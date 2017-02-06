@@ -95,7 +95,7 @@ WSGI_APPLICATION = 'lampstands.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'lampstands_db',
+        'NAME': 'd85jsi3phqta5n',
         'HOST': 'ec2-54-243-124-240.compute-1.amazonaws.com',
         'PASSWORD': '1edeae694aa4e49354562c4b36fefdc6eded2fc251f9615558b4ce013aa4ba0b',
         'USER': 'iqmxhqvsegcfet',
