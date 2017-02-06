@@ -1,0 +1,43 @@
+.pagination-wrapper {
+	@extend .clearfix;
+
+	clear: both;
+	text-align: center;
+}
+
+.page-link {
+	background-color: transparent;
+	border: 0;	
+	border-radius: 3px;
+	color: $color-gray-darker;
+	font-weight: 600;
+	margin: 0 5px;
+	padding: 8px 15px;
+	transition: all .15s linear;
+
+	.page-item.active & {
+		background-color: $color-primary;
+
+		&:hover {
+			background-color: $color-primary;
+		}
+	}
+
+	&:active, &:focus, &:hover, &:active:focus {
+		background-color: rgba(#000, .05);
+		color: $color-gray-darker;
+		text-decoration: none;
+	}		
+}
+
+.page-item:first-child .page-link, .page-item:last-child .page-link {
+	background-color: #fff;
+	border-radius: 50%;
+	box-shadow: 0 1px 2px rgba(#000, .08);
+	width: 37px;
+
+	&:hover {
+		background-color: $color-secondary;
+		color: #fff;
+	}
+}

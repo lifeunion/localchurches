@@ -1,0 +1,187 @@
+@mixin optional-at-root($sel) {
+	@at-root #{if(not &, $sel, selector-append(&, $sel))} {
+		@content;
+	}
+}
+
+@mixin placeholder {
+	@include optional-at-root('::-webkit-input-placeholder') {
+		@content;
+	}
+
+	@include optional-at-root(':-moz-placeholder') {
+		@content;
+	}
+
+	@include optional-at-root('::-moz-placeholder') {
+		@content;
+	}
+
+	@include optional-at-root(':-ms-input-placeholder') {
+		@content;
+	}
+}
+
+select {
+	background-position: right 1rem top 50%;  
+    background-repeat: no-repeat;
+	background-image: url('../img/caret.svg') !important; 
+
+	cursor: pointer;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+}
+
+select::-ms-expand {
+    display: none;
+}
+
+input[type=checkbox], input[type=radio] {
+	cursor: pointer;
+}
+
+label {
+	color: $color-gray-darker;
+	cursor: pointer;
+	font-size: .85em;
+	font-weight: 600;
+	text-transform: uppercase;
+}
+
+.form-control {
+	background-color: #fff;
+	border-color: lighten($color-gray-medium, 5%);
+	border-radius: 3px;
+	font-size: 1em;
+	min-height: 41px;
+	transition: border-color .15s linear;
+
+	&:focus {
+		border-color: $color-primary;		
+	}
+}
+
+.input-group-addon {
+	background-color: #fff;
+	border-color: lighten($color-gray-medium, 5%);
+	border-right: 0;
+
+	.fa {
+		color: darken($color-gray-dark, 10%);
+	}
+}
+
+.form-group-btn {
+	@extend .clearfix;
+}
+
+.form-group-btn-placeholder-gap {
+	margin-top: 28px;
+}
+
+.form-group-bottom-link {
+	border-top: 1px solid $color-gray-medium;
+	clear: both;
+	margin: 20px 0 0 0;
+	padding: 20px 0 0 0;
+	text-align: center;
+
+	a {	
+		color: $color-primary;
+		font-weight: 600;
+		padding: 0 0 3px 0;
+
+		&:hover {
+			text-decoration: none;
+		}
+
+		.fa {
+			font-weight: 400;
+			margin: 0 10px;
+		}
+	}
+}
+
+.checkbox-list {
+	@extend .clearfix;
+	
+	.checkbox { 
+		float: left;
+		margin-top: 0;
+		width: 33.33333%;			
+
+		@include media-breakpoint-down(md) {
+			width: 50%;
+		}
+	}
+}
+
+.checkbox, .checkbox-inline {
+	margin-bottom: 20px;
+	padding: 0;
+
+	label {
+		font-size: .95em;			
+		font-weight: 400;
+		padding: 0;
+		text-transform: inherit;
+
+		input {
+			margin-right: 5px;
+			position: relative !important;
+		}
+	}
+}
+
+/**
+ * ezMark
+ */
+.ez-hide {
+	opacity: 0;
+}
+
+.ez-checkbox {
+	background-image: url('../img/checkbox.png');
+	background-size: 17px 17px;
+	cursor: pointer;
+	display: inline-block;
+	height: 17px;
+	margin: 0px 8px 0px 0px;
+	vertical-align: -1px;
+	width: 17px;
+
+	.checkbox-light & {
+		background-image: url('../img/checkbox-light.png');
+	}
+}
+
+.ez-checked {
+	background-image: url('../img/checkbox-open.png');
+
+	.checkbox-light & {
+		background-image: url('../img/checkbox-light-open.png');
+	}	
+}
+
+.ez-radio {
+	background-image: url('../img/radio.png');
+	background-size: 17px 17px;
+	cursor: pointer;
+	display: inline-block;
+	height: 17px;
+	margin: 0px 8px 0px 0px;
+	vertical-align: -px;
+	width: 17px;
+
+	.checkbox-light & {
+		background-image: url('../img/radio-light.png');
+	}		
+}
+
+.ez-selected {
+	background-image: url('../img/radio-open.png');
+
+	.checkbox-light & {
+		background-image: url('../img/radio-light-open.png');
+	}		
+}
