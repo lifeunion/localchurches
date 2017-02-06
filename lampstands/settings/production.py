@@ -15,7 +15,7 @@ DATABASES['default'] =  dj_database_url.config()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Allow all host headers
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['ec2-54-243-124-240.compute-1.amazonaws.com', 'localhost', '127.0.0.1']
 
 try:
     from .local import *
