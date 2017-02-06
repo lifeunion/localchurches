@@ -96,7 +96,6 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'lampstands_db',
-        'HOST': 'localhost',
     }
 }
 
