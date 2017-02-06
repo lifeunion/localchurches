@@ -12,7 +12,10 @@ from __future__ import absolute_import, unicode_literals
 import os
 
 from django.core.wsgi import get_wsgi_application
+from whitenoise.django import DjangoWhiteNoise
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "lampstands.settings.dev")
 
 application = get_wsgi_application()
+application = get_wsgi_application()
+application = DjangoWhiteNoise(application)
