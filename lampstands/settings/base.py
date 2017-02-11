@@ -137,6 +137,11 @@ STATIC_URL = '/static/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
+AWS_STORAGE_BUCKET_NAME = 'wagtailadminimages'
+AWS_ACCESS_KEY_ID = 'AKIAIPSSMC5GJAGG3DBQ'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+
 
 # Wagtail settings
 
