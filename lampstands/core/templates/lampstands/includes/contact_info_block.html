@@ -1,0 +1,25 @@
+<div class="contact">
+    <div class="container">
+        <h2><span>Get in touch</span> about your exciting project</h2>
+        <ul>
+            <li>
+                <a href="tel:{{ settings.lampstands.GlobalSettings.contact_telephone }}">
+                    {% include "lampstands/includes/svg/phone.svg" %}
+                    <span>{{ settings.lampstands.GlobalSettings.contact_telephone }}</span>
+                </a>
+            </li>
+            <li>
+                <a href="mailto:{{ settings.lampstands.GlobalSettings.contact_email }}">
+                    {% include "lampstands/includes/svg/envelope.svg" %}
+                    <span>{{ settings.lampstands.GlobalSettings.contact_email }}</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://twitter.com/{{ settings.lampstands.GlobalSettings.contact_twitter }}">
+                    {% include "lampstands/includes/svg/twitter.svg" %}
+                    <span>@{{ settings.lampstands.GlobalSettings.contact_twitter }}</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

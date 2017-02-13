@@ -26,10 +26,14 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # Application definition
 
 INSTALLED_APPS = [
-    'home',
     'search',
-    'blog',
     'storages',
+    'lampstands.core',
+
+    # added from tbx settings
+    'wagtail.contrib.wagtailsearchpromotions',
+    'wagtail.contrib.wagtailsitemaps',
+    'wagtail.contrib.settings',
 
     'wagtail.wagtailforms',
     'wagtail.wagtailredirects',
@@ -43,8 +47,16 @@ INSTALLED_APPS = [
     'wagtail.wagtailadmin',
     'wagtail.wagtailcore',
 
+    # self-add
+    'wagtail.contrib.modeladmin',
+
     'modelcluster',
     'taggit',
+
+    # added from tbx settings
+    'compressor',
+    'raven.contrib.django.raven_compat',
+    'django.contrib.humanize',
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -83,6 +95,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'wagtail.contrib.settings.context_processors.settings',
             ],
         },
     },
@@ -125,6 +138,8 @@ USE_TZ = True
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    # added through tbx
+    'compressor.finders.CompressorFinder',
 ]
 
 STATICFILES_DIRS = [
@@ -144,11 +159,20 @@ AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 #AWS_SECRET_ACCESS_KEY = 'sa5Noj9p90TFrV9FIOs8q8klG7ZsFZD1LgGMXKsv'
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 
+# added through tbx
+# Django compressor settings
+# http://django-compressor.readthedocs.org/en/latest/settings/
+
+COMPRESS_PRECOMPILERS = [
+    ('text/x-scss', 'django_libsass.SassCompiler'),
+]
 
 # Wagtail settings
-
 WAGTAIL_SITE_NAME = "lampstands"
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 BASE_URL = 'http://safe-cove-64619.herokuapp.com'
+
+# Override the Image class used by wagtailimages with a custom one
+WAGTAILIMAGES_IMAGE_MODEL = 'lampstands.LampstandsImage'
