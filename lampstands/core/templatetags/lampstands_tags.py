@@ -1,8 +1,8 @@
 from django import template
 from django.conf import settings
 
-from tbx.core.models import *
-from tbx.core.utils import *
+from lampstands.core.models import *
+from lampstands.core.utils import *
 
 register = template.Library()
 
