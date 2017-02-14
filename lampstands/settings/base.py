@@ -175,4 +175,4 @@ WAGTAIL_SITE_NAME = "lampstands"
 BASE_URL = 'http://safe-cove-64619.herokuapp.com'
 
 # Override the Image class used by wagtailimages with a custom one
-WAGTAILIMAGES_IMAGE_MODEL = 'lampstands.LampstandsImage'
+#WAGTAILIMAGES_IMAGE_MODEL = 'lampstands.LampstandsImage'
