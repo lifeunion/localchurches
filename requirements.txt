@@ -35,7 +35,6 @@ six==1.10.0
 static3==0.7.0
 Unidecode==0.4.20
 wagtail==1.8.1
-wagtail-embed-videos==0.2.5
 wagtailembedder==1.1
 wagtailfontawesome==1.0.6
 wagtailmenus==2.1.3
