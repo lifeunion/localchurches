@@ -49,6 +49,12 @@ INSTALLED_APPS = [
 
     # self-add
     'wagtail.contrib.modeladmin',
+    
+    # self-add embedder
+    'wagtailembedder',
+
+    # self-add tinyMCE
+    'wagtailtinymce',
 
     'modelcluster',
     'taggit',
@@ -176,3 +182,10 @@ BASE_URL = 'http://safe-cove-64619.herokuapp.com'
 
 # Override the Image class used by wagtailimages with a custom one
 #WAGTAILIMAGES_IMAGE_MODEL = 'lampstands.LampstandsImage'
+
+# self-incorporate TinyMCE into all text editors
+WAGTAILADMIN_RICH_TEXT_EDITORS = {
+    'default': {
+        'WIDGET': 'wagtailtinymce.rich_text.TinyMCERichTextArea'
+    },
+}
