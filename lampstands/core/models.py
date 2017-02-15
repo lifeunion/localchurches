@@ -227,7 +227,7 @@ class AdvertPlacement(models.Model):
 class Advert(models.Model):
     page = models.ForeignKey(
         'wagtailcore.Page',
-        related_name='adverts',
+        related_name='+',
         null=True,
         blank=True
     )
@@ -267,7 +267,7 @@ def image_delete(sender, instance, **kwargs):
 
 
 class LampstandsRendition(AbstractRendition):
-    image = models.ForeignKey('LampstandsImage', related_name='renditions')
+    image = models.ForeignKey('LampstandsImage', related_name='+')
 
     class Meta:
         unique_together = (
@@ -841,7 +841,7 @@ class BlogPageTagSelect(Orderable):
     page = ParentalKey('lampstands.BlogPage', related_name='tags')
     tag = models.ForeignKey(
         'lampstands.BlogPageTagList',
-        related_name='blog_page_tag_select'
+        related_name='+'
     )
 
 
@@ -1008,7 +1008,7 @@ class WorkPageTagSelect(Orderable):
     page = ParentalKey('lampstands.WorkPage', related_name='tags')
     tag = models.ForeignKey(
         'lampstands.BlogPageTagList',
-        related_name='work_page_tag_select'
+        related_name='+'
     )
 
 
@@ -1276,8 +1276,8 @@ class TurnkeyApplicationForm(forms.ModelForm):
         }
 
 
-class TurnkeyPageGrantsManaged(models.Model):
-    page = ParentalKey('lampstands.TurnkeyPage', related_name="grants_managed")
+class TurnkeyPageEventsManaged(models.Model):
+    page = ParentalKey('lampstands.TurnkeyPage', related_name="events_managed")
     image = models.ForeignKey(
         'lampstands.LampstandsImage',
         null=True, blank=True,
@@ -1327,7 +1327,7 @@ class TurnkeyPage(Page):
         help_text="Optional - form submissions will be emailed to this address"
     )
     body = RichTextField()
-    grants_managed_title = models.CharField(max_length=255)
+    events_managed_title = models.CharField(max_length=255)
     call_to_action_title = models.CharField(max_length=255, blank=True)
     call_to_action_embed_url = models.URLField(blank=True)
 
@@ -1354,13 +1354,13 @@ class TurnkeyPage(Page):
                     send_mail(subject, content, [self.to_address],)
                 return render(
                     request,
-                    'lampstands/includes/ad_grant_application_landing.html',
+                    'lampstands/includes/turnkey_application_landing.html',
                     {'self': self, 'form': form}
                 )
             else:
                 return render(
                     request,
-                    'lampstands/includes/ad_grant_application_form.html',
+                    'lampstands/includes/turnkey_application_form.html',
                     {'self': self, 'form': form}
                 )
         else:
@@ -1376,9 +1376,9 @@ class TurnkeyPage(Page):
             FieldPanel('to_address'),
         ], "Application Form"),
         MultiFieldPanel([
-            FieldPanel('grants_managed_title'),
-            InlinePanel('grants_managed', label="Grants Managed")
-        ], "Grants Managed Section"),
+            FieldPanel('events_managed_title'),
+            InlinePanel('events_managed', label="Events Managed")
+        ], "Events Managed Section"),
         InlinePanel('quotes', label="Quotes"),
         MultiFieldPanel([
             FieldPanel('call_to_action_title'),
