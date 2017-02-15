@@ -56,6 +56,9 @@ INSTALLED_APPS = [
     # self-add tinyMCE
     'wagtailtinymce',
 
+    # self-add fa
+    'wagtailfontawesome',
+
     'modelcluster',
     'taggit',
 
