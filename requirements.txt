@@ -8,6 +8,7 @@ dj-static==0.0.6
 Django==1.10.5
 django-appconf==1.0.2
 django-compressor==2.1.1
+django-embed-video==1.1.0
 django-modelcluster==2.0
 django-storages==1.5.2
 django-taggit==0.18.3
@@ -34,6 +35,7 @@ six==1.10.0
 static3==0.7.0
 Unidecode==0.4.20
 wagtail==1.8.1
+wagtail-embed-videos==0.2.5
 wagtailembedder==1.1
 wagtailfontawesome==1.0.6
 wagtailmenus==2.1.3

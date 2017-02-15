@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'wagtail.wagtailadmin',
     'wagtail.wagtailcore',
 
-    # self-add
+    # self-add flat menus
     'wagtail.contrib.modeladmin',
     'wagtailmenus',
     
@@ -59,6 +59,10 @@ INSTALLED_APPS = [
 
     # self-add fa
     'wagtailfontawesome',
+
+    # self-add embed videos
+    'embed_video',
+    'wagtail_embed_videos',
 
     'modelcluster',
     'taggit',
