@@ -60,6 +60,9 @@ INSTALLED_APPS = [
     # self-add fa
     'wagtailfontawesome',
 
+    # self-add wagtailmedia
+    'wagtailmedia',
+
     'modelcluster',
     'taggit',
 
