@@ -26,9 +26,9 @@ BASE_DIR = os.path.dirname(PROJECT_DIR)
 # Application definition
 
 INSTALLED_APPS = [
+    'lampstands.core',
     'search',
     'storages',
-    'lampstands.core',
 
     # added from tbx settings
     'wagtail.contrib.wagtailsearchpromotions',
