@@ -17,6 +17,7 @@ import os
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
+CORE_DIR = os.path.join(BASE_DIR, 'core')
 
 
 # Quick-start development settings - unsuitable for production
@@ -99,7 +100,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            os.path.join(PROJECT_DIR, 'templates'),
+            os.path.join(CORE_DIR, 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
