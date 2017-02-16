@@ -72,7 +72,7 @@ def main_menu():
 
 
 # Person feed for home page
-@register.inclusion_tag('torchbox/tags/homepage_people_listing.html', takes_context=True)
+@register.inclusion_tag('lampstands/tags/homepage_people_listing.html', takes_context=True)
 def homepage_people_listing(context, count=3):
     people = play_filter(PersonPage.objects.filter(live=True).order_by('?'),
                          count)
@@ -84,7 +84,7 @@ def homepage_people_listing(context, count=3):
 
 
 # Blog feed for home page
-@register.inclusion_tag('torchbox/tags/homepage_blog_listing.html', takes_context=True)
+@register.inclusion_tag('lampstands/tags/homepage_blog_listing.html', takes_context=True)
 def homepage_blog_listing(context, count=6):
     blog_posts = play_filter(BlogPage.objects.filter(live=True).order_by('-date'), count)
     return {
@@ -95,7 +95,7 @@ def homepage_blog_listing(context, count=6):
 
 
 # Work feed for home page
-@register.inclusion_tag('torchbox/tags/homepage_work_listing.html', takes_context=True)
+@register.inclusion_tag('lampstands/tags/homepage_work_listing.html', takes_context=True)
 def homepage_work_listing(context, count=3):
     work = play_filter(WorkPage.objects.filter(live=True),
                        count)
@@ -107,7 +107,7 @@ def homepage_work_listing(context, count=3):
 
 
 # Jobs feed for home page
-@register.inclusion_tag('torchbox/tags/homepage_job_listing.html', takes_context=True)
+@register.inclusion_tag('lampstands/tags/homepage_job_listing.html', takes_context=True)
 def homepage_job_listing(context, count=3, intro_text=None):
     # Assume there is only one job index page
     jobindex = JobIndexPage.objects.filter(live=True).first()
@@ -128,7 +128,7 @@ def homepage_job_listing(context, count=3, intro_text=None):
 
 
 # Advert snippets
-@register.inclusion_tag('torchbox/tags/adverts.html', takes_context=True)
+@register.inclusion_tag('lampstands/tags/adverts.html', takes_context=True)
 def adverts(context):
     return {
         'adverts': Advert.objects.all(),
@@ -137,7 +137,7 @@ def adverts(context):
 
 
 # blog posts by team member
-@register.inclusion_tag('torchbox/tags/person_blog_listing.html', takes_context=True)
+@register.inclusion_tag('lampstands/tags/person_blog_listing.html', takes_context=True)
 def person_blog_post_listing(context, calling_page=None):
     posts = play_filter(BlogPage.objects.filter(related_author__author=calling_page.id).live().order_by('-date'))
     return {
@@ -148,7 +148,7 @@ def person_blog_post_listing(context, calling_page=None):
     }
 
 
-@register.inclusion_tag('torchbox/tags/work_and_blog_listing.html', takes_context=True)
+@register.inclusion_tag('lampstands/tags/work_and_blog_listing.html', takes_context=True)
 def work_and_blog_listing(context, count=10, marketing=False):
     """
     An interleaved list of work and blog items.

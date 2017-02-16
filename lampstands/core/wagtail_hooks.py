@@ -20,7 +20,7 @@ def whitelister_element_rules():
 @hooks.register('insert_editor_js')
 def editor_js():
     js_files = [
-        'torchbox/js/hallo-plugins/span.js'
+        'lampstands/js/hallo-plugins/span.js'
     ]
     js_includes = format_html_join(
         '\n', '<script src="{0}{1}"></script>',
