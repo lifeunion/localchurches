@@ -267,7 +267,7 @@ def image_delete(sender, instance, **kwargs):
 
 
 class LampstandsRendition(AbstractRendition):
-    image = models.ForeignKey('LampstandsImage', related_name='+')
+    image = models.ForeignKey('LampstandsImage', related_name='renditions')
 
     class Meta:
         unique_together = (
