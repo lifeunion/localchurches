@@ -105,13 +105,12 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'debug': DEBUG,
-                #'django.template.context_processors.debug',
-                #'django.template.context_processors.request',
-                #'django.contrib.auth.context_processors.auth',
-                #'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
                 #'wagtail.contrib.settings.context_processors.settings',
-                #'wagtailmenus.context_processors.wagtailmenus',
+                'wagtailmenus.context_processors.wagtailmenus',
             ],
         },
     },
