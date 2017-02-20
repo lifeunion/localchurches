@@ -1,0 +1,55 @@
+html {
+	height: 100%;
+	font-size: 16px;
+	width: 100%;
+} 
+
+body {
+	background-color: #F9F9F8;
+	color: $color-black; 
+	font-family: 'Raleway', 'Arial', sans-serif;	
+	font-size: .85em;
+	height: 100%;
+	overflow-x: hidden;
+	width: 100%;	
+} 
+
+blockquote {
+	background-color: #fff;
+	font-style: italic;
+	font-size: 1.5em;	
+	padding: 20px 30px;
+
+	p {
+		color: $color-black !important;
+		line-height: 1.7;		
+	}
+
+	cite {
+		color: $color-gray-darker;
+		float: right;
+		font-size: .7em;
+		font-weight: 400;
+		margin: 30px 0 0 0;
+	}
+}
+
+a {
+	color: $color-primary;
+
+	&:hover {
+		color: darken($color-primary, 10%);
+	}
+}
+
+p {
+	font-size: 1.05em;
+	line-height: 26px;
+	margin: 0 0 20px 0;
+}
+
+hr {
+	border-color: lighten($color-gray-medium, 5%);
+	margin: 60px 0;
+	padding: 0;
+}

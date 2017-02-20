@@ -1,0 +1,275 @@
+.header {
+	background-color: #fff;	
+	position: relative;
+	z-index: 1000;
+
+	.header-transparent & {
+		background-color: transparent;
+		background-image: linear-gradient(to bottom, rgba(black, .5), transparent); 		
+	}
+
+	@include media-breakpoint-up(md) {
+		&.sps--blw {
+			box-shadow: 0 1px 2px rgba(#000, .12);
+			left: 0;
+			right: 0;
+			position: fixed;
+			top: 0; 
+
+			.header-topbar, .header-separator, .header-search, .header-information, .nav-currencies {
+				display: none;
+			}
+
+			.header-top {
+				float: left;
+				padding-bottom: 15px;
+				padding-top: 15px;
+			}
+
+			.header-bottom {
+				float: right;
+				margin-top: 10px;
+			}
+
+			.header-logo-shape {
+				&:before, &:after {
+					height: 28px;
+					width: 28px;
+				}
+			}
+		}
+	}
+}
+
+.header-sticky .header-wrapper {
+	min-height: 194px;
+}
+
+.header-top {
+	@extend .clearfix;
+
+	box-shadow: 0 1px 2px rgba(#000, .08);
+	margin: 0 -1000px;
+	min-height: 68px;
+	padding: 30px 1000px;	
+
+	.header-small & {
+		padding: 10px 1000px;
+	}
+
+	.header-transparent & {
+		box-shadow: none;
+		border: 0;
+		padding-bottom: 60px;
+	}
+}
+
+.header-top-inner {
+	position: relative;
+}
+
+.header-bottom {
+	@extend .clearfix;
+	
+	margin: 0 -1000px;
+	padding: 0 1000px;	
+}
+
+.header-bottom-inner {
+	position: relative;
+}
+
+.header-logo {
+	color: $color-black;
+	display: block;
+	float: left;
+	font-size: 2em;
+	font-weight: 600;
+
+	&:hover {
+		color: $color-black;
+		text-decoration: none;
+	}
+
+	.header-small & {
+		font-size: 1.4em;
+		margin-top: 10px;
+	}
+
+	.header-transparent & {
+		color: #fff;
+	}
+}
+
+.header-logo-text {
+	@include media-breakpoint-down(md) {
+		@include media-breakpoint-up(md) {
+			display: none;
+		}
+	}
+}
+.header-logo-shape {
+	margin: 0 20px 0 0;
+
+	@extend .logo-shape;
+}
+
+.header-separator {
+	background-color: $color-gray-medium;
+	float: left;
+	height: 46px;
+	margin: 0px 50px 0 50px;	
+	position: relative;
+	width: 1px;
+
+	@include media-breakpoint-down(lg) {
+		display: none;
+	}	
+}
+
+.header-search {
+	float: left;
+	margin: 0;
+	position: relative;
+	width: 250px;
+
+	@include media-breakpoint-down(lg) {
+		display: none;
+	}
+
+	.form-group, .input-group {
+		margin: 0;
+	}
+
+	.form-control {
+		border-left: 0;
+		font-size: 1.1em;
+		height: 44px;
+		margin: 0;
+		padding-left: 5px;		
+		width: 250px;
+
+		&:focus {
+			border-color: $color-gray-medium;
+		}
+	}
+}
+
+.header-information {
+	display: block;
+	float: right;
+	margin: 0 0 0 50px;
+	white-space: nowrap;
+
+	@include media-breakpoint-down(sm) {
+		display: none;
+	}
+
+	.fa {
+		color: $color-gray-medium;		
+		font-size: 3.4em;
+		margin: 0px 20px 0 0;
+	}
+
+	span, strong {
+		display: block;
+		white-space: nowrap;
+	}
+
+	strong {
+		font-size: 1.25em;
+		font-weight: 600;
+	}
+
+	span {
+		color: $color-gray-darker;
+		font-size: .9em;
+		margin: 3px 0 0 0;
+	}
+}
+
+.header-information-block {
+	display: inline-block;
+}
+
+.header-topbar {
+	@extend .clearfix;
+	
+	font-size: .85em;
+	margin: 0 -1000px;
+	padding: 2px 1000px;
+
+	@include media-breakpoint-down(sm) {
+		display: none;
+	}
+}
+
+.header-topbar-left {
+	float: left;
+}
+
+.header-topbar-right {
+	float: right;
+}
+
+.header-action {
+	background-color: $color-secondary;
+	box-shadow: 0 1px 2px rgba(#000, .08);
+	color: #fff;
+	cursor: pointer;
+	font-size: .85em;
+	font-weight: 700;
+	float: right;
+	padding: 7px 16px;
+	position: absolute;
+	right: 0;	
+	top: 44px;
+	transition: background-color .15s linear;
+	z-index: 100; 
+
+	.fa {
+		margin: 0 10px 0 0;
+	}
+
+	&:hover {
+		background-color: lighten($color-secondary, 5%);
+		color: #fff;
+		text-decoration: none;
+	}
+
+	.header-transparent & {
+		background-color: $color-primary;
+
+		&:hover {
+			background-color: darken($color-primary, 5%);
+		}
+	}
+}
+
+.navbar-toggler {
+	border: 2px solid rgba(#000, .15);
+	border-radius: 3px;
+	padding: 8px;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 40px;
+
+	span {
+		border-top: 2px solid rgba(#000, .3);
+		display: block;
+		margin: 4px 0 0 0;
+
+		.header-transparent & {
+			border-color: rgba(#fff, .9);
+		}
+
+		&:first-child {
+			margin-top: 0;
+		}
+	}
+
+	.header-transparent & {
+		border-color: rgba(#fff, .6);
+	}
+}
