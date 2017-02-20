@@ -1,0 +1,114 @@
+[
+	{	
+		"id": "marker-1",
+		"center": [40.761077, -73.983307],
+		"icon": "<i class='fa fa-building'></i>",
+		"title": "Bright Island Route",
+		"price": "$ 40.000",
+		"image": "assets/img/tmp/tmp-1.jpg"
+	},
+	{
+		"id": "marker-2",
+		"center": [40.725382, -73.991968],
+		"icon": "<i class='fa fa-home'></i>",
+		"title": "Bright Island Route",
+		"price": "$ 40.000",		
+		"image": "assets/img/tmp/tmp-2.jpg"	
+	},
+	{
+		"id": "marker-3",
+		"center": [40.759677, -73.917586],
+		"icon": "<i class='fa fa-suitcase'></i>",
+		"title": "Bright Island Route",
+		"price": "$ 40.000",		
+		"image": "assets/img/tmp/tmp-3.jpg"
+	},
+	{
+		"id": "marker-4",
+		"center": [40.710249, -73.951918],
+		"icon": "<i class='fa fa-shield'></i>",
+		"title": "Bright Island Route",
+		"price": "$ 40.000",		
+		"image": "assets/img/tmp/tmp-4.jpg"
+	},
+	{
+		"id": "marker-5",
+		"center": [40.732106, -73.857161],
+		"icon": "<i class='fa fa-star'></i>",
+		"title": "Bright Island Route",
+		"price": "$ 40.000",		
+		"image": "assets/img/tmp/tmp-5.jpg"
+	},
+	{
+		"id": "marker-6",
+		"center": [40.782558, -73.970457],
+		"icon": "<i class='fa fa-building'></i>",
+		"title": "Bright Island Route",
+		"price": "$ 40.000",		
+		"image": "assets/img/tmp/tmp-1.jpg"
+	},
+	{
+		"id": "marker-7",
+		"center": [40.739390, -74.038435],
+		"icon": "<i class='fa fa-home'></i>",
+		"title": "Bright Island Route",
+		"price": "$ 40.000",		
+		"image": "assets/img/tmp/tmp-1.jpg"
+	},
+	{
+		"id": "marker-8",
+		"center": [40.770079, -73.874327],
+		"icon": "<i class='fa fa-suitcase'></i>",
+		"title": "Bright Island Route",
+		"price": "$ 40.000",		
+		"image": "assets/img/tmp/tmp-8.jpg"
+	},
+	{
+		"id": "marker-9",
+		"center": [40.710065, -73.892044],
+		"icon": "<i class='fa fa-home'></i>",
+		"title": "Bright Island Route",
+		"price": "$ 40.000",		
+		"image": "assets/img/tmp/tmp-10.jpg"
+	},
+	{
+		"id": "marker-10",
+		"center": [40.731922, -73.825783],
+		"icon": "<i class='fa fa-building'></i>",
+		"title": "Bright Island Route",
+		"price": "$ 40.000",		
+		"image": "assets/img/tmp/tmp-11.jpg"
+	},
+	{
+		"id": "marker-11",
+		"center": [40.703168, -73.797115],
+		"icon": "<i class='fa fa-star'></i>",
+		"title": "Bright Island Route",
+		"price": "$ 40.000",		
+		"image": "assets/img/tmp/tmp-1.jpg"
+	},
+	{
+		"id": "marker-12",
+		"center": [40.810119, -73.882946],
+		"icon": "<i class='fa fa-star'></i>",
+		"title": "Bright Island Route",
+		"price": "$ 40.000",		
+		"image": "assets/img/tmp/tmp-12.jpg"
+	},
+	{
+		"id": "marker-13",
+		"center": [40.812718, -73.828701],
+		"icon": "<i class='fa fa-star'></i>",
+		"title": "Bright Island Route",
+		"price": "$ 40.000",		
+		"image": "assets/img/tmp/tmp-3.jpg"
+	},
+	{
+		"id": "marker-14",
+		"center": [40.790367, -74.012722],
+		"icon": "<i class='fa fa-building'></i>",
+		"title": "Bright Island Route",
+		"price": "$ 40.000",		
+		"image": "assets/img/tmp/tmp-4.jpg"
+	}	
+]

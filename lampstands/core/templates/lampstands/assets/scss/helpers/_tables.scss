@@ -1,0 +1,38 @@
+.table-users {
+	background-color: #fff;
+	box-shadow: 0 1px 2px rgba(#000, .08);
+}
+
+.table {
+	td {
+		vertical-align: middle;
+	}
+
+	.user-image {
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-size: cover;		 
+		border: 2px solid $color-gray;
+		border-radius: 50%;
+		display: inline-block;
+		height: 34px;
+		margin: 0 10px 0 0;
+		vertical-align: -10px;
+		width: 34px;
+	}
+
+	.min-width {
+		white-space: nowrap;
+		width: 1px;
+	}	
+
+	.btn {
+		font-size: .9em;
+		padding: 4px 14px;
+
+		.fa {
+			font-size: 12px;
+			margin: 0 6px 0 0;
+		}
+	}
+}
