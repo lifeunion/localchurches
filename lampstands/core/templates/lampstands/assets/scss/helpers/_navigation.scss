@@ -1,0 +1,403 @@
+@include media-breakpoint-up(md) {
+	.nav-primary {
+		float: left;
+
+		.header-small & {
+			float: right;
+		}
+		
+		.nav-item { 
+			margin: 0 40px 0 0;
+			position: relative;
+
+			&:last-child {
+				margin: 0;
+			}
+		}
+
+		.nav-item-parent {
+			> .nav-link {
+				&:after {
+					-webkit-font-smoothing: antialiased;
+					content: '\f0d7';
+					font-family: 'FontAwesome';
+					margin: 0 0 0 10px;
+				}
+			}
+
+			&:hover {
+				> a {
+					color: $color-primary;
+
+					.header-transparent & {
+						color: #fff;
+					}
+				}
+				
+				> .sub-menu {
+					opacity: 1;
+					transition: opacity .15s linear;
+					visibility: visible;
+				}
+			}
+		}
+
+		.nav-link {
+			color: $color-black;
+			cursor: pointer;
+			font-size: .9em;
+			font-weight: 700;
+			padding: 15px 0;
+			position: relative;
+			transition: color .15s linear;
+			text-transform: uppercase;
+
+			.header-transparent & {
+				color: #fff;
+
+				&:hover {
+					color: #fff;
+				}
+			}
+
+			&.active {
+				background-color: transparent;
+				border-radius: 0;
+				color: $color-black;
+				cursor: pointer !important;
+
+				.header-transparent & {
+					color: #fff;
+				}
+			
+				&:before {
+					background-color: $color-primary; 
+					content: '';
+					display: block;
+					height: 2px;			
+					left: 0;
+					position: absolute;
+					right: 0;
+					top: 0px;
+
+					.header-small & {
+						top: -10px;
+					}
+				}			
+
+				&:hover {
+					background-color: transparent;
+					color: $color-primary;
+
+					.header-transparent & {
+						color: #fff;
+					}
+				}	
+
+				&:active, &:focus {
+					background-color: #fff;
+					color: $color-black;
+				}		
+			}
+
+			&:hover {
+				background-color: transparent;
+				color: $color-primary;
+			}
+		}	
+
+		.nav-item {
+			&:last-child {
+				> .sub-menu {
+					left: auto;
+					right: 0;
+
+					&:before {
+						left: auto;
+						right: 15px;
+					}
+				}
+			}
+		}
+
+		.sub-menu {
+			background-color: $color-gray;
+			box-shadow: 0 1px 2px rgba(#000, .15);
+			display: block;
+			left: -20px;
+			list-style: none;
+			margin: 0;
+			opacity: 0;
+			padding: 0; 
+			position: absolute;
+			top: 48px;
+			visibility: hidden;
+			width: 230px;
+			z-index: 1000;
+
+			.sub-menu {
+				left: 230px;
+				top: 0;
+
+				&:before {
+					display: none;
+				}
+			}
+
+			&:after {
+				background-color: transparent;
+				content: '';
+				display: block;
+				height: 10px;
+				left: 0;
+				position: absolute;
+				right: 0;
+				top: -10px;
+			}
+
+			&:before {
+				border: 7px solid transparent;
+				border-bottom-color: $color-gray;
+				content: '';
+				left: 15px;
+				top: -14px;
+				position: absolute;
+			}
+
+			a {
+				border-bottom: 1px solid rgba(#000, .03);
+				color: $color-black;
+				font-size: .9em;
+				font-weight: 400; 
+				display: block;
+				padding: 12px 20px;
+				transition: all .15s linear;
+
+				&:hover {
+					background-color: rgba(#000, .02);
+					color: $color-primary;
+					padding-left: 22px;
+					text-decoration: none;
+				}
+			}
+
+			.nav-item-parent {
+				> a {					
+
+					&:after {
+						content: '\f0da';
+						float: right;
+						font-family: 'FontAwesome';				
+						margin-top: 1px;
+					}
+				}
+				&:hover {
+					> a {
+						color: $color-primary;
+					}
+				}
+			}
+
+			li {
+				position: relative;
+
+				&:last-child {
+					> a {
+						border: 0;
+					}
+				}
+			}
+		}
+	}
+}
+
+@include media-breakpoint-down(sm) {
+	.nav-primary-wrapper {
+		background-color: #fff;
+		box-shadow: 0 1px 2px rgba(#000, .08);
+		left: -15px;		
+		padding: 0;
+		position: absolute;
+		right: -15px;
+
+		.header-small & {
+			top: 58px;
+		}
+	}
+
+	.nav-primary {
+		.nav-item {
+			float: none;
+			margin: 0 !important;
+		}
+
+		.nav-link {
+			color: $color-black;
+			cursor: pointer;
+			font-size: .9em;
+			font-weight: 700;
+			padding: 10px 15px;
+			position: relative;
+			transition: all .15s linear;
+			text-transform: uppercase;			
+
+			&.active {
+				background-color: $color-primary;
+				border-radius: 0;
+				color: #fff !important;
+
+				&:hover {
+					background-color: $color-primary;
+				}
+			}
+
+			&:hover {
+				background-color: rgba(#000, .04);
+			}
+		}
+
+		.nav-item-parent {
+			> .nav-link {
+				&:after {
+					-webkit-font-smoothing: antialiased;
+					content: '\f0da';
+					font-family: 'FontAwesome';
+					margin: 0 0 0 10px;
+					position: absolute;
+					right: 15px;
+				}
+			}
+
+			&:hover {
+				> a {
+					color: $color-primary;
+
+					.header-transparent & {
+						color: #fff;
+					}
+				}
+				
+				> .sub-menu {
+					display: block;
+				}
+			}
+		}
+
+		.sub-menu {
+			background-color: rgba(#000, .03);
+			display: none;
+			list-style: none;
+			margin: 0;
+			padding: 0;
+
+			a {
+				color: $color-black;
+				display: block;
+				font-size: .95em;
+				padding: 8px 15px;
+				transition: background-color .15s linear;
+
+				&:hover {
+					background-color: rgba(#000, .12);
+					text-decoration: none;
+				}
+			}
+		}
+	}
+}
+
+.nav-currencies {
+	float: right;
+	margin-top: 15px;
+
+	@include media-breakpoint-down(md) {
+		display: none;
+	}
+	
+	.nav-item {
+		margin: 0 25px;
+
+		&:last-child {
+			margin: 0;
+		} 
+	}
+
+	.nav-link {
+		color: $color-gray-darker;
+		font-size: .85em;
+		font-weight: 700;		
+		margin: 0;
+		padding: 0;
+		transition: color .15s linear;
+
+		&.active {
+			background-color: transparent;
+			border-radius: 0;
+			color: $color-primary;
+			font-weight: 700;
+
+			&:hover {
+				background-color: transparent;
+				color: $color-primary;
+			}
+		}
+
+		&:hover {
+			color: $color-primary;
+		}
+	}
+}
+
+.nav-topbar {
+	.nav-link {
+		color: $color-gray-darker;
+		transition: color .15s linear;
+
+		&:hover {
+			color: $color-primary;
+		}
+
+		.fa {
+			border: 1px solid $color-gray-medium;
+			border-radius: 50%;
+			color: darken($color-gray-medium, 20%);
+			height: 22px;
+			font-size: .9em;
+			line-height: 21px;
+			position: relative;
+			text-align: center;
+			transition: all .15s linear;
+			width: 22px;
+
+			&:hover {
+				border-color: $color-primary;
+				color: $color-primary;  
+			}
+		}
+	}
+
+	.nav-item {
+		&:first-child {
+			margin-left: 0;
+
+			.nav-link {
+				padding-left: 0;
+			}
+		}
+
+		&:last-child {
+			margin-right: 0;
+
+			.nav-link {
+				padding-right: 0;
+			}
+		}		
+	}
+}
+
+.nav-topbar-social {
+	.nav-link {
+		padding-left: 8px;
+		padding-right: 8px;		
+	}
+}

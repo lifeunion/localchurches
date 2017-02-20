@@ -1,0 +1,36 @@
+.btn {
+	border: 0;
+	border-radius: 3px;	 
+	font-size: 1.05em;
+	font-weight: 500;
+	padding: 10px 20px; 
+	transition: background-color .15s linear;
+
+	&:active, &:hover, &:focus, &:active:active {
+		outline: none;
+	} 
+
+	.fa {
+		color: rgba(#fff, .9);
+		margin: 0 10px 0 0;
+		font-size: 1.15em;
+	}
+}
+
+.btn-primary {
+	background-color: $color-primary;
+
+	&:active, &:hover, &:focus, &:active:active {
+		background-color: darken($color-primary, 3%);
+	}
+}
+
+.btn-secondary {
+	background-color: $color-secondary;
+	color: #fff;
+
+	&:active, &:hover, &:focus, &:focus:active {
+		background-color: lighten($color-secondary, 3%);
+		color: #fff;
+	}
+}
