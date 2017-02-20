@@ -1,0 +1,26 @@
+.main {
+	padding-bottom: 60px;
+	padding-top: 60px;
+}
+
+.page-wrapper {
+	display: table;
+	height: 100%;
+	overflow: hidden; 
+	table-layout: fixed;	
+	width: 100%;
+}
+
+.header-wrapper {
+	display: table-row;
+	height: 1px;
+}
+
+.main-wrapper {
+	display: table-row;	
+}
+
+.footer-wrapper {
+	display: table-row;
+	height: 1px;
+}
