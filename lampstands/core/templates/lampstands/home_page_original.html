@@ -1,0 +1,36 @@
+{% extends "lampstands/basevillareal.html" %}
+{% load lampstands_tags wagtailcore_tags wagtailimages_tags wagtailembeds_tags staticfiles %}
+{% block title_postfix %}{% endblock %}
+{% block content %}
+
+    {% include "lampstands/includes/hero.html" with hero=self.hero.all primary_title=self.hero_intro_primary secondary_title=self.hero_intro_secondary %}
+
+    <section class="about-tbx">
+        <div class="container">
+            <div class="body">
+                {{ self.intro_body|richtext }}
+            </div>
+        </div>
+    </section>
+
+    <section id="posts" class="container">
+        <h2>{{ self.blog_title|safe }}</h2>
+        {% homepage_blog_listing %}
+
+        <h2>{{ self.work_title|safe }}</h2>
+        {% homepage_work_listing %}
+    </section>
+
+    <div class="container">
+        <section class="clients">
+            <h2>{{ self.clients_title|safe }}</h2>
+            {% include "lampstands/includes/clients.html" with clients=self.clients.all %}
+        </section>
+    </div>
+
+    <section class="hiring">
+        <div class="container">
+            {% homepage_job_listing 0 %}
+        </div>
+    </section>
+{% endblock %}
