@@ -314,6 +314,15 @@ p {
   margin-top: 0;
   margin-bottom: 1rem; }
 
+.drop-cap {
+  float: left;
+  width: auto;
+  margin-right: 0.1em;
+  font-size: 600%;
+  font-family: serif;
+  line-height: 80%;
+  }
+
 abbr[title],
 abbr[data-original-title] {
   cursor: help;
@@ -4804,6 +4813,11 @@ hr {
     .header-separator {
       display: none; } }
 
+.header-background {
+  background-position: 25% 70%;
+  background-image: url(img/background2.jpg);
+  }
+
 .header-search {
   float: left;
   margin: 0;
@@ -5335,7 +5349,7 @@ hr {
 select {
   background-position: right 1rem top 50%;
   background-repeat: no-repeat;
-  background-image: url("../img/caret.svg") !important;
+  background-image: url("img/caret.svg") !important;
   cursor: pointer;
   -webkit-appearance: none;
   -moz-appearance: none; }
@@ -5416,7 +5430,7 @@ label {
   opacity: 0; }
 
 .ez-checkbox {
-  background-image: url("../img/checkbox.png");
+  background-image: url("img/checkbox.png");
   background-size: 17px 17px;
   cursor: pointer;
   display: inline-block;
@@ -5425,15 +5439,15 @@ label {
   vertical-align: -1px;
   width: 17px; }
   .checkbox-light .ez-checkbox {
-    background-image: url("../img/checkbox-light.png"); }
+    background-image: url("img/checkbox-light.png"); }
 
 .ez-checked {
-  background-image: url("../img/checkbox-open.png"); }
+  background-image: url("img/checkbox-open.png"); }
   .checkbox-light .ez-checked {
-    background-image: url("../img/checkbox-light-open.png"); }
+    background-image: url("img/checkbox-light-open.png"); }
 
 .ez-radio {
-  background-image: url("../img/radio.png");
+  background-image: url("img/radio.png");
   background-size: 17px 17px;
   cursor: pointer;
   display: inline-block;
@@ -5442,12 +5456,12 @@ label {
   vertical-align: -px;
   width: 17px; }
   .checkbox-light .ez-radio {
-    background-image: url("../img/radio-light.png"); }
+    background-image: url("img/radio-light.png"); }
 
 .ez-selected {
-  background-image: url("../img/radio-open.png"); }
+  background-image: url("img/radio-open.png"); }
   .checkbox-light .ez-selected {
-    background-image: url("../img/radio-light-open.png"); }
+    background-image: url("img/radio-light-open.png"); }
 
 /**
  * 7. Buttons
@@ -5720,7 +5734,7 @@ label {
   position: relative; }
 
 .image-holder {
-  background-image: url("../img/tmp/tmp-9.jpg");
+  background-image: url("img/tmp/tmp-9.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: left top;
@@ -6227,7 +6241,7 @@ label {
         display: none; } }
 
 .content-title-inner {
-  background-image: url("../img/noise.png");
+  background-image: url("img/noise.png");
   background-position: center center;
   background-repeat: repeat;
   line-height: 1.5;
@@ -7146,7 +7160,7 @@ label {
       width: 100%; } }
 
 .dashboard-login-wrapper {
-  background-image: url("../img/tmp/tmp-12.jpg");
+  background-image: url("img/tmp/tmp-12.jpg");
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -7282,7 +7296,7 @@ label {
  * 26. Landing
  */
 .landing-image {
-  background-image: url("../img/tmp/landing.jpg");
+  background-image: url("img/tmp/landing.jpg");
   background-position: 0 -600px;
   background-repeat: no-repeat;
   height: 480px;
@@ -7406,7 +7420,7 @@ label {
   margin-bottom: -30px; }
 
 .category {
-  background-image: url("../img/tmp/tmp-12.jpg");
+  background-image: url("img/tmp/tmp-12.jpg");
   border-radius: 3px;
   background-position: center center;
   background-repeat: no-repeat;
@@ -8132,7 +8146,7 @@ label {
       opacity: 1; }
 
 .listing-box-image {
-  background-image: url("../img/placeholder.png");
+  background-image: url("img/placeholder.png");
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
