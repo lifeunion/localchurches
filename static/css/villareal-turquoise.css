@@ -5060,7 +5060,7 @@ hr {
           .bleed li a:after {
             content: '';
             position: absolute;
-            bottom: 10px;
+            bottom: 5px;
             right: 0;
             width: 0;
             height: 1px;
@@ -5105,7 +5105,7 @@ hr {
       cursor: pointer;
       font-size: .9em;
       font-weight: 700;
-      padding: 15px 0;
+      padding: 5px 0;
       position: relative;
       transition: color .15s linear;
       text-transform: uppercase; }
@@ -5186,10 +5186,10 @@ hr {
       .nav-primary .sub-menu a {
         border-bottom: 1px solid rgba(0, 0, 0, 0.03);
         color: #323232;
-        font-size: .9em;
+        font-size: .8em;
         font-weight: 400;
         display: block;
-        padding: 12px 20px;
+        padding: 10px 10px 10px 12px;
         transition: all .15s linear; }
         .nav-primary .sub-menu a:hover {
           background-color: rgba(0, 0, 0, 0.02);
