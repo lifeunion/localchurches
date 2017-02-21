@@ -5064,7 +5064,7 @@ hr {
             right: 0;
             width: 0;
             height: 1px;
-            background: #fd5938;
+            background: #40E0D0;
             transition: all 0.25s ease 0s; }
           .bleed li a:hover {
             cursor: pointer;
@@ -5091,7 +5091,7 @@ hr {
       -webkit-font-smoothing: antialiased;
       content: '\f0d7';
       font-family: 'FontAwesome';
-      margin: 0 0 0 10px; }
+      margin: 0 0 0 0px; }
     .nav-primary .nav-item-parent:hover > a {
       color: #0BB7A5; }
       .header-transparent .nav-primary .nav-item-parent:hover > a {
