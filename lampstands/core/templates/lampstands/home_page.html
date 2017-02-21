@@ -10,13 +10,13 @@
 
     <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,600,300,700&subset=latin,latin-ext" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}" >
-    <link rel="stylesheet" type="text/css" href="{% static 'lampstands/assets/libraries/owl-carousel/owl.carousel.css' %}" >
-    <link rel="stylesheet" type="text/css" href="{% static 'lampstands/assets/libraries/chartist/chartist.min.css' %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'css/libraries/owl-carousel/owl.carousel.css' %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'css/libraries/chartist/chartist.min.css' %}" >
     <link rel="stylesheet" type="text/css" href="{% static 'css/leaflet.css' %}" >
     <link rel="stylesheet" type="text/css" href="{% static 'css/leaflet.markercluster.css' %}" >
     <link rel="stylesheet" type="text/css" href="{% static 'css/leaflet.markercluster.default.css' %}" >    
     <link rel="stylesheet" type="text/css" id="css-primary" href="{% static 'css/villareal-turquoise.css' %}" >
-    <link rel="shortcut icon" type="image/x-icon" href="{% static 'lampstands/assets/favicon.png' %}" >
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/favicon.png' %}" >
     
     <title>Local Churches</title>
 </head>
@@ -154,7 +154,8 @@
     <div class="col-md-6">
         
         <div class="listing-box listing-box-simple">
-    <div class="listing-box-image" style="background-image: url('assets/img/tmp/tmp-12.jpg')">
+    <div class="listing-box-image" 
+    style="background-image: url("{% static 'css/img/tmp/tmp-12.jpg' %}")>
         <div class="listing-box-image-title">
             <h2><a href="...">A Word of Testimony</a></h2>
         </div><!-- /.listing-box-image-title -->
@@ -282,17 +283,17 @@
 
 <script src="//maps.googleapis.com/maps/api/js" type="text/javascript"></script>
 
-<script type="text/javascript" src="assets/js/jquery.js"></script>
-<script type="text/javascript" src="assets/js/jquery.ezmark.min.js"></script>
-<script type="text/javascript" src="assets/js/tether.min.js"></script>
-<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="assets/js/gmap3.min.js"></script>
-<script type="text/javascript" src="assets/js/leaflet.js"></script>
-<script type="text/javascript" src="assets/js/leaflet.markercluster.js"></script>
-<script type="text/javascript" src="assets/libraries/owl-carousel/owl.carousel.min.js"></script>
-<script type="text/javascript" src="assets/libraries/chartist/chartist.min.js"></script>
-<script type="text/javascript" src="assets/js/scrollPosStyler.js"></script>
-<script type="text/javascript" src="assets/js/villareal.js"></script>
+<script type="text/javascript" src="js/villareal/jquery.js"></script>
+<script type="text/javascript" src="js/villareal/jquery.ezmark.min.js"></script>
+<script type="text/javascript" src="js/villareal/tether.min.js"></script>
+<script type="text/javascript" src="js/villareal/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/villareal/gmap3.min.js"></script>
+<script type="text/javascript" src="js/villareal/leaflet.js"></script>
+<script type="text/javascript" src="js/villareal/leaflet.markercluster.js"></script>
+<script type="text/javascript" src="css/libraries/owl-carousel/owl.carousel.min.js"></script>
+<script type="text/javascript" src="css/libraries/chartist/chartist.min.js"></script>
+<script type="text/javascript" src="js/villareal/scrollPosStyler.js"></script>
+<script type="text/javascript" src="js/villareal/villareal.js"></script>
 
 </body>
 </html>

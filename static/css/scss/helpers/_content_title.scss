@@ -1,0 +1,59 @@
+.content-title {
+	background-color: #fff;
+	background-image: linear-gradient(to right, darken($color-primary, 10%), lighten($color-primary, 10%));  
+	margin: -60px 0 60px 0;	
+
+	h1 {
+		color: #fff;
+		float: left;
+		font-size: 2em;
+		font-weight: 300;
+		margin: 0;
+		padding: 0;
+
+		.content-title-center & {
+			float: none;
+			text-align: center;
+		}
+	}
+
+	.breadcrumb {
+		background-color: transparent;	
+		border-radius: 0;
+		color: #fff;
+		float: right;
+		margin: 5px 0 0 0;
+		padding: 0;
+
+		li {
+			&:before {
+				color: rgba(#fff, .4);	
+				margin: 0 10px;
+			}
+		}
+
+		a {
+			color: #fff;
+		}
+
+		> .active {
+			color: #fff;	
+		}
+
+		.content-title-center & {
+			display: none;
+		}
+
+		@include media-breakpoint-down(sm) {
+			display: none;
+		}
+	}
+}
+
+.content-title-inner {
+	background-image: url('../img/noise.png');
+    background-position: center center;
+    background-repeat: repeat;
+    line-height: 1.5;
+    padding: 44px 0;	
+}
