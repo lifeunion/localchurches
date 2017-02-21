@@ -4908,6 +4908,172 @@ hr {
   .header-transparent .navbar-toggler {
     border-color: rgba(255, 255, 255, 0.6); }
 
+.bleed {
+  transition: all 350ms cubic-bezier(0.705, 0, 1, 1.13);
+  transition-timing-function: cubic-bezier(0.705, 0, 1, 1.13);
+  overflow-y: scroll;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  height: 0;
+  float: right;
+  margin-top: 14px;
+  z-index: 5;
+  width: 100%;
+  position: fixed;
+  left: 0;
+  top: 54px;
+  opacity: 0;
+  padding-left: 1px;
+  padding-right: 1px; }
+  .bleed:before {
+    content: '';
+    position: absolute;
+    width: 0%;
+    height: calc(100vh - 68px);
+    top: 0;
+    left: 0;
+    z-index: -1;
+    background: #fff; }
+  @media (min-width: 768px) {
+    .bleed {
+      height: auto;
+      width: auto;
+      margin-top: 12px;
+      position: relative;
+      top: auto;
+      opacity: 1;
+      transition: none;
+      overflow: visible; }
+      .bleed:before {
+        display: none; } }
+  .bleed.visible {
+    padding: 0;
+    height: calc(100vh - 68px);
+    opacity: 1;
+    background: #fff; }
+    .bleed.visible:before {
+      width: 100%; }
+    .bleed.visible li {
+      transform: translate3d(0, 0, 0); }
+    .bleed.visible li.show {
+      opacity: 1; }
+      .bleed.visible li.show:nth-of-type(1) {
+        transition-delay: 0.1s; }
+      .bleed.visible li.show:nth-of-type(2) {
+        transition-delay: 0.2s; }
+      .bleed.visible li.show:nth-of-type(3) {
+        transition-delay: 0.3s; }
+      .bleed.visible li.show:nth-of-type(4) {
+        transition-delay: 0.4s; }
+      .bleed.visible li.show:nth-of-type(5) {
+        transition-delay: 0.5s; }
+      .bleed.visible li.show:nth-of-type(6) {
+        transition-delay: 0.6s; }
+      .bleed.visible li.show:nth-of-type(7) {
+        transition-delay: 0.7s; }
+      .bleed.visible li.show:nth-of-type(8) {
+        transition-delay: 0.8s; }
+  .bleed.out-animation:before {
+    left: auto;
+    right: 0; }
+  @media (min-width: 768px) {
+    .bleed.out-animation {
+      transition-delay: 0ms; }
+      .bleed.out-animation:before {
+        transition-delay: 0ms; }
+      .bleed.out-animation li {
+        transition: none; } }
+  .bleed li {
+    text-align: center;
+    font-weight: 500;
+    margin-bottom: 0;
+    opacity: 0;
+    transform: translate3d(0, -20px, 0);
+    transition: all 450ms ease;
+    border-top: 1px solid rgba(0, 0, 0, 0.1); }
+    @media (min-width: 768px) {
+      .bleed li:hover ul {
+        opacity: 1;
+        max-height: 300px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); } }
+    .bleed li:last-child {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
+    .bleed li ul li .block-subitem:first-of-type {
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1); }
+    .bleed li ul li:last-child {
+      border-bottom: none; }
+    @media (min-width: 768px) {
+      .bleed li ul {
+        transition: all 0.4s ease;
+        position: absolute;
+        z-index: 0;
+        background-color: white;
+        width: 200px;
+        overflow: hidden;
+        max-height: 0;
+        padding: 0 15px 0;
+        left: -15px;
+        opacity: 0;
+        top: 56px; }
+        .bleed li ul li {
+          display: block;
+          width: 100%; }
+        .bleed li ul li a {
+          width: 100%;
+          border-top: 1px solid rgba(0, 0, 0, 0.1);
+          display: block; }
+          .bleed li ul li a:hover:after {
+            background: transparent;
+            display: none; } }
+    @media (min-width: 768px) {
+      .bleed li {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+        text-align: left;
+        float: left;
+        margin-right: 20px;
+        margin-bottom: 0;
+        transition: none;
+        border: none; }
+        .bleed li:last-child {
+          border-bottom: none; } }
+    @media (min-width: 1025px) {
+      .bleed li {
+        margin-right: 45px; } }
+    .bleed li:last-of-type {
+      margin-right: 0; }
+    .bleed li a {
+      transition: all 0.25s ease 0s;
+      color: #2b3033;
+      font-size: 16px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      font-weight: 500;
+      display: block;
+      padding: 12px 0;
+      z-index: 1; }
+      @media (min-width: 768px) {
+        .bleed li a {
+          font-size: 14px;
+          position: relative;
+          top: 0; }
+          .bleed li a:after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            right: 0;
+            width: 0;
+            height: 1px;
+            background: #fd5938;
+            transition: all 0.25s ease 0s; }
+          .bleed li a:hover {
+            cursor: pointer;
+            color: #fd5938; }
+            .bleed li a:hover:after {
+              width: 100%;
+              left: 0;
+              right: auto; } }
+
 /**
  * 5. Navigation
  */
