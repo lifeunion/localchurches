@@ -5813,7 +5813,7 @@ label {
     padding: 14px 30px; }
 
 .cover-image {
-  background-image: url("url(http://wallpapercave.com/wp/fcuObs5.jpg)");
+  background-image: url(http://wallpapercave.com/wp/fcuObs5.jpg);
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
