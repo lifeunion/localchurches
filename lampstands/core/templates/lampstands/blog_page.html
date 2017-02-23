@@ -1,116 +1,89 @@
-{% extends "lampstands/base_original.html" %}
-{% load wagtailcore_tags wagtailimages_tags lampstands_tags %}
+{% extends "lampstands/base_blog.html" %}
+{% load lampstands_tags cache staticfiles wagtailuserbar wagtailcore_tags wagtailimages_tags wagtailsettings_tags %}
 
 {% block content %}
-<main class="page-blog-single single">
-    <section class="container body-copy">
-        <div class="main-content">
 
-            {% include "lampstands/includes/breadcrumb.html" %}
+					<div class="content-title">
+	<div class="content-title-inner">
+		<div class="container">		
+			<h1>A Word of Testimony</h1>		
+	
+		</div><!-- /.container -->
+	</div><!-- /.content-title-inner -->
+	</div><!-- /.content-title -->			
+				<div class="container">
+					<div class="row">
 
-            <h1 class="{% if self.title|length >= 30 %}long-title{% endif %}">{{ self.title }}</h1>
+					<div class="col-md-4 col-lg-3">
+			            	<div class="sidebar">
+			            		<div class="widget">
+				            		
+	<h2 class="widgettitle">Navigation</h2>
 
-            {% if self.date %}
-                <div class="article-meta">
-                    <span class="date">{{ self.date|date:"j F Y" }}</span>
-                </div>
-            {% endif %}
+	<ul class="menu nav nav-stacked">
+		<li class="nav-item">
+			<a href="#" class="nav-link"><i class="fa fa-chevron-right"></i> Next Post from the Same Locality </a>		
+		</li>
 
-            {% if not self.streamfield and self.intro %}
-                {{ self.intro|richtext }}
-            {% endif %}
+		<li class="nav-item">
+			<a href="#" class="nav-link"><i class="fa fa-chevron-right"></i>  Blog Index</a>
+		</li>
 
-            {% if self.body %}
-                {{ self.body|richtext }}
-            {% endif %}
+		<li class="nav-item">
+			<a href="#" class="nav-link"><i class="fa fa-chevron-right"></i> Similar Post </a>			
+		</li>
 
-            {% include "lampstands/includes/streamfield.html" %}
+	</ul><!-- /.nav -->
+</div><!-- /.widget -->
+			            	</div><!-- /.sidebar -->
+			            </div><!-- /.col-* -->
 
-            <div class="blog-meta">
-                {% with self.related_author.all as authors %}
-                    {% if authors %}
-                    <div class="author-holder" >
-                        {% for author in authors %}
-                            <div class="author">
-                                {% if author.author.image %}
-                                    {% image author.author.image fill-300x300 as photo %}
-                                    <img src="{{ photo.url }}" width="{{ photo.width }}" height="{{ photo.height }}" alt="{{ photo.alt }}" class="avatar" />
-                                {% endif %}
-                                <p class="text">
-                                    {% if author.author %}<a href="{% pageurl author.author %}" class="name">{{ author.author.title }}</a>{% endif %}
 
-                                    {% if author.author.role %}
-                                        <span class="role">{{ author.author.role }}</span>
-                                    {% endif %}
-                                </p>
-                            </div>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                {% endwith %}
 
-                {% with self.tags.all as tags %}
-                    {% if tags %}
-                        <div class="tags">
-                            <h4>tags</h4>
-                            <ul>
-                            {% for tag in tags %}
-                                <li>
-                                    <a href="{% pageurl self.blog_index %}?tag={{ tag.tag.slug }}">{{ tag.tag }}</a>
-                                </li>
-                            {% endfor %}
-                            </ul>
-                        </div>
-                    {% endif %}
-                {% endwith %}
+						<div class="col-md-12 col-lg-9">
+				            <div class="content">	               
+				          <div class="post-detail">  	
+	<p><span class="drop-cap">W</span>e wish to share a word of testimony concerning our experience of Christ and our practice of the church life. We testify to all that the Lord is bringing us back to our first love for Himself, back to Himself as our life and our everything. We have come to know the Lord Jesus as the altogether lovely One, as the fairest among ten thousand. 
+	The most charming and attracting person in the universe, He has won our hearts and has drawn out of us a fervent love for Him and devotion to Him. As Mary broke the alabaster flask and anointed the Lord, we desire to pour out ourselves upon Him. This desire is fittingly expressed in a stanza of a hymn written by a brother in one of the churches:
+	</p>
 
-            </div>
+<blockquote>
+	<p align="center">Precious Lord, my flask of alabaster
+	<br>
+	Gladly now I break in love for Thee;
+	<br>
+	I anoint Thy head, beloved Master;
+	<br>
+	Lord, behold, I've saved the best for Thee.
+	<br>
+	Dearest Lord, I waste myself upon Thee;
+	<br>
+	Loving Thee, I'm deeply satisfied.
+	<br>
+	Love outpoured from hidden depths within me,
+	<br>
+	Costly oil, dear Lord, I would provide.
+	</p>
+</blockquote>
+	<p>
+	We testify that our hearts have been captured not by a teaching, nor by a practice, nor by a movement—we have been conquered by a wonderful person, even by Christ Himself. Above all else, we wish to bear testimony to God, to man, and to the principalities and powers that this lovely One is worthy of all we are and have. Our first responsibility and calling is to testify of Him by manifesting what He is in us and to us. May the Lord bring us all to the point where we can say with the Apostle Paul, "To me to live is Christ."
+	</p>
 
-        </div>
-    </section>
+	<p>
+	Along with the enjoyment of this unsearchable, all-inclusive Christ, we have the privilege of participating in the recovery of the practical church life. Today, by His mercy and grace, the Lord is bringing us back to the beginning, back to the enjoyment of Christ and to the practice of the church life.
+	</p>
 
-    {% get_next_sibling_blog self as next_page %}
-    {% if next_page %}
-        <div class="nextprev-nav">
-            <a href="{% pageurl next_page %}">
-                {% image next_page.feed_image original as image %}
-                <div class="next {{ next_page.homepage_color }}"{% if not next_page.homepage_color and image %} style='background-image: url({{ image.url }});'{% endif %}>
-                    <div class="container">
-                        <div class="content">
-                            <h2>{{ next_page.title }}</h2>
-                            {% with next_page.related_author.all as authors %}
-                                {% for author in authors %}
-                                    {% if author.author %}
-                                        <p class="author">{{ author.author.title }}</p>
-                                    {% endif %}
-                                {% endfor %}
-                            {% endwith %}
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-    {% endif %}
+	
+	<p> By: the Co-workers in the Lord’s Recovery
+	</p>
+	
 
-</main>
+	
+</div><!-- /.post-detail -->
 
-<div id="fb-root"></div>
-{% endblock %}
+				            </div><!-- /.content -->
+			            </div><!-- /.col-* -->
 
-{% block extra_js %}
-{% if FB_APP_ID %}
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId={{ FB_APP_ID }}&status=0";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
-{% endif %}
-
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-
-<script src="//platform.twitter.com/oct.js" type="text/javascript"></script>
-<script type="text/javascript">twttr.conversion.trackPid('l5fhw');</script>
-<noscript><img height="1" width="1" style="display:none;" alt="" src="https://analytics.twitter.com/i/adsct?txn_id=l5fhw&p_id=Twitter" /><img height="1" width="1" style="display:none;" alt="" src="//t.co/i/adsct?txn_id=l5fhw&p_id=Twitter" /></noscript>
+			            		            </div><!-- /.row -->
+	            </div><!-- /.container -->    
 {% endblock %}
