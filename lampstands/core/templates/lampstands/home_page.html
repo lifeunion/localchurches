@@ -43,7 +43,23 @@
 
     <ul class="blogpage-listing">
     {% for post in blog_posts %}
-        {% include "lampstands/blog_post_item.html" %}
+        <li {% if post.colour %}class="{{ post.colour }}"{% endif %}>
+        <div class="col-sm-6">
+            <div class="listing-box">
+    
+            <div class="listing-box-title" align="center">
+                <h2 style="white-space:normal"><a href="{% pageurl post %}"></a>{{post.title}}</h2>
+                <h3 style="font-style:italic">{{post.author}}</h3>
+            </div><!-- /.listing-box-title -->
+
+            <div class="listing-box-content">
+                <dl>
+                    <dt>From:</dt><dd>{{post.author_origin}}</dd>
+                </dl>
+            </div><!-- /.listing-box-content -->
+            </div><!-- /.listing-box -->
+        </div><!-- /.col-* -->
+        </li>
     {% endfor %}
     </ul>
 
