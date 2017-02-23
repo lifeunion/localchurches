@@ -363,7 +363,7 @@ class HomePage(Page):
 
         # Order by most recent date first
         blog_posts = blog_posts.order_by('-date')
-
+        print (blog_posts)
         return blog_posts
 
 
@@ -770,7 +770,7 @@ class BlogIndexPage(Page):
         blog_posts = BlogPage.objects.filter(
             live=True,
             path__startswith=self.path
-        ).exclude(marketing_only=True)
+        )
 
         # Order by most recent date first
         blog_posts = blog_posts.order_by('-date', 'pk')
