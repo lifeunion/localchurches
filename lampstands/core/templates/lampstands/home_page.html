@@ -31,6 +31,8 @@
     </div><!-- /.container -->
 </div><!-- /.information-bar -->
 
+
+
 <div class="container">
     <div class="page-header">
         <h1>Real people. Real stories</h1> 
@@ -41,8 +43,8 @@
         </ul>
     </div><!-- /.page-header -->
 
-    <ul class="blogpage-listing">
-    {% for post in blog_posts %}
+    {% for entry in Homepages %}
+        {% for post in entry.instance.blog_posts %}
         <li {% if post.colour %}class="{{ post.colour }}"{% endif %}>
         <div class="col-sm-6">
             <div class="listing-box">
@@ -60,8 +62,9 @@
             </div><!-- /.listing-box -->
         </div><!-- /.col-* -->
         </li>
+        {% endfor %}        
     {% endfor %}
-    </ul>
+        
 
     <div class="row">
 
