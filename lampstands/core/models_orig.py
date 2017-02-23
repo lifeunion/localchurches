@@ -312,9 +312,29 @@ class HomePageHero(Orderable, RelatedLink):
         FieldPanel('text'),
     ]
 
+
+class HomePageClient(Orderable, RelatedLink):
+    page = ParentalKey('lampstands.HomePage', related_name='clients')
+    image = models.ForeignKey(
+        'lampstands.LampstandsImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
+
+    panels = RelatedLink.panels + [
+        ImageChooserPanel('image')
+    ]
+
+
 class HomePage(Page):
     hero_intro_primary = models.TextField(blank=True)
     hero_intro_secondary = models.TextField(blank=True)
+    intro_body = RichTextField(blank=True)
+    work_title = models.TextField(blank=True)
+    blog_title = models.TextField(blank=True)
+    clients_title = models.TextField(blank=True)
 
     class Meta:
         verbose_name = "Homepage"
@@ -329,6 +349,11 @@ class HomePage(Page):
             heading="Hero intro"
         ),
         InlinePanel('hero', label="Hero"),
+        FieldPanel('intro_body'),
+        FieldPanel('work_title'),
+        FieldPanel('blog_title'),
+        FieldPanel('clients_title'),
+        InlinePanel('clients', label="Clients"),
     ]
 
     @property
