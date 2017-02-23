@@ -835,8 +835,6 @@ class BlogPageAuthor(Orderable):
 
 
 class BlogPage(Page):
-    intro = RichTextField("Intro (used for blog index and Planet Drupal listings)", blank=True)
-    body = RichTextField("body (deprecated. Use streamfield instead)", blank=True)
     colour = models.CharField(
         "Listing card colour if left blank will display image",
         choices=(
@@ -848,21 +846,10 @@ class BlogPage(Page):
         blank=True
     )
     streamfield = StreamField(StoryBlock())
-    author_left = models.CharField(max_length=255, blank=True, help_text='author who has left Lampstands')
-    date = models.DateField("Post date")
-    feed_image = models.ForeignKey(
-        'lampstands.LampstandsImage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+'
-    )
-    marketing_only = models.BooleanField(default=False, help_text='Display this blog post only on marketing landing page')
-
+    author = models.CharField(max_length=255, blank=True)
     canonical_url = models.URLField(blank=True, max_length=255)
-
     search_fields = Page.search_fields + [
-        index.SearchField('body'),
+        index.SearchField('streamfield'),
     ]
 
     @property
@@ -885,23 +872,11 @@ class BlogPage(Page):
     content_panels = [
         FieldPanel('title', classname="full title"),
         FieldPanel('colour'),
-        InlinePanel('related_author', label="Author"),
-        FieldPanel('author_left'),
-        FieldPanel('date'),
-        FieldPanel('intro', classname="full"),
-        FieldPanel('body', classname="full"),
+        FieldPanel('author'),
         StreamFieldPanel('streamfield'),
         InlinePanel('related_links', label="Related links"),
         InlinePanel('tags', label="Tags")
     ]
-
-    promote_panels = [
-        MultiFieldPanel(Page.promote_panels, "Common page configuration"),
-        ImageChooserPanel('feed_image'),
-        FieldPanel('canonical_url'),
-        FieldPanel('marketing_only'),
-    ]
-
 
 # Jobs index page
 class ReasonToJoin(Orderable):
