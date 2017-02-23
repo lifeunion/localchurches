@@ -43,11 +43,12 @@
 
     <ul class="blogpage-listing">
     {% for post in blog_posts %}
-        {% include 'lampstands/includes/blog_listing_front.html' %}
+        {% include 'lampstands/blog_post_item.html' %}
     {% endfor %}
     </ul>
 
     <div class="row">
+
     <div class="col-md-6">
         
         <div class="listing-box listing-box-simple">
