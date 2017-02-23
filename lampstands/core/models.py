@@ -747,9 +747,6 @@ class BlogIndexPage(Page):
             path__startswith=self.path
         )
 
-        # Order by most recent date first
-        blog_posts = blog_posts.order_by('-date', 'pk')
-
         return blog_posts
 
     def serve(self, request):
