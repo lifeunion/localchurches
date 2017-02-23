@@ -1,5 +1,3 @@
-{% load lampstands_tags cache staticfiles wagtailuserbar wagtailcore_tags wagtailimages_tags wagtailsettings_tags %}
-
 <!DOCTYPE html>
 <html>
 
@@ -7,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-
+    
     <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,600,300,700&subset=latin,latin-ext" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}" >
     <link rel="stylesheet" type="text/css" href="{% static 'css/libraries/owl-carousel/owl.carousel.css' %}" >
@@ -17,31 +15,27 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/leaflet.markercluster.default.css' %}" >    
     <link rel="stylesheet" type="text/css" id="css-primary" href="{% static 'css/villareal-turquoise.css' %}" >
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'img/favicon.png' %}" >
-    
+
     <title>Local Churches</title>
 </head>
 
-<body class="cover-pull-top header-transparent">
-
-{% wagtailuserbar %} {# Don't delete this #}
+<body class="content-title-center">
 <div class="page-wrapper">
-                
+    
         <div class="header-wrapper">
     <div class="header header-small">
         <div class="header-inner">
             <div class="container">
-                <div class="header-top">
+                
+                <div class="header-top header-background">
                     <div class="header-top-inner">
-                        <a class="header-logo" href="."> 
+                        <a class="header-logo" href=".">  
                             <span class="header-logo-text">the local churches</span>
                         </a><!-- /.header-logo -->
-
-                    
-                        
-<div class="nav-primary-wrapper collapse navbar-toggleable-sm">
+                    <div class="nav-primary-wrapper collapse navbar-toggleable-sm">
     <ul class="nav nav-pills nav-primary bleed out-animation">
         <li class="nav-item nav-item-parent">
-            <a href="index-static-image-filter-center.html" class="nav-link menu button">
+            <a href="..." class="nav-link menu button">
                 Find Us
             </a>
             <ul class="sub-menu">
@@ -94,7 +88,32 @@
     </ul><!-- /.nav -->
 </div><!-- /.nav-primary -->
 
-<div class="footer-wrapper">
+                                    
+                        <button class="navbar-toggler pull-xs-right hidden-md-up" type="button" data-toggle="collapse" data-target=".nav-primary-wrapper">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </button>                           
+                    </div><!-- /.header-top-inner -->
+                </div><!-- /.header-top -->
+
+            </div><!-- /.container -->
+        </div><!-- /.header-inner -->
+    </div><!-- /.header -->
+</div><!-- /.header-wrapper-->
+    
+
+    <div class="main-wrapper">
+        <div class="main">
+            <div class="main-inner">      
+                
+                <main>{% spaceless %}{% block content %}{% endblock %}{% endspaceless %}</main>
+
+            </div><!-- /.main-inner -->
+        </div><!-- /.main -->
+    </div><!-- /.main-wrapper -->
+
+    <div class="footer-wrapper">
     <div class="container">
         <div class="footer-inner">
             
