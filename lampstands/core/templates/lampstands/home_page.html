@@ -37,9 +37,15 @@
 
         <ul>
             <li><a href="...">Recent</a></li>
-            <li><a href="...">All</a></li>
+            <li><a href="blog_index.html">All</a></li>
         </ul>
     </div><!-- /.page-header -->
+
+    <ul class="blogpage-listing">
+    {% for post in blog_posts %}
+        {% include 'lampstands/includes/blog_listing_front.html' %}
+    {% endfor %}
+    </ul>
 
     <div class="row">
     <div class="col-md-6">
