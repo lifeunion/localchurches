@@ -14,9 +14,6 @@
                         <div class="name">{{ author.author.title }}{% if not forloop.last %},&nbsp;{% endif %}</div>
                     {% endfor %}
 
-                    {% if post.date %}
-                        <span class="date">{{ post.date|date:"j F Y" }}</span>
-                    {% endif %}
                 </div>
             </div>
         </div>
