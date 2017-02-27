@@ -43,29 +43,12 @@
         </ul>
     </div><!-- /.page-header -->
 
-    {% for entry in Homepages %}
-        {% for post in entry.instance.blog_posts %}
-        <li {% if post.colour %}class="{{ post.colour }}"{% endif %}>
-        <div class="col-sm-6">
-            <div class="listing-box">
+    <section id="posts" class="container">
+        <h2>{{ self.blog_title|safe }}</h2>
+        {% homepage_blog_listing %}        
+
+    </section>
     
-            <div class="listing-box-title" align="center">
-                <h2 style="white-space:normal"><a href="{% pageurl post %}"></a>{{post.title}}</h2>
-                <h3 style="font-style:italic">{{post.author}}</h3>
-            </div><!-- /.listing-box-title -->
-
-            <div class="listing-box-content">
-                <dl>
-                    <dt>From:</dt><dd>{{post.author_origin}}</dd>
-                </dl>
-            </div><!-- /.listing-box-content -->
-            </div><!-- /.listing-box -->
-        </div><!-- /.col-* -->
-        </li>
-        {% endfor %}        
-    {% endfor %}
-        
-
     <div class="row">
 
     <div class="col-md-6">
