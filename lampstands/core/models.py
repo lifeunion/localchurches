@@ -867,7 +867,7 @@ class BlogPage(Page):
         FieldPanel('title', classname="full title"),
         FieldPanel('colour'),
         FieldPanel('author'),
-        FieldPanel('from_area', label="From locality (if not available: name of the area)"),
+        FieldPanel('from_area'),
         StreamFieldPanel('streamfield'),
         InlinePanel('related_links', label="Related links"),
         InlinePanel('tags', label="Tags")
