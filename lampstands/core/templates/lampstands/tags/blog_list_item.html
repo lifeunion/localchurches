@@ -9,7 +9,7 @@
                         <div class="listing-box">
                         
                         <div class="listing-box-title {% if pot.colour %}class="{{ post.colour }}"{% endif %}" align="center">
-                            <h2 style="white-space:normal"><a href="...">{{post.title}}</a></h2>
+                            <h2 style="white-space:normal"><a href="{% pageurl post %}">{{post.title}}</a></h2>
                             <h3 style="font-style:italic">{{post.author}}</h3>
                         </div><!-- /.listing-box-title -->
 
