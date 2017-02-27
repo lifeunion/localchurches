@@ -840,6 +840,7 @@ class BlogPage(Page):
     )
     streamfield = StreamField(StoryBlock())
     author = models.CharField(max_length=255, blank=True)
+    from_area = models.CharField(max_length=255, blank=True)
     canonical_url = models.URLField(blank=True, max_length=255)
     search_fields = Page.search_fields + [
         index.SearchField('streamfield'),
