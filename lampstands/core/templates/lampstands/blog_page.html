@@ -3,46 +3,53 @@
 
 {% block content %}
 
-					<div class="content-title">
+	<div class="content-title">
 	<div class="content-title-inner">
 		<div class="container">		
-			<h1>A Word of Testimony</h1>		
+			<h1>{{self.title}}</h1>		
 	
 		</div><!-- /.container -->
 	</div><!-- /.content-title-inner -->
 	</div><!-- /.content-title -->			
-				<div class="container">
-					<div class="row">
+	
+	<div class="container">
+		<div class="row">
 
 					<div class="col-md-4 col-lg-3">
 			            	<div class="sidebar">
 			            		<div class="widget">
 				            		
-	<h2 class="widgettitle">Navigation</h2>
+								<h2 class="widgettitle">Navigation</h2>
 
-	<ul class="menu nav nav-stacked">
-		<li class="nav-item">
-			<a href="#" class="nav-link"><i class="fa fa-chevron-right"></i> Next Post from the Same Locality </a>		
-		</li>
+								<ul class="menu nav nav-stacked">
+									<li class="nav-item">
+										<a href="#" class="nav-link"><i class="fa fa-chevron-right"></i> Next Post from the Same Locality </a>		
+									</li>
 
-		<li class="nav-item">
-			<a href="#" class="nav-link"><i class="fa fa-chevron-right"></i>  Blog Index</a>
-		</li>
+									<li class="nav-item">
+										<a href="#" class="nav-link"><i class="fa fa-chevron-right"></i>  Blog Index</a>
+									</li>
 
-		<li class="nav-item">
-			<a href="#" class="nav-link"><i class="fa fa-chevron-right"></i> Similar Post </a>			
-		</li>
+									<li class="nav-item">
+										<a href="#" class="nav-link"><i class="fa fa-chevron-right"></i> Similar Post </a>			
+									</li>
 
-	</ul><!-- /.nav -->
-</div><!-- /.widget -->
+								</ul><!-- /.nav -->
+								</div><!-- /.widget -->
 			            	</div><!-- /.sidebar -->
-			            </div><!-- /.col-* -->
+			        </div><!-- /.col-* -->
 
+					<div class="col-md-12 col-lg-9">
+				         	<div class="content">	               
+				          		<div class="post-detail">
+				                	<p><span class="drop-cap">{{self.letterdropcap}}</span>{{self.firstparagraph|richtext}}</p>
 
+					            {% if self.body %}
+					                {{ self.body|richtext }}
+					            {% endif %}
 
-						<div class="col-md-12 col-lg-9">
-				            <div class="content">	               
-				          <div class="post-detail">  	
+            					{% include "lampstands/includes/streamfield.html" %}
+
 	<p><span class="drop-cap">W</span>e wish to share a word of testimony concerning our experience of Christ and our practice of the church life. We testify to all that the Lord is bringing us back to our first love for Himself, back to Himself as our life and our everything. We have come to know the Lord Jesus as the altogether lovely One, as the fairest among ten thousand. 
 	The most charming and attracting person in the universe, He has won our hearts and has drawn out of us a fervent love for Him and devotion to Him. As Mary broke the alabaster flask and anointed the Lord, we desire to pour out ourselves upon Him. This desire is fittingly expressed in a stanza of a hymn written by a brother in one of the churches:
 	</p>
