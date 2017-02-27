@@ -7,12 +7,26 @@
             <div class="image-container" {% if not post.colour %}style="background-image: url('{{ background.url }}');"{% endif %}></div>
             <div class="blog-text">
                 <div id="author" class="author clearfix" >
-                    <label>Blog</label>
-                    <h3>{{ post.title }}</h3>
 
-                    {% for author in post.related_author.all %}
+<div class="col-sm-6">
+                    <div class="listing-box">
+    
+    <div class="listing-box-title" align="center">
+        <h2 style="white-space:normal"><a href="...">{{post.title}}</a></h2>
+        <h3 style="font-style:italic">{% for author in post.related_author.all %}
                         <div class="name">{{ author.author.title }}{% if not forloop.last %},&nbsp;{% endif %}</div>
-                    {% endfor %}
+                    {% endfor %}</h3>
+        </div><!-- /.listing-box-title -->
+
+    <div class="listing-box-content">
+        <dl>
+            <dt>Locality</dt><dd>California, USA</dd>
+        </dl>
+    </div><!-- /.listing-box-content -->
+
+</div><!-- /.listing-box -->
+                </div><!-- /.col-* -->
+
 
                 </div>
             </div>
