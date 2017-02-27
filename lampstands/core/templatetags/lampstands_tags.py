@@ -85,7 +85,7 @@ def homepage_people_listing(context, count=3):
 
 # Blog feed for home page
 @register.inclusion_tag('lampstands/tags/homepage_blog_listing.html', takes_context=True)
-def homepage_blog_listing(context, count=6):
+def homepage_blog_listing(context, count=4):
     blog_posts = play_filter(BlogPage.objects.filter(live=True), count)
     return {
         'blog_posts': blog_posts,
