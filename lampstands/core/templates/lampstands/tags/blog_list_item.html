@@ -1,8 +1,6 @@
 {% load wagtailcore_tags wagtailimages_tags lampstands_tags staticfiles %}
 
-<li {% if post.colour %}class="{{ post.colour }}"{% endif %}>
         <div class="content">
-            {% image post.feed_image fill-764x448 as background %}
             <div class="image-container" {% if not post.colour %}style="background-image: url('{{ background.url }}');"{% endif %}></div>
             <div class="blog-text">
                 <div id="author" class="author clearfix" >
@@ -10,7 +8,7 @@
                     <div class="col-sm-6">
                         <div class="listing-box">
                         
-                        <div class="listing-box-title" align="center">
+                        <div class="listing-box-title {% if pot.colour %}class="{{ post.colour }}"{% endif %}" align="center">
                             <h2 style="white-space:normal"><a href="...">{{post.title}}</a></h2>
                             <h3 style="font-style:italic">{{post.author}}</h3>
                         </div><!-- /.listing-box-title -->
@@ -27,4 +25,3 @@
                 </div>
             </div>
         </div>
-</li>
