@@ -838,9 +838,8 @@ class BlogPage(Page):
         max_length=255,
         blank=True
     )
-    streamfield = StreamField(StoryBlock())
+    streamfield = StreamField(StoryBlock(), help_text="Always starts with the second letter after dropcap letter")
     letterdropcap = models.CharField(max_length=1, blank=True)
-    firstparagraph = StreamField(StoryBlock(), help_text="Always starts with the second letter", blank=True)
     author = models.CharField(max_length=255, blank=True)
     from_area = models.CharField(max_length=255, blank=True)
     canonical_url = models.URLField(blank=True, max_length=255)
@@ -871,7 +870,6 @@ class BlogPage(Page):
         FieldPanel('author'),
         FieldPanel('from_area'),
         FieldPanel('letterdropcap'),
-        FieldPanel('firstparagraph'),
         StreamFieldPanel('streamfield'),
         InlinePanel('related_links', label="Related links"),
         InlinePanel('tags', label="Tags")
