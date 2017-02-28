@@ -1,8 +1,8 @@
-{% extends "lampstands/base_original.html" %}
+{% extends "lampstands/base_blog.html" %}
 {% load staticfiles lampstands_tags wagtailcore_tags wagtailimages_tags %}
 
 {% block content %}
-
+    
     {% get_popular_tags self as poptags %}
 
     <div class="container">
