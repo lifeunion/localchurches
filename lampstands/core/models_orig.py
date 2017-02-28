@@ -834,6 +834,9 @@ class BlogPageTagList(models.Model):
     def __unicode__(self):
         return self.name
 
+    def __str__(self):
+        return self.slug
+
 register_snippet(BlogPageTagList)
 
 
