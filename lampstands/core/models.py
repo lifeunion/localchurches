@@ -809,7 +809,7 @@ class BlogPageTagSelect(Orderable):
     page = ParentalKey('lampstands.BlogPage', related_name='tags')
     tag = models.ForeignKey(
         'lampstands.BlogPageTagList',
-        related_name='+'
+        related_name='blog_page_tag_select'
     )
 
 
