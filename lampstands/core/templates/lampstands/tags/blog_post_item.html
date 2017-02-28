@@ -1,19 +1,36 @@
 {% load wagtailcore_tags wagtailimages_tags lampstands_tags staticfiles %}
 
-<li {% if post.colour %}class="{{ post.colour }}"{% endif %}>
-<div class="col-sm-6">
-                    <div class="listing-box">
-    
-    <div class="listing-box-title" align="center">
-        <h2 style="white-space:normal"><a href="{% pageurl post %}"></a>{{post.title}}</h2>
-        <h3 style="font-style:italic">{{post.author}}</h3>
-        </div><!-- /.listing-box-title -->
+<div class="col-lg-3">
+                    <div class="post">
+                        <div class="post-image">
+                            <a href="blog-detail.html" class="post-image-link" style="background-image: url('assets/img/tmp/tmp-1.jpg');"></a>
 
-    <div class="listing-box-content">
-        <dl>
-            <dt>From:</dt><dd>{{post.author_origin}}</dd>
-        </dl>
-    </div><!-- /.listing-box-content -->
-</div><!-- /.listing-box -->
+                            <div class="post-author">                   
+                                <a href="blog-detail.html">
+                                    <span class="post-author-name">by {{ post.author }}</span>
+                                </a>
+                            </div><!-- /.post-author -->
+                        </div><!-- /.post-image -->
+
+                        <div class="post-title">
+                            <h2><a href="blog-detail.html">{{ post.title }}</a></h2>
+                        </div><!-- /.post-title -->
+
+                        <div class="post-meta">
+                            <div class="post-meta-item">
+                                From: 
+                            </div><!-- /.post-meta-item -->
+
+                            </div><!-- /.post-meta -->
+
+                        <div class="post-content">
+                            <p>
+                                {{ post.streamfield }} 
+                            </p>
+                        </div><!-- /.post-content -->
+
+                        <div class="post-read-more">
+                            <a href="blog-detail.html">Read More <i class="fa fa-chevron-right"></i></a>
+                        </div><!-- /.post-read-more -->
+                    </div><!-- /.post-->
                 </div><!-- /.col-* -->
-</li>
