@@ -12,6 +12,24 @@
 	</div><!-- /.content-title-inner -->
 	</div><!-- /.content-title -->			
 	
+	<div class="specifications--no-visit">
+        <div class="container">
+            <div class="content">
+                <ul class="tags">
+                    {% with self.tags.all as tags %}
+                        {% if tags %}
+                            {% for tag in tags %}
+                                <li>
+                                    <a href="{% pageurl self.blog_index %}?tag={{ tag.tag.slug }}">{{ tag.tag }}</a>
+                                </li>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
 	<div class="container">
 		<div class="row">
 

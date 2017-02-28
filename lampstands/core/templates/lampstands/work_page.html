@@ -7,7 +7,7 @@
 
 <main class="single">
     {% with self.screenshots.all as screenshots %}
-        {% if screenshots %}
+       {% if screenshots %}
                 {% for screenshot in screenshots %}
                     {% image screenshot.image width-9999 as shot %}
                     <div class="work-hero" style=" background-image:url({{ shot.url }});">
@@ -23,7 +23,7 @@
                     </div>
                 {% endfor %}
         {% endif %}
-    {% endwith %}
+    {% endwith %} 
 
     <div class="specifications {% if not page.visit_the_site %}specifications--no-visit{% endif %}">
         <div class="container">

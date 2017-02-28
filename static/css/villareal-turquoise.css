@@ -33,6 +33,7 @@
  * 29. Map
  * 30. Customizer
  * 31. Listing
+ * 32. Icon Bar
  */
 /**
  * 1. Bootstrap
@@ -8821,3 +8822,36 @@ label {
       color: #25b45b; }
     .listing-compare-list li.no {
       color: #F75156; }
+
+/**
+ * 32. Icon Bar
+ */
+ .icon-bar {
+  width: 100%;
+  text-align: center;
+  background-color: #555;
+  overflow: auto;
+ }
+
+ .icon-bar a{
+  width: 20%;
+  padding: 12px 0;
+  float: left;
+  transition: all 0.3s ease;
+  color: white;
+  font-size: 36px;
+ }
+
+ .icon-bar a:hover{
+  background-color: #000;
+ }
+
+ .icon-active {
+  background-color: #0BB7A5;
+  background-image: linear-gradient(to right, #0a9f8f, #0ccfbb)
+ }
+
+ .top-mobile-icon {
+  padding: 5px 10px;
+  font-size:25px;
+ }
