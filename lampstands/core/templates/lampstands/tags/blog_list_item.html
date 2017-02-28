@@ -3,9 +3,9 @@
         <div class="content">
             <div class="image-container" {% if not post.colour %}style="background-image: url('{{ background.url }}');"{% endif %}></div>
             <div class="blog-text">
-                <div id="author" class="author clearfix" >
+                
 
-                    <div class="col-sm-12">
+                    <div class="col-sm-6">
                         <div class="listing-box">
                         
                         <div class="listing-box-title {% if pot.colour %}class="{{ post.colour }}"{% endif %}" align="center">
@@ -15,13 +15,13 @@
 
                                     <div class="listing-box-content">
                                         <dl>
-                                            <dt>Locality</dt><dd>{{post.from_area}}</dd>
+                                            <dt>From</dt><dd>{{post.from_area}}</dd>
                                         </dl>
                                     </div><!-- /.listing-box-content -->
 
                         </div><!-- /.listing-box -->
                     </div><!-- /.col-* -->
 
-                </div>
+                
             </div>
         </div>
