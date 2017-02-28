@@ -240,7 +240,7 @@ class Advert(models.Model):
         FieldPanel('text'),
     ]
 
-    def __unicode__(self):
+    def __str__(self):
         return self.text
 
 register_snippet(Advert)
