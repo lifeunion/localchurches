@@ -6,6 +6,55 @@
     {% get_popular_tags self as poptags %}
 
     <div class="container">
+        <div class="row">
+
+                    <div class="col-md-4 col-lg-3">
+                            <div class="sidebar">
+                                <div class="widget">
+                                    
+                                <h2 class="widgettitle">Navigation</h2>
+
+                                <ul class="menu nav nav-stacked">
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link"><i class="fa fa-chevron-right"></i> Next Post from the Same Locality </a>      
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link"><i class="fa fa-chevron-right"></i>  Blog Index</a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link"><i class="fa fa-chevron-right"></i> Similar Post </a>          
+                                    </li>
+
+                                </ul><!-- /.nav -->
+                                </div><!-- /.widget -->
+                            </div><!-- /.sidebar -->
+                    </div><!-- /.col-* -->
+
+                    <div class="col-md-12 col-lg-9">
+                            <div class="content">                  
+                                <div class="post-detail">
+                                    <p><span class="drop-cap">{{self.letterdropcap}}</span>{{self.firstparagraph|richtext}}</p>
+
+                                {% if self.body %}
+                                    {{ self.body|richtext }}
+                                {% endif %}
+
+                                {% include "lampstands/includes/streamfield.html" %}
+
+                                <p><i>{{ self.author }}</i><br>
+                                ({{ self.from_area }})</p>
+
+                                </div><!-- /.post-detail -->
+
+                            </div><!-- /.content -->
+                    </div><!-- /.col-* -->
+
+        </div><!-- /.row -->
+    </div><!-- /.container -->    
+
+    <div class="container">
         <h1>{{ self.intro }}</h1>
     </div>
 
