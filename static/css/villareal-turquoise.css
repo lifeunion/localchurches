@@ -8846,7 +8846,7 @@ label {
   background-color: #000;
  }
 
- .icon-active {
+ .icon-bar .active {
   background-color: #0BB7A5;
   background-image: linear-gradient(to right, #0a9f8f, #0ccfbb)
  }

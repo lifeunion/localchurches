@@ -316,6 +316,8 @@ class HomePageHero(Orderable, RelatedLink):
 class HomePage(Page):
     hero_intro_primary = models.TextField(blank=True)
     hero_intro_secondary = models.TextField(blank=True)
+    information_bar_content = models.TextField(blank=True)
+    testimonies_tag_line = models.TextField(blank=True)
 
     class Meta:
         verbose_name = "Homepage"
@@ -330,6 +332,8 @@ class HomePage(Page):
             heading="Hero intro"
         ),
         InlinePanel('hero', label="Hero"),
+        FieldPanel('information_bar_content', label="Information Bar Content")
+        FieldPanel('testimonies_tag_line', label="Testimonies Tag Line")
     ]
 
     @property
