@@ -332,8 +332,8 @@ class HomePage(Page):
             heading="Hero intro"
         ),
         InlinePanel('hero', label="Hero"),
-        FieldPanel('information_bar_content', label="Information Bar Content"),
-        FieldPanel('testimonies_tag_line', label="Testimonies Tag Line")
+        FieldPanel('information_bar_content'),
+        FieldPanel('testimonies_tag_line')
     ]
 
     @property
