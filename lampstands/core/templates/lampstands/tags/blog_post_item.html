@@ -29,7 +29,7 @@
                             <p>
                             {% for block in post.streamfield %}
                                         {% if block.block_type == 'firstparagraph' %}
-                                        {{post.letterdropcap}} {% include_block block %} 
+                                        <span class="drop-cap">{{post.letterdropcap}}</span> {% include_block block %} 
                                         {% endif %}
                             {% endfor %}
                             </p>
