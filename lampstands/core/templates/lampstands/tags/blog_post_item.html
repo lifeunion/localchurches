@@ -26,10 +26,10 @@
                             </div><!-- /.post-meta -->
 
                         <div class="post-content">
-                            <p>{{post.letterdropcap}}
+                            <p>
                             {% for block in post.streamfield %}
                                         {% if block.block_type == 'firstparagraph' %}
-                                        {% include_block block %} 
+                                        {{post.letterdropcap}} {% include_block block %} 
                                         {% endif %}
                             {% endfor %}
                             </p>
