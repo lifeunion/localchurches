@@ -61,12 +61,8 @@
 				         	<div class="content">	               
 				          		<div class="post-detail">
 				                	<p><span class="drop-cap">{{self.letterdropcap}}</span>
-				                	{% for block in page.body %}
-    									{% if block.block_type == 'firstparagraph' %}
-        								{% include_block block %} 
-    									{% endif %}
-									{% endfor %}
 
+									{% include "lampstands/includes/streamfield.html" %}
             					<p><i>{{ self.author }}</i><br>
             					({{ self.from_area }})</p>
 
