@@ -1,4 +1,5 @@
 {% load wagtailcore_tags wagtailimages_tags lampstands_tags staticfiles %}
+{% include_block page.streamfield %}
 
 <div class="col-lg-3">
                     <div class="post">
@@ -25,7 +26,7 @@
 
                         <div class="post-content">
                             <p>
-                                {{ block.value }} 
+                                {{ page.streamfield }} 
                             </p>
                         </div><!-- /.post-content -->
 
