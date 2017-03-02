@@ -883,80 +883,6 @@ class BlogPage(Page):
         InlinePanel('tags', label="Tags")
     ]
 
-# Jobs index page
-class ReasonToJoin(Orderable):
-    page = ParentalKey('lampstands.JobIndexPage', related_name='reasons_to_join')
-    image = models.ForeignKey(
-        'lampstands.LampstandsImage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+'
-    )
-    title = models.CharField(max_length=255)
-    body = models.CharField(max_length=511)
-
-    panels = [
-        ImageChooserPanel('image'),
-        FieldPanel('title'),
-        FieldPanel('body')
-    ]
-
-
-class JobIndexPageJob(Orderable):
-    page = ParentalKey('lampstands.JobIndexPage', related_name='job')
-    job_title = models.CharField(max_length=255)
-    job_intro = models.CharField(max_length=255)
-    url = models.URLField(null=True)
-    location = models.CharField(max_length=255, blank=True)
-
-    panels = [
-        FieldPanel('job_title'),
-        FieldPanel('job_intro'),
-        FieldPanel("url"),
-        FieldPanel("location"),
-    ]
-
-
-class JobIndexPage(Page):
-    intro = models.TextField(blank=True)
-    listing_intro = models.TextField(
-        blank=True,
-        help_text="Shown instead of the intro when job listings are included "
-        "on other pages")
-    no_jobs_that_fit = RichTextField(blank=True)
-    terms_and_conditions = models.URLField(null=True)
-    refer_a_friend = models.URLField(null=True)
-    reasons_intro = models.TextField(blank=True)
-
-    search_fields = Page.search_fields + [
-        index.SearchField('intro'),
-    ]
-
-    def get_context(self, request, *args, **kwargs):
-        context = super(
-            JobIndexPage, self
-        ).get_context(request, *args, **kwargs)
-        context['jobs'] = self.job.all()
-        context['blogs'] = BlogPage.objects.live().order_by('-date')[:4]
-        return context
-
-    content_panels = [
-        FieldPanel('title', classname="full title"),
-        FieldPanel('intro', classname="full"),
-        FieldPanel('listing_intro', classname="full"),
-        FieldPanel('no_jobs_that_fit', classname="full"),
-        FieldPanel('terms_and_conditions', classname="full"),
-        FieldPanel('refer_a_friend', classname="full"),
-        InlinePanel('job', label="Job"),
-        FieldPanel('reasons_intro', classname="full"),
-        InlinePanel('reasons_to_join', label="Reasons To Join"),
-    ]
-
-    promote_panels = [
-        MultiFieldPanel(Page.promote_panels, "Common page configuration"),
-    ]
-
 
 # Work page
 class WorkPageTagSelect(Orderable):
@@ -1605,7 +1531,6 @@ class ContactFormField(AbstractFormField):
 
 class ContactLandingPageRelatedLinkButton(Orderable, RelatedLink):
     page = ParentalKey('lampstands.Contact', related_name='related_link_buttons')
-
 
 class Contact(AbstractEmailForm):
     intro = RichTextField(blank=True)
