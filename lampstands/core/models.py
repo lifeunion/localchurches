@@ -843,11 +843,10 @@ class BlogPage(Page):
         max_length=255,
         blank=True
     )
-    #streamfield = StreamField([
-    #    ('firstparagraph', blocks.RichTextBlock()),
-    #    ('story', StoryBlock()),
-    #    ], help_text="Always starts with the second letter after dropcap letter")
-    streamfield = StreamField(StoryBlock())
+    streamfield = StreamField([
+        ('firstparagraph', blocks.RichTextBlock()),
+        ('story', StoryBlock()),
+        ], help_text="Always starts with the second letter after dropcap letter")
     letterdropcap = models.CharField(max_length=1, blank=True)
     author = models.CharField(max_length=255, blank=True)
     from_area = models.CharField(max_length=255, blank=True)
