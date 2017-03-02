@@ -26,9 +26,7 @@
                             </div><!-- /.post-meta -->
 
                         <div class="post-content">
-                                {% if post.body %}
-                                    {{ post.body|richtext }}
-                                {% endif %}
+                            {{post.letterdropcap}}{{post.firstparagraph|richtext}}
 
                                 {% include "lampstands/includes/streamfield.html" %}
                         </div><!-- /.post-content -->

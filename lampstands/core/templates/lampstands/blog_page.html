@@ -62,8 +62,8 @@
 				          		<div class="post-detail">
 				                	<p><span class="drop-cap">{{self.letterdropcap}}</span>{{self.firstparagraph|richtext}}</p>
 
-					            {% if self.body %}
-					                {{ self.body|richtext }}
+					            {% if self.story %}
+					                {{ self.story|richtext }}
 					            {% endif %}
 
             					{% include "lampstands/includes/streamfield.html" %}
