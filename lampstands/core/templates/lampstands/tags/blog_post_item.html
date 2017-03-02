@@ -26,7 +26,11 @@
                             </div><!-- /.post-meta -->
 
                         <div class="post-content">
-                                {% include "../includes/streamfield.html" %}
+                                {% if post.body %}
+                                    {{ post.body|richtext }}
+                                {% endif %}
+
+                                {% include "lampstands/includes/streamfield.html" %}
                         </div><!-- /.post-content -->
 
                         <div class="post-read-more">
