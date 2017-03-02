@@ -60,7 +60,12 @@
 					<div class="col-md-12 col-lg-9">
 				         	<div class="content">	               
 				          		<div class="post-detail">
-				                	<p><span class="drop-cap">{{self.letterdropcap}}</span>{{self.firstparagraph|richtext}}</p>
+				                	<p><span class="drop-cap">{{self.letterdropcap}}</span>
+				                	{% for block in page.body %}
+    									{% if block.block_type == 'firstparagraph' %}
+        								{% include_block block %} 
+    									{% endif %}
+									{% endfor %}
 
 					            {% if self.story %}
 					                {{ self.story|richtext }}
