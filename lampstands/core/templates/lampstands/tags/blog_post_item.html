@@ -5,17 +5,17 @@
 <div class="col-lg-3">
                     <div class="post">
                         <div class="post-image">
-                            <a href="blog-detail.html" class="post-image-link" style="background-image: url('assets/img/tmp/tmp-1.jpg');"></a>
+                            <a href="{{pageurl self}}" class="post-image-link" style="background-image: url('assets/img/tmp/tmp-1.jpg');"></a>
 
                             <div class="post-author">                   
-                                <a href="blog-detail.html">
+                                <a href="{{pageurl self}}">
                                     <span class="post-author-name">by {{ post.author }}</span>
                                 </a>
                             </div><!-- /.post-author -->
                         </div><!-- /.post-image -->
 
                         <div class="post-title">
-                            <h2><a href="blog-detail.html">{{ post.title }}</a></h2>
+                            <h2><a href="{{pageurl self}}">{{ post.title }}</a></h2>
                         </div><!-- /.post-title -->
 
                         <div class="post-meta">
@@ -36,7 +36,7 @@
                         </div><!-- /.post-content -->
 
                         <div class="post-read-more">
-                            <a href="{{post.canonical_url}}">Read More <i class="fa fa-chevron-right"></i></a>
+                            <a href="{{pageurl self}}">Read More <i class="fa fa-chevron-right"></i></a>
                         </div><!-- /.post-read-more -->
                     </div><!-- /.post-->
 </div><!-- /.col-* -->
