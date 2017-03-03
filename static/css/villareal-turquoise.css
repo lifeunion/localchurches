@@ -8906,3 +8906,20 @@ label {
 
 .wf-active .popular-tags {
   opacity: 1; }
+
+.container {
+  max-width: 1450px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding: 0 15px;
+  zoom: 1; }
+  .container:before, .container:after {
+    display: table;
+    content: "";
+    zoom: 1;
+    *display: inline; }
+  .container:after {
+    clear: both; }
+  @media (min-width: 768px) {
+    .container {
+      padding: 0 50px; } }
