@@ -13,6 +13,7 @@
             </div><!-- /.content-title-inner -->
     </div><!-- /.content-title -->                          
 
+    <section class="blog">
     <div class="container">
             <div class="popular-tags">
                 {% if poptags %}
@@ -29,7 +30,7 @@
                             {% if request.GET.tag|length %}
                                 {% for tag in poptags %}
                                     {% if request.GET.tag|safe == tag.slug %}
-                                        <a class="before" href="{% pageurl self %}">show all</a>
+                                        <a class="before" href="{% pageurl self %}">  show all</a>
                                     {% endif %}
                                 {% endfor %}
                             {% endif %}
@@ -38,6 +39,7 @@
                 {% endif %}
             </div>
     </div>
+    </section>
 
     <div class="content">
         <div class="container">
