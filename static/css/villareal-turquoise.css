@@ -655,34 +655,34 @@ pre {
   max-height: 340px;
   overflow-y: scroll; }
 
-.container, .map-filter-wrapper {
+.vessel, .map-filter-wrapper {
   margin-left: auto;
   margin-right: auto;
   padding-left: 0.9375rem;
   padding-right: 0.9375rem; }
-  .container::after, .map-filter-wrapper::after {
+  .vessel::after, .map-filter-wrapper::after {
     content: "";
     display: table;
     clear: both; }
   @media (min-width: 544px) {
-    .container, .map-filter-wrapper {
+    .vessel, .map-filter-wrapper {
       max-width: 576px; } }
   @media (min-width: 768px) {
-    .container, .map-filter-wrapper {
+    .vessel, .map-filter-wrapper {
       max-width: 720px; } }
   @media (min-width: 992px) {
-    .container, .map-filter-wrapper {
+    .vessel, .map-filter-wrapper {
       max-width: 940px; } }
   @media (min-width: 1200px) {
-    .container, .map-filter-wrapper {
+    .vessel, .map-filter-wrapper {
       max-width: 1140px; } }
 
-.container-fluid {
+.vessel-fluid {
   margin-left: auto;
   margin-right: auto;
   padding-left: 0.9375rem;
   padding-right: 0.9375rem; }
-  .container-fluid::after {
+  .vessel-fluid::after {
     content: "";
     display: table;
     clear: both; }
