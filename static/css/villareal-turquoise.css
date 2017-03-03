@@ -34,6 +34,7 @@
  * 30. Customizer
  * 31. Listing
  * 32. Icon Bar
+ * 33. Popular Tags
  */
 /**
  * 1. Bootstrap
@@ -8855,3 +8856,53 @@ label {
   padding: 5px 10px;
   font-size:25px;
  }
+
+/**
+ * 33. Popular Tags
+ */
+.popular-tags {
+  margin: 10px 0 20px 0;
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  display: none; }
+  .popular-tags p {
+    margin: 0; }
+  @media (min-width: 768px) {
+    .popular-tags {
+      margin: 20px 0 0 15px;
+      display: block; } }
+  .popular-tags a {
+    display: inline-block;
+    margin-left: -5px;
+    color: #2b3033;
+    text-transform: uppercase;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
+    padding: 10px 18px 10px 18px;
+    transition: all 0.25s ease 0s; }
+    .popular-tags a:first-of-type {
+      margin-left: 0; }
+    .popular-tags a:hover {
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      color: #fd5938; }
+    .popular-tags a.filtering {
+      border-color: #fd5938;
+      background: #fd5938;
+      color: white; }
+    .popular-tags a.before {
+      border-color: #23b0b0;
+      background: #23b0b0;
+      color: white; }
+      .popular-tags a.before:hover {
+        border-color: #fd441f;
+        background: #fd441f; }
+
+.wf-loading .popular-tags {
+  opacity: 0; }
+
+.wf-active .popular-tags {
+  opacity: 1; }
