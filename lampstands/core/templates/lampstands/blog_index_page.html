@@ -13,6 +13,32 @@
             </div><!-- /.content-title-inner -->
     </div><!-- /.content-title -->                          
 
+    <div class="container">
+            <div class="popular-tags">
+                {% if poptags %}
+                    <div class="closed">
+                        <p>
+                            {% for tag in poptags %}
+                                {% if request.GET.tag|length and request.GET.tag|safe == tag.slug %}
+                                    <a class="filtering" href="?tag={{ tag.slug }}">{{ tag }}</a>
+                                {% else %}
+                                    <a href="?tag={{ tag.slug }}">{{ tag }}</a>
+                                {% endif %}
+                            {% endfor %}
+                            {# Optional 'show all' appears if filtering by tag #}
+                            {% if request.GET.tag|length %}
+                                {% for tag in poptags %}
+                                    {% if request.GET.tag|safe == tag.slug %}
+                                        <a class="before" href="{% pageurl self %}">show all</a>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+    </div>
+
     <div class="content">
         <div class="container">
             <div class="posts posts-grid">  
