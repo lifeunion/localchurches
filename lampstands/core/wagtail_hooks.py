@@ -63,8 +63,8 @@ class ChurchAdmin(ModelAdmin):
     menu_label = 'Localities'
     menu_icon = 'folder-open-inverse'
     menu_order = 200
-    
-wagtailmodeladmin_register(ChurchAdmin)
+
+modeladmin_register(ChurchAdmin)
 
 @hooks.register('insert_global_admin_css')
 def import_fontawesome_stylesheet():
