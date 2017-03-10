@@ -1057,8 +1057,8 @@ class ChurchPage(Page):
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     locality_phone_number = models.CharField(validators=[phone_regex], blank=True, max_length=16) # validators should be a list
     locality_fax_number = models.CharField(validators=[phone_regex], blank=True, max_length=16) # validators should be a list
-    locality_email = models.EmailField()
-    locality_web = models.TextField(validators=[URLValidator()])
+    locality_email = models.EmailField(blank=True)
+    locality_web = models.TextField(validators=[URLValidator()], blank=True)
     meeting_info = RichTextField(blank=True)
     last_update = models.DateField(null=True)
     feed_image = models.ForeignKey(
@@ -1093,7 +1093,7 @@ class ChurchPage(Page):
 
 # Church index
 class ChurchIndexPage(Page):
-    intro = models.TextField()
+    intro = models.TextField(blank=True)
 
     @cached_property
     def churches(self):
