@@ -36,6 +36,9 @@ from wagtail.wagtailsnippets.models import register_snippet
 
 from .fields import ColorField
 
+# added for phone numbers
+from django.core.validators import RegexValidator, URLValidator
+from django_countries.fields import CountryField
 
 # Streamfield blocks and config
 
@@ -1041,6 +1044,64 @@ class WorkIndexPage(Page):
         FieldPanel('show_in_play_menu'),
     ]
 
+# Church page
+class ChurchPage(Page):
+    locality_name = models.CharField(max_length=255)
+    locality_state_or_province = models.CharField(max_length=255, blank=True)
+    locality_country = CountryField(blank_label='(select country)')
+    short_intro = models.CharField(
+        max_length=255, blank=True,
+        help_text='A short summary of when the locality started meeting'
+    )
+    mail_address = RichTextField(blank=True)
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    locality_phone_number = models.CharField(validators=[phone_regex], blank=True, max_length=16) # validators should be a list
+    locality_fax_number = models.CharField(validators=[phone_regex], blank=True, max_length=16) # validators should be a list
+    locality_email = models.EmailField()
+    locality_web = models.TextField(validators=[URLValidator()])
+    meeting_info = RichTextField(blank=True)
+    last_update = models.DateField(null=True)
+    feed_image = models.ForeignKey(
+        'lampstands.LampstandsImage',
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name='+'
+    )
+    search_fields = Page.search_fields + [
+        index.SearchField('locality_name'),
+        index.SearchField('locality_state_or_province'),
+        index.SearchField('locality_country'),
+        index.SearchField('mail_address'),
+        index.SearchField('meeting_info'),
+    ]
+    content_panels = [
+        FieldPanel('title', classname="full title"),
+        FieldPanel('locality_name'),
+        FieldPanel('locality_state_or_province'),
+        FieldPanel('locality_country'),
+        FieldPanel('short_intro'),
+        FieldPanel('mail_address'),
+        FieldPanel('locality_phone_number'),
+        FieldPanel('locality_fax_number'),
+        FieldPanel('locality_email'),
+        FieldPanel('locality_web'),
+        FieldPanel('meeting_info'),
+        FieldPanel('last_update'),
+        ImageChooserPanel('feed_image'),
+    ]
+
+# Church index
+class ChurchIndexPage(Page):
+    intro = models.TextField()
+
+    @cached_property
+    def churches(self):
+        return ChurchPage.objects.live().public()
+
+    content_panels = Page.content_panels + [
+        FieldPanel('intro'),
+    ]
 
 # Person page
 class PersonPageRelatedLink(Orderable, RelatedLink):
