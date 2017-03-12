@@ -1,4 +1,4 @@
 $(".firstStyle").ShopLocator({
    paginationStyle: 1
-   json: "markers.json"}
-);
+   json: "../shop-locator/json/markers.json"
+});

@@ -104,7 +104,7 @@
                 units: "km",
                 selectSection:{
                     visible: false,
-                    pathToJSONDirectory: "src/json/",
+                    pathToJSONDirectory: "shop-locator/json/",
                     difFiles: [["First Region", "markers"], ["Second Region", "diffmarkers"]],
                     fileTypes: "json"
                 },
