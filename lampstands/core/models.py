@@ -1029,7 +1029,7 @@ class ChurchIndexPage(Page):
 
         return church_posts
 
-    def serve(self, request):
+     def serve(self, request):
         # Get church_posts
         church_posts = self.church_posts
 
@@ -1039,9 +1039,9 @@ class ChurchIndexPage(Page):
             church_posts = church_posts.filter(tags__tag__slug=tag)
 
         # Pagination
-        per_page = 10
+        per_page = 12
         page = request.GET.get('page')
-        paginator = Paginator(church_posts, per_page)  # Show 10 church_posts per page
+        paginator = Paginator(blog_posts, per_page)  # Show 10 blog_posts per page
         try:
             church_posts = paginator.page(page)
         except PageNotAnInteger:
@@ -1061,6 +1061,7 @@ class ChurchIndexPage(Page):
                 'church_posts': church_posts,
                 'per_page': per_page,
             })
+
 
 
     @property
