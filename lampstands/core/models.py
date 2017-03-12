@@ -1002,8 +1002,76 @@ class WorkIndexPage(Page):
     ]
 
 # Church page
-class ChurchPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('lampstands.ChurchPage', related_name='related_links')
+class ChurchIndexPageRelatedLink(Orderable, RelatedLink):
+    page = ParentalKey('lampstands.ChurchIndexPage', related_name='related_links')
+
+# Church index
+class ChurchIndexPage(Page):
+    intro = models.TextField(blank=True)
+    
+    search_fields = Page.search_fields + [
+        index.SearchField('intro'),
+    ]
+
+    def get_popular_tags(self):
+        popular_tags = ChurchPageTagSelect.objects.all().values('tag').annotate(item_count=models.Count('tag')).order_by('-item_count')
+
+        # Return first 10 popular tags as tag objects
+        # Getting them individually to preserve the order
+        return [ChurchPageTagList.objects.get(id=tag['tag']) for tag in popular_tags[:10]]
+
+    def church_posts(self):
+        # Get list of church pages that are descendants of this page
+        church_posts = ChurchPage.objects.filter(
+            live=True,
+            path__startswith=self.path
+        )
+
+        return church_posts
+
+    def serve(self, request):
+        # Get church_posts
+        church_posts = self.church_posts
+
+        # Filter by tag
+        tag = request.GET.get('tag')
+        if tag:
+            church_posts = church_posts.filter(tags__tag__slug=tag)
+
+        # Pagination
+        per_page = 10
+        page = request.GET.get('page')
+        paginator = Paginator(church_posts, per_page)  # Show 10 church_posts per page
+        try:
+            church_posts = paginator.page(page)
+        except PageNotAnInteger:
+            church_posts = paginator.page(1)
+        except EmptyPage:
+            church_posts = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "lampstands/includes/church_listing.html", {
+                'self': self,
+                'church_posts': church_posts,
+                'per_page': per_page,
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'church_posts': church_posts,
+                'per_page': per_page,
+            })
+
+
+    @property
+    def churches(self):
+        return ChurchPage.objects.live().public()
+
+    content_panels = [
+        FieldPanel('title', classname="full title"),
+        FieldPanel('intro', classname="full"),
+        InlinePanel('related_links', label="Related links"),
+    ]
 
 # Church page
 class ChurchPageTagList(models.Model):
@@ -1022,6 +1090,9 @@ class ChurchPageTagSelect(Orderable):
         'lampstands.ChurchPageTagList',
         related_name='church_page_tag_select'
     )
+
+class ChurchPageRelatedLink(Orderable, RelatedLink):
+    page = ParentalKey('lampstands.ChurchPage', related_name='related_links')
 
 class ChurchPage(Page):
     locality_name = models.CharField(max_length=255)
@@ -1068,73 +1139,6 @@ class ChurchPage(Page):
         FieldPanel('last_update'),
         InlinePanel('tags', label="Tags"),
         ImageChooserPanel('feed_image'),
-    ]
-
-# Church index
-class ChurchIndexPage(Page):
-    intro = models.TextField(blank=True)
-    
-    search_fields = Page.search_fields + [
-        index.SearchField('intro'),
-    ]
-
-    def get_popular_tags(self):
-        popular_tags = ChurchPageTagSelect.objects.all().values('tag').annotate(item_count=models.Count('tag')).order_by('-item_count')
-
-        # Return first 10 popular tags as tag objects
-        # Getting them individually to preserve the order
-        return [ChurchPageTagList.objects.get(id=tag['tag']) for tag in popular_tags[:10]]
-
-    def church_posts(self):
-        # Get list of church pages that are descendants of this page
-        church_posts = ChurchPage.objects.filter(
-            live=True,
-            path__startswith=self.path
-        )
-
-        return church_posts
-
-    def serve(self, request):
-        # Get church_posts
-        church_posts = self.church_posts
-
-        # Filter by tag
-        tag = request.GET.get('tag')
-        if tag:
-            church_posts = church_posts.filter(tags__tag__slug=tag)
-
-        # Pagination
-        per_page = 12
-        page = request.GET.get('page')
-        paginator = Paginator(church_posts, per_page)  # Show 12 church_posts per page
-        try:
-            church_posts = paginator.page(page)
-        except PageNotAnInteger:
-            church_posts = paginator.page(1)
-        except EmptyPage:
-            church_posts = paginator.page(paginator.num_pages)
-
-        if request.is_ajax():
-            return render(request, "lampstands/includes/church_listing.html", {
-                'self': self,
-                'church_posts': church_posts,
-                'per_page': per_page,
-            })
-        else:
-            return render(request, self.template, {
-                'self': self,
-                'church_posts': church_posts,
-                'per_page': per_page,
-            })
-
-
-    @property
-    def churches(self):
-        return ChurchPage.objects.live().public()
-
-    content_panels = [
-        FieldPanel('title', classname="full title"),
-        FieldPanel('intro', classname="full"),
     ]
 
 class TshirtPage(Page):
