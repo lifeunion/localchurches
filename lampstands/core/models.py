@@ -1041,13 +1041,11 @@ class ChurchIndexPage(Page):
             return render(request, "lampstands/includes/church_listing.html", {
                 'self': self,
                 'church_posts': church_posts,
-                'per_page': per_page,
             })
         else:
             return render(request, self.template, {
                 'self': self,
                 'church_posts': church_posts,
-                'per_page': per_page,
             })
 
     @property
