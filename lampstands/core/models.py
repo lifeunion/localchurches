@@ -820,21 +820,6 @@ class BlogPageTagSelect(Orderable):
         related_name='blog_page_tag_select'
     )
 
-
-class BlogPageAuthor(Orderable):
-    page = ParentalKey('lampstands.BlogPage', related_name='related_author')
-    author = models.ForeignKey(
-        'lampstands.PersonPage',
-        null=True,
-        blank=True,
-        related_name='+'
-    )
-
-    panels = [
-        PageChooserPanel('author'),
-    ]
-
-
 class BlogPage(Page):
     colour = models.CharField(
         "Listing card colour if left blank will display image",
@@ -868,12 +853,6 @@ class BlogPage(Page):
         # No ancestors are blog indexes,
         # just return first blog index in database
         return BlogIndexPage.objects.first()
-
-    @property
-    def has_authors(self):
-        for author in self.related_author.all():
-            if author.author:
-                return True
 
     content_panels = [
         FieldPanel('title', classname="full title"),
@@ -910,23 +889,8 @@ class WorkPageScreenshot(Orderable):
         ImageChooserPanel('image'),
     ]
 
-
-class WorkPageAuthor(Orderable):
-    page = ParentalKey('lampstands.WorkPage', related_name='related_author')
-    author = models.ForeignKey(
-        'lampstands.PersonPage',
-        null=True,
-        blank=True,
-        related_name='+'
-    )
-
-    panels = [
-        PageChooserPanel('author'),
-    ]
-
-
 class WorkPage(Page):
-    author_left = models.CharField(max_length=255, blank=True, help_text='author who has left Lampstands')
+    author = models.CharField(max_length=255, blank=True, help_text='author')
     summary = models.CharField(max_length=255)
     descriptive_title = models.CharField(max_length=255)
     intro = RichTextField("Intro (deprecated. Use streamfield instead)", blank=True)
@@ -955,17 +919,10 @@ class WorkPage(Page):
         # just return first work index in database
         return WorkIndexPage.objects.first()
 
-    @property
-    def has_authors(self):
-        for author in self.related_author.all():
-            if author.author:
-                return True
-
     content_panels = [
         FieldPanel('title', classname="full title"),
         FieldPanel('descriptive_title'),
-        InlinePanel('related_author', label="Author"),
-        FieldPanel('author_left'),
+        FieldPanel('author'),
         FieldPanel('summary'),
         FieldPanel('intro', classname="full"),
         FieldPanel('body', classname="full"),
@@ -1118,9 +1075,7 @@ class ChurchIndexPage(Page):
     intro = models.TextField(blank=True)
     
     search_fields = Page.search_fields + [
-        index.SearchField('locality_name'),
-        index.SearchField('locality_state_or_province'),
-        index.SearchField('locality_country'),
+        index.SearchField('intro'),
     ]
 
     def get_popular_tags(self):
@@ -1177,10 +1132,9 @@ class ChurchIndexPage(Page):
     def churches(self):
         return ChurchPage.objects.live().public()
 
-     content_panels = [
-        FieldPanel('locality_name', classname="full title"),
-        FieldPanel('locality_state_or_province', classname="full"),
-        FieldPanel('related_links', label="Related links"),
+    content_panels = [
+        FieldPanel('title', classname="full title"),
+        FieldPanel('intro', classname="full"),
     ]
 
 class TshirtPage(Page):
@@ -1652,12 +1606,6 @@ class GlobalSettings(BaseSetting):
     phili_address = models.CharField(max_length=255, help_text='Full address')
     phili_address_link = models.URLField(max_length=255, help_text='Link to google maps')
     phili_address_svg = models.CharField(max_length=9000, help_text='Paste SVG code here')
-
-    # Contact widget
-    contact_person = models.ForeignKey(
-        'lampstands.PersonPage', related_name='+', null=True,
-        on_delete=models.SET_NULL,
-        help_text="Ensure this person has telephone and email fields set")
     contact_widget_intro = models.TextField()
     contact_widget_call_to_action = models.TextField()
     contact_widget_button_text = models.TextField()
