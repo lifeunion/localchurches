@@ -1117,6 +1117,7 @@ class ChurchPage(Page):
         on_delete=models.SET_NULL,
         related_name='+'
     )
+    
     search_fields = Page.search_fields + [
         index.SearchField('locality_name'),
         index.SearchField('locality_state_or_province'),
@@ -1124,6 +1125,18 @@ class ChurchPage(Page):
         index.SearchField('mail_address'),
         index.SearchField('meeting_info'),
     ]
+
+    @property
+    def church_index(self):
+        # Find church index in ancestors
+        for ancestor in reversed(self.get_ancestors()):
+            if isinstance(ancestor.specific, ChurchIndexPage):
+                return ancestor
+
+        # No ancestors are blog indexes,
+        # just return first blog index in database
+        return ChurchIndexPage.objects.first()
+
     content_panels = [
         FieldPanel('title', classname="full title"),
         FieldPanel('locality_name'),
