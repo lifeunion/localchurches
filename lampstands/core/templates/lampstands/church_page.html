@@ -1,0 +1,78 @@
+{% extends "lampstands/base.html" %}
+{% load wagtailcore_tags wagtailimages_tags lampstands_tags %}
+
+{% block content %}
+<div class="content-title">
+    <div class="content-title-inner">
+        <div class="container">     
+            <h1>Church in {{self.locality_name}}</h1>       
+                    
+        </div><!-- /.container -->
+    </div><!-- /.content-title-inner -->
+                    </div><!-- /.content-title -->
+            
+            <div class="" style="margin-top:-60px;">
+                <ol class="breadcrumb" style="padding:0.75rem 1.5rem;">
+                <li><a href="...">Worldwide</a></li>
+                <li><a href="...">{{self.country}}</a></li>
+                <li><a href="...">{{self.locality_state_or_province}}</a></li>
+                <li class="active">{{self.locality_name}}</li>
+                </ol>
+            </div>  
+            
+                <div class="content">
+                    <div class="container">
+                    <div class="row" style="margin:0px auto;">
+        <div class="listing-detail col-md-8 col-lg-12">
+        
+                
+                   <h2>Information</h2>
+            
+                    <div class="col-lg-6">
+                     {% if self.feed_image %}
+                        {% image self.feed_image fill-900x900 as photo %}
+                            <img src="{{ photo.url }}" width="{{ photo.width }}" height="{{ photo.height }}" alt="{{ photo.alt }}" />
+                    {% endif %}
+
+                     <table class="contact" style="margin-bottom:30px;">
+                        <tbody>
+                        <tr>
+                            <th>Address:</th>
+                        <td>{{self.mail_address}}<br><a href="https://goo.gl/maps/1qNdSConHhs">Map it!</a></td>
+                        </tr>
+                        <tr>
+                            <th>Telephone:</th>
+                            <td>{{self.locality_phone_number}}</td>
+                        </tr>
+                        <tr>
+                            <th>Fax:</th>
+                            <td>{{self.locality_fax_number}}</td>
+                        </tr>
+                        <tr>
+                            <th>E-mail:</th>
+                            <td><a href="mailto:{{}}"</a>{{self.locality_email}}</td>
+                        </tr>
+                        <tr>
+                            <th>Website:</th>
+                            <td><a href="http://www.churchinaustin.org">{{self.locality_web}}</a></td>
+                        </tr>
+                        <tr>
+                            <th>Last Updated:</th>
+                            <td>{{self.last_update}}</td>
+                        </tr>
+                        </tbody>
+                        </table>
+                        </div><!-- col-* -->
+                       <div class="col-lg-6">
+                    
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3446.996878514728!2d-97.75759808487693!3d30.23716551639744!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8644b4eef77fb2bd%3A0x9da2db38c1d4d316!2s2530+S+Congress+Ave%2C+Austin%2C+TX+78704!5e0!3m2!1sen!2sus!4v1487886650414" width="100%" height="300px" position="relative" frameborder="0" style="border:0" allowfullscreen></iframe>
+            
+                                
+                    </div><!-- /.col -->
+            </div><!-- /.listing-detail -->
+        
+            </div><!-- /.row -->
+            </div><!-- /.container -->
+                </div><!-- /.content -->
+
+{% endblock %}

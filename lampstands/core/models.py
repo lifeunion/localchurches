@@ -1045,6 +1045,27 @@ class WorkIndexPage(Page):
     ]
 
 # Church page
+class ChurchPageTagList(models.Model):
+    name = models.CharField(max_length=255)
+    slug = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+register_snippet(ChurchPageTagList)
+
+
+class ChurchPageTagSelect(Orderable):
+    page = ParentalKey('lampstands.ChurchPage', related_name='tags')
+    tag = models.ForeignKey(
+        'lampstands.ChurchPageTagList',
+        related_name='church_page_tag_select'
+    )
+
+# Church page
+class ChurchPageRelatedLink(Orderable, RelatedLink):
+    page = ParentalKey('lampstands.ChurchPage', related_name='related_links')
+
 class ChurchPage(Page):
     locality_name = models.CharField(max_length=255)
     locality_state_or_province = models.CharField(max_length=255, blank=True)
@@ -1088,99 +1109,79 @@ class ChurchPage(Page):
         FieldPanel('locality_web'),
         FieldPanel('meeting_info'),
         FieldPanel('last_update'),
+        InlinePanel('tags', label="Tags"),
         ImageChooserPanel('feed_image'),
     ]
 
 # Church index
 class ChurchIndexPage(Page):
     intro = models.TextField(blank=True)
+    
+    search_fields = Page.search_fields + [
+        index.SearchField('locality_name'),
+        index.SearchField('locality_state_or_province'),
+        index.SearchField('locality_country'),
+    ]
 
-    @cached_property
+    def get_popular_tags(self):
+        popular_tags = ChurchPageTagSelect.objects.all().values('tag').annotate(item_count=models.Count('tag')).order_by('-item_count')
+
+        # Return first 10 popular tags as tag objects
+        # Getting them individually to preserve the order
+        return [ChurchPageTagList.objects.get(id=tag['tag']) for tag in popular_tags[:10]]
+
+    def church_posts(self):
+        # Get list of church pages that are descendants of this page
+        church_posts = ChurchPage.objects.filter(
+            live=True,
+            path__startswith=self.path
+        )
+
+        return church_posts
+
+    def serve(self, request):
+        # Get church_posts
+        church_posts = self.church_posts
+
+        # Filter by tag
+        tag = request.GET.get('tag')
+        if tag:
+            church_posts = church_posts.filter(tags__tag__slug=tag)
+
+        # Pagination
+        per_page = 12
+        page = request.GET.get('page')
+        paginator = Paginator(church_posts, per_page)  # Show 12 church_posts per page
+        try:
+            church_posts = paginator.page(page)
+        except PageNotAnInteger:
+            church_posts = paginator.page(1)
+        except EmptyPage:
+            church_posts = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "lampstands/includes/church_listing.html", {
+                'self': self,
+                'church_posts': church_posts,
+                'per_page': per_page,
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'church_posts': church_posts,
+                'per_page': per_page,
+            })
+
+
+    @property
     def churches(self):
         return ChurchPage.objects.live().public()
 
-    content_panels = Page.content_panels + [
-        FieldPanel('intro'),
+     content_panels = [
+        FieldPanel('locality_name', classname="full title"),
+        FieldPanel('locality_state_or_province', classname="full"),
+        FieldPanel('related_links', label="Related links"),
     ]
-
-# Person page
-class PersonPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('lampstands.PersonPage', related_name='related_links')
-
-
-class PersonPage(Page, ContactFields):
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    role = models.CharField(max_length=255, blank=True)
-    is_senior = models.BooleanField(default=False)
-    intro = RichTextField(blank=True)
-    biography = RichTextField(blank=True)
-    short_biography = models.CharField(
-        max_length=255, blank=True,
-        help_text='A shorter summary biography for including in other pages'
-    )
-    image = models.ForeignKey(
-        'lampstands.LampstandsImage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+'
-    )
-    feed_image = models.ForeignKey(
-        'lampstands.LampstandsImage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+'
-    )
-
-    search_fields = Page.search_fields + [
-        index.SearchField('first_name'),
-        index.SearchField('last_name'),
-        index.SearchField('intro'),
-        index.SearchField('biography'),
-    ]
-
-    content_panels = [
-        FieldPanel('title', classname="full title"),
-        FieldPanel('first_name'),
-        FieldPanel('last_name'),
-        FieldPanel('role'),
-        FieldPanel('is_senior'),
-        FieldPanel('intro', classname="full"),
-        FieldPanel('biography', classname="full"),
-        FieldPanel('short_biography', classname="full"),
-        ImageChooserPanel('image'),
-        MultiFieldPanel(ContactFields.panels, "Contact"),
-        InlinePanel('related_links', label="Related links"),
-    ]
-
-    promote_panels = [
-        MultiFieldPanel(Page.promote_panels, "Common page configuration"),
-        ImageChooserPanel('feed_image'),
-    ]
-
-
-# Person index
-class PersonIndexPage(Page):
-    intro = models.TextField()
-    senior_management_intro = models.TextField()
-    team_intro = models.TextField()
-
-    @cached_property
-    def people(self):
-        return PersonPage.objects.exclude(is_senior=True).live().public()
-
-    @cached_property
-    def senior_management(self):
-        return PersonPage.objects.exclude(is_senior=False).live().public()
-
-    content_panels = Page.content_panels + [
-        FieldPanel('intro', classname="full"),
-        FieldPanel('senior_management_intro', classname="full"),
-        FieldPanel('team_intro', classname="full"),
-    ]
-
 
 class TshirtPage(Page):
     main_image = models.ForeignKey(
