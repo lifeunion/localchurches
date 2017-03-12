@@ -1029,7 +1029,7 @@ class ChurchIndexPage(Page):
 
         return church_posts
 
-     def serve(self, request):
+    def serve(self, request):
         # Get church_posts
         church_posts = self.church_posts
 
