@@ -1041,7 +1041,7 @@ class ChurchIndexPage(Page):
         # Pagination
         per_page = 12
         page = request.GET.get('page')
-        paginator = Paginator(blog_posts, per_page)  # Show 10 blog_posts per page
+        paginator = Paginator(church_posts, per_page)  # Show 10 blog_posts per page
         try:
             church_posts = paginator.page(page)
         except PageNotAnInteger:
