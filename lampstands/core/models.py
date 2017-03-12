@@ -1002,6 +1002,10 @@ class WorkIndexPage(Page):
     ]
 
 # Church page
+class ChurchPageRelatedLink(Orderable, RelatedLink):
+    page = ParentalKey('lampstands.ChurchPage', related_name='related_links')
+
+# Church page
 class ChurchPageTagList(models.Model):
     name = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
@@ -1018,10 +1022,6 @@ class ChurchPageTagSelect(Orderable):
         'lampstands.ChurchPageTagList',
         related_name='church_page_tag_select'
     )
-
-# Church page
-class ChurchPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('lampstands.ChurchPage', related_name='related_links')
 
 class ChurchPage(Page):
     locality_name = models.CharField(max_length=255)
