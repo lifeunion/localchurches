@@ -723,7 +723,6 @@ class ParticleSnippet(models.Model):
 class BlogIndexPageRelatedLink(Orderable, RelatedLink):
     page = ParentalKey('lampstands.BlogIndexPage', related_name='related_links')
 
-
 class BlogIndexPage(Page):
     intro = models.TextField(blank=True)
 
@@ -1038,17 +1037,6 @@ class ChurchIndexPage(Page):
         if tag:
             church_posts = church_posts.filter(tags__tag__slug=tag)
 
-        # Pagination
-        per_page = 12
-        page = request.GET.get('page')
-        paginator = Paginator(church_posts, per_page)  # Show 10 blog_posts per page
-        try:
-            church_posts = paginator.page(page)
-        except PageNotAnInteger:
-            church_posts = paginator.page(1)
-        except EmptyPage:
-            church_posts = paginator.page(paginator.num_pages)
-
         if request.is_ajax():
             return render(request, "lampstands/includes/church_listing.html", {
                 'self': self,
@@ -1061,8 +1049,6 @@ class ChurchIndexPage(Page):
                 'church_posts': church_posts,
                 'per_page': per_page,
             })
-
-
 
     @property
     def churches(self):
