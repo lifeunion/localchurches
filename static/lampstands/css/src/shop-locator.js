@@ -1,7 +1,7 @@
 /*------------------------------------------------------------------
  Project:	ShopLocator
- Version:	1.2
- Last change:	25 September 2015
+ Version:	1.1
+ Last change:	28 May 2015
  -------------------------------------------------------------------*/
 
 
@@ -65,7 +65,7 @@
                 getDirectionsButtonName: "Get Directions",
                 directionsUseGeolocation: true
             },
-            markersIcon: "",
+            markersIcon: "src/style/lollipop/images/marker.png",
             marker: {
                 latlng: [52.2296760, 21.0122290],
                 animation: false, //google.maps.Animation.DROP, google.maps.Animation.BOUNCE
@@ -94,9 +94,9 @@
                     widthMD: 54,
                     heightBIG: 60,
                     widthBIG: 54,
-                    iconSmall: "",
-                    iconMedium: "",
-                    iconBig: ""
+                    iconSmall: "src/style/lollipop/images/clusterSmall.png",
+                    iconMedium: "src/style/lollipop/images/clusterMedium.png",
+                    iconBig: "src/style/lollipop/images/clusterBig.png"
                 }
             },
             sidebar:{
@@ -110,7 +110,7 @@
                 },
                 searchBox: {
                     visible: false,
-                    findPlaceBy: ["(regions)"],
+                    findPlaceBy: "regions",
                     searchByCountry: [true, "us"],
                     search: false,
                     searchRadius: 20
@@ -233,53 +233,49 @@
         //JSon function for different files
         JSonMainFunction: function (constructor, searchBox, data, arrayMarker, element, map, bounds, settings) {
             var clearClusterer;
-            var dataMarkers, marker, cluster, clusterOptions;
-            var clusterStyles = [];
+            var dataMarkers, marker, cluster, clusterStyles, clusterOptions;
             //var gmarkers = [];
-            if(settings.cluster.style.iconSmall.length !== 0 && settings.cluster.style.iconMedium !== 0 && settings.cluster.style.iconBig !== 0){
-                clusterStyles = [
-                    {
-                        anchorIcon: settings.cluster.style.anchorIcon,
-                        anchorText: settings.cluster.style.anchorText,
-                        backgroundPosition: settings.cluster.style.backgroundPosition,
-                        fontFamily: settings.cluster.style.fontFamily,
-                        fontStyle: settings.cluster.style.fontStyle,
-                        textColor: settings.cluster.style.textColor,
-                        fontWeight: settings.cluster.style.fontWeight,
-                        textSize: settings.cluster.style.textSize,
-                        url: settings.cluster.style.iconSmall,
-                        height: settings.cluster.style.heightSM,
-                        width: settings.cluster.style.widthSM
-                    },
-                    {
-                        anchorIcon: settings.cluster.style.anchorIcon,
-                        anchorText: settings.cluster.style.anchorText,
-                        backgroundPosition: settings.cluster.style.backgroundPosition,
-                        fontFamily: settings.cluster.style.fontFamily,
-                        fontStyle: settings.cluster.style.fontStyle,
-                        textColor: settings.cluster.style.textColor,
-                        fontWeight: settings.cluster.style.fontWeight,
-                        textSize: settings.cluster.style.textSize,
-                        url: settings.cluster.style.iconMedium,
-                        height: settings.cluster.style.heightMD,
-                        width: settings.cluster.style.widthMD
-                    },
-                    {
-                        anchorIcon: settings.cluster.style.anchorIcon,
-                        anchorText: settings.cluster.style.anchorText,
-                        backgroundPosition: settings.cluster.style.backgroundPosition,
-                        fontFamily: settings.cluster.style.fontFamily,
-                        fontStyle: settings.cluster.style.fontStyle,
-                        textColor: settings.cluster.style.textColor,
-                        fontWeight: settings.cluster.style.fontWeight,
-                        textSize: settings.cluster.style.textSize,
-                        url: settings.cluster.style.iconBig,
-                        height: settings.cluster.style.heightBIG,
-                        width: settings.cluster.style.widthBIG
-                    }
-                ];
-            }
-
+            clusterStyles = [
+                {
+                    anchorIcon: settings.cluster.style.anchorIcon,
+                    anchorText: settings.cluster.style.anchorText,
+                    backgroundPosition: settings.cluster.style.backgroundPosition,
+                    fontFamily: settings.cluster.style.fontFamily,
+                    fontStyle: settings.cluster.style.fontStyle,
+                    textColor: settings.cluster.style.textColor,
+                    fontWeight: settings.cluster.style.fontWeight,
+                    textSize: settings.cluster.style.textSize,
+                    url: settings.cluster.style.iconSmall,
+                    height: settings.cluster.style.heightSM,
+                    width: settings.cluster.style.widthSM
+                },
+                {
+                    anchorIcon: settings.cluster.style.anchorIcon,
+                    anchorText: settings.cluster.style.anchorText,
+                    backgroundPosition: settings.cluster.style.backgroundPosition,
+                    fontFamily: settings.cluster.style.fontFamily,
+                    fontStyle: settings.cluster.style.fontStyle,
+                    textColor: settings.cluster.style.textColor,
+                    fontWeight: settings.cluster.style.fontWeight,
+                    textSize: settings.cluster.style.textSize,
+                    url: settings.cluster.style.iconMedium,
+                    height: settings.cluster.style.heightMD,
+                    width: settings.cluster.style.widthMD
+                },
+                {
+                    anchorIcon: settings.cluster.style.anchorIcon,
+                    anchorText: settings.cluster.style.anchorText,
+                    backgroundPosition: settings.cluster.style.backgroundPosition,
+                    fontFamily: settings.cluster.style.fontFamily,
+                    fontStyle: settings.cluster.style.fontStyle,
+                    textColor: settings.cluster.style.textColor,
+                    fontWeight: settings.cluster.style.fontWeight,
+                    textSize: settings.cluster.style.textSize,
+                    url: settings.cluster.style.iconBig,
+                    height: settings.cluster.style.heightBIG,
+                    width: settings.cluster.style.widthBIG
+                }
+            ];
             clusterOptions = {
                 clusterClass: settings.cluster.clusterClass,
                 gridSize: settings.cluster.gridSize,
@@ -329,12 +325,12 @@
             if(settings.sidebar.searchBox.visible == true || settings.sidebar.searchBox.search == true){
                 if(settings.sidebar.searchBox.searchByCountry[0] == true){
                     optionsSearchBox = {
-                        types: settings.sidebar.searchBox.findPlaceBy,
+                        types: ["("+settings.sidebar.searchBox.findPlaceBy+")"],
                         componentRestrictions: {country: settings.sidebar.searchBox.searchByCountry[1]}
                     };
                 }else{
                     optionsSearchBox = {
-                        types: settings.sidebar.searchBox.findPlaceBy
+                        types: ["("+settings.sidebar.searchBox.findPlaceBy+")"]
                     };
                 }
                 // Create the search box and link it to the UI element.
@@ -420,11 +416,8 @@
                 animation: settings.marker.animation,
                 map : map,
                 title: markerTable.title,
-                icon: markerTable.icon
+                icon: new google.maps.MarkerImage(settings.markersIcon)
             });
-            if(settings.markersIcon.length != 0){
-                marker.setIcon(settings.markersIcon)
-            }
             var markerPosition = marker.getPosition();
             if(settings.infoBubble.getDirectionsButton == true){
                 getDirectinButton = "<a class='ct-button--direction make-hidden' href='' target='_blank'>"+settings.infoBubble.getDirectionsButtonName+"</a>";

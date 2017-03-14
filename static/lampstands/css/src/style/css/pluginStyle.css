@@ -185,7 +185,7 @@
 }
 
 .ct-googleMap--sidebar .ct-googleMap--search:focus{
-   outline: none;
+    outline: none;
 }
 .ct-googleMap--sidebar .ct-googleMap--sidebarItem{
     font-size: 14px;
@@ -344,7 +344,7 @@ Styles:
     color: #e03377;
 }
 .lollipop .ct-googleMap--selectContainer:before, .lollipop .ct-googleMap--searchContainer:before{
-   display: none;
+    display: none;
 }
 .lollipop .ct-googleMap--searchContainer, .lollipop .ct-googleMap--selectContainer{
     background-image: url("../lollipop/images/gradient-background.png");
@@ -1455,7 +1455,7 @@ Styles:
     color: #666666;
 }
 .metro .ct-googleMap--InfoWindowBody span:first-child{
-   font-weight: bold;
+    font-weight: bold;
 }
 .metro .ct-googleMap--customInfoWindow{
     border-bottom: 3px solid #0077d5;
@@ -1886,7 +1886,7 @@ Styles:
 
 @media(max-width: 1200px ) {
     .lollipop, .cosmic, .pop, .retro, .bee, .dark, .metro, .modern, .material{
-      width: 100%;
+        width: 100%;
     }
     .ct-googleMap--SidebarCol{
         width: 40%;
