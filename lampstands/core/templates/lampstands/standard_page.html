@@ -3,7 +3,7 @@
 <head lang="en">
     <meta charset="UTF-8">
     <title>Example</title>
-    <link rel="stylesheet" type="text/css" href="src/style/css/pluginStyle.css">
+    <link rel="stylesheet" type="text/css" href="{% static 'lampstands/css/src/style/css/pluginStyle.css' %}">
 </head>
 <style type="text/css">
 
@@ -176,11 +176,11 @@
             });
         </code></pre>
     </section>
-
-    <script src="src/dependences/jquery-2.1.4.min.js"></script>
+href="{% static 'css/libraries/owl-carousel/owl.carousel.css' %}" >
+    <script src="{% static 'lampstands/css/src/dependences/jquery-2.1.4.min.js' %}"></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry&key=AIzaSyC8DzA414OJ7tzw0J7cKc9LPisCg2gNNKI&sensor=false
 "></script>
-    <script src="src/shop-locator.js"></script>
-    <script src="../example/js/example.js"></script>
+    <script src="{% static 'lampstands/css/src/shop-locator.js' %}"></script>
+    <script src="{% static 'lampstands/css/js/example.js' %}"></script>
 </body>
 </html>
