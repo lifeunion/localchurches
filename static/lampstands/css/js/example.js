@@ -197,6 +197,7 @@
         $(".secondStyle").ShopLocator({
             pluginStyle: "cosmic",
             paginationStyle: 1,
+            json: "src/json/markers.json",
             infoBubble: {
                 visible: true,
                 arrowPosition: 50,
