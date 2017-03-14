@@ -40,11 +40,65 @@
 <section>
     <div class="secondStyle"></div>
 </section>
+    <script language = "javascript">
+    (function ($) {
+    "use strict";
+
+    $(document).ready(function () {
+        $(".secondStyle").ShopLocator({
+            pluginStyle: "cosmic",
+            paginationStyle: 1,
+            json: "src/json/markers.json",
+            infoBubble: {
+                visible: true,
+                arrowPosition: 50,
+                minHeight: 112,
+                maxHeight: null,
+                minWidth: 170,
+                maxWidth: 250
+            },
+            markersIcon: "src/style/cosmic/images/marker.png",
+            map:{
+                mapStyle: [{"featureType":"administrative","elementType":"labels.text.fill","stylers":[{"color":"#7d8d97"}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#f2f2f2"}]},{"featureType":"landscape","elementType":"geometry.fill","stylers":[{"color":"#f2f5f6"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"poi.attraction","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"geometry.fill","stylers":[{"color":"#e6f3d6"},{"visibility":"off"}]},{"featureType":"road","elementType":"all","stylers":[{"saturation":-100},{"lightness":45},{"visibility":"off"}]},{"featureType":"road.highway","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#f4d2c5"},{"visibility":"simplified"}]},{"featureType":"road.highway","elementType":"labels.text","stylers":[{"color":"#4e4e4e"}]},{"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"color":"#f4f4f4"}]},{"featureType":"road.arterial","elementType":"labels.text.fill","stylers":[{"color":"#787878"}]},{"featureType":"road.arterial","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"water","elementType":"all","stylers":[{"visibility":"on"},{"hue":"#ff0000"},{"saturation":"-100"},{"lightness":"45"}]},{"featureType":"water","elementType":"geometry.fill","stylers":[{"color":"#cddbe2"}]}]
+            },
+            cluster:{
+                enable: true,
+                gridSize: 50,
+                style:{
+                    textColor: '#4757a3',
+                    textSize: 18,
+                    heightSM: 42,
+                    widthSM: 42,
+                    heightMD: 56,
+                    widthMD: 56,
+                    heightBIG: 75,
+                    widthBIG: 75,
+                    iconSmall: "src/style/cosmic/images/clusterSmall.png",
+                    iconMedium: "src/style/cosmic/images/clusterMedium.png",
+                    iconBig: "src/style/cosmic/images/clusterBig.png"
+                }
+            },
+            sidebar: {
+                visible: true,
+                selectSection:{
+                    visible: true
+                },
+                searchBox: {
+                    visible: true,
+                    search: true
+                },
+                results:{
+                    pageSize: 8
+                }
+            }
+        });
+    });
+    }(jQuery));
+    </script>
 
     <script src="{% static 'lampstands/css/src/dependences/jquery-2.1.4.min.js' %}"></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry&key=AIzaSyC8DzA414OJ7tzw0J7cKc9LPisCg2gNNKI&sensor=false
 "></script>
     <script src="{% static 'lampstands/css/src/shop-locator.js' %}"></script>
-    <script src="{% static 'lampstands/css/js/example.js' %}"></script>
 </body>
 </html>
