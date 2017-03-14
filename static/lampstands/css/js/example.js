@@ -197,7 +197,7 @@
         $(".secondStyle").ShopLocator({
             pluginStyle: "cosmic",
             paginationStyle: 1,
-            json: json_location,
+            json: "/static/lampstands/css/src/json/markers.json",
             infoBubble: {
                 visible: true,
                 arrowPosition: 50,
