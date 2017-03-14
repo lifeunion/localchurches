@@ -57,7 +57,7 @@
                 arrowSize: 10,
                 arrowPosition: 50,
                 hideCloseButton: false,
-                closeSrc: "src/style/closeButton.svg",
+                closeSrc: CLB,
                 offsetTop: 2,
                 offsetRight: 2,
                 disableAutoPan: false,
@@ -65,7 +65,7 @@
                 getDirectionsButtonName: "Get Directions",
                 directionsUseGeolocation: true
             },
-            markersIcon: "src/style/lollipop/images/marker.png",
+            markersIcon: CLB,
             marker: {
                 latlng: [52.2296760, 21.0122290],
                 animation: false, //google.maps.Animation.DROP, google.maps.Animation.BOUNCE
