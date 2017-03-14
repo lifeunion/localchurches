@@ -17,7 +17,7 @@
             },
             marker:{
                 latlng: [52.2296760, 21.0122290],
-                title: "CreateIT",
+                title: "Remod",
                 street: "ul. Narbutta 22/15",
                 zip: "+48 22 378 3 379",
                 city: "Warszawa"
