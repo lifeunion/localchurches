@@ -36,55 +36,6 @@
     }
 </style>
 <body>
-    <section class="ct-section--grey text-center">
-        <h1>Example 4: Map with multiple JSon files and enabled search.</h1>
-        <div class="fourthExample"></div>
-        <pre><code>
-            $(".fourthExample").ShopLocator({
-            pluginStyle: "retro",
-            paginationStyle: 2,
-            infoBubble: {
-                visible: true,
-                arrowStyle: 0,
-                arrowSize: 0,
-                arrowPosition: 50
-            },
-            markersIcon: "{% static "lampstands/css/src/style/retro/images/marker.png" %}",
-            cluster:{
-                enable: true,
-                gridSize: 50,
-                maxZoom: 14,
-                style:{
-                    textColor: '#fff',
-                    textSize: 18,
-                    heightSM: 55,
-                    widthSM: 55,
-                    heightMD: 68,
-                    widthMD: 68,
-                    heightBIG: 78,
-                    widthBIG: 78,
-                    iconSmall: "{% static "lampstands/css/src/style/retro/images/clusterSmall.png" %}",
-                    iconMedium: "{% static "lampstands/css/src/style/retro/images/clusterMedium.png" %}",
-                    iconBig: "{% static "lampstands/css/src/style/retro/images/clusterBig.png" %}"
-                }
-            },
-            sidebar: {
-                visible: true,
-                    selectSection:{
-                        visible: true
-                    },
-                    searchBox: {
-                        visible: true,
-                        search: true,
-                        searchRadius: 5
-                    },
-                    results:{
-                        pageSize: 8
-                    }
-                }
-            });
-        </code></pre>
-    </section>
 
     <script src="{% static "lampstands/css/src/dependences/jquery-2.1.4.min.js" %}"></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry&key=AIzaSyC8DzA414OJ7tzw0J7cKc9LPisCg2gNNKI&sensor=false"></script>
