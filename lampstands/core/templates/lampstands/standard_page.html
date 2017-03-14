@@ -40,18 +40,17 @@
 <section>
     <div class="secondStyle"></div>
 </section>
-    <script>
+
+    <script src="{% static 'lampstands/css/src/dependences/jquery-2.1.4.min.js' %}"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry&key=AIzaSyC8DzA414OJ7tzw0J7cKc9LPisCg2gNNKI&sensor=false
+"></script>
+    <script src="{% static 'lampstands/css/src/shop-locator.js' %}"></script>
+    <script src="{% static 'lampstands/css/js/example.js' %}">
             var JSLOC= "{% static 'lampstands/css/src/json/markers.json' %}"
             var MRK= "{% static 'lampstands/css/src/style/cosmic/images/marker.png' %}"
             var SM= "{% static 'lampstands/src/style/cosmic/images/clusterSmall.png' %}"
             var MED= "{% static 'lampstands/src/style/cosmic/images/clusterMedium.png' %}"
             var BIG= "{% static 'lampstands/src/style/cosmic/images/clusterBig.png' %}"
     </script>
-
-    <script src="{% static 'lampstands/css/src/dependences/jquery-2.1.4.min.js' %}"></script>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry&key=AIzaSyC8DzA414OJ7tzw0J7cKc9LPisCg2gNNKI&sensor=false
-"></script>
-    <script src="{% static 'lampstands/css/src/shop-locator.js' %}"></script>
-    <script src="{% static 'lampstands/css/js/example.js' %}"></script>
 </body>
 </html>
