@@ -94,9 +94,9 @@
                     widthMD: 54,
                     heightBIG: 60,
                     widthBIG: 54,
-                    iconSmall: "src/style/lollipop/images/clusterSmall.png",
-                    iconMedium: "src/style/lollipop/images/clusterMedium.png",
-                    iconBig: "src/style/lollipop/images/clusterBig.png"
+                    iconSmall: SM,
+                    iconMedium: MED,
+                    iconBig: BIG
                 }
             },
             sidebar:{
@@ -104,7 +104,7 @@
                 units: "km",
                 selectSection:{
                     visible: false,
-                    pathToJSONDirectory: "src/json/",
+                    pathToJSONDirectory: JSPATH,
                     difFiles: [["First Region", "markers"], ["Second Region", "diffmarkers"]],
                     fileTypes: "json"
                 },
