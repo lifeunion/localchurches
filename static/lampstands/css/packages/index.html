@@ -40,7 +40,7 @@
 <script>
     $(function() {
         $('.map_container').storeLocator({
-            remote: 'src/stores.json',
+            remote: 'file:///C:/Users/lifem/Desktop/codecanyon-19275040-jquery-store-locator%20(1)/src/adam.json',
             detailsOptions: {
                 panorama: {
                     showPanorama: true
@@ -123,6 +123,97 @@
             $(this).html($('<span />').width(Math.max(0, (Math.min(5, Math.round(parseFloat($(this).html())) / 2))) * 16));
         });
     }
+</script>
+<script id="mapListEntryTemplate" type="text/x-jQuery-tmpl">
+<div class="result_item" data-id="${id}">
+    <a><h3>${name}</h3></a>
+    <span class="stars">${rating}</span>
+    <div class="result_item_info">
+        {{if picture}}
+          <div class="image_container">
+            <img class="image" src="${picture}" alt="${name}" />
+          </div>
+        {{/if}}
+        <div class="info">
+            <ul class="list-unstyled">
+                <li><b>Address</b>: ${address}</li>
+                <li><b>Phone</b>: ${phone}</li>
+                <li><b>E-Mail</b>: ${email}</li>
+                <li><b>Homepage</b>: www.website.com</li>
+            </ul>
+            <div class="label label-default">${category}</div>
+        </div>
+    </div>
+</div>
+</script>
+<script id="mapListDetailTemplate" type="text/x-jQuery-tmpl">
+<div class="result_item_detail">
+<a href="#" class="map_details_close"><img src="src/close.png" alt="Close"></a>
+    <h3>${name}</h3>
+    <div class="result_item_detail_info">
+        {{if picture}}
+          <div class="image_container">
+            <img class="image" src="${picture}" alt="${name}" />
+          </div>
+        {{/if}}
+        <div class="info">
+            <ul class="list-unstyled">
+                <li><b>Address</b>: ${address}</li>
+                <li><b>Phone</b>: ${phone}</li>
+                <li><b>E-Mail</b>: ${email}</li>
+                <li><b>Homepage</b>: www.website.com</li>
+            </ul>
+            <div class="label label-default">${category}</div>
+            <a class="map_direction_trigger label label-warning">get route</a>
+        </div>
+    </div>
+    {{if tags}}
+    <div class="result_item_detail_info">
+        <h4>Tags</h4>
+        {{each tags}}
+           <span class="label label-primary">${$value}</span>
+        {{/each}}
+    </div>
+    {{/if}}
+    <div class="result_item_detail_info">
+    <h4>About</h4>
+    ${about}
+    </div>
+    {{if openings}}
+    <div class="result_item_detail_info opening_hours">
+        <h4>Opening hours</h4>
+        <dl>
+        {{each(prop, val) openings}}
+              <dt>${prop}</dt> <dd>${val}</dd>
+        {{/each}}
+        </dl>
+    </div>
+    {{/if}}
+    <div class="result_item_detail_info">
+    <h4>Gallery</h4>
+        <div class="slider_container">
+            <div style="display: inline-block;">
+                <img src="slider/1.jpg"/>
+            </div>
+            <div>
+                <img src="slider/2.jpg"/>
+            </div>
+            <div>
+               <img src="slider/3.jpg"/>
+            </div>
+             <div>
+                <img src="slider/4.jpg"/>
+            </div>
+            <span class="slider_nav next">&#x203a;</span>
+            <span class="slider_nav prev">&#x2039;</span>
+        </div>
+
+    </div>
+    <div class="result_item_detail_info">
+    <h4>Panorama View</h4>
+        <div id="pano"> </div>
+    </div>
+</div>
 </script>
 </body>
 </html>
