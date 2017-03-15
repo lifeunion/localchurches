@@ -48,6 +48,10 @@
     $(function() {
         $('.map_container').storeLocator({
             remote: "{% static 'lampstands/css/packages/src/stores.json' %}",
+            listOptions:{
+                sortByDistance: true,
+                distanceType: 'km'
+            },
             detailsOptions: {
                 panorama: {
                     showPanorama: true
