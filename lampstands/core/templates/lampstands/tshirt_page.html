@@ -129,11 +129,6 @@
     <a><h3>${name}</h3></a>
     <span class="stars">${rating}</span>
     <div class="result_item_info">
-        {{if picture}}
-          <div class="image_container">
-            <img class="image" src="${picture}" alt="${name}" />
-          </div>
-        {{/if}}
         <div class="info">
             <ul class="list-unstyled">
                 <li><b>Address</b>: ${address}</li>
@@ -151,11 +146,6 @@
 <a href="#" class="map_details_close"><img src="src/close.png" alt="Close"></a>
     <h3>${name}</h3>
     <div class="result_item_detail_info">
-        {{if picture}}
-          <div class="image_container">
-            <img class="image" src="${picture}" alt="${name}" />
-          </div>
-        {{/if}}
         <div class="info">
             <ul class="list-unstyled">
                 <li><b>Address</b>: ${address}</li>
@@ -167,28 +157,14 @@
             <a class="map_direction_trigger label label-warning">get route</a>
         </div>
     </div>
-    {{if tags}}
     <div class="result_item_detail_info">
         <h4>Tags</h4>
-        {{each tags}}
            <span class="label label-primary">${$value}</span>
-        {{/each}}
     </div>
-    {{/if}}
     <div class="result_item_detail_info">
     <h4>About</h4>
     ${about}
     </div>
-    {{if openings}}
-    <div class="result_item_detail_info opening_hours">
-        <h4>Opening hours</h4>
-        <dl>
-        {{each(prop, val) openings}}
-              <dt>${prop}</dt> <dd>${val}</dd>
-        {{/each}}
-        </dl>
-    </div>
-    {{/if}}
     <div class="result_item_detail_info">
     <h4>Gallery</h4>
         <div class="slider_container">
