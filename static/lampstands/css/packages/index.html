@@ -7,19 +7,6 @@
    	<meta name="author" content="">
     <title>Title</title>
 
-    <!--
-    #########
-    #########
-
-    INSERT YOUR BASE PATH
-
-    #########
-    #########
-
-    
-    <base href="../storeupdate/">
-    -->
-
     <link href="src/style.css" rel="stylesheet">
     <link href="layout.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -44,8 +31,8 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry&key=AIzaSyA4MAVqADcBv3nSIqd8y7RZWF9kmcVB6XQ&sensor=false
-"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4MAVqADcBv3nSIqd8y7RZWF9kmcVB6XQ
+&libraries=places,geometry"></script>
 <!--<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>-->
 <script src="src/storeLocator.min.js"></script>
 <script src="src/markerclusterer.js"></script>
@@ -53,25 +40,7 @@
 <script>
     $(function() {
         $('.map_container').storeLocator({
-            remote: 'src/stores.json',
-            categoriesOptions: {
-                showFilter: true,
-                template: '<h5 class="filter_minimize">Filter by Category</h5><a class="map-marker-filter-restaurant" data-cat="restaurant"><img src="pins/restaurant.png" alt=""> Restaurant</a>' +
-                '<a class="map-marker-filter-hotel" data-cat="hotel"><img src="pins/hotel.png" alt=""> Hotel</a>' +
-                '<a class="map-marker-filter-bar" data-cat="bar"><img src="pins/bar.png" alt=""> bar</a>' +
-                '<a class="map-marker-filter-casino" data-cat="casino"><img src="pins/casino.png" alt=""> casino</a>' +
-                '<a class="map-marker-filter-gas" data-cat="gas"><img src="pins/gas.png" alt=""> gas</a>' +
-                '<a class="map-marker-filter-ambulance" data-cat="ambulance"><img src="pins/ambulance.png" alt=""> ambulance</a>' +
-                '<a class="map-marker-filter-all" data-cat="all">show all</a>',
-                icons: {
-                    'ambulance': 'pins/ambulance.png',
-                    'bar': 'pins/bar.png',
-                    'casino': 'pins/casino.png',
-                    'gas': 'pins/gas.png',
-                    'hotel': 'pins/hotel.png',
-                    'restaurant': 'pins/restaurant.png'
-                }
-            },
+            remote: 'file:///C:/Users/lifem/Desktop/codecanyon-19275040-jquery-store-locator%20(1)/src/adam.json',
             detailsOptions: {
                 panorama: {
                     showPanorama: true
@@ -155,7 +124,6 @@
         });
     }
 </script>
-
 <script id="mapListEntryTemplate" type="text/x-jQuery-tmpl">
 <div class="result_item" data-id="${id}">
     <a><h3>${name}</h3></a>
