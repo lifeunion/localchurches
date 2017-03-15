@@ -1,3 +1,5 @@
+{% load lampstands_tags cache staticfiles wagtailuserbar wagtailcore_tags wagtailimages_tags wagtailsettings_tags %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,8 +9,8 @@
     <meta name="author" content="">
     <title>Title</title>
 
-    <link href="src/style.css" rel="stylesheet">
-    <link href="layout.css" rel="stylesheet">
+    <link href="{% static 'lampstands/css/packages/src/style.css' %}" rel="stylesheet">
+    <link href="{% static 'lampstands/css/packages/src/layout.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 <body>
@@ -34,13 +36,13 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4MAVqADcBv3nSIqd8y7RZWF9kmcVB6XQ
 &libraries=places,geometry"></script>
 <!--<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>-->
-<script src="src/storeLocator.min.js"></script>
-<script src="src/markerclusterer.js"></script>
-<script src="src/jquery.tmpl.min.js"></script>
+<script src="{% static 'lampstands/css/packages/src/storeLocator.min.js' %}"></script>
+<script src="{% static 'lampstands/css/packages/src/markerclusterer.js' %}"></script>
+<script src="{% static 'lampstands/css/packages/src/jquery.tmpl.min.js' %}"></script>
 <script>
     $(function() {
         $('.map_container').storeLocator({
-            remote: 'src/stores.json',
+            remote: "{% static 'lampstands/css/packages/src/stores.json' %}",
             detailsOptions: {
                 panorama: {
                     showPanorama: true
@@ -143,7 +145,7 @@
 </script>
 <script id="mapListDetailTemplate" type="text/x-jQuery-tmpl">
 <div class="result_item_detail">
-<a href="#" class="map_details_close"><img src="src/close.png" alt="Close"></a>
+<a href="#" class="map_details_close"><img src="{% static 'lampstands/css/packages/src/close.png' %}" alt="Close"></a>
     <h3>${name}</h3>
     <div class="result_item_detail_info">
         <div class="info">
