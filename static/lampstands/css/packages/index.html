@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+   	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+   	<meta name="description" content="">
+   	<meta name="author" content="">
+    <title>Title</title>
+
+    <!--
+    #########
+    #########
+
+    INSERT YOUR BASE PATH
+
+    #########
+    #########
+
+    -->
+    <base href="../storeupdate/">
+    
+
+    <link href="src/style.css" rel="stylesheet">
+    <link href="layout.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+<body>
+<div class="map_wrapper">
+    <div id="map" class="map_container">
+    </div>
+    <div class="map_results">
+
+        <div class="map_detail"></div>
+
+        <div class="map_listings">
+            <div class="map_listings_headline">
+                <h2>Results <span class="map_listings_number"></span></h2>
+            </div>
+            <div class="map_listings_results">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry&key=AIzaSyA4MAVqADcBv3nSIqd8y7RZWF9kmcVB6XQ&sensor=false
+"></script>
+<!--<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>-->
+<script src="src/storeLocator.min.js"></script>
+<script>
+    $(function() {
+        $('.map_container').storeLocator({
+            remote: 'src/stores.json',
+            categoriesOptions: {
+                showFilter: true,
+                template: '<h5 class="filter_minimize">Filter by Category</h5><a class="map-marker-filter-restaurant" data-cat="restaurant"><img src="pins/restaurant.png" alt=""> Restaurant</a>' +
+                '<a class="map-marker-filter-hotel" data-cat="hotel"><img src="pins/hotel.png" alt=""> Hotel</a>' +
+                '<a class="map-marker-filter-bar" data-cat="bar"><img src="pins/bar.png" alt=""> bar</a>' +
+                '<a class="map-marker-filter-casino" data-cat="casino"><img src="pins/casino.png" alt=""> casino</a>' +
+                '<a class="map-marker-filter-gas" data-cat="gas"><img src="pins/gas.png" alt=""> gas</a>' +
+                '<a class="map-marker-filter-ambulance" data-cat="ambulance"><img src="pins/ambulance.png" alt=""> ambulance</a>' +
+                '<a class="map-marker-filter-all" data-cat="all">show all</a>',
+                icons: {
+                    'ambulance': 'pins/ambulance.png',
+                    'bar': 'pins/bar.png',
+                    'casino': 'pins/casino.png',
+                    'gas': 'pins/gas.png',
+                    'hotel': 'pins/hotel.png',
+                    'restaurant': 'pins/restaurant.png'
+                }
+            },
+            detailsOptions: {
+                panorama: {
+                    showPanorama: true
+                }
+            },
+            responsiveOptions: [
+                {
+                    breakpoint: 768,
+                    settings: {
+                        mapHeight: 400,
+                        listHeight: 400
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        mapHeight: 'full',
+                        listHeight: 400
+                    }
+                }
+            ],
+            geoLocationOptions: {
+                position: google.maps.ControlPosition.TOP_LEFT
+            },
+            routeOptions: {
+                show: true,
+                closeHtml: '<span class="label label-danger">close</span>',
+            },
+            onUpdateList: function() {
+                $('.stars').stars();
+            },
+            onUpdateDetail: function()
+            {
+                var current = 0,
+                        items = $('.result_item_detail_info .slider_container div'),
+                        itemsLength = items.length;
+
+                items.hide();
+                showItem();
+
+                function showItem() {
+                    var item = items.eq(current);
+                    items.hide();
+                    item.css('display', 'inline-block');
+                }
+
+                $(document).on('click', '.result_item_detail_info .slider_container .next',function () {
+                    current += 1;
+                    if (current > itemsLength - 1) {
+                        current = 0;
+                    }
+                    showItem();
+                });
+
+                $(document).on('click', '.result_item_detail_info .slider_container .prev',function () {
+                    console.log(itemsLength)
+                    current -= 1;
+                    if (current < 0) {
+                        current = itemsLength - 1;
+                    }
+                    showItem();
+                });
+
+
+                if (window.timer) {
+                    clearTimeout(timer);
+                }
+                timer = setTimeout(function () {
+                    $('.result_item_detail .image').attr('src', 'http://www.w124-freunde.com/wcf/images/avatars/avatar-1868.gif');
+                }, 3000);
+            }
+        });
+    });
+    /*
+    http://stackoverflow.com/a/1987545
+     */
+
+    $.fn.stars = function() {
+        return $(this).each(function() {
+            $(this).html($('<span />').width(Math.max(0, (Math.min(5, Math.round(parseFloat($(this).html())) / 2))) * 16));
+        });
+    }
+</script>
+
+<script id="mapListEntryTemplate" type="text/x-jQuery-tmpl">
+<div class="result_item" data-id="${id}">
+    <a><h3>${name}</h3></a>
+    <span class="stars">${rating}</span>
+    <div class="result_item_info">
+        {{if picture}}
+          <div class="image_container">
+            <img class="image" src="${picture}" alt="${name}" />
+          </div>
+        {{/if}}
+        <div class="info">
+            <ul class="list-unstyled">
+                <li><b>Address</b>: ${address}</li>
+                <li><b>Phone</b>: ${phone}</li>
+                <li><b>E-Mail</b>: ${email}</li>
+                <li><b>Homepage</b>: www.website.com</li>
+            </ul>
+            <div class="label label-default">${category}</div>
+        </div>
+    </div>
+</div>
+</script>
+<script id="mapListDetailTemplate" type="text/x-jQuery-tmpl">
+<div class="result_item_detail">
+<a href="#" class="map_details_close"><img src="src/close.png" alt="Close"></a>
+    <h3>${name}</h3>
+    <div class="result_item_detail_info">
+        {{if picture}}
+          <div class="image_container">
+            <img class="image" src="${picture}" alt="${name}" />
+          </div>
+        {{/if}}
+        <div class="info">
+            <ul class="list-unstyled">
+                <li><b>Address</b>: ${address}</li>
+                <li><b>Phone</b>: ${phone}</li>
+                <li><b>E-Mail</b>: ${email}</li>
+                <li><b>Homepage</b>: www.website.com</li>
+            </ul>
+            <div class="label label-default">${category}</div>
+            <a class="map_direction_trigger label label-warning">get route</a>
+        </div>
+    </div>
+    {{if tags}}
+    <div class="result_item_detail_info">
+        <h4>Tags</h4>
+        {{each tags}}
+           <span class="label label-primary">${$value}</span>
+        {{/each}}
+    </div>
+    {{/if}}
+    <div class="result_item_detail_info">
+    <h4>About</h4>
+    ${about}
+    </div>
+    {{if openings}}
+    <div class="result_item_detail_info opening_hours">
+        <h4>Opening hours</h4>
+        <dl>
+        {{each(prop, val) openings}}
+              <dt>${prop}</dt> <dd>${val}</dd>
+        {{/each}}
+        </dl>
+    </div>
+    {{/if}}
+    <div class="result_item_detail_info">
+    <h4>Gallery</h4>
+        <div class="slider_container">
+            <div style="display: inline-block;">
+                <img src="slider/1.jpg"/>
+            </div>
+            <div>
+                <img src="slider/2.jpg"/>
+            </div>
+            <div>
+               <img src="slider/3.jpg"/>
+            </div>
+             <div>
+                <img src="slider/4.jpg"/>
+            </div>
+            <span class="slider_nav next">&#x203a;</span>
+            <span class="slider_nav prev">&#x2039;</span>
+        </div>
+
+    </div>
+    <div class="result_item_detail_info">
+    <h4>Panorama View</h4>
+        <div id="pano"> </div>
+    </div>
+</div>
+</script>
+</body>
+</html>
