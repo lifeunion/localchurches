@@ -161,11 +161,11 @@
     <a><h3>${name}</h3></a>
     <span class="stars">${rating}</span>
     <div class="result_item_info">
-        {{if picture}}
+        {% if picture %}
           <div class="image_container">
             <img class="image" src="${picture}" alt="${name}" />
           </div>
-        {{/if}}
+        {% endif %}
         <div class="info">
             <ul class="list-unstyled">
                 <li><b>Address</b>: ${address}</li>
