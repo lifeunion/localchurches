@@ -74,7 +74,7 @@
                 markerOptions: {
                     draggable: false,
                     bounceMarker: true,
-                    markerIcon: 'pins/blank.png',
+                    markerIcon: BLA,
                     dropAnimation: false
                 },
                 categoriesOptions: {
@@ -110,7 +110,7 @@
                 },
                 geoLocationOptions: {
                     show: true,
-                    icon: 'src/bullseye.png',
+                    icon: BUL,
                     title: 'Show your Location',
                     zoom: 10,
                     position: google.maps.ControlPosition.TOP_LEFT,

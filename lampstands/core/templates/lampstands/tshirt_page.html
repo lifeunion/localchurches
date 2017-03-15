@@ -10,7 +10,7 @@
     <title>Title</title>
 
     <link href="{% static 'lampstands/css/packages/src/style.css' %}" rel="stylesheet">
-    <link href="{% static 'lampstands/css/packages/src/layout.css' %}" rel="stylesheet">
+    <link href="{% static 'lampstands/css/packages/layout.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 </head>
 <body>
@@ -36,6 +36,10 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4MAVqADcBv3nSIqd8y7RZWF9kmcVB6XQ
 &libraries=places,geometry"></script>
 <!--<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>-->
+<script>
+            var BUL= "{% static 'lampstands/css/packages/src/bullseye.png' %}"
+            var BLA= "{% static 'lampstands/css/packages/pins/blanks.png' %}"
+</script>
 <script src="{% static 'lampstands/css/packages/src/storeLocator.min.js' %}"></script>
 <script src="{% static 'lampstands/css/packages/src/markerclusterer.js' %}"></script>
 <script src="{% static 'lampstands/css/packages/src/jquery.tmpl.min.js' %}"></script>
