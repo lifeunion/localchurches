@@ -1,3 +1,5 @@
+{% load lampstands_tags cache staticfiles wagtailuserbar wagtailcore_tags wagtailimages_tags wagtailsettings_tags %}
+
 <!DOCTYPE html>
 <html>
 
@@ -20,7 +22,7 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4MAVqADcBv3nSIqd8y7RZWF9kmcVB6XQ&libraries=places,geometry"></script>
-<script src="src/storeLocator.all.js"></script>
+<script src="{% static "lampstands/css/src/storeLocator.all.js" %}"></script>
 
 <script>
     $(function() {
