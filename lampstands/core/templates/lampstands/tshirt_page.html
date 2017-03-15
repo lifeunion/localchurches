@@ -202,9 +202,9 @@
     {% if tags %}
     <div class="result_item_detail_info">
         <h4>Tags</h4>
-        {{each tags}}
+        {% for value in tags %}
            <span class="label label-primary">${$value}</span>
-        {{/each}}
+        {% endfor %}
     </div>
     {% endif %}
     <div class="result_item_detail_info">
@@ -215,9 +215,9 @@
     <div class="result_item_detail_info opening_hours">
         <h4>Opening hours</h4>
         <dl>
-        {{each(prop, val) openings}}
+        {% for (prop, val) in openings}}
               <dt>${prop}</dt> <dd>${val}</dd>
-        {{/each}}
+        {% endfor %}
         </dl>
     </div>
     {% endif %}
