@@ -51,13 +51,15 @@
             listOptions:{
                 sortByDistance: true,
                 distanceType: 'km',
-                position: "left",
             },
             detailsOptions: {
                 panorama: {
                     showPanorama: true
                 }
             },
+            markerOptions: {
+                dropAnimation: true
+            }
             responsiveOptions: [
                 {
                     breakpoint: 768,
@@ -69,17 +71,24 @@
                 {
                     breakpoint: 480,
                     settings: {
-                        mapHeight: 'full',
+                        mapHeight: 400,
                         listHeight: 400
                     }
                 }
             ],
             geoLocationOptions: {
-                position: google.maps.ControlPosition.TOP_LEFT
+                position: google.maps.ControlPosition.LEFT_TOP
+                zoom: 12
             },
+            autocompleteOptions: {
+                zoom: 12,
+                placeholder: 'find a locality by city'
+                country: 'all'
+            }
             routeOptions: {
                 show: true,
                 closeHtml: '<span class="label label-danger">close</span>',
+                country: null,
             },
             onUpdateList: function() {
                 $('.stars').stars();
@@ -148,7 +157,9 @@
                 <li><b>E-Mail</b>: ${email}</li>
                 <li><b>Homepage</b>: www.website.com</li>
             </ul>
-            <div class="label label-default">${category}</div>
+            <div class="label label-default">${category}
+            </div>
+            <div class="label label-danger">${distance} km</div>
         </div>
     </div>
 </div>
