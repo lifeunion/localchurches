@@ -3267,9 +3267,12 @@ a.label:focus, a.label:hover {
     background-color: #ec971f; }
 
 .label-danger {
-  background-color: #d9534f; }
+  background-color: #d9534f;
+
+   }
   .label-danger[href]:focus, .label-danger[href]:hover {
-    background-color: #c9302c; }
+    background-color: #c9302c;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; }
 
 .jumbotron {
   padding: 2rem 1rem;
