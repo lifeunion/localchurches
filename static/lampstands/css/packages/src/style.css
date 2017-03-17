@@ -42,8 +42,8 @@ h2 { font-size: 25px; }
 .map_results .map_detail .result_item_detail .result_item_detail_info.opening_hours dt { text-transform: capitalize; }
 .map_results .map_listings .map_listings_headline h2 { padding: 10px 20px; }
 .map_results .map_listings .map_listings_headline h2 .map_listings_number { color: #cdcdcd; font-size: 14px; }
-.map_results .map_listings .map_listings_results .result_item { border-bottom: 1px solid #4815b8; padding: 10px 20px; }
-.map_results .map_listings .map_listings_results .result_item a { text-decoration: none; color: #4815b8; cursor: pointer; }
+.map_results .map_listings .map_listings_results .result_item { border-bottom: 1px solid #0BB7A5; padding: 10px 20px; }
+.map_results .map_listings .map_listings_results .result_item a { text-decoration: none; color: #0BB7A5; cursor: pointer; }
 .map_results .map_listings .map_listings_results .result_item h3 { margin: 0 0 5px 0; font-size: 18px; }
 .map_results .map_listings .map_listings_results .result_item.active, .map_results .map_listings .map_listings_results .result_item:hover { background: #f1f1f1; }
 .map_results .map_listings .map_listings_results .result_item .result_item_info .image_container { float: left; width: 30%; }
@@ -65,7 +65,7 @@ h2 { font-size: 25px; }
 #mapFilterNavigation .filter_minimize { cursor: pointer; }
 #mapFilterNavigation a { display: block; padding: 8px; cursor: pointer; text-decoration: none; color: #000; text-transform: capitalize; text-align: left; }
 #mapFilterNavigation a img { padding-right: 10px; }
-#mapFilterNavigation a.active, #mapFilterNavigation a:hover { background-color: #4815b8; color: #fff; }
+#mapFilterNavigation a.active, #mapFilterNavigation a:hover { background-color: #0BB7A5; color: #fff; }
 #mapFilterNavigation a.map-marker-filter-all { text-align: center; }
 
 .ucwords { text-transform: capitalize; }
@@ -91,8 +91,8 @@ span.stars span { background-position: 0 0; }
 .map_filter_box { position: absolute; top: 20px; width: 100%; }
 .map_filter_box .map_filter_input { float: right; position: relative; width: 0%; min-width: 50px; height: 50px; overflow: hidden; -webkit-transition: width 0.3s; transition: width 0.3s; -webkit-backface-visibility: hidden; }
 .map_filter_box .map_filter_input.input_open { width: 100%; }
-.map_filter_box .map_filter_input .map_search_input { position: absolute; top: 0; right: 0; border: none; background: #fff; width: 100%; height: 50px; margin: 0; z-index: 10; padding: 10px 55px 10px 10px; font-family: inherit; font-size: 20px; color: #2c3e50; border-left: 5px solid #4815b8; }
-.map_filter_box .map_filter_input .map_search_icon { width: 50px; height: 50px; display: block; position: absolute; right: 0; top: 0; padding: 0; margin: 0; line-height: 50px; text-align: center; color: #fff; background: #4815b8 url("../src/search.png") no-repeat center center; z-index: 90; font-size: 22px; font-family: 'icomoon'; speak: none; font-weight: normal; -webkit-font-smoothing: antialiased; cursor: pointer; }
+.map_filter_box .map_filter_input .map_search_input { position: absolute; top: 0; right: 0; border: none; background: #fff; width: 100%; height: 50px; margin: 0; z-index: 10; padding: 10px 55px 10px 10px; font-family: inherit; font-size: 20px; color: #2c3e50; border-left: 5px solid #0BB7A5; }
+.map_filter_box .map_filter_input .map_search_icon { width: 50px; height: 50px; display: block; position: absolute; right: 0; top: 0; padding: 0; margin: 0; line-height: 50px; text-align: center; color: #fff; background: #0BB7A5 url("../src/search.png") no-repeat center center; z-index: 90; font-size: 22px; font-family: 'icomoon'; speak: none; font-weight: normal; -webkit-font-smoothing: antialiased; cursor: pointer; }
 
 #map_notification { position: absolute; top: 10px; z-index: 100; text-align: center; background-color: #FF7800; padding: 5px 10px; color: #fff; left: 50%; -webkit-transform: translateX(-50%); -ms-transform: translateX(-50%); transform: translateX(-50%); }
 
