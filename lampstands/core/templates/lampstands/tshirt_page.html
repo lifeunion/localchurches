@@ -77,13 +77,15 @@
                 }
             ],
             geoLocationOptions: {
-                position: google.maps.ControlPosition.LEFT_TOP,
+                position: google.maps.ControlPosition.TOP_LEFT,
                 zoom: 12
             },
             autocompleteOptions: {
                 zoom: 12,
                 placeholder: 'find a locality by city',
-                country: 'all'
+                country: 'all',
+                types: 'address',
+                position: google.maps.ControlPosition.LEFT_TOP,
             },
             routeOptions: {
                 show: true,
