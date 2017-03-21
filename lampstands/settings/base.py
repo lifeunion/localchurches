@@ -196,9 +196,10 @@ BASE_URL = 'http://safe-cove-64619.herokuapp.com'
 # Override the Image class used by wagtailimages with a custom one
 WAGTAILIMAGES_IMAGE_MODEL = 'lampstands.LampstandsImage'
 
-# Wagtail GMaps
+# Wagtail Gmaps
 WAGTAIL_ADDRESS_MAP_CENTER = 'Jerusalem, Israel'
 WAGTAIL_ADDRESS_MAP_ZOOM = 8
+WAGTAIL_ADDRESS_MAP_KEY = 'AIzaSyA4MAVqADcBv3nSIqd8y7RZWF9kmcVB6XQ'
 
 # self-incorporate TinyMCE into all text editors
 WAGTAILADMIN_RICH_TEXT_EDITORS = {
