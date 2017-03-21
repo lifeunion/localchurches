@@ -31,6 +31,8 @@ INSTALLED_APPS = [
     'search',
     'storages',
     'geoposition',
+    'leaflet',
+    'djgeojson',
 
     # added from tbx settings
     'wagtail.contrib.wagtailsearchpromotions',
