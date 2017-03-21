@@ -33,7 +33,7 @@ INSTALLED_APPS = [
     'geoposition',
     'leaflet',
     'djgeojson',
-    'easy_maps'
+    'easy_maps',
 
     # added from tbx settings
     'wagtail.contrib.wagtailsearchpromotions',
