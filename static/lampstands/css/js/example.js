@@ -230,7 +230,7 @@
             sidebar: {
                 visible: false,
                 selectSection:{
-                    visible: false
+                    visible: true
                 },
                 searchBox: {
                     visible: false,
