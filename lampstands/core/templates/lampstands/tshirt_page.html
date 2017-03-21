@@ -262,7 +262,7 @@
                 <li><b>Address</b>: ${address}</li>
                 <li><b>Phone</b>: ${phone}</li>
                 <li><b>E-Mail</b>: ${email}</li>
-                <li><b>Homepage</b>: www.website.com</li>
+                <li><b>Church's website</b>: www.website.com</li>
             </ul>
             <div class="label label-default">${category}
             </div>
@@ -274,14 +274,14 @@
 <script id="mapListDetailTemplate" type="text/x-jQuery-tmpl">
 <div class="result_item_detail">
 <a href="#" class="map_details_close"><img src="{% static 'lampstands/css/packages/src/close.png' %}" alt="Close"></a>
-    <h3>${name}</h3>
+    <h3><a href="https://safe-cove-64619.herokuapp.com/churches/${name}.html">${name}</a></h3>
     <div class="result_item_detail_info">
         <div class="info">
             <ul class="list-unstyled">
                 <li><b>Address</b>: ${address}</li>
                 <li><b>Phone</b>: ${phone}</li>
                 <li><b>E-Mail</b>: ${email}</li>
-                <li><b>Homepage</b>: www.website.com</li>
+                <li><b>Church's website</b>: www.website.com</li>
             </ul>
             <div class="label label-default">${category}</div>
             <a class="map_direction_trigger label label-warning">get route</a>
