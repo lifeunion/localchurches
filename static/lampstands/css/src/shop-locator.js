@@ -178,7 +178,7 @@
             if(settings.sidebar.visible == true){
                 element.innerHTML = "<div class='row'>"+"<div class='ct-googleMap--SidebarCol'>"+"<div class='ct-googleMap--sidebar'></div>"+"</div>"+"<div class='ct-googleMap--MapCol'>"+"<div class='ct-googleMap ct-js-googleMap' id='map_canvas'></div>"+"</div>"+"</div>";
                 sidebarBody = $(element).find('.ct-googleMap--sidebar');
-                if(settings.sidebar.selectSection.visible == true){
+                /*if(settings.sidebar.selectSection.visible == true){
                     sidebarBody.append("<div class='ct-googleMap--selectContainer'>"+"<select class='ct-googleMap--select'></select>"+"</div>");
                     this.createSelectSection(element, settings);
                 }
@@ -189,7 +189,7 @@
                     }else if(settings.sidebar.results.visibleInFirstPage == true){
                         sidebarBody.append("<div class='ct-googleMap--results'></div>")
                     }
-                }
+                }*/
                 if(settings.preloader == true){
                     $(element).append("<div class='ct-preloader'><div class='ct-preloaderCenter'><div class='ct-preloader-content'><span></span><span></span><span></span><span></span><span></span></div></div> </div>");
                 }
@@ -560,6 +560,7 @@
                 }
 
 
+
                 if (place.length == 0) {
                     return;
                 }
@@ -638,7 +639,8 @@
                 pageNavPages += "</li>";
             }
 
-            // show/hide the appropriate regions
+
+               // show/hide the appropriate regions
             sidebarResults.children().hide();
             sidebarResults.children(".page"+currentPage).show();
 

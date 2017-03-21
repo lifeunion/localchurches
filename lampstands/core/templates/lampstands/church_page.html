@@ -79,45 +79,4 @@
 
 {% block extra_js %}
       <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key="AIzaSyA4MAVqADcBv3nSIqd8y7RZWF9kmcVB6XQ"> </script>
-      <script type="text/javascript">
-          var pages = [];
-          {% for page in pages %}
-            pages.push([
-                {{ page.location.latitude }},
-                {{ page.location.longitude }},
-                "{{ page.title }}",
-                "{{ page.text }}"
-            ]);
-          {% endfor %}
-          var map = undefined;
-          var markers = [];
-          function addMarker(lat, long, title, text) {
-              var latLng = new google.maps.LatLng(lat, long);
-              var marker = new google.maps.Marker({
-                  position: latLng,
-                  map: map,
-                  title: title,
-                  desc: "<h3>" + title + "</h3>" + text
-              });
-              var infowindow = new google.maps.InfoWindow();
-              google.maps.event.addListener(marker, 'click', function() {
-                  infowindow.setContent(marker.desc);
-                  infowindow.open(map,marker);
-              });
-              markers.push(marker)
-          }
-          function initialize() {
-              var mapOptions = {
-                  zoom: 8,
-                  scrollwheel: false,
-                  center: new google.maps.LatLng(51.5072, 0.1275)
-              };
-              map = new google.maps.Map(document.getElementById('map-canvas'),
-                                        mapOptions);
-              pages.forEach(function(page) {
-                  addMarker.apply(undefined, page);
-              });
-          }
-          google.maps.event.addDomListener(window, 'load', initialize);
-      </script>
 {% endblock %}
