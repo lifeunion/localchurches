@@ -1087,7 +1087,7 @@ class ChurchPage(Page):
         max_length=255, blank=True,
         help_text='A short summary of when the locality started meeting'
     )
-    mail_address = RichTextField(blank=True)
+    address = RichTextField(blank=True)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     locality_phone_number = models.CharField(validators=[phone_regex], blank=True, max_length=16) # validators should be a list
     locality_fax_number = models.CharField(validators=[phone_regex], blank=True, max_length=16) # validators should be a list
@@ -1107,7 +1107,7 @@ class ChurchPage(Page):
         index.SearchField('locality_name'),
         index.SearchField('locality_state_or_province'),
         index.SearchField('locality_country'),
-        index.SearchField('mail_address'),
+        index.SearchField('address'),
         index.SearchField('meeting_info'),
     ]
 
@@ -1128,7 +1128,9 @@ class ChurchPage(Page):
         FieldPanel('locality_state_or_province'),
         FieldPanel('locality_country'),
         FieldPanel('short_intro'),
-        FieldPanel('mail_address'),
+        MultiFieldPanel([
+        FieldPanel('address', classname="gmap"),
+        ], heading="Street Address"),
         FieldPanel('locality_phone_number'),
         FieldPanel('locality_fax_number'),
         FieldPanel('locality_email'),
