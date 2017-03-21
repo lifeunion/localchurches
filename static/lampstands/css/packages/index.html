@@ -126,7 +126,7 @@
 </script>
 <script id="mapListEntryTemplate" type="text/x-jQuery-tmpl">
 <div class="result_item" data-id="${id}">
-    <a href=""https://safe-cove-64619.herokuapp.com/churches/${name}.html"><h3>${name}</h3></a>
+    <a><h3>${name}</h3></a>
     <span class="stars">${rating}</span>
     <div class="result_item_info">
         {{if picture}}
@@ -149,7 +149,7 @@
 <script id="mapListDetailTemplate" type="text/x-jQuery-tmpl">
 <div class="result_item_detail">
 <a href="#" class="map_details_close"><img src="src/close.png" alt="Close"></a>
-    <h3>${name}</h3>
+    <h3><a href="https://safe-cove-64619.herokuapp.com/churches/${name}.html">${name}</a></h3>
     <div class="result_item_detail_info">
         {{if picture}}
           <div class="image_container">
