@@ -187,7 +187,7 @@
                     if(settings.sidebar.searchBox.search == true){
                         //sidebarBody.append("<div class='ct-googleMap--resultsCounter'></div>"+"<div class='ct-googleMap--results'></div>");
                     }else if(settings.sidebar.results.visibleInFirstPage == true){
-                        sidebarBody.append("<div class='ct-googleMap--results'></div>")
+                        //sidebarBody.append("<div class='ct-googleMap--results'></div>")
                     }
                 }
                 if(settings.preloader == true){
