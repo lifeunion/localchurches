@@ -1,4 +1,4 @@
-appdirs==1.4.0
+appdirs==1.4.3
 beautifulsoup4==4.5.3
 boto3==1.4.4
 botocore==1.5.9
