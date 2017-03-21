@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'lampstands.core',
     'search',
     'storages',
+    'geoposition',
 
     # added from tbx settings
     'wagtail.contrib.wagtailsearchpromotions',
@@ -192,6 +193,8 @@ BASE_URL = 'http://safe-cove-64619.herokuapp.com'
 
 # Override the Image class used by wagtailimages with a custom one
 WAGTAILIMAGES_IMAGE_MODEL = 'lampstands.LampstandsImage'
+
+GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyA4MAVqADcBv3nSIqd8y7RZWF9kmcVB6XQ'
 
 # self-incorporate TinyMCE into all text editors
 WAGTAILADMIN_RICH_TEXT_EDITORS = {

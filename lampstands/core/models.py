@@ -40,7 +40,7 @@ from .fields import ColorField
 from django.core.validators import RegexValidator, URLValidator
 from django_countries.fields import CountryField
 
-#from location_field.models import PlainLocationField
+from geoposition.fields import GeopositionField
 
 # Streamfield blocks and config
 
@@ -1089,8 +1089,9 @@ class ChurchPage(Page):
         max_length=255, blank=True,
         help_text='A short summary of when the locality started meeting'
     )
-    mailaddr = models.CharField(max_length=255, blank=True, null=True)
-    #address = PlainLocationField(based_fields=['locality_name'], zoom=8, blank=True, null=True)
+    #mailaddr = models.CharField(max_length=255, blank=True, null=True)
+    address = models.CharField(max_length=255, blank=True, null=True)
+    position = GeopositionField(blank=True, null=True)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     locality_phone_number = models.CharField(validators=[phone_regex], blank=True, max_length=16) # validators should be a list
     locality_fax_number = models.CharField(validators=[phone_regex], blank=True, max_length=16) # validators should be a list
@@ -1130,6 +1131,8 @@ class ChurchPage(Page):
         FieldPanel('locality_state_or_province'),
         FieldPanel('locality_country'),
         FieldPanel('short_intro'),
+        FieldPanel('address'),
+        FieldPanel('position'),
         FieldPanel('locality_phone_number'),
         FieldPanel('locality_fax_number'),
         FieldPanel('locality_email'),
