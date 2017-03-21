@@ -1,5 +1,10 @@
 {% extends "lampstands/base_blog.html" %}
-{% load wagtailcore_tags wagtailimages_tags lampstands_tags overextends_tags %}
+{% load wagtailcore_tags wagtailimages_tags lampstands_tags leaflet_tags geojson_tags %}
+
+{% block extra_assets %}
+  {% leaflet_js %}
+  {% leaflet_css %}
+{% endblock %}
 
 {% block content %}
 <div class="content-title">
@@ -65,6 +70,16 @@
                         </div><!-- col-* -->
                        <div class="col-lg-6">
                     
+                        <script type="text/javascript">
+                          qs_results = {{self.geom}}
+                          var collection = {{ qs_results|geojsonfeature|safe }};
+                          function map_init(map, options) {
+                              L.geoJson(collection).addTo(map);
+                          }
+                        </script>
+
+                        {% leaflet_map "spots" callback="window.map_init" %}
+
                         <iframe src="http://maps.google.com/?q={{self.address}}" width="100%" height="300px" position="relative" frameborder="0" style="border:0" allowfullscreen></iframe>
             
                                 
