@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'lampstands.core',
     'search',
     'storages',
+    'location_field.apps.DefaultConfig',
 
     # added from tbx settings
     'wagtail.contrib.wagtailsearchpromotions',
