@@ -179,7 +179,7 @@
                 element.innerHTML = "<div class='row'>"+"<div class='ct-googleMap--SidebarCol'>"+"<div class='ct-googleMap--sidebar'></div>"+"</div>"+"<div class='ct-googleMap--MapCol'>"+"<div class='ct-googleMap ct-js-googleMap' id='map_canvas'></div>"+"</div>"+"</div>";
                 sidebarBody = $(element).find('.ct-googleMap--sidebar');
                 if(settings.sidebar.selectSection.visible == true){
-                    sidebarBody.append("<div class='ct-googleMap--selectContainer'>"+"<select class='ct-googleMap--select'></select>"+"</div>");
+                    sidebarBody.append("<div class='ct-googleMap--selectContainer'>"+"</div>");//"<select class='ct-googleMap--select'></select>"+"</div>");
                     this.createSelectSection(element, settings);
                 }
                 if(settings.sidebar.searchBox.visible == true || settings.sidebar.searchBox.search == true){
