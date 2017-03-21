@@ -30,7 +30,6 @@ INSTALLED_APPS = [
     'lampstands.core',
     'search',
     'storages',
-    'overextends',
     'wagtailgmaps',
 
     # added from tbx settings
