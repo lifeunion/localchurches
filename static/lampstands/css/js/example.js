@@ -195,7 +195,7 @@
         });
 
         $(".secondStyle").ShopLocator({
-            pluginStyle: "cosmic",
+            pluginStyle: "material",
             paginationStyle: 1,
             json: JSLOC,
             infoBubble: {
@@ -228,16 +228,16 @@
                 }
             },
             sidebar: {
-                visible: true,
+                visible: false,
                 selectSection:{
-                    visible: true
+                    visible: false
                 },
                 searchBox: {
-                    visible: true,
-                    search: true
+                    visible: false,
+                    search: false
                 },
                 results:{
-                    pageSize: 8
+                    pageSize: 1
                 }
             }
         });
