@@ -30,7 +30,6 @@ INSTALLED_APPS = [
     'lampstands.core',
     'search',
     'storages',
-    'location_field.apps.DefaultConfig',
 
     # added from tbx settings
     'wagtail.contrib.wagtailsearchpromotions',
@@ -114,7 +113,6 @@ TEMPLATES = [
                 'wagtail.contrib.settings.context_processors.settings',
                 'wagtailmenus.context_processors.wagtailmenus',
             ],
-            'builtins': ['overextends.templatetags.overextends_tags'],
         },
     },
 ]
