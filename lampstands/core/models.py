@@ -40,7 +40,7 @@ from .fields import ColorField
 from django.core.validators import RegexValidator, URLValidator
 from django_countries.fields import CountryField
 
-#from location_field.models.plain import PlainLocationField
+#from location_field.models import PlainLocationField
 
 # Streamfield blocks and config
 
