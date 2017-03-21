@@ -41,6 +41,7 @@ from django.core.validators import RegexValidator, URLValidator
 from django_countries.fields import CountryField
 
 from geoposition.fields import GeopositionField
+from djgeojson.fields import PointField
 
 # Streamfield blocks and config
 
@@ -1092,6 +1093,7 @@ class ChurchPage(Page):
     #mailaddr = models.CharField(max_length=255, blank=True, null=True)
     address = models.CharField(max_length=255, blank=True, null=True)
     position = GeopositionField(blank=True, null=True)
+    geom = PointField(blank=True, null=True)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     locality_phone_number = models.CharField(validators=[phone_regex], blank=True, max_length=16) # validators should be a list
     locality_fax_number = models.CharField(validators=[phone_regex], blank=True, max_length=16) # validators should be a list
@@ -1133,6 +1135,7 @@ class ChurchPage(Page):
         FieldPanel('short_intro'),
         FieldPanel('address'),
         FieldPanel('position'),
+        FieldPanel('geom'),
         FieldPanel('locality_phone_number'),
         FieldPanel('locality_fax_number'),
         FieldPanel('locality_email'),
