@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'geoposition',
     'leaflet',
     'djgeojson',
+    'easy_maps'
 
     # added from tbx settings
     'wagtail.contrib.wagtailsearchpromotions',
@@ -197,6 +198,8 @@ BASE_URL = 'http://safe-cove-64619.herokuapp.com'
 WAGTAILIMAGES_IMAGE_MODEL = 'lampstands.LampstandsImage'
 
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyA4MAVqADcBv3nSIqd8y7RZWF9kmcVB6XQ'
+EASY_MAPS_GOOGLE_MAPS_API_KEY = GEOPOSITION_GOOGLE_MAPS_API_KEY
+EASY_MAPS_CENTER = (31.7962419, 35.035271)
 
 # self-incorporate TinyMCE into all text editors
 WAGTAILADMIN_RICH_TEXT_EDITORS = {
