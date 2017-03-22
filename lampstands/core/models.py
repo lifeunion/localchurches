@@ -322,7 +322,7 @@ class HomePage(Page):
     hero_intro_primary = models.TextField(blank=True)
     hero_intro_secondary = models.TextField(blank=True)
     information_bar_content = models.TextField(blank=True)
-    testimonies_tag_line = models.TextField(blank=True)
+    blogs_tag_line = models.TextField(blank=True)
 
     class Meta:
         verbose_name = "Homepage"
@@ -338,14 +338,14 @@ class HomePage(Page):
         ),
         InlinePanel('hero', label="Hero"),
         FieldPanel('information_bar_content'),
-        FieldPanel('testimonies_tag_line')
+        FieldPanel('blogs_tag_line')
     ]
 
     @property
-    def testimony_posts(self):
-        # Get list of testimony pages.
-        testimony_posts = TestimonyPage.objects.live().public()
-        return testimony_posts
+    def blog_posts(self):
+        # Get list of blog pages.
+        blog_posts = BlogPage.objects.live().public()
+        return blog_posts
 
 
 # Standard page
@@ -720,12 +720,12 @@ class ParticleSnippet(models.Model):
         return self.title
 
 
-# testimony index page
+# blog index page
 
-class TestimonyIndexPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('lampstands.TestimonyIndexPage', related_name='related_links')
+class BlogIndexPageRelatedLink(Orderable, RelatedLink):
+    page = ParentalKey('lampstands.BlogIndexPage', related_name='related_links')
 
-class TestimonyIndexPage(Page):
+class BlogIndexPage(Page):
     intro = models.TextField(blank=True)
 
     search_fields = Page.search_fields + [
@@ -737,53 +737,53 @@ class TestimonyIndexPage(Page):
     def get_popular_tags(self):
         # Get a ValuesQuerySet of tags ordered by most popular (exclude 'planet-drupal' as this is effectively
         # the same as Drupal and only needed for the rss feed)
-        popular_tags = TestimonyPageTagSelect.objects.all().values('tag').annotate(item_count=models.Count('tag')).order_by('-item_count')
+        popular_tags = BlogPageTagSelect.objects.all().values('tag').annotate(item_count=models.Count('tag')).order_by('-item_count')
 
         # Return first 10 popular tags as tag objects
         # Getting them individually to preserve the order
-        return [TestimonyPageTagList.objects.get(id=tag['tag']) for tag in popular_tags[:10]]
+        return [BlogPageTagList.objects.get(id=tag['tag']) for tag in popular_tags[:10]]
 
     @property
-    def testimony_posts(self):
-        # Get list of testimony pages that are descendants of this page
+    def blog_posts(self):
+        # Get list of blog pages that are descendants of this page
         # and are not marketing_only
-        testimony_posts = TestimonyPage.objects.filter(
+        blog_posts = BlogPage.objects.filter(
             live=True,
             path__startswith=self.path
         )
 
-        return testimony_posts
+        return blog_posts
 
     def serve(self, request):
-        # Get testimony_posts
-        testimony_posts = self.testimony_posts
+        # Get blog_posts
+        blog_posts = self.blog_posts
 
         # Filter by tag
         tag = request.GET.get('tag')
         if tag:
-            testimony_posts = testimony_posts.filter(tags__tag__slug=tag)
+            blog_posts = blog_posts.filter(tags__tag__slug=tag)
 
         # Pagination
         per_page = 12
         page = request.GET.get('page')
-        paginator = Paginator(testimony_posts, per_page)  # Show 10 testimony_posts per page
+        paginator = Paginator(blog_posts, per_page)  # Show 10 blog_posts per page
         try:
-            testimony_posts = paginator.page(page)
+            blog_posts = paginator.page(page)
         except PageNotAnInteger:
-            testimony_posts = paginator.page(1)
+            blog_posts = paginator.page(1)
         except EmptyPage:
-            testimony_posts = paginator.page(paginator.num_pages)
+            blog_posts = paginator.page(paginator.num_pages)
 
         if request.is_ajax():
-            return render(request, "lampstands/includes/testimony_listing.html", {
+            return render(request, "lampstands/includes/blog_listing.html", {
                 'self': self,
-                'testimony_posts': testimony_posts,
+                'blog_posts': blog_posts,
                 'per_page': per_page,
             })
         else:
             return render(request, self.template, {
                 'self': self,
-                'testimony_posts': testimony_posts,
+                'blog_posts': blog_posts,
                 'per_page': per_page,
             })
 
@@ -799,29 +799,29 @@ class TestimonyIndexPage(Page):
     ]
 
 
-# testimony page
-class TestimonyPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('lampstands.TestimonyPage', related_name='related_links')
+# blog page
+class BlogPageRelatedLink(Orderable, RelatedLink):
+    page = ParentalKey('lampstands.BlogPage', related_name='related_links')
 
 
-class TestimonyPageTagList(models.Model):
+class BlogPageTagList(models.Model):
     name = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name
 
-register_snippet(TestimonyPageTagList)
+register_snippet(BlogPageTagList)
 
 
-class TestimonyPageTagSelect(Orderable):
-    page = ParentalKey('lampstands.TestimonyPage', related_name='tags')
+class BlogPageTagSelect(Orderable):
+    page = ParentalKey('lampstands.BlogPage', related_name='tags')
     tag = models.ForeignKey(
-        'lampstands.TestimonyPageTagList',
-        related_name='Testimony_page_tag_select'
+        'lampstands.BlogPageTagList',
+        related_name='Blog_page_tag_select'
     )
 
-class TestimonyPage(Page):
+class BlogPage(Page):
     colour = models.CharField(
         "Listing card colour if left blank will display image",
         choices=(
@@ -845,15 +845,15 @@ class TestimonyPage(Page):
     ]
 
     @property
-    def testimony_index(self):
-        # Find testimony index in ancestors
+    def blog_index(self):
+        # Find blog index in ancestors
         for ancestor in reversed(self.get_ancestors()):
-            if isinstance(ancestor.specific, TestimonyIndexPage):
+            if isinstance(ancestor.specific, BlogIndexPage):
                 return ancestor
 
-        # No ancestors are testimony indexes,
-        # just return first testimony index in database
-        return TestimonyIndexPage.objects.first()
+        # No ancestors are blog indexes,
+        # just return first blog index in database
+        return BlogIndexPage.objects.first()
 
     content_panels = [
         FieldPanel('title', classname="full title"),
@@ -891,7 +891,7 @@ class BeliefsIndexPage(Page):
 
     @property
     def beliefs_posts(self):
-        # Get list of testimony pages that are descendants of this page
+        # Get list of blog pages that are descendants of this page
         # and are not marketing_only
         beliefs_posts = BeliefsPage.objects.filter(
             live=True,
@@ -912,7 +912,7 @@ class BeliefsIndexPage(Page):
         # Pagination
         per_page = 12
         page = request.GET.get('page')
-        paginator = Paginator(beliefs_posts, per_page)  # Show 10 testimony_posts per page
+        paginator = Paginator(beliefs_posts, per_page)  # Show 10 blog_posts per page
         try:
             beliefs_posts = paginator.page(page)
         except PageNotAnInteger:
@@ -1127,8 +1127,8 @@ class ChurchPage(Page):
             if isinstance(ancestor.specific, ChurchIndexPage):
                 return ancestor
 
-        # No ancestors are testimony indexes,
-        # just return first testimony index in database
+        # No ancestors are blog indexes,
+        # just return first blog index in database
         return ChurchIndexPage.objects.first()
 
     content_panels = [
@@ -1520,7 +1520,7 @@ class MarketingLandingPageFeaturedItem(Orderable):
     related_page = models.ForeignKey('wagtailcore.Page', related_name='+')
 
     panels = [
-        PageChooserPanel('related_page', ['lampstands.TestimonyPage', 'lampstands.BeliefsPage'])
+        PageChooserPanel('related_page', ['lampstands.BlogPage', 'lampstands.BeliefsPage'])
     ]
 
 

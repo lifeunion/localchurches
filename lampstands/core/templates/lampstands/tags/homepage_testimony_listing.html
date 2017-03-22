@@ -1,5 +1,5 @@
-{% if testimony_posts %}
-        {% for post in testimony_posts %}
-            {% include "lampstands/tags/testimony_list_item.html" with post=post %}
+{% if blog_posts %}
+        {% for post in blog_posts %}
+            {% include "lampstands/tags/blog_list_item.html" with post=post %}
         {% endfor %}
 {% endif %}
