@@ -85,10 +85,10 @@ def homepage_people_listing(context, count=3):
 
 # Blog feed for home page
 @register.inclusion_tag('lampstands/tags/homepage_testimony_listing.html', takes_context=True)
-def homepage_blog_listing(context, count=4):
-    blog_posts = play_filter(BlogPage.objects.filter(live=True), count)
+def homepage_testimony_listing(context, count=4):
+    blog_posts = play_filter(TestimonyPage.objects.filter(live=True), count)
     return {
-        'blog_posts': blog_posts,
+        'testimony_posts': testimony_posts,
         # required by the pageurl tag that we want to use within this template
         'request': context['request'],
     }
