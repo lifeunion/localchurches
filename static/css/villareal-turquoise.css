@@ -677,6 +677,9 @@ pre {
   @media (min-width: 1200px) {
     .vessel, .map-filter-wrapper {
       max-width: 1140px; } }
+  @media (min-width: 1900px) {
+    .vessel, .map-filter-wrapper {
+      max-width: 1800px; } }
 
 .vessel-fluid {
   margin-left: auto;
@@ -4795,7 +4798,7 @@ hr {
     color: #323232;
     text-decoration: none; }
   .header-small .header-logo {
-    font-size: 1.4em;
+    font-size: 1.5em;
     margin-top: 10px; }
   .header-transparent .header-logo {
     color: #fff; }
@@ -5122,7 +5125,7 @@ hr {
     .nav-primary .nav-link {
       color: #323232;
       cursor: pointer;
-      font-size: .9em;
+      font-size: 1em;
       font-weight: 700;
       padding: 5px 0;
       position: relative;
@@ -5818,7 +5821,6 @@ label {
     padding: 14px 30px; }
 
 .cover-image {
-  background-image: url(http://wallpapercave.com/wp/fcuObs5.jpg);
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;

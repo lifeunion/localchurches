@@ -1096,28 +1096,19 @@ class ChurchPage(Page):
         help_text='A short summary of when the locality started meeting'
     )
     #mailaddr = models.CharField(max_length=255, blank=True, null=True)
-    address = models.CharField(max_length=255, blank=True, null=True)
+    meeting_address = models.CharField(max_length=255, blank=True, null=True)
     position = GeopositionField(blank=True, null=True)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     locality_phone_number = models.CharField(validators=[phone_regex], blank=True, max_length=16) # validators should be a list
-    locality_fax_number = models.CharField(validators=[phone_regex], blank=True, max_length=16) # validators should be a list
     locality_email = models.EmailField(blank=True)
     locality_web = models.TextField(validators=[URLValidator()], blank=True)
-    meeting_info = RichTextField(blank=True)
-    last_update = models.DateField(null=True)
-    feed_image = models.ForeignKey(
-        'lampstands.LampstandsImage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+'
-    )
+    last_update = models.DateField(null=True, blank=True)
     
     search_fields = Page.search_fields + [
         index.SearchField('locality_name'),
         index.SearchField('locality_state_or_province'),
         index.SearchField('locality_country'),
-        index.SearchField('meeting_info'),
+        index.SearchField('meeting_address'),
     ]
 
     @property
@@ -1137,30 +1128,21 @@ class ChurchPage(Page):
         FieldPanel('locality_state_or_province'),
         FieldPanel('locality_country'),
         FieldPanel('short_intro'),
-        FieldPanel('address'),
+        FieldPanel('meeting_address'),
         FieldPanel('position'),
         FieldPanel('locality_phone_number'),
-        FieldPanel('locality_fax_number'),
         FieldPanel('locality_email'),
         FieldPanel('locality_web'),
-        FieldPanel('meeting_info'),
         FieldPanel('last_update'),
         InlinePanel('tags', label="Tags"),
-        ImageChooserPanel('feed_image'),
     ]
 
-class TshirtPage(Page):
-    main_image = models.ForeignKey(
-        'lampstands.LampstandsImage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+'
-    )
+class MapPage(Page):
+    last_update = models.DateField(null=True, blank=True)
 
-TshirtPage.content_panels = [
+MapPage.content_panels = [
     FieldPanel('title', classname="full title"),
-    ImageChooserPanel('main_image'),
+    ImageChooserPanel('last_updates'),
 ]
 
 

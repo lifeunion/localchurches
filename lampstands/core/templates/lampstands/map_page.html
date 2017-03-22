@@ -1,57 +1,365 @@
-{% load staticfiles %}<!DOCTYPE html>
-<html>
+{% load lampstands_tags cache staticfiles wagtailuserbar wagtailcore_tags wagtailimages_tags wagtailsettings_tags %}
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <!-- MAP -->
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4MAVqADcBv3nSIqd8y7RZWF9kmcVB6XQ&sensor=false"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
+    <title>{% block title_postfix %} | The Local Churches {% endblock %}</title>
+    
+    <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,600,300,700&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'css/libraries/owl-carousel/owl.carousel.css' %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'css/libraries/chartist/chartist.min.css' %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'css/leaflet.css' %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'css/leaflet.markercluster.css' %}" >
+    <link rel="stylesheet" type="text/css" href="{% static 'css/leaflet.markercluster.default.css' %}" >
+    <link href="{% static 'lampstands/css/packages/src/style.css' %}" rel="stylesheet">    
+    <link rel="stylesheet" type="text/css" id="css-primary" href="{% static 'css/villareal-turquoise.css' %}" >
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'css/img/LCfavicon.ico' %}" >
 
-    <script type="text/javascript">
-        google.maps.event.addDomListener(window, 'load', init);
+    <title>Local Churches</title>
 
-        function init() {
-            // For more options see: https://developers.google.com/maps/documentation/javascript/reference#MapOptions
-            var mapOptions = {
-                zoom: 9,
-                center: new google.maps.LatLng(51.638071, -1.856351),
-                styles: [
-                    {"featureType":"all", "stylers":[  {"saturation":0},  {"hue":"#ea853a"} ]},
-                    {"featureType":"road", "stylers":[ {"saturation":-20} ]},
-                    {"featureType":"transit","stylers":[ {"visibility":"off"} ] },
-                    {"featureType":"road.arterial","stylers":[{"visibility":"off"} ]},
-                    {"featureType":"poi","stylers":[{"visibility":"off"}]},
-                    {"featureType":"water","stylers":[{"visibility":"simplified"},{"saturation":-60}]}
-                ]
-            };
-
-            var mapElement = document.getElementById('map');
-            var map = new google.maps.Map(mapElement, mapOptions);
-
-            var iconBase = '{% static "lampstands/images/map_icon.png" %}';
-            var myLatlng = new google.maps.LatLng(51.453375, -2.600566);
-            var marker = new google.maps.Marker({
-                position: myLatlng,
-                map: map,
-                icon: iconBase,
-                title: 'Hello World!'
-            });
-
-            var iconBase = '{% static "lampstands/images/map_icon.png" %}';
-            var myLatlng = new google.maps.LatLng(51.858469,-1.480863);
-            var marker = new google.maps.Marker({
-                position: myLatlng,
-                map: map,
-                icon: iconBase,
-                title: 'Hello World!'
-            });
-
-        }
-        </script>
-        <!-- MAP END -->
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{% static "lampstands/css/main.css" %}">
+    <link href="{% static 'lampstands/css/packages/layout.css' %}" rel="stylesheet">
 </head>
-
 <body>
-    <div id="map" style="height: 100%; width: 100%; top: 0px; margin:0; padding:0;"></div>
+
+<body class="content-title-center">
+<div class="page-wrapper">
+    
+        <div class="header-wrapper">
+    <div class="header header-small">
+        <div class="header-inner">
+            <div class="vessel">
+                
+                <div class="header-top header-background">
+                    <div class="header-top-inner">
+                        <a class="header-logo" href="/">  
+                            <span class="header-logo-text">the local churches</span>
+                        </a><!-- /.header-logo -->
+                    <div class="nav-primary-wrapper collapse navbar-toggleable-sm">
+    <ul class="nav nav-pills nav-primary bleed out-animation">
+        <li class="nav-item nav-item-parent">
+            <a href="..." class="nav-link menu button">
+                Find Us
+            </a>
+            <ul class="sub-menu">
+                <li><a href="../map">Interactive Map</a></li>
+                <li><a href="../churches">Listings</a></li> 
+            </ul>
+        </li>
+
+        <li class="nav-item nav-item-parent">
+            <a href="https://safe-cove-64619.herokuapp.com/beliefs" class="nav-link menu button">
+                Beliefs
+            </a>
+
+            <ul class="sub-menu">
+                <li><a href="../beliefs">Our Beliefs</a></li>
+                <li><a href="../standing">Our Standing</a></li>
+                <li><a href="../mission">Our Mission</a></li>
+                <li><a href="../hope">Our Hope</a></li>
+                <li><a href="../recovery">Concerning the Recovery</a></li>
+                <li><a href="../salvation">Concerning Salvation</a></li>
+                <li><a href="../christian-life">Concerning Christian Life</a></li>
+                <li><a href="../church-life">Concerning Church Life</a></li>
+            </ul>           
+        </li>   
+        
+        <li class="nav-item nav-item-parent ">
+            <a href="https://safe-cove-64619.herokuapp.com/history" class="nav-link menu button">
+                History
+            </a>    
+
+            <ul class="sub-menu">
+                <li><a href="agents-row.html">Sample Row</a></li>
+                <li><a href="agents-grid.html">Sample Grid</a></li>
+            </ul>       
+        </li>
+
+        <li class="nav-item">
+            <a href="https://safe-cove-64619.herokuapp.com/testimonies" class="nav-link menu button">
+                Testimonies
+            </a>
+
+        </li>       
+
+        <li class="nav-item">
+            <a href="https://safe-cove-64619.herokuapp.com/recognition" class="nav-link menu button">
+                Recognition
+            </a>        
+        </li>   
+                                                            
+    </ul><!-- /.nav -->
+</div><!-- /.nav-primary -->
+
+<div class="top-mobile-icon pull-xs-right hidden-md-up">
+<a href="https://safe-cove-64619.herokuapp.com/faq1"><i class="fa fa-question-circle"></i></a>
+</div>
+<div class="top-mobile-icon pull-xs-right hidden-md-up">
+<a href="https://safe-cove-64619.herokuapp.com/contact.html"><i class="fa fa-envelope"></i></a>
+</div>                                    
+                         
+                    </div><!-- /.header-top-inner -->
+                </div><!-- /.header-top -->
+
+            </div><!-- /.vessel -->
+        </div><!-- /.header-inner -->
+    </div><!-- /.header -->
+</div><!-- /.header-wrapper-->
+    
+
+    <div class="main-wrapper">
+            <div class="main-inner">      
+
+
+
+<div class="map_wrapper">
+    <div id="map" class="map_container">
+    </div>
+    <div class="map_results">
+
+        <div class="map_detail"></div>
+
+        <div class="map_listings">
+            <div class="map_listings_headline">
+                <h2>Results <span class="map_listings_number"></span></h2>
+            </div>
+            <div class="map_listings_results">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4MAVqADcBv3nSIqd8y7RZWF9kmcVB6XQ
+&libraries=places,geometry"></script>
+<!--<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script>-->
+<script>
+            var BUL = "{% static 'lampstands/css/packages/src/bullseye.png' %}"
+            var BLA = "{% static 'lampstands/css/packages/pins/blank.png' %}"
+            var STA = "{% static 'lampstands/css/packages/src/stars.png' %}"
+</script>
+<script src="{% static 'lampstands/css/packages/src/storeLocator.min.js' %}"></script>
+<script src="{% static 'lampstands/css/packages/src/markerclusterer.js' %}"></script>
+<script src="{% static 'lampstands/css/packages/src/jquery.tmpl.min.js' %}"></script>
+<script>
+    $(function() {
+        $('.map_container').storeLocator({
+            remote: "{% static 'lampstands/css/packages/src/stores.json' %}",
+            listOptions:{
+                sortByDistance: true,
+                distanceType: 'km',
+            },
+            detailsOptions: {
+                panorama: {
+                    showPanorama: true
+                }
+            },
+            markerOptions: {
+                dropAnimation: true
+            },
+            responsiveOptions: [
+                {
+                    breakpoint: 768,
+                    settings: {
+                        mapHeight: 400,
+                        listHeight: 400
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        mapHeight: 300,
+                        listHeight: 400
+                    }
+                }
+            ],
+            mapOptions: {
+                mapTypeControl: false,
+            },
+            geoLocationOptions: {
+                position: google.maps.ControlPosition.TOP_RIGHT,
+                zoom: 12
+            },
+            autocompleteOptions: {
+                zoom: 12,
+                placeholder: 'find a locality by city',
+                country: 'all',
+                types: 'address',
+                position: google.maps.ControlPosition.TOP_LEFT,
+            },
+            routeOptions: {
+                show: true,
+                closeHtml: '<span class="label label-danger">close</span>',
+                country: null,
+            },
+            onUpdateList: function() {
+                $('.stars').stars();
+            },
+            onUpdateDetail: function()
+            {
+                var current = 0,
+                        items = $('.result_item_detail_info .slider_container div'),
+                        itemsLength = items.length;
+
+                items.hide();
+                showItem();
+
+                function showItem() {
+                    var item = items.eq(current);
+                    items.hide();
+                    item.css('display', 'inline-block');
+                }
+
+                $(document).on('click', '.result_item_detail_info .slider_container .next',function () {
+                    current += 1;
+                    if (current > itemsLength - 1) {
+                        current = 0;
+                    }
+                    showItem();
+                });
+
+                $(document).on('click', '.result_item_detail_info .slider_container .prev',function () {
+                    console.log(itemsLength)
+                    current -= 1;
+                    if (current < 0) {
+                        current = itemsLength - 1;
+                    }
+                    showItem();
+                });
+
+
+                if (window.timer) {
+                    clearTimeout(timer);
+                }
+                timer = setTimeout(function () {
+                    $('.result_item_detail .image').attr('src', 'http://www.w124-freunde.com/wcf/images/avatars/avatar-1868.gif');
+                }, 3000);
+            }
+        });
+    });
+    /*
+    http://stackoverflow.com/a/1987545
+     */
+
+    $.fn.stars = function() {
+        return $(this).each(function() {
+            $(this).html($('<span />').width(Math.max(0, (Math.min(5, Math.round(parseFloat($(this).html())) / 2))) * 16));
+        });
+    }
+</script>
+<script id="mapListEntryTemplate" type="text/x-jQuery-tmpl">
+<div class="result_item" data-id="${id}">
+    <a><h3>${name}</h3></a>
+    <div class="result_item_info">
+        <div class="info">
+            <ul class="list-unstyled">
+                <li><b>Address</b>: ${address}</li>
+                <li><b>Phone</b>: ${phone}</li>
+                <li><b>E-Mail</b>: ${email}</li>
+                <li><b>Church's website</b>: www.website.com</li>
+            </ul>
+            <div class="label label-default">${category}
+            </div>
+            <div class="label label-danger">${distance} km</div>
+        </div>
+    </div>
+</div>
+</script>
+<script id="mapListDetailTemplate" type="text/x-jQuery-tmpl">
+<div class="result_item_detail">
+<a href="#" class="map_details_close"><img src="{% static 'lampstands/css/packages/src/close.png' %}" alt="Close"></a>
+    <h3><a href="https://safe-cove-64619.herokuapp.com/churches/${name}.html">${name}</a></h3>
+    <div class="result_item_detail_info">
+        <div class="info">
+            <ul class="list-unstyled">
+                <li><b>Address</b>: ${address}</li>
+                <li><b>Phone</b>: ${phone}</li>
+                <li><b>E-Mail</b>: ${email}</li>
+                <li><b>Church's website</b>: www.website.com</li>
+            </ul>
+            <div class="label label-default">${category}</div>
+            <a class="map_direction_trigger label label-warning">get route</a>
+        </div>
+    </div>
+    <div class="result_item_detail_info">
+        <h4>Tags</h4>
+           <span class="label label-primary">${$value}</span>
+    </div>
+    <div class="result_item_detail_info">
+    <h4>About</h4>
+    ${about}
+    </div>
+    <div class="result_item_detail_info">
+    <h4>Gallery</h4>
+        <div class="slider_container">
+            <div style="display: inline-block;">
+                <img src="{% static 'lampstands/css/packages/slider/1.jpg' %}"/>
+            </div>
+            <div>
+                <img src="{% static 'lampstands/css/packages/slider/2.jpg' %}"/>
+            </div>
+            <div>
+               <img src="{% static 'lampstands/css/packages/slider/3.jpg' %}"/>
+            </div>
+             <div>
+                <img src="{% static 'lampstands/css/packages/slider/4.jpg' %}"/>
+            </div>
+            <span class="slider_nav next">&#x203a;</span>
+            <span class="slider_nav prev">&#x2039;</span>
+        </div>
+
+    </div>
+    <div class="result_item_detail_info">
+    <h4>Panorama View</h4>
+        <div id="pano"> </div>
+    </div>
+</div>
+</script>
+ </div><!-- /.main-inner -->
+    </div><!-- /.main-wrapper -->
+
+<div class="icon-bar navbar-fixed-bottom hidden-md-up">
+    <a class="icon-bar active" href="index-static-image-filter-center"><i class="fa fa-search"></i></a>
+    <a href="https://safe-cove-64619.herokuapp.com/beliefs"><i class="fa fa-book"></i></a>
+    <a href="https://safe-cove-64619.herokuapp.com/history"><i class="fa fa-history"></i></a>
+    <a href="https://safe-cove-64619.herokuapp.com/testimonies"><i class="fa fa-users"></i></a>
+    <a href="https://safe-cove-64619.herokuapp.com/recognition"><i class="fa fa-comments"></i></a>
+</div>
+
+    <div class="footer-wrapper hidden-md-down">
+    <div class="vessel">
+        <div class="footer-inner">
+            
+
+            <div class="footer-bottom">
+                <div class="footer-left">
+                    &copy; 2017 All Rights reserved.
+                </div><!-- /.footer-left -->
+
+                <div class="footer-right">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item"><a href="faq1.html" class="nav-link">FAQ's</a></li>
+                        <li class="nav-item"><a href="privacy.html" class="nav-link">Privacy Policy</a></li>
+                        <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+                    </ul>
+                </div><!-- /.footer-right -->           
+            </div><!-- /.footer-bottom -->
+        </div><!-- /.footer-inner -->
+    </div><!-- /.vessel -->
+</div><!-- /.footer-wrapper -->
+</div><!-- /.page-wrapper -->
+
+<script type="text/javascript" src="{% static 'js/villareal/jquery.ezmark.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/villareal/leaflet.js' %}"></script>
+<script type="text/javascript" src="{% static 'css/libraries/owl-carousel/owl.carousel.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'css/libraries/chartist/chartist.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/villareal/villareal.js' %}"></script>
+
 </body>
 </html>
