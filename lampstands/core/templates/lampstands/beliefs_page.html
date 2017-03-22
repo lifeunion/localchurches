@@ -1,0 +1,75 @@
+{% extends "lampstands/base_testimony.html" %}
+{% load lampstands_tags cache staticfiles wagtailuserbar wagtailcore_tags wagtailimages_tags wagtailsettings_tags %}
+
+{% block content %}
+
+    <div class="content-title">
+    <div class="content-title-inner">
+        <div class="vessel">        
+            <h1>{{self.title}}</h1>     
+    
+        </div><!-- /.vessel -->
+    </div><!-- /.content-title-inner -->
+    </div><!-- /.content-title -->          
+    
+    <div class="specifications--no-visit">
+        <div class="vessel">
+            <div class="popular-tags">
+                <ul class="closed">
+                    {% with self.tags.all as tags %}
+                        {% if tags %}
+                            {% for tag in tags %}
+                                <li>
+                                    <a href="{% pageurl self.testimony_index %}?tag={{ tag.tag.slug }}">{{ tag.tag }}</a>
+                                </li>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="vessel">
+        <div class="row">
+
+                    <div class="col-md-4 col-lg-3">
+                            <div class="sidebar">
+                                <div class="widget">
+                                    
+                                <h2 class="widgettitle">Navigation</h2>
+
+                                <ul class="menu nav nav-stacked">
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link"><i class="fa fa-chevron-right"></i> Next Post from the Same Locality </a>      
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link"><i class="fa fa-chevron-right"></i>  Testimony Index</a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a href="#" class="nav-link"><i class="fa fa-chevron-right"></i> Similar Post </a>          
+                                    </li>
+
+                                </ul><!-- /.nav -->
+                                </div><!-- /.widget -->
+                            </div><!-- /.sidebar -->
+                    </div><!-- /.col-* -->
+
+                    <div class="col-md-12 col-lg-9">
+                            <div class="content">                  
+                                <div class="post-detail">
+                                    <p><span class="drop-cap">{{self.letterdropcap}}</span>
+                                    {{self.firstparagraph}}</p>
+
+                                    {% include "lampstands/includes/streamfield.html" %}
+
+                                </div><!-- /.post-detail -->
+
+                            </div><!-- /.content -->
+                    </div><!-- /.col-* -->
+
+        </div><!-- /.row -->
+    </div><!-- /.vessel -->    
+{% endblock %}

@@ -1,4 +1,4 @@
-{% extends "lampstands/base_blog.html" %}
+{% extends "lampstands/base_testimony.html" %}
 {% load lampstands_tags cache staticfiles wagtailuserbar wagtailcore_tags wagtailimages_tags wagtailsettings_tags %}
 
 {% block content %}
@@ -20,7 +20,7 @@
                         {% if tags %}
                             {% for tag in tags %}
                                 <li>
-                                    <a href="{% pageurl self.blog_index %}?tag={{ tag.tag.slug }}">{{ tag.tag }}</a>
+                                    <a href="{% pageurl self.testimony_index %}?tag={{ tag.tag.slug }}">{{ tag.tag }}</a>
                                 </li>
                             {% endfor %}
                         {% endif %}
@@ -45,7 +45,7 @@
 									</li>
 
 									<li class="nav-item">
-										<a href="#" class="nav-link"><i class="fa fa-chevron-right"></i>  Blog Index</a>
+										<a href="#" class="nav-link"><i class="fa fa-chevron-right"></i>  Testimony Index</a>
 									</li>
 
 									<li class="nav-item">

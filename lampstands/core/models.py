@@ -342,10 +342,10 @@ class HomePage(Page):
     ]
 
     @property
-    def blog_posts(self):
-        # Get list of blog pages.
-        blog_posts = BlogPage.objects.live().public()
-        return blog_posts
+    def testimony_posts(self):
+        # Get list of testimony pages.
+        testimony_posts = TestimonyPage.objects.live().public()
+        return testimony_posts
 
 
 # Standard page
@@ -542,7 +542,7 @@ class CaseStudyBlock(StructBlock):
     title = CharBlock(required=True)
     intro = TextBlock(required=True)
     case_studies = ListBlock(StructBlock([
-        ('page', PageChooserBlock('lampstands.WorkPage')),
+        ('page', PageChooserBlock('lampstands.BeliefsPage')),
         ('title', CharBlock(required=False)),
         ('descriptive_title', CharBlock(required=False)),
         ('image', ImageChooserBlock(required=False)),
@@ -720,12 +720,12 @@ class ParticleSnippet(models.Model):
         return self.title
 
 
-# Blog index page
+# testimony index page
 
-class BlogIndexPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('lampstands.BlogIndexPage', related_name='related_links')
+class TestimonyIndexPageRelatedLink(Orderable, RelatedLink):
+    page = ParentalKey('lampstands.TestimonyIndexPage', related_name='related_links')
 
-class BlogIndexPage(Page):
+class TestimonyIndexPage(Page):
     intro = models.TextField(blank=True)
 
     search_fields = Page.search_fields + [
@@ -737,53 +737,53 @@ class BlogIndexPage(Page):
     def get_popular_tags(self):
         # Get a ValuesQuerySet of tags ordered by most popular (exclude 'planet-drupal' as this is effectively
         # the same as Drupal and only needed for the rss feed)
-        popular_tags = BlogPageTagSelect.objects.all().exclude(tag__name='planet-drupal').values('tag').annotate(item_count=models.Count('tag')).order_by('-item_count')
+        popular_tags = TestimonyPageTagSelect.objects.all().values('tag').annotate(item_count=models.Count('tag')).order_by('-item_count')
 
         # Return first 10 popular tags as tag objects
         # Getting them individually to preserve the order
-        return [BlogPageTagList.objects.get(id=tag['tag']) for tag in popular_tags[:10]]
+        return [TestimonyPageTagList.objects.get(id=tag['tag']) for tag in popular_tags[:10]]
 
     @property
-    def blog_posts(self):
-        # Get list of blog pages that are descendants of this page
+    def testimony_posts(self):
+        # Get list of testimony pages that are descendants of this page
         # and are not marketing_only
-        blog_posts = BlogPage.objects.filter(
+        testimony_posts = TestimonyPage.objects.filter(
             live=True,
             path__startswith=self.path
         )
 
-        return blog_posts
+        return testimony_posts
 
     def serve(self, request):
-        # Get blog_posts
-        blog_posts = self.blog_posts
+        # Get testimony_posts
+        testimony_posts = self.testimony_posts
 
         # Filter by tag
         tag = request.GET.get('tag')
         if tag:
-            blog_posts = blog_posts.filter(tags__tag__slug=tag)
+            testimony_posts = testimony_posts.filter(tags__tag__slug=tag)
 
         # Pagination
         per_page = 12
         page = request.GET.get('page')
-        paginator = Paginator(blog_posts, per_page)  # Show 10 blog_posts per page
+        paginator = Paginator(testimony_posts, per_page)  # Show 10 testimony_posts per page
         try:
-            blog_posts = paginator.page(page)
+            testimony_posts = paginator.page(page)
         except PageNotAnInteger:
-            blog_posts = paginator.page(1)
+            testimony_posts = paginator.page(1)
         except EmptyPage:
-            blog_posts = paginator.page(paginator.num_pages)
+            testimony_posts = paginator.page(paginator.num_pages)
 
         if request.is_ajax():
-            return render(request, "lampstands/includes/blog_listing.html", {
+            return render(request, "lampstands/includes/testimony_listing.html", {
                 'self': self,
-                'blog_posts': blog_posts,
+                'testimony_posts': testimony_posts,
                 'per_page': per_page,
             })
         else:
             return render(request, self.template, {
                 'self': self,
-                'blog_posts': blog_posts,
+                'testimony_posts': testimony_posts,
                 'per_page': per_page,
             })
 
@@ -799,29 +799,29 @@ class BlogIndexPage(Page):
     ]
 
 
-# Blog page
-class BlogPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('lampstands.BlogPage', related_name='related_links')
+# testimony page
+class TestimonyPageRelatedLink(Orderable, RelatedLink):
+    page = ParentalKey('lampstands.TestimonyPage', related_name='related_links')
 
 
-class BlogPageTagList(models.Model):
+class TestimonyPageTagList(models.Model):
     name = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
 
     def __str__(self):
         return self.name
 
-register_snippet(BlogPageTagList)
+register_snippet(TestimonyPageTagList)
 
 
-class BlogPageTagSelect(Orderable):
-    page = ParentalKey('lampstands.BlogPage', related_name='tags')
+class TestimonyPageTagSelect(Orderable):
+    page = ParentalKey('lampstands.TestimonyPage', related_name='tags')
     tag = models.ForeignKey(
-        'lampstands.BlogPageTagList',
-        related_name='blog_page_tag_select'
+        'lampstands.TestimonyPageTagList',
+        related_name='Testimony_page_tag_select'
     )
 
-class BlogPage(Page):
+class TestimonyPage(Page):
     colour = models.CharField(
         "Listing card colour if left blank will display image",
         choices=(
@@ -845,15 +845,15 @@ class BlogPage(Page):
     ]
 
     @property
-    def blog_index(self):
-        # Find blog index in ancestors
+    def testimony_index(self):
+        # Find testimony index in ancestors
         for ancestor in reversed(self.get_ancestors()):
-            if isinstance(ancestor.specific, BlogIndexPage):
+            if isinstance(ancestor.specific, TestimonyIndexPage):
                 return ancestor
 
-        # No ancestors are blog indexes,
-        # just return first blog index in database
-        return BlogIndexPage.objects.first()
+        # No ancestors are testimony indexes,
+        # just return first testimony index in database
+        return TestimonyIndexPage.objects.first()
 
     content_panels = [
         FieldPanel('title', classname="full title"),
@@ -866,140 +866,146 @@ class BlogPage(Page):
         InlinePanel('tags', label="Tags")
     ]
 
+# beliefs index page
 
-# Work page
-class WorkPageTagSelect(Orderable):
-    page = ParentalKey('lampstands.WorkPage', related_name='tags')
-    tag = models.ForeignKey(
-        'lampstands.BlogPageTagList',
-        related_name='+'
-    )
+class BeliefsIndexPageRelatedLink(Orderable, RelatedLink):
+    page = ParentalKey('lampstands.BeliefsIndexPage', related_name='related_links')
 
+class BeliefsIndexPage(Page):
+    intro = models.TextField(blank=True)
 
-class WorkPageScreenshot(Orderable):
-    page = ParentalKey('lampstands.WorkPage', related_name='screenshots')
-    image = models.ForeignKey(
-        'lampstands.LampstandsImage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+'
-    )
-
-    panels = [
-        ImageChooserPanel('image'),
+    search_fields = Page.search_fields + [
+        index.SearchField('intro'),
     ]
-
-class WorkPage(Page):
-    author = models.CharField(max_length=255, blank=True, help_text='author')
-    summary = models.CharField(max_length=255)
-    descriptive_title = models.CharField(max_length=255)
-    intro = RichTextField("Intro (deprecated. Use streamfield instead)", blank=True)
-    body = RichTextField("Body (deprecated. Use streamfield instead)", blank=True)
-    homepage_image = models.ForeignKey(
-        'lampstands.LampstandsImage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+'
-    )
-    marketing_only = models.BooleanField(default=False, help_text='Display this work item only on marketing landing page')
-    streamfield = StreamField(StoryBlock())
-    visit_the_site = models.URLField(blank=True)
 
     show_in_play_menu = models.BooleanField(default=False)
-
-    @property
-    def work_index(self):
-        # Find work index in ancestors
-        for ancestor in reversed(self.get_ancestors()):
-            if isinstance(ancestor.specific, WorkIndexPage):
-                return ancestor
-
-        # No ancestors are work indexes,
-        # just return first work index in database
-        return WorkIndexPage.objects.first()
-
-    content_panels = [
-        FieldPanel('title', classname="full title"),
-        FieldPanel('descriptive_title'),
-        FieldPanel('author'),
-        FieldPanel('summary'),
-        FieldPanel('intro', classname="full"),
-        FieldPanel('body', classname="full"),
-        StreamFieldPanel('streamfield'),
-        ImageChooserPanel('homepage_image'),
-        InlinePanel('screenshots', label="Screenshots"),
-        InlinePanel('tags', label="Tags"),
-        FieldPanel('visit_the_site'),
-    ]
-
-    promote_panels = [
-        MultiFieldPanel(Page.promote_panels, "Common page configuration"),
-        FieldPanel('show_in_play_menu'),
-        FieldPanel('marketing_only'),
-    ]
-
-
-# Work index page
-class WorkIndexPage(Page):
-    intro = RichTextField(blank=True)
-
-    show_in_play_menu = models.BooleanField(default=False)
-    hide_popular_tags = models.BooleanField(default=False)
 
     def get_popular_tags(self):
-        # Get a ValuesQuerySet of tags ordered by most popular
-        popular_tags = WorkPageTagSelect.objects.all().values('tag').annotate(item_count=models.Count('tag')).order_by('-item_count')
+        # Get a ValuesQuerySet of tags ordered by most popular (exclude 'planet-drupal' as this is effectively
+        # the same as Drupal and only needed for the rss feed)
+        popular_tags = BeliefsPageTagSelect.objects.all().values('tag').annotate(item_count=models.Count('tag')).order_by('-item_count')
 
         # Return first 10 popular tags as tag objects
         # Getting them individually to preserve the order
-        return [BlogPageTagList.objects.get(id=tag['tag']) for tag in popular_tags[:10]]
+        return [BeliefsPageTagList.objects.get(id=tag['tag']) for tag in popular_tags[:10]]
 
     @property
-    def works(self):
-        # Get list of work pages that are descendants of this page
-        # and are not marketing only
-        works = WorkPage.objects.filter(
+    def beliefs_posts(self):
+        # Get list of testimony pages that are descendants of this page
+        # and are not marketing_only
+        beliefs_posts = BeliefsPage.objects.filter(
             live=True,
             path__startswith=self.path
-        ).exclude(marketing_only=True)
+        )
 
-        return works
+        return beliefs_posts
 
     def serve(self, request):
-        # Get work pages
-        works = self.works
+        # Get beliefs_posts
+        beliefs_posts = self.beliefs_posts
 
         # Filter by tag
         tag = request.GET.get('tag')
         if tag:
-            works = works.filter(tags__tag__slug=tag)
+            beliefs_posts = beliefs_posts.filter(tags__tag__slug=tag)
 
         # Pagination
+        per_page = 12
         page = request.GET.get('page')
-        paginator = Paginator(works, 12)  # Show 10 works per page
+        paginator = Paginator(beliefs_posts, per_page)  # Show 10 testimony_posts per page
         try:
-            works = paginator.page(page)
+            beliefs_posts = paginator.page(page)
         except PageNotAnInteger:
-            works = paginator.page(1)
+            beliefs_posts = paginator.page(1)
         except EmptyPage:
-            works = paginator.page(paginator.num_pages)
+            beliefs_posts = paginator.page(paginator.num_pages)
 
-        return render(request, self.template, {
-            'self': self,
-            'works': works,
-        })
+        if request.is_ajax():
+            return render(request, "lampstands/includes/beliefs_listing.html", {
+                'self': self,
+                'beliefs_posts': beliefs_posts,
+                'per_page': per_page,
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'beliefs_posts': beliefs_posts,
+                'per_page': per_page,
+            })
 
     content_panels = [
         FieldPanel('title', classname="full title"),
         FieldPanel('intro', classname="full"),
-        FieldPanel('hide_popular_tags'),
+        InlinePanel('related_links', label="Related links"),
     ]
 
     promote_panels = [
         MultiFieldPanel(Page.promote_panels, "Common page configuration"),
         FieldPanel('show_in_play_menu'),
+    ]
+
+
+# beliefs page
+class BeliefsPageRelatedLink(Orderable, RelatedLink):
+    page = ParentalKey('lampstands.BeliefsPage', related_name='related_links')
+
+
+class BeliefsPageTagList(models.Model):
+    name = models.CharField(max_length=255)
+    slug = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+register_snippet(BeliefsPageTagList)
+
+
+class BeliefsPageTagSelect(Orderable):
+    page = ParentalKey('lampstands.BeliefsPage', related_name='tags')
+    tag = models.ForeignKey(
+        'lampstands.BeliefsPageTagList',
+        related_name='Beliefs_page_tag_select'
+    )
+
+class BeliefsPage(Page):
+    colour = models.CharField(
+        "Listing card colour if left blank will display image",
+        choices=(
+            ('orange', "Orange"),
+            ('blue', "Blue"),
+            ('white', "White")
+        ),
+        max_length=255,
+        blank=True
+    )
+    streamfield = StreamField([
+        ('firstparagraph', blocks.RichTextBlock()),
+        ('story', StoryBlock()),
+        ], help_text="Always starts with the second letter after dropcap letter")
+    letterdropcap = models.CharField(max_length=1, blank=True)
+    canonical_url = models.URLField(blank=True, max_length=255)
+    search_fields = Page.search_fields + [
+        index.SearchField('streamfield'),
+    ]
+
+    @property
+    def beliefs_index(self):
+        # Find beliefs index in ancestors
+        for ancestor in reversed(self.get_ancestors()):
+            if isinstance(ancestor.specific, BeliefsIndexPage):
+                return ancestor
+
+        # No ancestors are beliefs indexes,
+        # just return first beliefs index in database
+        return BeliefsIndexPage.objects.first()
+
+    content_panels = [
+        FieldPanel('title', classname="full title"),
+        FieldPanel('colour'),
+        FieldPanel('letterdropcap'),
+        StreamFieldPanel('streamfield'),
+        InlinePanel('related_links', label="Related links"),
+        InlinePanel('tags', label="Tags")
     ]
 
 # Church page
@@ -1121,8 +1127,8 @@ class ChurchPage(Page):
             if isinstance(ancestor.specific, ChurchIndexPage):
                 return ancestor
 
-        # No ancestors are blog indexes,
-        # just return first blog index in database
+        # No ancestors are testimony indexes,
+        # just return first testimony index in database
         return ChurchIndexPage.objects.first()
 
     content_panels = [
@@ -1514,7 +1520,7 @@ class MarketingLandingPageFeaturedItem(Orderable):
     related_page = models.ForeignKey('wagtailcore.Page', related_name='+')
 
     panels = [
-        PageChooserPanel('related_page', ['lampstands.BlogPage', 'lampstands.WorkPage'])
+        PageChooserPanel('related_page', ['lampstands.TestimonyPage', 'lampstands.BeliefsPage'])
     ]
 
 

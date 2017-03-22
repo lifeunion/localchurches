@@ -1,0 +1,6 @@
+{% load wagtailcore_tags wagtailimages_tags staticfiles %}
+
+{% for post in beliefs_posts %}
+    {% include 'lampstands/tags/beliefs_post_item.html' %}
+{% endfor %}
+

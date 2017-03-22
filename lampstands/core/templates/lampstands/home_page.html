@@ -14,11 +14,11 @@
 
             <form method="get" action="properties.html">
                 <div class="form-group col-sm-6">
-                    <input type="text" class="form-control" placeholder="City/State/Province/Country/Region">
+                    <input id="geocomplete" type="text" class="form-control" placeholder="City/State/Province/Country/Region">
                 </div> <!-- /.form-group -->        
 
                 <div class="form-group col-sm-2">
-                    <button type="submit" class="btn btn-primary btn-block">Search</button>
+                    <button type="submit" id ="find" value="find" class="btn btn-primary btn-block">Search</button>
                 </div>
             </form>
         </div><!-- /.vessel -->
@@ -83,5 +83,39 @@
 </div><!-- /.vessel -->
 
 {% endblock %}
-
+{% block extra_js %}
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4MAVqADcBv3nSIqd8y7RZWF9kmcVB6XQ
+&libraries=places,geometry"  type="text/javascript"> </script>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="{% static 'js/villareal/jquery.geocomplete.js' %}"></script>
+    <script>
+      $(function(){
+        
+        var options = {
+          map: ".map_canvas"
+        };
+        
+        $("#geocomplete").geocomplete(options)
+          .bind("geocode:result", function(event, result){
+            $.log("Result: " + result.formatted_address);
+          })
+          .bind("geocode:error", function(event, status){
+            $.log("ERROR: " + status);
+          })
+          .bind("geocode:multiple", function(event, results){
+            $.log("Multiple: " + results.length + " results found");
+          });
+        
+        $("#find").click(function(){
+          $("#geocomplete").trigger("geocode");
+        });
+        
+        $("#examples a").click(function(){
+          $("#geocomplete").val($(this).text()).trigger("geocode");
+          return false;
+        });
+        
+      });
+    </script>
+{% endblock %}
 

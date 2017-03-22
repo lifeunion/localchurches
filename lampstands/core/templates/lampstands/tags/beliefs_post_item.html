@@ -1,0 +1,43 @@
+{% load wagtailcore_tags wagtailimages_tags lampstands_tags staticfiles %}
+
+{% block content %}
+
+<div class="col-lg-3">
+                    <div class="post">
+                        <div class="post-image">
+                            <a href="{% pageurl post %}" class="post-image-link" style="background-image: url('assets/img/tmp/tmp-1.jpg');"></a>
+
+                            <div class="post-author">                   
+                                <a href="{% pageurl post %}">
+                                    <span class="post-author-name">{{ post.title }}</span>
+                                </a>
+                            </div><!-- /.post-author -->
+                        </div><!-- /.post-image -->
+
+                        <div class="post-title">
+                            <h2><a href="{% pageurl post %}">{{ post.title }}</a></h2>
+                        </div><!-- /.post-title -->
+
+                        <div class="post-meta">
+                            <div class="post-meta-item">
+                                From: {{post.title}}
+                            </div><!-- /.post-meta-item -->
+
+                            </div><!-- /.post-meta -->
+
+                        <div class="post-content">
+                            <p>
+                            {% for block in post.streamfield %}
+                                        {% if block.block_type == 'firstparagraph' %}
+                                        <span class="drop-cap">{{post.letterdropcap}}</span> {% include_block block %} 
+                                        {% endif %}
+                            {% endfor %}
+                            </p>
+                        </div><!-- /.post-content -->
+
+                        <div class="post-read-more">
+                            <a href="{% pageurl post %}">Read More <i class="fa fa-chevron-right"></i></a>
+                        </div><!-- /.post-read-more -->
+                    </div><!-- /.post-->
+</div><!-- /.col-* -->
+{% endblock %}
