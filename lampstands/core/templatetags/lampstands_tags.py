@@ -86,7 +86,7 @@ def homepage_people_listing(context, count=3):
 # Blog feed for home page
 @register.inclusion_tag('lampstands/tags/homepage_testimony_listing.html', takes_context=True)
 def homepage_testimony_listing(context, count=4):
-    blog_posts = play_filter(TestimonyPage.objects.filter(live=True), count)
+    testimony_posts = play_filter(TestimonyPage.objects.filter(live=True), count)
     return {
         'testimony_posts': testimony_posts,
         # required by the pageurl tag that we want to use within this template
@@ -96,11 +96,11 @@ def homepage_testimony_listing(context, count=4):
 
 # Work feed for home page
 @register.inclusion_tag('lampstands/tags/homepage_beliefs_listing.html', takes_context=True)
-def homepage_work_listing(context, count=3):
-    work = play_filter(WorkPage.objects.filter(live=True),
+def homepage_beliefs_listing(context, count=3):
+    beliefs = play_filter(BeliefsPage.objects.filter(live=True),
                        count)
     return {
-        'work': work,
+        'beliefs': beliefs,
         # required by the pageurl tag that we want to use within this template
         'request': context['request'],
     }
