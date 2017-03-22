@@ -18,7 +18,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'css/leaflet.markercluster.default.css' %}" >    
     <link rel="stylesheet" type="text/css" id="css-primary" href="{% static 'css/villareal-turquoise.css' %}" >
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'css/img/LCfavicon.ico' %}" >
-
+    {% block extra_links %} {% endblock %}
     <title>Local Churches</title>
 </head>
 
@@ -144,6 +144,7 @@
 </div><!-- /.footer-wrapper -->
 </div><!-- /.page-wrapper -->
 
+{% block extra_js %}
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4MAVqADcBv3nSIqd8y7RZWF9kmcVB6XQ
 &libraries=places,geometry"  type="text/javascript"> </script>
 <script type="text/javascript" src="{% static 'js/villareal/jquery.js' %}"></script>
@@ -157,6 +158,6 @@
 <script type="text/javascript" src="{% static 'css/libraries/chartist/chartist.min.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/villareal/scrollPosStyler.js' %}"></script>
 <script type="text/javascript" src="{% static 'js/villareal/villareal.js' %}"></script>
-
+{% endblock %}
 </body>
 </html>

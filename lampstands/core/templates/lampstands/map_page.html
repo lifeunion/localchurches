@@ -40,14 +40,10 @@
                         </a><!-- /.header-logo -->
                     <div class="nav-primary-wrapper collapse navbar-toggleable-sm">
     <ul class="nav nav-pills nav-primary bleed out-animation">
-        <li class="nav-item nav-item-parent">
+        <li class="nav-item">
             <a href="..." class="nav-link menu button">
                 Find Us
             </a>
-            <ul class="sub-menu">
-                <li><a href="../map">Interactive Map</a></li>
-                <li><a href="../churches">Listings</a></li> 
-            </ul>
         </li>
 
         <li class="nav-item nav-item-parent">
@@ -56,14 +52,14 @@
             </a>
 
             <ul class="sub-menu">
-                <li><a href="../beliefs">Our Beliefs</a></li>
-                <li><a href="../standing">Our Standing</a></li>
-                <li><a href="../mission">Our Mission</a></li>
-                <li><a href="../hope">Our Hope</a></li>
-                <li><a href="../recovery">Concerning the Recovery</a></li>
-                <li><a href="../salvation">Concerning Salvation</a></li>
-                <li><a href="../christian-life">Concerning Christian Life</a></li>
-                <li><a href="../church-life">Concerning Church Life</a></li>
+                <li><a href="https://safe-cove-64619.herokuapp.com/ourbeliefs">Our Beliefs</a></li>
+                <li><a href="https://safe-cove-64619.herokuapp.com/ourstanding">Our Standing</a></li>
+                <li><a href="https://safe-cove-64619.herokuapp.com/ourmission">Our Mission</a></li>
+                <li><a href="https://safe-cove-64619.herokuapp.com/ourhope">Our Hope</a></li>
+                <li><a href="https://safe-cove-64619.herokuapp.com/recovery">Concerning the Recovery</a></li>
+                <li><a href="https://safe-cove-64619.herokuapp.com/salvation">Concerning Salvation</a></li>
+                <li><a href="https://safe-cove-64619.herokuapp.com/christian-life">Concerning Christian Life</a></li>
+                <li><a href="https://safe-cove-64619.herokuapp.com/church-life">Concerning Church Life</a></li>
             </ul>           
         </li>   
         
@@ -95,10 +91,10 @@
 </div><!-- /.nav-primary -->
 
 <div class="top-mobile-icon pull-xs-right hidden-md-up">
-<a href="https://safe-cove-64619.herokuapp.com/faq1"><i class="fa fa-question-circle"></i></a>
+<a href="https://safe-cove-64619.herokuapp.com/faq"><i class="fa fa-question-circle"></i></a>
 </div>
 <div class="top-mobile-icon pull-xs-right hidden-md-up">
-<a href="https://safe-cove-64619.herokuapp.com/contact.html"><i class="fa fa-envelope"></i></a>
+<a href="https://safe-cove-64619.herokuapp.com/contact"><i class="fa fa-envelope"></i></a>
 </div>                                    
                          
                     </div><!-- /.header-top-inner -->
@@ -150,7 +146,7 @@
 <script>
     $(function() {
         $('.map_container').storeLocator({
-            remote: "{% static 'lampstands/css/packages/src/stores.json' %}",
+            remote: "{% static 'lampstands/css/packages/src/churches.json' %}",
             listOptions:{
                 sortByDistance: true,
                 distanceType: 'km',
@@ -262,10 +258,8 @@
                 <li><b>Address</b>: ${address}</li>
                 <li><b>Phone</b>: ${phone}</li>
                 <li><b>E-Mail</b>: ${email}</li>
-                <li><b>Church's website</b>: www.website.com</li>
+                <li><b>Church's website</b>: ${website}</li>
             </ul>
-            <div class="label label-default">${category}
-            </div>
             <div class="label label-danger">${distance} km</div>
         </div>
     </div>
@@ -281,9 +275,8 @@
                 <li><b>Address</b>: ${address}</li>
                 <li><b>Phone</b>: ${phone}</li>
                 <li><b>E-Mail</b>: ${email}</li>
-                <li><b>Church's website</b>: www.website.com</li>
+                <li><b>Church's website</b>: ${website}</li>
             </ul>
-            <div class="label label-default">${category}</div>
             <a class="map_direction_trigger label label-warning">get route</a>
         </div>
     </div>
@@ -344,9 +337,9 @@
 
                 <div class="footer-right">
                     <ul class="nav nav-pills">
-                        <li class="nav-item"><a href="faq1.html" class="nav-link">FAQ's</a></li>
-                        <li class="nav-item"><a href="privacy.html" class="nav-link">Privacy Policy</a></li>
-                        <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
+                        <li class="nav-item"><a href="https://safe-cove-64619.herokuapp.com/faq" class="nav-link">FAQ's</a></li>
+                        <li class="nav-item"><a href="https://safe-cove-64619.herokuapp.com/privacy" class="nav-link">Privacy Policy</a></li>
+                        <li class="nav-item"><a href="https://safe-cove-64619.herokuapp.com/contact" class="nav-link">Contact</a></li>
                     </ul>
                 </div><!-- /.footer-right -->           
             </div><!-- /.footer-bottom -->
