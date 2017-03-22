@@ -1142,7 +1142,7 @@ class MapPage(Page):
 
 MapPage.content_panels = [
     FieldPanel('title', classname="full title"),
-    ImageChooserPanel('last_updates'),
+    ImageChooserPanel('last_update'),
 ]
 
 

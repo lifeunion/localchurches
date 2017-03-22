@@ -677,9 +677,9 @@ pre {
   @media (min-width: 1200px) {
     .vessel, .map-filter-wrapper {
       max-width: 1140px; } }
-  @media (min-width: 1900px) {
+  @media (min-width: 1500px) {
     .vessel, .map-filter-wrapper {
-      max-width: 1800px; } }
+      max-width: 1400px; } }
 
 .vessel-fluid {
   margin-left: auto;
@@ -5826,7 +5826,7 @@ label {
   background-size: cover;
   bottom: 0;
   left: 0;
-  opacity: .75;
+  opacity: 1.1;
   position: absolute;
   right: 0;
   top: 0; }
