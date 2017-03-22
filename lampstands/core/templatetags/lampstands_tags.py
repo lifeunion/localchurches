@@ -84,7 +84,7 @@ def homepage_people_listing(context, count=3):
 
 
 # Blog feed for home page
-@register.inclusion_tag('lampstands/tags/homepage_blog_listing.html', takes_context=True)
+@register.inclusion_tag('lampstands/tags/homepage_testimony_listing.html', takes_context=True)
 def homepage_blog_listing(context, count=4):
     blog_posts = play_filter(BlogPage.objects.filter(live=True), count)
     return {
@@ -95,7 +95,7 @@ def homepage_blog_listing(context, count=4):
 
 
 # Work feed for home page
-@register.inclusion_tag('lampstands/tags/homepage_work_listing.html', takes_context=True)
+@register.inclusion_tag('lampstands/tags/homepage_beliefs_listing.html', takes_context=True)
 def homepage_work_listing(context, count=3):
     work = play_filter(WorkPage.objects.filter(live=True),
                        count)
