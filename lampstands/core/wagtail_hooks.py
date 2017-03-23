@@ -72,3 +72,12 @@ def import_fontawesome_stylesheet():
         settings.STATIC_URL
     )
     return format_html(elem)
+
+@hooks.register('before_serve_page')
+def change_geodef(page, request, serve_args, serve_kwargs):
+    print ("Request:")
+    print (request)
+    print ("Args:")
+    print (serve_args)
+    print ("Kwargs:")
+    print (serve_kwargs)
