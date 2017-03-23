@@ -496,9 +496,8 @@
                 if (defaultLocation instanceof Array) {
                     latLng = new google.maps.LatLng(defaultLocation[0], defaultLocation[1]);
                 }
-                if (this.map) {
-                    this.map.setCenter(latLng);
-                }
+                
+                this.map.setCenter(latLng);
                 this.map.setZoom(this.settings.mapOptions.zoom);
 
                 var _t = this;
