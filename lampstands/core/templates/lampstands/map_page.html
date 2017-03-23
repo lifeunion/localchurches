@@ -41,7 +41,7 @@
                     <div class="nav-primary-wrapper collapse navbar-toggleable-sm">
     <ul class="nav nav-pills nav-primary bleed out-animation">
         <li class="nav-item">
-            <a href="https://safe-cove-64619.herokuapp.com/maps" class="nav-link menu button">
+            <a href="https://safe-cove-64619.herokuapp.com/map" class="nav-link menu button">
                 Find Us
             </a>
         </li>
@@ -253,14 +253,14 @@
 </script>
 <script id="mapListEntryTemplate" type="text/x-jQuery-tmpl">
 <div class="result_item" data-id="${id}">
-    <a><h3>${name}</h3></a>
+    <a href= "https://safe-cove-64619.herokuapp.com/churches/${name}"><h3>${name}</h3></a>
     <div class="result_item_info">
         <div class="info">
             <ul class="list-unstyled">
                 <li><b>Address</b>: ${address}</li>
                 <li><b>Phone</b>: ${phone}</li>
                 <li><b>E-Mail</b>: ${email}</li>
-                <li><b>Website</b>: <a href="${website}"></a></li>
+                <li><b>Website</b>: <a href="${website}"></a>${website}</li>
             </ul>
             <div class="label label-danger">${distance} km</div>
         </div>
@@ -269,7 +269,7 @@
 </script>
 <script id="mapListDetailTemplate" type="text/x-jQuery-tmpl">
 <div class="result_item_detail">
-<a href="#" class="map_details_close"><img src="{% static 'lampstands/css/packages/src/close.png' %}" alt="Close"></a>
+<a href="#" class="map_details_close"><img src="{% static 'lampstands/css/src/style/closeButton.svg' %}" alt="Close"></a>
     <h3><a href="https://safe-cove-64619.herokuapp.com/churches/${name}.html">${name}</a></h3>
     <div class="result_item_detail_info">
         <div class="info">
