@@ -82,7 +82,7 @@ span.stars span { background-position: 0 0; }
 
 .custom-pin:hover { -webkit-transform: scale(1.15); -ms-transform: scale(1.15); transform: scale(1.15); }
 
-.map_btn_custom { border: none; padding: 22px; position: relative; z-index: 20; cursor: pointer; }
+.map_btn_custom { border: none; padding: 12px; position: relative; z-index: 20; cursor: pointer; }
 .map_btn_custom::-webkit-input-placeholder { color: #000; }
 .map_btn_custom::-moz-placeholder { color: #000; }
 .map_btn_custom:-ms-input-placeholder { color: #000; }
