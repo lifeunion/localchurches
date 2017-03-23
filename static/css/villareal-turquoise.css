@@ -4699,8 +4699,8 @@ a {
     color: #08877a; }
 
 p {
-  font-size: 1.05em;
-  line-height: 26px;
+  font-size: 1.2em;
+  line-height: 28px;
   margin: 0 0 20px 0; }
 
 hr {
@@ -6216,7 +6216,7 @@ label {
 .content-title {
   background-color: #fff;
   background-image: linear-gradient(to right, #08877a, #0ee7d0);
-  margin: -60px 0 60px 0; }
+  margin: -60px 0 10px 0; }
   .content-title h1 {
     color: #fff;
     float: left;
