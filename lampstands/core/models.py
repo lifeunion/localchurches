@@ -840,7 +840,8 @@ class BeliefsIndexPageRelatedLink(Orderable, RelatedLink):
 
 class BeliefsIndexPage(Page):
     intro = models.TextField(blank=True)
-
+    #content = StreamField(StoryBlock())
+    
     search_fields = Page.search_fields + [
         index.SearchField('intro'),
     ]
