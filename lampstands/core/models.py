@@ -1097,10 +1097,6 @@ class ChurchPage(Page):
 class MapPage(Page):
     last_update = models.DateField(null=True, blank=True)
 
-    @property
-    def second_processor(request):
-        request.GET['search_term']
-
 MapPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('last_update'),
