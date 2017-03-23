@@ -1097,6 +1097,11 @@ class ChurchPage(Page):
 class MapPage(Page):
     last_update = models.DateField(null=True, blank=True)
 
+    def serve(self, request):
+        # Filter by tag
+        geolati = request.GET.get('lat')
+        geolong = request.GET.get('lng')
+
 MapPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('last_update'),
