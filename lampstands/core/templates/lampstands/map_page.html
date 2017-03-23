@@ -150,7 +150,7 @@
     $(function() {
         $('.map_container').storeLocator({
             remote: "{% static 'lampstands/css/packages/src/churches.json' %}",
-            defaultLocation:['{{geoinfo_lat}}', '{{geoinfo_lng}}'],
+            defaultLocation:['36.7783','-119.4179'],
             listOptions:{
                 sortByDistance: true,
                 distanceType: 'km',
@@ -185,8 +185,8 @@
                 zoomControlOptions: {
                         position: google.maps.ControlPosition.RIGHT_TOP
                     },
-                minZoom: 8,
-                maxZoom: 14
+                minZoom: 1,
+                maxZoom: 18
             },
             geoLocationOptions: {
                 position: google.maps.ControlPosition.TOP_RIGHT,
