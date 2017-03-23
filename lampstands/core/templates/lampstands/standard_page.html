@@ -1,210 +1,23 @@
+{% extends "lampstands/base_blog.html" %}
 {% load lampstands_tags cache staticfiles wagtailuserbar wagtailcore_tags wagtailimages_tags wagtailsettings_tags %}
 
-<!DOCTYPE html>
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1">
-    <title>{% block title_postfix %} | The Local Churches {% endblock %}</title>
-    
-    <link href="https://fonts.googleapis.com/css?family=Raleway:300,400,500,600,300,700&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}" >
-    <link rel="stylesheet" type="text/css" href="{% static 'css/libraries/owl-carousel/owl.carousel.css' %}" >
-    <link rel="stylesheet" type="text/css" href="{% static 'css/libraries/chartist/chartist.min.css' %}" >
-    <link rel="stylesheet" type="text/css" href="{% static 'css/leaflet.css' %}" >
-    <link rel="stylesheet" type="text/css" href="{% static 'css/leaflet.markercluster.css' %}" >
-    <link rel="stylesheet" type="text/css" href="{% static 'css/leaflet.markercluster.default.css' %}" >    
-    <link rel="stylesheet" type="text/css" id="css-primary" href="{% static 'css/villareal-turquoise.css' %}" >
-    <link rel="shortcut icon" type="image/x-icon" href="{% static 'css/img/LCfavicon.ico' %}" >
-
-    <title>Local Churches</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'lampstands/css/src/style/css/pluginStyle.css' %}">
-</head>
-<style type="text/css">
-
-    section{
-        padding: 60px 0;
-    }
-
-    .ct-section--grey{
-        background-color: #f5f5f5;
-        text-align: center;
-    }
-    h1{
-        font-size: 46px;
-        margin-top: 0;
-    }
-    code{
-        margin: 30px auto 0 auto;
-        background-color: rgba(255, 219, 140, 0.40);
-        display: block;
-        width: 850px;
-        font-size: 18px;
-        line-height: 30px;
-        text-align: left;
-    }
-    @media(max-width: 850px){
-        code{
-            width: 100%;
-        }
-    }
-</style>
-<body class="content-title-center">
-<div class="page-wrapper">
-    
-        <div class="header-wrapper">
-    <div class="header header-small">
-        <div class="header-inner">
-            <div class="vessel">
+{% block content %}
+<div class="content-title">
+    <div class="content-title-inner">
+        <div class="container">     
+            <h1>{{self.heading}}</h1>             
+        </div><!-- /.container -->
+    </div><!-- /.content-title-inner -->
+</div><!-- /.content-title -->
                 
-                <div class="header-top header-background">
-                    <div class="header-top-inner">
-                        <a class="header-logo" href="/">  
-                            <span class="header-logo-text">the local churches</span>
-                        </a><!-- /.header-logo -->
-                    <div class="nav-primary-wrapper collapse navbar-toggleable-sm">
-    <ul class="nav nav-pills nav-primary bleed out-animation">
-        <li class="nav-item nav-item-parent">
-            <a href="..." class="nav-link menu button">
-                Find Us
-            </a>
-            <ul class="sub-menu">
-                <li><a href="../map">Interactive Map</a></li>
-                <li><a href="../churches">Listings</a></li> 
-            </ul>
-        </li>
 
-        <li class="nav-item nav-item-parent">
-            <a href="https://safe-cove-64619.herokuapp.com/beliefs" class="nav-link menu button">
-                Beliefs
-            </a>
+                <div class="content">
+                    <div class="container">
 
-            <ul class="sub-menu">
-                <li><a href="../beliefs">Our Beliefs</a></li>
-                <li><a href="../standing">Our Standing</a></li>
-                <li><a href="../mission">Our Mission</a></li>
-                <li><a href="../hope">Our Hope</a></li>
-                <li><a href="../recovery">Concerning the Recovery</a></li>
-                <li><a href="../salvation">Concerning Salvation</a></li>
-                <li><a href="../christian-life">Concerning Christian Life</a></li>
-                <li><a href="../church-life">Concerning Church Life</a></li>
-            </ul>           
-        </li>   
-        
-        <li class="nav-item nav-item-parent ">
-            <a href="https://safe-cove-64619.herokuapp.com/history" class="nav-link menu button">
-                History
-            </a>    
+            <p align="center"> {{self.content}}
+            </p>
 
-            <ul class="sub-menu">
-                <li><a href="agents-row.html">Sample Row</a></li>
-                <li><a href="agents-grid.html">Sample Grid</a></li>
-            </ul>       
-        </li>
-
-        <li class="nav-item">
-            <a href="https://safe-cove-64619.herokuapp.com/testimonies" class="nav-link menu button">
-                Testimonies
-            </a>
-
-        </li>       
-
-        <li class="nav-item">
-            <a href="https://safe-cove-64619.herokuapp.com/recognition" class="nav-link menu button">
-                Recognition
-            </a>        
-        </li>   
-                                                            
-    </ul><!-- /.nav -->
-</div><!-- /.nav-primary -->
-
-<div class="top-mobile-icon pull-xs-right hidden-md-up">
-<a href="https://safe-cove-64619.herokuapp.com/faq1"><i class="fa fa-question-circle"></i></a>
-</div>
-<div class="top-mobile-icon pull-xs-right hidden-md-up">
-<a href="https://safe-cove-64619.herokuapp.com/contact.html"><i class="fa fa-envelope"></i></a>
-</div>                                    
-                         
-                    </div><!-- /.header-top-inner -->
-                </div><!-- /.header-top -->
-
-            </div><!-- /.vessel -->
-        </div><!-- /.header-inner -->
-    </div><!-- /.header -->
-</div><!-- /.header-wrapper-->
-    
-
-    <div class="main-wrapper">
-        <div class="main">
-            <div class="main-inner">  
-<section>
-    <div class="secondStyle"></div>
-</section>
-
-</div><!-- /.main-inner -->
-        </div><!-- /.main -->
-    </div><!-- /.main-wrapper -->
-
-<div class="icon-bar navbar-fixed-bottom hidden-md-up">
-    <a class="icon-bar active" href="index-static-image-filter-center"><i class="fa fa-search"></i></a>
-    <a href="https://safe-cove-64619.herokuapp.com/beliefs"><i class="fa fa-book"></i></a>
-    <a href="https://safe-cove-64619.herokuapp.com/history"><i class="fa fa-history"></i></a>
-    <a href="https://safe-cove-64619.herokuapp.com/testimonies"><i class="fa fa-users"></i></a>
-    <a href="https://safe-cove-64619.herokuapp.com/recognition"><i class="fa fa-comments"></i></a>
-</div>
-
-    <div class="footer-wrapper hidden-md-down">
-    <div class="vessel">
-        <div class="footer-inner">
-            
-
-            <div class="footer-bottom">
-                <div class="footer-left">
-                    &copy; 2017 All Rights reserved.
-                </div><!-- /.footer-left -->
-
-                <div class="footer-right">
-                    <ul class="nav nav-pills">
-                        <li class="nav-item"><a href="faq1.html" class="nav-link">FAQ's</a></li>
-                        <li class="nav-item"><a href="privacy.html" class="nav-link">Privacy Policy</a></li>
-                        <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
-                    </ul>
-                </div><!-- /.footer-right -->           
-            </div><!-- /.footer-bottom -->
-        </div><!-- /.footer-inner -->
-    </div><!-- /.vessel -->
-</div><!-- /.footer-wrapper -->
-</div><!-- /.page-wrapper -->
-
-    <script>
-            var JSLOC= "{% static 'lampstands/css/src/json/markers.json' %}"
-            var MRK= "{% static 'lampstands/css/src/style/cosmic/images/marker.png' %}"
-            var SM= "{% static 'lampstands/css/src/style/cosmic/images/clusterSmall.png' %}"
-            var MED= "{% static 'lampstands/css/src/style/cosmic/images/clusterMedium.png' %}"
-            var BIG= "{% static 'lampstands/css/src/style/cosmic/images/clusterBig.png' %}"
-            var JSPATH = "{% static 'lampstands/css/src/json/' %}"
-            var MRCL= "{% static 'lampstands/css/src/dependences/markerclusterer.js' %}"
-            var BUB = "{% static 'lampstands/css/src/dependences/infobubble.js' %}"
-            var CLB = "{% static 'lampstands/css/src/style/closeButton.svg' %}"
-    </script>
-
-    <script src="{% static 'lampstands/css/src/dependences/jquery-2.1.4.min.js' %}"></script>
-    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry&key=AIzaSyA4MAVqADcBv3nSIqd8y7RZWF9kmcVB6XQ&sensor=false
-"></script>
-    <script src="{% static 'lampstands/css/src/shop-locator.js' %}"></script>
-    <script src="{% static 'lampstands/css/js/example.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/villareal/jquery.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/villareal/jquery.ezmark.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/villareal/tether.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/villareal/bootstrap.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/villareal/gmap3.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/villareal/leaflet.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/villareal/leaflet.markercluster.js' %}"></script>
-    <script type="text/javascript" src="{% static 'css/libraries/owl-carousel/owl.carousel.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'css/libraries/chartist/chartist.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/villareal/scrollPosStyler.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/villareal/villareal.js' %}"></script>
-
-</body>
-</html>
+                    </div><!-- /.container -->
+                </div><!-- /.content -->
+   
+{% endblock %}

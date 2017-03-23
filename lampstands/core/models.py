@@ -374,59 +374,26 @@ class StandardPageClient(Orderable, RelatedLink):
 
 
 class StandardPage(Page):
-    main_image = models.ForeignKey(
-        'lampstands.LampstandsImage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+'
-    )
-    credit = models.CharField(max_length=255, blank=True)
-    heading = RichTextField(blank=True)
-    quote = models.CharField(max_length=255, blank=True)
-    intro = RichTextField("Intro (deprecated. Use streamfield instead)", blank=True)
-    middle_break = RichTextField(blank=True)
-    body = RichTextField("Body (deprecated. Use streamfield instead)", blank=True)
-    streamfield = StreamField(StoryBlock())
-    email = models.EmailField(blank=True)
-
-    feed_image = models.ForeignKey(
-        'lampstands.LampstandsImage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+'
-    )
+    heading = models.CharField(max_length=255, blank=True)
+    content = StreamField(StoryBlock())
 
     show_in_play_menu = models.BooleanField(default=False)
 
     search_fields = Page.search_fields + [
-        index.SearchField('intro'),
-        index.SearchField('body'),
+        index.SearchField('heading'),
+        index.SearchField('content'),
     ]
 
     content_panels = [
         FieldPanel('title', classname="full title"),
-        ImageChooserPanel('main_image'),
-        FieldPanel('credit', classname="full"),
         FieldPanel('heading', classname="full"),
-        FieldPanel('quote', classname="full"),
-        FieldPanel('intro', classname="full"),
-        FieldPanel('middle_break', classname="full"),
-        FieldPanel('body', classname="full"),
-        StreamFieldPanel('streamfield'),
-        FieldPanel('email', classname="full"),
-        InlinePanel('content_block', label="Content block"),
-        InlinePanel('related_links', label="Related links"),
-        InlinePanel('clients', label="Clients"),
+        StreamFieldPanel('content'),
     ]
 
     promote_panels = [
         MultiFieldPanel(Page.promote_panels, "Common page configuration"),
         FieldPanel('show_in_play_menu'),
-        ImageChooserPanel('feed_image'),
     ]
-
 
 # About page
 class AboutPageRelatedLinkButton(Orderable, RelatedLink):
@@ -968,21 +935,10 @@ class BeliefsPageTagSelect(Orderable):
     )
 
 class BeliefsPage(Page):
-    colour = models.CharField(
-        "Listing card colour if left blank will display image",
-        choices=(
-            ('orange', "Orange"),
-            ('blue', "Blue"),
-            ('white', "White")
-        ),
-        max_length=255,
-        blank=True
-    )
     streamfield = StreamField([
         ('firstparagraph', blocks.RichTextBlock()),
         ('story', StoryBlock()),
         ], help_text="Always starts with the second letter after dropcap letter")
-    letterdropcap = models.CharField(max_length=1, blank=True)
     canonical_url = models.URLField(blank=True, max_length=255)
     search_fields = Page.search_fields + [
         index.SearchField('streamfield'),
@@ -1001,8 +957,6 @@ class BeliefsPage(Page):
 
     content_panels = [
         FieldPanel('title', classname="full title"),
-        FieldPanel('colour'),
-        FieldPanel('letterdropcap'),
         StreamFieldPanel('streamfield'),
         InlinePanel('related_links', label="Related links"),
         InlinePanel('tags', label="Tags")
