@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "slug": "Anaheim-CA-USA"
+    "slug": "Anaheim-CA-USA",
     "name": "Church in Anaheim",
     "email": "office@churchinanaheim.org",
     "phone": "+1 (714) 761-7007",
@@ -22,7 +22,7 @@
   
   {
     "id": 2,
-    "slug": "Fullerton-1-CA-USA"
+    "slug": "Fullerton-1-CA-USA",
     "name": "Church in Fullerton (Hall 1-Chinese/Korean)",
     "email": "info@churchinfullerton.org",
     "phone": "+1 (714) 213-5598",
@@ -42,7 +42,7 @@
   },
   {
     "id": 3,
-    ""
+    "slug": "Fullerton-2-CA-USA",
     "name": "Church in Fullerton (Hall 2-English)",
     "email": "info@churchinfullerton.org",
     "phone": "+1 (714) 213-5598",
@@ -62,6 +62,7 @@
   },
   {
     "id": 4,
+    "slug": "Cerritos-CA-USA",
     "name": "Church in Cerritos",
     "email": "churchincerritos@gmail.com",
     "phone": "+1 (562) 924-8081",
@@ -81,6 +82,7 @@
   },
   {
     "id": 5,
+    "slug": "Cypress-CA-USA",
     "name": "Church in Cypress",
     "email": "churchincypress@gmail.com",
     "phone": "+1 (714) 527-2403",
@@ -100,6 +102,7 @@
   },
   {
     "id": 6,
+    "slug": "LongBeach-CA-USA",
     "name": "Church in Long Beach",
     "email": "thechurchinlongbeach@gmail.com",
     "phone": "+1 (562) 422-7330",
@@ -119,6 +122,7 @@
   },
   {
     "id": 7,
+    "slug": "SanFransisco-CA-USA",
     "name": "Church in San Francisco",
     "email": "info@churchinsf.org",
     "phone": "+1 (415) 564-1189",
@@ -138,6 +142,7 @@
   },
   {
     "id": 8,
+    "slug": "Austin-TX-USA",
     "name": "Church in Austin",
     "email": "hello@churchinaustin.org",
     "phone": "+1 (512) 443-0078",
