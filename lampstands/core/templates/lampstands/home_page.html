@@ -12,7 +12,7 @@
                 <h1>Find a local church.</h1>
             </div><!-- /.cover-title-->
 
-           <form method='GET' action='/map/'>
+           <form method='GET' action="{% url 'second_processor' %}">
                 {% csrf_token %}
                 <div class="form-group col-sm-6">
                 <input class="form-control" type="text" name="searchterm" placeholder="City or Region or Country Name"/>
