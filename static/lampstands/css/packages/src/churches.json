@@ -1,6 +1,7 @@
 [
   {
     "id": 1,
+    "slug": "Anaheim-CA-USA"
     "name": "Church in Anaheim",
     "email": "office@churchinanaheim.org",
     "phone": "+1 (714) 761-7007",
@@ -21,6 +22,7 @@
   
   {
     "id": 2,
+    "slug": "Fullerton-1-CA-USA"
     "name": "Church in Fullerton (Hall 1-Chinese/Korean)",
     "email": "info@churchinfullerton.org",
     "phone": "+1 (714) 213-5598",
@@ -40,6 +42,7 @@
   },
   {
     "id": 3,
+    ""
     "name": "Church in Fullerton (Hall 2-English)",
     "email": "info@churchinfullerton.org",
     "phone": "+1 (714) 213-5598",
