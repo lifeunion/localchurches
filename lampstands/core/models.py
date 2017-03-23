@@ -936,6 +936,7 @@ class BeliefsPageTagSelect(Orderable):
     )
 
 class BeliefsPage(Page):
+    letterdropcap = models.CharField(max_length=1, blank=True)
     streamfield = StreamField([
         ('firstparagraph', blocks.RichTextBlock()),
         ('story', StoryBlock()),
@@ -958,6 +959,7 @@ class BeliefsPage(Page):
 
     content_panels = [
         FieldPanel('title', classname="full title"),
+        FieldPanel('letterdropcap'),
         StreamFieldPanel('streamfield'),
         InlinePanel('related_links', label="Related links"),
         InlinePanel('tags', label="Tags")
