@@ -41,7 +41,7 @@
                     <div class="nav-primary-wrapper collapse navbar-toggleable-sm">
     <ul class="nav nav-pills nav-primary bleed out-animation">
         <li class="nav-item">
-            <a href="..." class="nav-link menu button">
+            <a href="https://safe-cove-64619.herokuapp.com/maps" class="nav-link menu button">
                 Find Us
             </a>
         </li>
@@ -178,7 +178,7 @@
             ],
             mapOptions: {
                 mapTypeControl: false,
-                zoom: 7
+                zoom: 6
             },
             geoLocationOptions: {
                 position: google.maps.ControlPosition.TOP_RIGHT,
@@ -260,7 +260,7 @@
                 <li><b>Address</b>: ${address}</li>
                 <li><b>Phone</b>: ${phone}</li>
                 <li><b>E-Mail</b>: ${email}</li>
-                <li><b>Church's website</b>: ${website}</li>
+                <li><b>Website</b>: <a href="${website}"></a></li>
             </ul>
             <div class="label label-danger">${distance} km</div>
         </div>
