@@ -12,7 +12,7 @@
 			defaults = {
                 remote: null,
                 height: null,
-                defaultLocation: {31.7683, 35.2137},
+                defaultLocation: null,
                 mapOptions: {
                     zoom: 10,
                     minZoom: 4,
