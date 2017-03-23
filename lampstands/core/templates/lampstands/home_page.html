@@ -12,19 +12,26 @@
                 <h1>Find a local church.</h1>
             </div><!-- /.cover-title-->
 
-            <form>
-              <input id="geocomplete" type="text" placeholder="Type in an address" value="Empire State Bldg" />
-              <input id="find" type="button" value="find" />
-              
-              <ul>
-                <li>Location: <span data-geo="location"></span></li>
-                <li>Route: <span data-geo="route"></span></li>
-                <li>Street Number: <span data-geo="street_number"></span></li>
-                <li>Postal Code: <span data-geo="postal_code"></span></li>
-                <li>Locality: <span data-geo="locality"></span></li>
-                <li>Country Code: <span data-geo="country_short"></span></li>
-                <li>State: <span data-geo="administrative_area_level_1"></span></li>
-              </ul>
+           <form>
+
+      <div class="location">
+        <input class="geocomplete" type="text" placeholder="Type in an address" value="Empire State Bldg" />
+        <input class="find" type="button" value="find" />
+
+        <fieldset class="details">
+          <h3>Address-Details</h3>
+
+
+          <label>Latitude</label>
+          <input name="lat" type="text" value="">
+
+          <label>Longitude</label>
+          <input name="lng" type="text" value="">
+
+
+        </fieldset>
+      </div>
+
             </form>
 
         </div><!-- /.vessel -->
@@ -91,14 +98,14 @@
 <script type="text/javascript" src="{% static 'js/villareal/jquery.geocomplete.js' %}"></script>    
     <script>
       $(function(){
-        $("#geocomplete").geocomplete({
-          map: ".map_canvas",
-          details: "form ul",
-          detailsAttribute: "data-geo"
+        $(".geocomplete").geocomplete({
+          details: ".details",
+          detailsScope: '.location',
+          types: ["geocode", "establishment"],
         });
-        
-        $("#find").click(function(){
-          $("#geocomplete").trigger("geocode");
+
+        $(".find").click(function(){
+          $(this).parents(".location").find(".geocomplete").trigger("geocode");
         });
       });
     </script>
