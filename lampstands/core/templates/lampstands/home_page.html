@@ -12,10 +12,10 @@
                 <h1>Find a local church.</h1>
             </div><!-- /.cover-title-->
 
-           <form method='POST' action='/map/?search={{ current_search}}'>
+           <form method='GET' action='/map/'>
                 {% csrf_token %}
                 <div class="form-group col-sm-6">
-                <input class="form-control" type="text" value="{{ current_search }}" placeholder="City or Region or Country Name"/>
+                <input class="form-control" type="text" name="searchterm" placeholder="City or Region or Country Name"/>
                 </div>
                 <div class="form-group col-sm-2">
                 <input class="btn btn-primary btn-block find" type="submit" value="Search">
