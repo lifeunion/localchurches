@@ -120,7 +120,7 @@
                     show: true,
                     position: google.maps.ControlPosition.TOP_LEFT,
                     placeholder: 'find location by city',
-                    country: null,
+                    country: 'all',
                     types: '(cities)',
                     zoom: 10,
                     class: 'map_btn_custom',
