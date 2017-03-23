@@ -1097,6 +1097,25 @@ class ChurchPage(Page):
 class MapPage(Page):
     last_update = models.DateField(null=True, blank=True)
 
+    @property
+    def geoinfo_lat(self):
+        geoinfo_lat = '0' 
+        return geoinfo_lat
+
+    def geoinfo_lng(self):
+        geoinfo_lng = '0' 
+        return geoinfo_lng
+
+    def serve(self, request):
+        # Filter by tag
+        geoinfo_lat = request.GET.get('lat')
+        geoinfo_lng = request.GET.get('lng')
+
+        return render(request, self.template, {
+                'self': self,
+                'geinfo_lat': geoinfo_lat,
+                'geoinfo_lng': geoinfo_lng,
+            })
 
 MapPage.content_panels = [
     FieldPanel('title', classname="full title"),

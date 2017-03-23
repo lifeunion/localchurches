@@ -77,7 +77,3 @@ def import_fontawesome_stylesheet():
 def change_geodef(page, request, serve_args, serve_kwargs):
     print ("Request:")
     print (request)
-    print ("Args:")
-    print (serve_args)
-    print ("Kwargs:")
-    print (serve_kwargs)
