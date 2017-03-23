@@ -12,7 +12,7 @@
                 <h1>Find a local church.</h1>
             </div><!-- /.cover-title-->
 
-            <form method="get" action="properties.html">
+            <form method="get" action="map_page.html">
                 <div class="form-group col-sm-6">
                     <input id="geocomplete" type="text" class="form-control" placeholder="City or Region or Country">
                 </div> <!-- /.form-group -->        
@@ -21,6 +21,24 @@
                     <button type="submit" id ="find" value="find" class="btn btn-primary btn-block">Search</button>
                 </div>
             </form>
+            
+            <form>
+              <input id="geocomplete" type="text" placeholder="Type in an address" value="Empire State Bldg" />
+              <input id="find" type="button" value="find" />
+              
+              <ul>
+                <li>Location: <span data-geo="location"></span></li>
+                <li>Route: <span data-geo="route"></span></li>
+                <li>Street Number: <span data-geo="street_number"></span></li>
+                <li>Postal Code: <span data-geo="postal_code"></span></li>
+                <li>Locality: <span data-geo="locality"></span></li>
+                <li>Country Code: <span data-geo="country_short"></span></li>
+                <li>State: <span data-geo="administrative_area_level_1"></span></li>
+              </ul>
+
+            </form>
+
+
         </div><!-- /.vessel -->
     </div><!-- /.cover-title -->
 </div><!-- /.cover -->
@@ -82,11 +100,7 @@
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA4MAVqADcBv3nSIqd8y7RZWF9kmcVB6XQ
 &libraries=places,geometry"  type="text/javascript"> </script>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script type="text/javascript" src="{% static 'js/villareal/jquery.geocomplete.js' %}"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    
-    <script src="../jquery.geocomplete.js"></script>
-    
+<script type="text/javascript" src="{% static 'js/villareal/jquery.geocomplete.js' %}"></script>    
     <script>
       $(function(){
         $("#geocomplete").geocomplete({
