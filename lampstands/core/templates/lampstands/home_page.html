@@ -15,8 +15,8 @@
            <form>
 
       <div class="location">
-        <input class="geocomplete" type="text" placeholder="Type in an address" value="Empire State Bldg" />
-        <input class="find" type="button" value="find" />
+        <input class="form-control" type="text" placeholder="Type in an address" value="Empire State Bldg" />
+        <button class="btn btn-primary btn-block find"> Search </button>
 
         <fieldset class="details">
           <h3>Address-Details</h3>
@@ -98,14 +98,14 @@
 <script type="text/javascript" src="{% static 'js/villareal/jquery.geocomplete.js' %}"></script>    
     <script>
       $(function(){
-        $(".geocomplete").geocomplete({
+        $(".form-control").geocomplete({
           details: ".details",
           detailsScope: '.location',
           types: ["geocode", "establishment"],
         });
 
         $(".find").click(function(){
-          $(this).parents(".location").find(".geocomplete").trigger("geocode");
+          $(this).parents(".location").find(".form-control").trigger("geocode");
         });
       });
     </script>
