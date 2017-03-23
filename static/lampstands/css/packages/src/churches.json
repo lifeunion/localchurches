@@ -14,8 +14,8 @@
       "Southern California",
       "California",
       "United States of America",
-      "North America",
-    ],
+      "North America"
+    ]
     
     },
   
@@ -34,8 +34,8 @@
       "Southern California",
       "California",
       "United States of America",
-      "North America",
-    ],
+      "North America"
+    ]
     
   },
   {
@@ -53,8 +53,8 @@
       "Southern California",
       "California",
       "United States of America",
-      "North America",
-    ],
+      "North America"
+    ]
    
   },
   {
@@ -72,8 +72,8 @@
       "Southern California",
       "California",
       "United States of America",
-      "North America",
-    ],
+      "North America"
+    ]
 
   },
   {
@@ -91,8 +91,8 @@
       "Southern California",
       "California",
       "United States of America",
-      "North America",
-    ],
+      "North America"
+    ]
     
   },
   {
@@ -110,8 +110,8 @@
       "Southern California",
       "California",
       "United States of America",
-      "North America",
-    ],
+      "North America"
+    ]
    
   },
   {
@@ -129,8 +129,8 @@
       "Northern California",
       "California",
       "United States of America",
-      "North America",
-    ],
+      "North America"
+    ]
     
   },
   {
@@ -147,9 +147,9 @@
     "tags": [
       "Texas",
       "United States of America",
-      "North America",
-    ],
+      "North America"
+    ]
     
-  },
+  }
 
 ]
