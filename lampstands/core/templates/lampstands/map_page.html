@@ -260,7 +260,7 @@
                 <li><b>Address</b>: ${address}</li>
                 <li><b>Phone</b>: ${phone}</li>
                 <li><b>E-Mail</b>: ${email}</li>
-                <li><b>Website</b>: <a href="${website}"></a>${website}</li>
+                <li><b>Website</b>: <a href="${website}">${website}</a></li>
             </ul>
             <div class="label label-danger">${distance} km</div>
         </div>
@@ -279,40 +279,16 @@
                 <li><b>E-Mail</b>: ${email}</li>
                 <li><b>Church's website</b>: ${website}</li>
             </ul>
-            <a class="map_direction_trigger label label-warning">get route</a>
+            <a class="map_direction_trigger label label-danger">get route</a>
         </div>
     </div>
     <div class="result_item_detail_info">
         <h4>Tags</h4>
-           <span class="label label-primary">${$value}</span>
+           <span class="label label-primary">${$tags}</span>
     </div>
     <div class="result_item_detail_info">
     <h4>About</h4>
     ${about}
-    </div>
-    <div class="result_item_detail_info">
-    <h4>Gallery</h4>
-        <div class="slider_container">
-            <div style="display: inline-block;">
-                <img src="{% static 'lampstands/css/packages/slider/1.jpg' %}"/>
-            </div>
-            <div>
-                <img src="{% static 'lampstands/css/packages/slider/2.jpg' %}"/>
-            </div>
-            <div>
-               <img src="{% static 'lampstands/css/packages/slider/3.jpg' %}"/>
-            </div>
-             <div>
-                <img src="{% static 'lampstands/css/packages/slider/4.jpg' %}"/>
-            </div>
-            <span class="slider_nav next">&#x203a;</span>
-            <span class="slider_nav prev">&#x2039;</span>
-        </div>
-
-    </div>
-    <div class="result_item_detail_info">
-    <h4>Panorama View</h4>
-        <div id="pano"> </div>
     </div>
 </div>
 </script>
