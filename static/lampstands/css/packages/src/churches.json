@@ -1,0 +1,155 @@
+[
+  {
+    "id": 1,
+    "name": "church in Anaheim",
+    "email": "office@churchinanaheim.org",
+    "phone": "+1 (714) 761-7007",
+    "address": "2528 W La Palma Ave, Anaheim, CA 92801",
+    "website": "http://www.churchinanaheim.org",
+    "location": {
+      "latitude": "33.8443769",
+      "longitude": "-117.9338217"
+    },
+    "tags": [
+      "Southern California",
+      "California",
+      "United States of America",
+      "North America",
+    ],
+    
+    },
+  
+  {
+    "id": 2,
+    "name": "church in Fullerton (Hall 1-Chinese/Korean)",
+    "email": "info@churchinfullerton.org",
+    "phone": "+1 (714) 213-5598",
+    "address": "1330 N Placentia Ave, Fullerton, CA 92831",
+    "website": "http://www.churchinfullerton.org",
+    "location": {
+      "latitude": "33.8846113",
+      "longitude": "-117.8776912"
+    },
+    "tags": [
+      "Southern California",
+      "California",
+      "United States of America",
+      "North America",
+    ],
+    
+  },
+  {
+    "id": 3,
+    "name": "church in Fullerton (Hall 2-English)",
+    "email": "info@churchinfullerton.org",
+    "phone": "+1 (714) 213-5598",
+    "address": "414 N Placentia Ave, Placentia, CA 92870",
+    "website": "http://www.churchinfullerton.org",
+    "location": {
+      "latitude": "33.8771104",
+      "longitude": "-117.8795457"
+    },
+    "tags": [
+      "Southern California",
+      "California",
+      "United States of America",
+      "North America",
+    ],
+   
+  },
+  {
+    "id": 4,
+    "name": "church in Cerritos",
+    "email": "churchincerritos@gmail.com",
+    "phone": "+1 (562) 924-8081",
+    "address": "12061 Del Amo Blvd, Cerritos, CA 90703",
+    "website": "http://www.churchincerritos.org",
+    "location": {
+      "latitude": "33.8466665",
+      "longitude": "-118.0773907"
+    },
+    "tags": [
+      "Southern California",
+      "California",
+      "United States of America",
+      "North America",
+    ],
+
+  },
+  {
+    "id": 5,
+    "name": "church in Cypress",
+    "email": "churchincypress@gmail.com",
+    "phone": "+1 (714) 527-2403",
+    "address": "9512 Juanita St, Cypress, CA 90630",
+    "website": "http://www.churchincypress.org",
+    "location": {
+      "latitude": "33.8239407",
+      "longitude": "-118.0256847"
+    },
+    "tags": [
+      "Southern California",
+      "California",
+      "United States of America",
+      "North America",
+    ],
+    
+  },
+  {
+    "id": 6,
+    "name": "church in Long Beach",
+    "email": "thechurchinlongbeach@gmail.com",
+    "phone": "+1 (562) 422-7330",
+    "address": "4911 Orange Ave, Long Beach, CA 90807",
+    "website": "http://www.churchinlongbeach.org",
+    "location": {
+      "latitude": "33.8467809",
+      "longitude": "-118.179197"
+    },
+    "tags": [
+      "Southern California",
+      "California",
+      "United States of America",
+      "North America",
+    ],
+   
+  },
+  {
+    "id": 7,
+    "name": "church in San Francisco",
+    "email": "info@churchinsf.org",
+    "phone": "+1 (415) 564-1189",
+    "address": "1201 19th Ave, San Francisco, CA 94122",
+    "website": "http://www.churchinsf.org",
+    "location": {
+      "latitude": "37.7652120",
+      "longitude": "-122.4775990"
+    },
+    "tags": [
+      "Northern California",
+      "California",
+      "United States of America",
+      "North America",
+    ],
+    
+  },
+  {
+    "id": 8,
+    "name": "church in Austin",
+    "email": "hello@churchinaustin.org",
+    "phone": "+1 (512) 443-0078",
+    "address": "2530 S Congress Ave, Austin, TX 78704",
+    "website": "http://www.churchinaustin.org",
+    "location": {
+      "latitude": "30.2371655",
+      "longitude": "-97.7575981"
+    },
+    "tags": [
+      "Texas",
+      "United States of America",
+      "North America",
+    ],
+    
+  },
+
+]
