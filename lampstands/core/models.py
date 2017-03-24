@@ -1106,10 +1106,15 @@ class MapPage(Page):
         geoinfo_lng = '0' 
         return geoinfo_lng
 
+    def zoom_deflevel(self):
+        zoom_deflevel = 12 
+        return zoom_deflevel
+
     def serve(self, request):
         # Filter by tag
         geoinfo_lat = request.GET.get('lat')
         geoinfo_lng = request.GET.get('lng')
+        zoom_deflevel = 12
 
         print (geoinfo_lat)
         print (geoinfo_lng)
@@ -1117,14 +1122,17 @@ class MapPage(Page):
         if not geoinfo_lat:
             print ('execute default:')
             geoinfo_lat = '36.7783'
+            zoom_deflevel = 4
 
         if not geoinfo_lng:
             geoinfo_lng = '-119.4179'
+            zoom_deflevel = 4
 
         return render(request, self.template, {
                 'self': self,
                 'geoinfo_lat': geoinfo_lat,
                 'geoinfo_lng': geoinfo_lng,
+                'zoom_deflevel': zoom_deflevel
             })
 
 MapPage.content_panels = [
