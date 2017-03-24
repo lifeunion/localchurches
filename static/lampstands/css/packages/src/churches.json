@@ -8,8 +8,8 @@
     "address": "2528 W La Palma Ave, Anaheim, CA 92801",
     "website": "http://www.churchinanaheim.org",
     "location": {
-      "latitude": "33.8443769",
-      "longitude": "-117.9338217"
+      "latitude": "33.8465868",
+      "longitude": "-117.9756909"
     },
     "tags": [
       "Southern California",
@@ -29,8 +29,8 @@
     "address": "1330 N Placentia Ave, Fullerton, CA 92831",
     "website": "http://www.churchinfullerton.org",
     "location": {
-      "latitude": "33.8846113",
-      "longitude": "-117.8776912"
+      "latitude": "33.8846069",
+      "longitude": "-117.8776965"
     },
     "tags": [
       "Southern California",
@@ -49,8 +49,8 @@
     "address": "414 N Placentia Ave, Placentia, CA 92870",
     "website": "http://www.churchinfullerton.org",
     "location": {
-      "latitude": "33.8771104",
-      "longitude": "-117.8795457"
+      "latitude": "33.8771619",
+      "longitude": "-117.8797671"
     },
     "tags": [
       "Southern California",
@@ -69,8 +69,8 @@
     "address": "12061 Del Amo Blvd, Cerritos, CA 90703",
     "website": "http://www.churchincerritos.org",
     "location": {
-      "latitude": "33.8466665",
-      "longitude": "-118.0773907"
+      "latitude": "33.8466736",
+      "longitude": "-118.077367"
     },
     "tags": [
       "Southern California",
@@ -90,7 +90,7 @@
     "website": "http://www.churchincypress.org",
     "location": {
       "latitude": "33.8239407",
-      "longitude": "-118.0256847"
+      "longitude": "-118.02569"
     },
     "tags": [
       "Southern California",
@@ -109,8 +109,8 @@
     "address": "4911 Orange Ave, Long Beach, CA 90807",
     "website": "http://www.churchinlongbeach.org",
     "location": {
-      "latitude": "33.8467809",
-      "longitude": "-118.179197"
+      "latitude": "33.8466394",
+      "longitude": "-118.179362"
     },
     "tags": [
       "Southern California",
@@ -129,8 +129,8 @@
     "address": "1201 19th Ave, San Francisco, CA 94122",
     "website": "http://www.churchinsf.org",
     "location": {
-      "latitude": "37.7652120",
-      "longitude": "-122.4775990"
+      "latitude": "37.7652046",
+      "longitude": "-122.4797948"
     },
     "tags": [
       "Northern California",
@@ -149,8 +149,8 @@
     "address": "2530 S Congress Ave, Austin, TX 78704",
     "website": "http://www.churchinaustin.org",
     "location": {
-      "latitude": "30.2371655",
-      "longitude": "-97.7575981"
+      "latitude": "30.2367947",
+      "longitude": "-97.7574212"
     },
     "tags": [
       "Texas",
