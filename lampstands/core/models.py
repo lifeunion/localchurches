@@ -1117,11 +1117,13 @@ class MapPage(Page):
         if not geoinfo_lat:
             print ('execute default:')
             geoinfo_lat = '36.7783'
+
+        if not geoinfo_lng:
             geoinfo_lng = '-119.4179'
 
         return render(request, self.template, {
                 'self': self,
-                'geinfo_lat': geoinfo_lat,
+                'geoinfo_lat': geoinfo_lat,
                 'geoinfo_lng': geoinfo_lng,
             })
 
