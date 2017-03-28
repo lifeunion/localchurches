@@ -4701,7 +4701,8 @@ a {
 p {
   font-size: 1.2em;
   line-height: 28px;
-  margin: 0 0 20px 0; }
+  margin: 0 0 20px 0; 
+  font-family: serif;}
 
 hr {
   border-color: #eaeaea;
@@ -6783,7 +6784,7 @@ label {
   margin: 0 0 20px 0; }
   .post-title h2 {
     font-weight: 600;
-    font-style: 2.6rem;
+    font-size: 2.6rem;
     line-height: 0.9;
     margin: 0;
     padding: 0;
