@@ -802,6 +802,14 @@ class BlogPage(Page):
     streamfield = StreamField([
         ('firstparagraph', blocks.RichTextBlock()),
         ('story', StoryBlock()),
+        ('stats', StatsBlock()),
+        ('wideimage', WideImage()),
+        ('bustout', BustoutBlock()),
+        ('pullimgquote',PullQuoteImageBlock()),
+        ('pullquote', PullQuoteBlock()),
+        ('photogrid', PhotoGridBlock()),
+        ('img', ImageBlock()),
+        ('imgchoice', ImageFormatChoiceBlock()),
         ], help_text="Always starts with the second letter after dropcap letter")
     letterdropcap = models.CharField(max_length=1, blank=True)
     author = models.CharField(max_length=255, blank=True)
