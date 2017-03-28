@@ -6798,7 +6798,7 @@ label {
 .post-meta {
   border-bottom: 1px solid rgba(0, 0, 0, 0.04);
   border-top: 1px solid rgba(0, 0, 0, 0.04);
-  font-size: .9em;
+  font-size: 1.1em;
   font-style: italic;
   margin: 0 0 20px 0;
   padding: 7px 0; }
@@ -6817,7 +6817,7 @@ label {
 
 .post-content p {
   color: gray;
-  font-size: 1.2em;
+  font-size: 1.3em;
   margin: 0; }
 
 .post-read-more {
