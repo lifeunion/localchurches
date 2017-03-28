@@ -6783,7 +6783,8 @@ label {
   margin: 0 0 20px 0; }
   .post-title h2 {
     font-weight: 600;
-    line-height: 1;
+    font-style: 2.6rem;
+    line-height: 0.9;
     margin: 0;
     padding: 0;
     white-space: normal; }
