@@ -6822,15 +6822,14 @@ label {
 
 .post-read-more {
   margin: 10px 0 0 0; 
-  font-family: serif;
-  font-size:1.3em;}
+  font-size:1.1em;}
   .post-read-more a {
     float: right;
     font-weight: 600;
     transition: color .15s linear; }
     .post-read-more a .fa {
-      font-size: .8em;
-      margin: 0 0 0 10px; }
+      font-size: .7em;
+      margin: 0 0 0 9px; }
     .post-read-more a:hover {
       text-decoration: none; }
 
