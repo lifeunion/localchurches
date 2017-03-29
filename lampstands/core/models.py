@@ -886,7 +886,7 @@ class BeliefsIndexPage(Page):
             beliefs_posts = beliefs_posts.filter(tags__tag__slug=tag)
 
         # Pagination
-        per_page = 4
+        per_page = 8
         page = request.GET.get('page')
         paginator = Paginator(beliefs_posts, per_page)  # Show 10 blog_posts per page
         try:
