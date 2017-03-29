@@ -320,7 +320,7 @@ p {
   float: left;
   width: auto;
   margin-right: 0.1em;
-  font-size: 650%;
+  font-size: 580%;
   font-family: serif;
   line-height: 80%;
   }
@@ -4699,7 +4699,7 @@ a {
     color: #08877a; }
 
 p {
-  font-size: 1.2em;
+  font-size: 1.3em;
   line-height: 28px;
   margin: 0 0 20px 0; 
   font-family: serif;}
@@ -6221,7 +6221,7 @@ label {
   .content-title h1 {
     color: #fff;
     float: left;
-    font-size: 2.5em;
+    font-size: 2.75em;
     font-weight: 300;
     margin: 0;
     padding: 0; }
@@ -6821,13 +6821,15 @@ label {
   margin: 0; }
 
 .post-read-more {
-  margin: 10px 0 0 0; }
+  margin: 10px 0 0 0; 
+  font-family: serif;
+  font-size:1.3em;}
   .post-read-more a {
     float: right;
     font-weight: 600;
     transition: color .15s linear; }
     .post-read-more a .fa {
-      font-size: .7em;
+      font-size: .8em;
       margin: 0 0 0 10px; }
     .post-read-more a:hover {
       text-decoration: none; }
