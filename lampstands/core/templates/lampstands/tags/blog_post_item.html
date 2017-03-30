@@ -18,7 +18,7 @@
 
                         <div class="post-content">
                             <p>
-                            {% for block in post.streamfield %}
+                            {% for block in post.previewstreamfield %}
                                         {% if block.block_type == 'indexpreview' %}
                                             {% include_block block %} 
                                         {% endif %}
