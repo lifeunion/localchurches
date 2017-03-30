@@ -799,8 +799,10 @@ class BlogPage(Page):
         max_length=255,
         blank=True
     )
-    streamfield = StreamField([
+    previewstreamfield = StreamField([
         ('indexpreview', blocks.TextBlock(max_length=400)),
+        ], help_text="To show a summarized version in the index page only")
+    streamfield = StreamField([
         ('wholestory', StoryBlock()),
         ('stats', StatsBlock()),
         ('wideimage', WideImage()),
@@ -834,6 +836,7 @@ class BlogPage(Page):
         FieldPanel('colour'),
         FieldPanel('author'),
         FieldPanel('from_area'),
+        StreamFieldPanel('previewstreamfield'),
         StreamFieldPanel('streamfield'),
         InlinePanel('related_links', label="Related links"),
         InlinePanel('tags', label="Tags")
@@ -942,8 +945,10 @@ class BeliefsPageTagSelect(Orderable):
     )
 
 class BeliefsPage(Page):
-    streamfield = StreamField([
+    previewstreamfield = StreamField([
         ('indexpreview', blocks.TextBlock(max_length=300)),
+        ], help_text="To show a summarized version in the index page only")
+    streamfield = StreamField([
         ('wholestory', StoryBlock()),
         ], help_text="Use Raw HTML option if dropcaps etc. are needed to customize look")
     canonical_url = models.URLField(blank=True, max_length=255)
@@ -964,6 +969,7 @@ class BeliefsPage(Page):
 
     content_panels = [
         FieldPanel('title', classname="full title"),
+        StreamFieldPanel('previewstreamfield'),
         StreamFieldPanel('streamfield'),
         InlinePanel('related_links', label="Related links"),
         InlinePanel('tags', label="Tags")
