@@ -800,8 +800,8 @@ class BlogPage(Page):
         blank=True
     )
     streamfield = StreamField([
-        ('firstparagraph', blocks.RichTextBlock()),
-        ('story', StoryBlock()),
+        ('indexpreview', blocks.TextBlock(max_length=400)),
+        ('wholestory', StoryBlock()),
         ('stats', StatsBlock()),
         ('wideimage', WideImage()),
         ('bustout', BustoutBlock()),
@@ -810,8 +810,7 @@ class BlogPage(Page):
         ('photogrid', PhotoGridBlock()),
         ('img', ImageBlock()),
         ('imgchoice', ImageFormatChoiceBlock()),
-        ], help_text="Always starts with the second letter after dropcap letter")
-    letterdropcap = models.CharField(max_length=1, blank=True)
+        ], help_text="Use Raw HTML option if dropcaps etc. are needed to customize look")
     author = models.CharField(max_length=255, blank=True)
     from_area = models.CharField(max_length=255, blank=True)
     canonical_url = models.URLField(blank=True, max_length=255)
@@ -835,7 +834,6 @@ class BlogPage(Page):
         FieldPanel('colour'),
         FieldPanel('author'),
         FieldPanel('from_area'),
-        FieldPanel('letterdropcap'),
         StreamFieldPanel('streamfield'),
         InlinePanel('related_links', label="Related links"),
         InlinePanel('tags', label="Tags")
@@ -944,11 +942,10 @@ class BeliefsPageTagSelect(Orderable):
     )
 
 class BeliefsPage(Page):
-    letterdropcap = models.CharField(max_length=1, blank=True)
     streamfield = StreamField([
-        ('firstparagraph', blocks.RichTextBlock()),
-        ('story', StoryBlock()),
-        ], help_text="Always starts with the second letter after dropcap letter")
+        ('indexpreview', blocks.TextBlock(max_length=300)),
+        ('wholestory', StoryBlock()),
+        ], help_text="Use Raw HTML option if dropcaps etc. are needed to customize look")
     canonical_url = models.URLField(blank=True, max_length=255)
     search_fields = Page.search_fields + [
         index.SearchField('streamfield'),
@@ -967,7 +964,6 @@ class BeliefsPage(Page):
 
     content_panels = [
         FieldPanel('title', classname="full title"),
-        FieldPanel('letterdropcap'),
         StreamFieldPanel('streamfield'),
         InlinePanel('related_links', label="Related links"),
         InlinePanel('tags', label="Tags")
