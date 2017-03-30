@@ -801,7 +801,7 @@ class BlogPage(Page):
     )
     previewstreamfield = StreamField([
         ('indexpreview', blocks.TextBlock(max_length=400)),
-        ], help_text="To show a summarized version in the index page only")
+        ], help_text="To show a summarized version in the index page only", blank=True)
     streamfield = StreamField([
         ('wholestory', StoryBlock()),
         ('stats', StatsBlock()),
@@ -947,7 +947,7 @@ class BeliefsPageTagSelect(Orderable):
 class BeliefsPage(Page):
     previewstreamfield = StreamField([
         ('indexpreview', blocks.TextBlock(max_length=300)),
-        ], help_text="To show a summarized version in the index page only")
+        ], help_text="To show a summarized version in the index page only", blank=True)
     streamfield = StreamField([
         ('wholestory', StoryBlock()),
         ], help_text="Use Raw HTML option if dropcaps etc. are needed to customize look")
