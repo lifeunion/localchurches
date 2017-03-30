@@ -19,8 +19,8 @@
                         <div class="post-content">
                             <p>
                             {% for block in post.streamfield %}
-                                        {% if block.block_type == 'firstparagraph' %}
-                                        <span class="drop-cap">{{post.letterdropcap}}</span> {% include_block block %} 
+                                        {% if block.block_type == 'indexpreview' %}
+                                            {% include_block block %} 
                                         {% endif %}
                             {% endfor %}
                             </p>
