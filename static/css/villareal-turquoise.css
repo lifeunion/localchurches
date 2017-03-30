@@ -6182,6 +6182,7 @@ label {
  */
 .pagination-wrapper {
   clear: both;
+  margin-bottom: 20px;
   text-align: center; }
 
 .page-link {
