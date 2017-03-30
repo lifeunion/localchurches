@@ -6784,7 +6784,7 @@ label {
   margin: 0 0 20px 0; }
   .post-title h2 {
     font-weight: 600;
-    font-size: 2.6rem;
+    font-size: 2.7rem;
     line-height: 0.9;
     margin: 0;
     padding: 0;
@@ -6819,6 +6819,9 @@ label {
   color: gray;
   font-size: 1.3em;
   margin: 0; }
+  .post-content .rich-text h3 {
+    font-size: 1.25em;
+    padding-top: 10px;}
 
 .post-read-more {
   margin: 10px 0 0 0; 
