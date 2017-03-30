@@ -18,12 +18,13 @@
 
                         <div class="post-content">
                             <p>
-                            {% for block in post.previewstreamfield %}
+                            {% for block in post.streamfield %}
                                         {% if block.block_type == 'indexpreview' %}
                                             {% include_block block %} 
                                         {% endif %}
                             {% endfor %}
                             </p>
+                            ...
                         </div><!-- /.post-content -->
 
                         <div class="post-read-more">
