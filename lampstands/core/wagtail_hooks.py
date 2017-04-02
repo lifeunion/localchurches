@@ -6,7 +6,7 @@ from wagtail.wagtailcore.whitelist import allow_without_attributes
 
 from wagtail.contrib.modeladmin.options import ModelAdminGroup, ModelAdmin, modeladmin_register
 
-from .models import TurnkeyApplication, SignUpFormPageResponse, ChurchPage
+from .models import SignUpFormPageResponse, ChurchPage
 
 
 @hooks.register('construct_whitelister_element_rules')
@@ -34,14 +34,6 @@ def editor_js():
         """
     )
 
-class TurnkeyApplicationModelAdmin(ModelAdmin):
-    model = TurnkeyApplication
-    menu_label = 'Event Dummy Applications'
-    menu_icon = 'date'
-    menu_order = 600
-    add_to_settings_menu = False
-    list_display = ('date', 'name', 'email')
-
 class SignUpFormPageResponseModelAdmin(ModelAdmin):
     model = SignUpFormPageResponse
     menu_label = 'Sign-Up Form Page Submissions'
@@ -49,14 +41,6 @@ class SignUpFormPageResponseModelAdmin(ModelAdmin):
     menu_order = 600
     add_to_settings_menu = False
     list_display = ('date', 'email')
-
-class SubmissionsModelAdminGroup(ModelAdminGroup):
-    menu_label = 'Form Submissions'
-    menu_icon = 'folder-open-inverse' # change as required
-    menu_order = 600
-    items = (SignUpFormPageResponseModelAdmin, TurnkeyApplicationModelAdmin)
-
-modeladmin_register(SubmissionsModelAdminGroup)
 
 class ChurchAdmin(ModelAdmin):
     model = ChurchPage
