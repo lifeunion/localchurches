@@ -1258,29 +1258,6 @@ class SignUpFormPage(Page):
         email_message.attach_file(self.email_attachment.file.path)
         email_message.send()
 
-
-class AbstractBaseMarketingLandingPageRelatedLink(Orderable, RelatedLink):
-    email_link = models.EmailField("Email link", blank=True,
-                                   help_text="Enter email address only, without 'mailto:'")
-
-    @property
-    def link(self):
-        if self.link_page:
-            return self.link_page.url
-        elif self.link_document:
-            return self.link_document.url
-        elif self.link_external:
-            return self.link_external
-        else:
-            return "mailto:{}".format(self.email_link)
-
-    panels = RelatedLink.panels + [
-        FieldPanel('email_link')
-    ]
-
-    class Meta:
-        abstract = True
-
 # Contact page
 class ContactFormField(AbstractFormField):
     page = ParentalKey('Contact', related_name='form_fields')
