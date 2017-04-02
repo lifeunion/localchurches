@@ -726,16 +726,6 @@ class BlogPageTagSelect(Orderable):
     )
 
 class BlogPage(Page):
-    colour = models.CharField(
-        "Listing card colour if left blank will display image",
-        choices=(
-            ('orange', "Orange"),
-            ('blue', "Blue"),
-            ('white', "White")
-        ),
-        max_length=255,
-        blank=True
-    )
     previewstreamfield = StreamField([
         ('indexpreview', blocks.TextBlock(max_length=400)),
         ], help_text="To show a summarized version in the index page only", blank=True)
@@ -770,7 +760,6 @@ class BlogPage(Page):
 
     content_panels = [
         FieldPanel('title', classname="full title"),
-        FieldPanel('colour'),
         FieldPanel('author'),
         FieldPanel('from_area'),
         StreamFieldPanel('previewstreamfield'),
@@ -805,7 +794,7 @@ class BeliefsIndexPage(Page):
 
     @property
     def beliefs_posts(self):
-        # Get list of blog pages that are descendants of this page
+        # Get list of beliefs pages that are descendants of this page
         # and are not marketing_only
         beliefs_posts = BeliefsPage.objects.filter(
             live=True,
@@ -1040,6 +1029,301 @@ class ChurchPage(Page):
         FieldPanel('last_update'),
         InlinePanel('tags', label="Tags"),
     ]
+
+# recognition index page
+
+class RecognitionIndexPageRelatedLink(Orderable, RelatedLink):
+    page = ParentalKey('lampstands.RecognitionIndexPage', related_name='related_links')
+
+class RecognitionIndexPage(Page):
+    intro = models.TextField(blank=True)
+
+    search_fields = Page.search_fields + [
+        index.SearchField('intro'),
+    ]
+
+    show_in_play_menu = models.BooleanField(default=False)
+
+    def get_popular_tags(self):
+        # Get a ValuesQuerySet of tags ordered by most popular (exclude 'planet-drupal' as this is effectively
+        # the same as Drupal and only needed for the rss feed)
+        popular_tags = RecognitionPageTagSelect.objects.all().values('tag').annotate(item_count=models.Count('tag')).order_by('-item_count')
+
+        # Return first 10 popular tags as tag objects
+        # Getting them individually to preserve the order
+        return [RecognitionPageTagList.objects.get(id=tag['tag']) for tag in popular_tags[:10]]
+
+    @property
+    def recognition_posts(self):
+        # Get list of blog pages that are descendants of this page
+        # and are not marketing_only
+        recognition_posts = RecognitionPage.objects.filter(
+            live=True,
+            path__startswith=self.path
+        )
+
+        return recognition_posts
+
+    def serve(self, request):
+        # Get blog_posts
+        recognition_posts = self.recognition_posts
+
+        # Filter by tag
+        tag = request.GET.get('tag')
+        if tag:
+            recognition_posts = recognition_posts.filter(tags__tag__slug=tag)
+
+        # Pagination
+        per_page = 8
+        page = request.GET.get('page')
+        paginator = Paginator(recognition_posts, per_page)  # Show 8 blog_posts per page
+        try:
+            recognition_posts = paginator.page(page)
+        except PageNotAnInteger:
+            recognition_posts = paginator.page(1)
+        except EmptyPage:
+            recognition_posts = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "lampstands/includes/recognition_listing.html", {
+                'self': self,
+                'recognition_posts': recognition_posts,
+                'per_page': per_page,
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'recognition_posts': recognition_posts,
+                'per_page': per_page,
+            })
+
+    content_panels = [
+        FieldPanel('title', classname="full title"),
+        FieldPanel('intro', classname="full"),
+        InlinePanel('related_links', label="Related links"),
+    ]
+
+    promote_panels = [
+        MultiFieldPanel(Page.promote_panels, "Common page configuration"),
+        FieldPanel('show_in_play_menu'),
+    ]
+
+
+# recognition page
+class RecognitionPageRelatedLink(Orderable, RelatedLink):
+    page = ParentalKey('lampstands.RecognitionPage', related_name='related_links')
+
+
+class RecognitionPageTagList(models.Model):
+    name = models.CharField(max_length=255)
+    slug = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+register_snippet(RecognitionPageTagList)
+
+class RecognitionPageTagSelect(Orderable):
+    page = ParentalKey('lampstands.RecognitionPage', related_name='tags')
+    tag = models.ForeignKey(
+        'lampstands.RecognitionPageTagList',
+        related_name='Recognition_page_tag_select'
+    )
+
+class RecognitionPage(Page):
+    previewstreamfield = StreamField([
+        ('indexpreview', blocks.TextBlock(max_length=400)),
+        ], help_text="To show a summarized version in the index page only", blank=True)
+    streamfield = StreamField([
+        ('wholestory', StoryBlock()),
+        ('stats', StatsBlock()),
+        ('wideimage', WideImage()),
+        ('bustout', BustoutBlock()),
+        ('pullimgquote',PullQuoteImageBlock()),
+        ('pullquote', PullQuoteBlock()),
+        ('photogrid', PhotoGridBlock()),
+        ('img', ImageBlock()),
+        ('imgchoice', ImageFormatChoiceBlock()),
+        ], help_text="Use Raw HTML option if dropcaps etc. are needed to customize look")
+    author = models.CharField(max_length=255, blank=True)
+    reference = models.CharField(max_length=255, blank=True)
+    reference_images = models.ForeignKey('lampstands.LampstandsImage', null=True,
+                                   blank=True, on_delete=models.SET_NULL,
+                                   related_name='+')
+    canonical_url = models.URLField(blank=True, max_length=255)
+    search_fields = Page.search_fields + [
+        index.SearchField('streamfield'),
+    ]
+
+    @property
+    def recognition_index(self):
+        # Find recognition index in ancestors
+        for ancestor in reversed(self.get_ancestors()):
+            if isinstance(ancestor.specific, RecognitionIndexPage):
+                return ancestor
+
+        # No ancestors are recognition indexes,
+        # just return first recognition index in database
+        return RecognitionIndexPage.objects.first()
+
+    content_panels = [
+        FieldPanel('title', classname="full title"),
+        FieldPanel('author'),
+        FieldPanel('reference'),
+        ImageChooserPanel('reference_images'),
+        StreamFieldPanel('previewstreamfield'),
+        StreamFieldPanel('streamfield'),
+        InlinePanel('related_links', label="Related links"),
+        InlinePanel('tags', label="Tags")
+    ]
+
+# history index page
+
+class HistoryIndexPageRelatedLink(Orderable, RelatedLink):
+    page = ParentalKey('lampstands.HistoryIndexPage', related_name='related_links')
+
+class HistoryIndexPage(Page):
+    intro = models.TextField(blank=True)
+
+    search_fields = Page.search_fields + [
+        index.SearchField('intro'),
+    ]
+
+    show_in_play_menu = models.BooleanField(default=False)
+
+    def get_popular_tags(self):
+        # Get a ValuesQuerySet of tags ordered by most popular (exclude 'planet-drupal' as this is effectively
+        # the same as Drupal and only needed for the rss feed)
+        popular_tags = HistoryPageTagSelect.objects.all().values('tag').annotate(item_count=models.Count('tag')).order_by('-item_count')
+
+        # Return first 10 popular tags as tag objects
+        # Getting them individually to preserve the order
+        return [HistoryPageTagList.objects.get(id=tag['tag']) for tag in popular_tags[:10]]
+
+    @property
+    def history_posts(self):
+        # Get list of history pages that are descendants of this page
+        # and are not marketing_only
+        history_posts = HistoryPage.objects.filter(
+            live=True,
+            path__startswith=self.path
+        )
+
+        return history_posts
+
+    def serve(self, request):
+        # Get history_posts
+        history_posts = self.history_posts
+
+        # Filter by tag
+        tag = request.GET.get('tag')
+        if tag:
+            history_posts = history_posts.filter(tags__tag__slug=tag)
+
+        # Pagination
+        per_page = 8
+        page = request.GET.get('page')
+        paginator = Paginator(history_posts, per_page)  # Show 8 blog_posts per page
+        try:
+            history_posts = paginator.page(page)
+        except PageNotAnInteger:
+            history_posts = paginator.page(1)
+        except EmptyPage:
+            history_posts = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "lampstands/includes/history_listing.html", {
+                'self': self,
+                'history_posts': history_posts,
+                'per_page': per_page,
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'history_posts': history_posts,
+                'per_page': per_page,
+            })
+
+    content_panels = [
+        FieldPanel('title', classname="full title"),
+        FieldPanel('intro', classname="full"),
+        InlinePanel('related_links', label="Related links"),
+    ]
+
+    promote_panels = [
+        MultiFieldPanel(Page.promote_panels, "Common page configuration"),
+        FieldPanel('show_in_play_menu'),
+    ]
+
+# history page
+class HistoryPageRelatedLink(Orderable, RelatedLink):
+    page = ParentalKey('lampstands.HistoryPage', related_name='related_links')
+
+
+class HistoryPageTagList(models.Model):
+    name = models.CharField(max_length=255)
+    slug = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+register_snippet(HistoryPageTagList)
+
+
+class HistoryPageTagSelect(Orderable):
+    page = ParentalKey('lampstands.HistoryPage', related_name='tags')
+    tag = models.ForeignKey(
+        'lampstands.HistoryPageTagList',
+        related_name='History_page_tag_select'
+    )
+
+class HistoryPage(Page):
+    previewstreamfield = StreamField([
+        ('indexpreview', blocks.TextBlock(max_length=400)),
+        ], help_text="To show a summarized version in the index page only", blank=True)
+    streamfield = StreamField([
+        ('wholestory', StoryBlock()),
+        ('stats', StatsBlock()),
+        ('wideimage', WideImage()),
+        ('bustout', BustoutBlock()),
+        ('pullimgquote',PullQuoteImageBlock()),
+        ('pullquote', PullQuoteBlock()),
+        ('photogrid', PhotoGridBlock()),
+        ('img', ImageBlock()),
+        ('imgchoice', ImageFormatChoiceBlock()),
+        ], help_text="Use Raw HTML option if dropcaps etc. are needed to customize look")
+    main_category = models.CharField(max_length=255, blank=True)
+    reference = models.CharField(max_length=255, blank=True)
+    reference_images = models.ForeignKey('lampstands.LampstandsImage', null=True,
+                                   blank=True, on_delete=models.SET_NULL,
+                                   related_name='+')
+    canonical_url = models.URLField(blank=True, max_length=255)
+    search_fields = Page.search_fields + [
+        index.SearchField('streamfield'),
+    ]
+
+    @property
+    def history_index(self):
+        # Find history index in ancestors
+        for ancestor in reversed(self.get_ancestors()):
+            if isinstance(ancestor.specific, HistoryIndexPage):
+                return ancestor
+
+        # No ancestors are history indexes,
+        # just return first history index in database
+        return HistoryIndexPage.objects.first()
+
+    content_panels = [
+        FieldPanel('title', classname="full title"),
+        FieldPanel('main_category'),
+        FieldPanel('reference'),
+        ImageChooserPanel('reference_images'),
+        StreamFieldPanel('previewstreamfield'),
+        StreamFieldPanel('streamfield'),
+        InlinePanel('related_links', label="Related links"),
+        InlinePanel('tags', label="Tags")
+    ]
+
 
 class MapPage(Page):
     last_update = models.DateField(null=True, blank=True)

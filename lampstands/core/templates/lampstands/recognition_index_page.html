@@ -1,16 +1,20 @@
-{% extends "lampstands/base_original.html" %}
+{% extends "lampstands/base_blog.html" %}
 {% load staticfiles lampstands_tags wagtailcore_tags wagtailimages_tags %}
 
 {% block content %}
-
+    
     {% get_popular_tags self as poptags %}
 
-    <div class="container">
-        <h1>{{ self.intro }}</h1>
-    </div>
+    <div class="content-title">
+            <div class="content-title-inner">
+                <div class="vessel">     
+                    <h1>Recognition</h1>        
+                </div><!-- /.vessel -->
+            </div><!-- /.content-title-inner -->
+    </div><!-- /.content-title -->                          
 
     <section class="blog">
-        <div class="container">
+    <div class="vessel">
             <div class="popular-tags">
                 {% if poptags %}
                     <div class="closed">
@@ -26,7 +30,7 @@
                             {% if request.GET.tag|length %}
                                 {% for tag in poptags %}
                                     {% if request.GET.tag|safe == tag.slug %}
-                                        <a class="before" href="{% pageurl self %}">show all</a>
+                                        <a class="before" href="{% pageurl self %}">  show all</a>
                                     {% endif %}
                                 {% endfor %}
                             {% endif %}
@@ -34,11 +38,17 @@
                     </div>
                 {% endif %}
             </div>
-        </div>
-
-        <div class="container">
-            {% include "lampstands/includes/blog_listing.html" %}
-        </div>
-
+    </div>
     </section>
+
+    <div class="content">
+        <div class="vessel">
+            <div class="posts posts-grid">  
+                <div class="row">   
+                    {% include "lampstands/includes/recognition_listing.html" %}               
+                </div><!-- /.row -->
+            </div><!-- /.posts-->
+
+        </div><!-- /.vessel -->
+    </div><!-- /.content -->
 {% endblock %}

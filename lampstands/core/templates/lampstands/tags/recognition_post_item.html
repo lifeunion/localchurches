@@ -1,0 +1,35 @@
+{% load wagtailcore_tags wagtailimages_tags lampstands_tags staticfiles %}
+
+{% block content %}
+
+<div class="col-lg-3">
+                    <div class="post">
+                       
+                        <div class="post-title">
+                            <h2><a href="{% pageurl post %}">{{ post.title }}</a></h2>
+                        </div><!-- /.post-title -->
+
+                        <div class="post-meta">
+                            <div class="post-meta-item">
+                                By: {{post.author}}
+                            </div><!-- /.post-meta-item -->
+
+                            </div><!-- /.post-meta -->
+
+                        <div class="post-content">
+                            <p>
+                            {% for block in post.previewstreamfield %}
+                                        {% if block.block_type == 'indexpreview' %}
+                                            {% include_block block %} 
+                                        {% endif %}
+                            {% endfor %}
+                            &hellip;
+                            </p>
+                        </div><!-- /.post-content -->
+
+                        <div class="post-read-more">
+                            <a href="{% pageurl post %}">Read More <i class="fa fa-chevron-right"></i></a>
+                        </div><!-- /.post-read-more -->
+                    </div><!-- /.post-->
+</div><!-- /.col-* -->
+{% endblock %}

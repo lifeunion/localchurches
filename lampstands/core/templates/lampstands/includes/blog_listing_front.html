@@ -1,8 +1,0 @@
-{% load wagtailcore_tags wagtailimages_tags staticfiles %}
-
-{# orange arrow navigation #}
-<ul class="blogpage-listing">
-{% for post in blog_posts %}
-    {% include 'lampstands/tags/blog_post_item.html' %}
-{% endfor %}
-</ul>
