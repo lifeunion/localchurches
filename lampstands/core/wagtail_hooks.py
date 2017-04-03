@@ -8,10 +8,6 @@ from wagtail.contrib.modeladmin.options import ModelAdminGroup, ModelAdmin, mode
 
 from .models import SignUpFormPageResponse, ChurchPage
 
-import json
-from django.templatetags.static import static
-from django.utils.safestring import mark_safe
-
 @hooks.register('construct_whitelister_element_rules')
 def whitelister_element_rules():
     return {
@@ -59,17 +55,6 @@ def import_fontawesome_stylesheet():
         settings.STATIC_URL
     )
     return format_html(elem)
-
-@hooks.register('insert_tinymce_js')
-def my_plugin_js():
-    return format_html(
-        """
-        <script>
-            registerMCEPlugin("myplugin", {});
-        </script>
-        """,
-        mark_safe(json.dumps(static('js/my-tinymce-plugin.js'))),
-    )
 
 @hooks.register('before_serve_page')
 def change_geodef(page, request, serve_args, serve_kwargs):
