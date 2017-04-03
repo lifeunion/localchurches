@@ -3,6 +3,9 @@
 
 {% block content %}
 
+	{{self.wholestory}}
+	{% include "lampstands/includes/streamfield.html" %}
+
 	<div class="content-title">
 	<div class="content-title-inner">
 		<div class="vessel">		
@@ -62,7 +65,7 @@
             					
             					<p><i>{{ self.author }}</i><br>
             					({{ self.from_area }})</p>
-            					
+
 
 		</div><!-- /.row -->
 	</div><!-- /.vessel -->    
