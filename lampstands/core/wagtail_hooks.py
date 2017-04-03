@@ -8,6 +8,7 @@ from wagtail.contrib.modeladmin.options import ModelAdminGroup, ModelAdmin, mode
 
 from .models import SignUpFormPageResponse, ChurchPage
 
+
 @hooks.register('construct_whitelister_element_rules')
 def whitelister_element_rules():
     return {
