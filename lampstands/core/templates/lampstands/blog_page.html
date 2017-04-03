@@ -3,9 +3,6 @@
 
 {% block content %}
 
-	{{self.wholestory}}
-	{% include "lampstands/includes/streamfield.html" %}
-
 	<div class="content-title">
 	<div class="content-title-inner">
 		<div class="vessel">		
@@ -60,12 +57,19 @@
 			            	</div><!-- /.sidebar -->
 			        </div><!-- /.col-* -->
 
-				                	{{self.wholestory}}
+					<div class="col-md-12 col-lg-9">
+				         	<div class="content">	               
+				          		<div class="post-detail">
+				                	<p>{{self.wholestory}}</p>
 					            	{% include "lampstands/includes/streamfield.html" %}
             					
             					<p><i>{{ self.author }}</i><br>
             					({{ self.from_area }})</p>
 
+								</div><!-- /.post-detail -->
+
+				            </div><!-- /.content -->
+			        </div><!-- /.col-* -->
 
 		</div><!-- /.row -->
 	</div><!-- /.vessel -->    
