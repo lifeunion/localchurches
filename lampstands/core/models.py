@@ -1074,9 +1074,9 @@ class RecognitionIndexPage(Page):
             recognition_posts = recognition_posts.filter(tags__tag__slug=tag)
 
         # Pagination
-        per_page = 8
+        per_page = 6
         page = request.GET.get('page')
-        paginator = Paginator(recognition_posts, per_page)  # Show 8 blog_posts per page
+        paginator = Paginator(recognition_posts, per_page)  # Show 6 blog_posts per page
         try:
             recognition_posts = paginator.page(page)
         except PageNotAnInteger:
@@ -1221,9 +1221,9 @@ class HistoryIndexPage(Page):
             history_posts = history_posts.filter(tags__tag__slug=tag)
 
         # Pagination
-        per_page = 8
+        per_page = 6
         page = request.GET.get('page')
-        paginator = Paginator(history_posts, per_page)  # Show 8 blog_posts per page
+        paginator = Paginator(history_posts, per_page)  # Show 6 blog_posts per page
         try:
             history_posts = paginator.page(page)
         except PageNotAnInteger:
