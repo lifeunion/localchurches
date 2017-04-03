@@ -6787,12 +6787,11 @@ label {
   .post-title h2 {
     font-weight: 700;
     overflow: hidden;
-    line-height: 0.9;
+    line-height: 1.2;
     display: -webkit-box;
     -webkit-line-clamp:1; /*truncation to only 1 row */
     -webkit-box-orient:vertical;
     font-size: 2.7rem;
-    line-height: 1.0;
     margin: 0;
     padding: 0;
     white-space: normal; }
