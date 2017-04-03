@@ -4682,6 +4682,7 @@ blockquote {
   background-color: #fff;
   font-style: italic;
   font-size: 1.5em;
+  font-family: serif;
   padding: 20px 30px; }
   blockquote p {
     color: #323232 !important;
@@ -6788,10 +6789,10 @@ label {
     overflow: hidden;
     line-height: 1;
     display: -webkit-box;
-    -webkit-line-clamp:3;
+    -webkit-line-clamp:1; /*truncation to only 1 row */
     -webkit-box-orient:vertical;
     font-size: 2.7rem;
-    line-height: 0.9;
+    line-height: 1.0;
     margin: 0;
     padding: 0;
     white-space: normal; }
