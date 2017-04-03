@@ -197,8 +197,8 @@ WAGTAILIMAGES_IMAGE_MODEL = 'lampstands.LampstandsImage'
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyA4MAVqADcBv3nSIqd8y7RZWF9kmcVB6XQ'
 
 # self-incorporate TinyMCE into all text editors
-WAGTAILADMIN_RICH_TEXT_EDITORS = {
-    'default': {
-        'WIDGET': 'wagtailtinymce.rich_text.TinyMCERichTextArea'
-    },
-}
+#WAGTAILADMIN_RICH_TEXT_EDITORS = {
+#    'default': {
+#        'WIDGET': 'wagtailtinymce.rich_text.TinyMCERichTextArea'
+#    },
+#}
