@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     'wagtailembedder',
 
     # self-add tinyMCE
-    'wagtailtinymce',
+    #'wagtailtinymce',
 
     # self-add fa
     'wagtailfontawesome',
