@@ -347,6 +347,139 @@ class HomePage(Page):
         blog_posts = BlogPage.objects.live().public()
         return blog_posts
 
+# FAQ index page
+
+class FAQIndexPageRelatedLink(Orderable, RelatedLink):
+    page = ParentalKey('lampstands.FAQIndexPage', related_name='related_links')
+
+class FAQIndexPage(Page):
+    intro = models.TextField(blank=True)
+
+    search_fields = Page.search_fields + [
+        index.SearchField('intro'),
+    ]
+
+    show_in_play_menu = models.BooleanField(default=False)
+
+    def get_popular_tags(self):
+        # Get a ValuesQuerySet of tags ordered by most popular (exclude 'planet-drupal' as this is effectively
+        # the same as Drupal and only needed for the rss feed)
+        popular_tags = FAQPageTagSelect.objects.all().values('tag').annotate(item_count=models.Count('tag')).order_by('-item_count')
+
+        # Return first 10 popular tags as tag objects
+        # Getting them individually to preserve the order
+        return [FAQPageTagList.objects.get(id=tag['tag']) for tag in popular_tags[:10]]
+
+    @property
+    def faq_posts(self):
+        # Get list of faq pages that are descendants of this page
+        # and are not marketing_only
+        faq_posts = BlogPage.objects.filter(
+            live=True,
+            path__startswith=self.path
+        )
+
+        return faq_posts
+
+    def serve(self, request):
+        # Get faq_posts
+        faq_posts = self.faq_posts
+
+        # Filter by tag
+        tag = request.GET.get('tag')
+        if tag:
+            faq_posts = faq_posts.filter(tags__tag__slug=tag)
+
+        # Pagination
+        per_page = 5
+        page = request.GET.get('page')
+        paginator = Paginator(faq_posts, per_page)  # Show 5 faq_posts per page
+        try:
+            faq_posts = paginator.page(page)
+        except PageNotAnInteger:
+            faq_posts = paginator.page(1)
+        except EmptyPage:
+            faq_posts = paginator.page(paginator.num_pages)
+
+        if request.is_ajax():
+            return render(request, "lampstands/includes/faq_listing.html", {
+                'self': self,
+                'faq_posts': faq_posts,
+                'per_page': per_page,
+            })
+        else:
+            return render(request, self.template, {
+                'self': self,
+                'faq_posts': faq_posts,
+                'per_page': per_page,
+            })
+
+    content_panels = [
+        FieldPanel('title', classname="full title"),
+        FieldPanel('intro', classname="full"),
+    ]
+
+    promote_panels = [
+        MultiFieldPanel(Page.promote_panels, "Common page configuration"),
+        FieldPanel('show_in_play_menu'),
+    ]
+
+
+# faq page
+class FAQPageRelatedLink(Orderable, RelatedLink):
+    page = ParentalKey('lampstands.FAQPage', related_name='related_links')
+
+
+class FAQPageTagList(models.Model):
+    name = models.CharField(max_length=255)
+    slug = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+
+register_snippet(FAQPageTagList)
+
+
+class FAQPageTagSelect(Orderable):
+    page = ParentalKey('lampstands.FAQPage', related_name='tags')
+    tag = models.ForeignKey(
+        'lampstands.FAQPageTagList',
+        related_name='faq_page_tag_select'
+    )
+
+class FAQPage(Page):
+    streamfield = StreamField([
+        ('question', StoryBlock()),
+        ('wholestory', StoryBlock()),
+        ('stats', StatsBlock()),
+        ('wideimage', WideImage()),
+        ('bustout', BustoutBlock()),
+        ('pullimgquote',PullQuoteImageBlock()),
+        ('pullquote', PullQuoteBlock()),
+        ('photogrid', PhotoGridBlock()),
+        ('img', ImageBlock()),
+        ('imgchoice', ImageFormatChoiceBlock()),
+        ], help_text="Use Raw HTML option if dropcaps etc. are needed to customize look")
+    search_fields = Page.search_fields + [
+        index.SearchField('streamfield'),
+    ]
+
+    @property
+    def faq_index(self):
+        # Find faq index in ancestors
+        for ancestor in reversed(self.get_ancestors()):
+            if isinstance(ancestor.specific,FAQIndexPage):
+                return ancestor
+
+        # No ancestors are blog indexes,
+        # just return first blog index in database
+        return FAQIndexPage.objects.first()
+
+    content_panels = [
+        FieldPanel('title', classname="full title"),
+        StreamFieldPanel('streamfield'),
+        InlinePanel('tags', label="Tags")
+    ]
 
 # Standard page
 

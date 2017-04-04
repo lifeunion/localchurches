@@ -1,0 +1,49 @@
+{% extends "lampstands/base_blog.html" %}
+{% load lampstands_tags cache staticfiles wagtailuserbar wagtailcore_tags wagtailimages_tags wagtailsettings_tags %}
+
+{% block content %}
+
+	<div class="content-title">
+	<div class="content-title-inner">
+		<div class="vessel">		
+			<h1>{{self.title}}</h1>		
+	
+		</div><!-- /.vessel -->
+	</div><!-- /.content-title-inner -->
+	</div><!-- /.content-title -->			
+	
+	<div class="specifications--no-visit">
+        <div class="vessel">
+            <div class="popular-tags">
+                <ul class="closed">
+                    {% with self.tags.all as tags %}
+                        {% if tags %}
+                            {% for tag in tags %}
+                                <li>
+                                    <a href="{% pageurl self.blog_index %}?tag={{ tag.tag.slug }}">{{ tag.tag }}</a>
+                                </li>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+	<div class="vessel">
+		<div class="row">
+
+					<div class="col-md-12 col-lg-9">
+				         	<div class="content">	               
+				          		<div class="post-detail">
+				                	<p>{{self.streamfield}}</p>
+					            	{% include "lampstands/includes/streamfield.html" %}
+
+								</div><!-- /.post-detail -->
+
+				            </div><!-- /.content -->
+			        </div><!-- /.col-* -->
+
+		</div><!-- /.row -->
+	</div><!-- /.vessel -->    
+{% endblock %}
