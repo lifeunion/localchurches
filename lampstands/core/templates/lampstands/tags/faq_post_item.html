@@ -7,13 +7,12 @@
                                 <div class="faq">
                                     <div class="faq-item">
                                         <div class="faq-item-question">
-                                            <h2><a href="{% pageurl post %}">
+                                            <h2>
                                                 {% for block in post.streamfield %}
                                                         {% if block.block_type == 'question' %}
                                                             {% include_block block %} 
                                                         {% endif %}
                                                 {% endfor %}
-                                                </a>
                                             </h2>
                                         </div>
 
