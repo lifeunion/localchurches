@@ -5,8 +5,14 @@
 
 	<div class="content-title">
 	<div class="content-title-inner">
-		<div class="vessel">		
-                    <h1>{{self.questions}}</h1>  		
+		<div class="vessel">
+					<h1>
+					{% for block in post.streamfield %}
+                        {% if block.block_type == 'question' %}
+                            {% include_block block %} 
+                        {% endif %}
+                    {% endfor %}		
+                    </h1>  		
 		</div><!-- /.vessel -->
 	</div><!-- /.content-title-inner -->
 	</div><!-- /.content-title -->			
