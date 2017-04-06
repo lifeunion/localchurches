@@ -1,6 +1,10 @@
 {% extends "lampstands/base_blog.html" %}
 {% load staticfiles lampstands_tags wagtailcore_tags wagtailimages_tags %}
 
+{% block title %}
+{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %} | The Local Churches
+{% endblock %}
+
 {% block content %}
     
     {% get_popular_tags self as poptags %}

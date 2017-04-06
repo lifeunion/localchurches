@@ -1,6 +1,10 @@
 {% extends "lampstands/base.html" %}
 {% load wagtailcore_tags wagtailimages_tags lampstands_tags %}
 
+{% block title %}
+{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %} | The Local Churches
+{% endblock %}
+
 {% block content %}
 	<section>
 		{% include "lampstands/includes/breadcrumb.html" %}

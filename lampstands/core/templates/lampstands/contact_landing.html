@@ -3,6 +3,10 @@
 {% block googlemap %}
     <script src="https://maps.googleapis.com/maps/api/js"></script>
 {% endblock %}
+{% block title %}
+{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %} | The Local Churches
+{% endblock %}
+
 {% block content %}
 
 <style>
