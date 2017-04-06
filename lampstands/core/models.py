@@ -450,16 +450,8 @@ class FAQPageTagSelect(Orderable):
 class FAQPage(Page):
     streamfield = StreamField([
         ('question', StoryBlock()),
-        ('wholestory', StoryBlock()),
-        ('stats', StatsBlock()),
-        ('wideimage', WideImage()),
-        ('bustout', BustoutBlock()),
-        ('pullimgquote',PullQuoteImageBlock()),
-        ('pullquote', PullQuoteBlock()),
-        ('photogrid', PhotoGridBlock()),
-        ('img', ImageBlock()),
-        ('imgchoice', ImageFormatChoiceBlock()),
-        ], help_text="Use Raw HTML option if dropcaps etc. are needed to customize look")
+        ('answer', StoryBlock()),
+        ], help_text="Question and answer are to appear in same block")
     search_fields = Page.search_fields + [
         index.SearchField('streamfield'),
     ]
