@@ -468,6 +468,7 @@ class FAQPage(Page):
         return FAQIndexPage.objects.first()
 
     content_panels = [
+        FieldPanel('title', classname="full title"),
         StreamFieldPanel('streamfield'),
         InlinePanel('tags', label="Tags")
     ]
