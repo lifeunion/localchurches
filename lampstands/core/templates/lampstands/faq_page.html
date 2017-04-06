@@ -1,19 +1,13 @@
-{% extends "lampstands/base_blog.html" %}
-{% load lampstands_tags cache staticfiles wagtailuserbar wagtailcore_tags wagtailimages_tags wagtailsettings_tags %}
-
-{% block content %}
-
-	<div class="content-title">
-	<div class="content-title-inner">
-		<div class="vessel">
-					<h1>
-                    {{self.question}}		
-                    </h1>  		
-		</div><!-- /.vessel -->
-	</div><!-- /.content-title-inner -->
-	</div><!-- /.content-title -->			
-	
-	<div class="specifications--no-visit">
+<div class="content-title">
+    <div class="content-title-inner">
+        <div class="vessel">        
+                    <h1>{{self.question}}</h1> 
+                    {% include "lampstands/includes/streamfield.html" %}
+        </div><!-- /.vessel -->
+    </div><!-- /.content-title-inner -->
+    </div><!-- /.content-title -->          
+    
+    <div class="specifications--no-visit">
         <div class="vessel">
             <div class="popular-tags">
                 <ul class="closed">
@@ -31,19 +25,17 @@
         </div>
     </div>
 
-    <div class="col-md-12 col-lg-12">
-                     <div class="content">                 
-                                <div class="faq">
-                                    <div class="faq-item">
-                                        <div class="faq-item-answer">
-                                            <p>
-                                            {{self.answer}}
-                                            </p>
-                                        </div>
-                                        
-                                    </div><!-- /.faq-item -->
-                                </div><!-- /.faq -->
-                    </div><!-- /.content-->
-	</div><!-- /.col-* -->
-  
+    <div class="vessel">
+        <div class="row">
+                    <div class="col-md-12 col-lg-9">
+                            <div class="content">                  
+                                <div class="post-detail">
+                                    <p>{{self.answer}}</p>
+                                    {% include "lampstands/includes/streamfield.html" %}
+                                </div><!-- /.post-detail -->
+
+                            </div><!-- /.content -->
+                    </div><!-- /.col-* -->
+        </div><!-- /.row -->
+    </div><!-- /.vessel -->    
 {% endblock %}
