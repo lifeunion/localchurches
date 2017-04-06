@@ -374,7 +374,7 @@ class FAQIndexPage(Page):
     def faq_posts(self):
         # Get list of faq pages that are descendants of this page
         # and are not marketing_only
-        faq_posts = BlogPage.objects.filter(
+        faq_posts = FAQPage.objects.filter(
             live=True,
             path__startswith=self.path
         )
