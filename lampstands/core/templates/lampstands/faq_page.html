@@ -7,11 +7,7 @@
 	<div class="content-title-inner">
 		<div class="vessel">
 					<h1>
-					{% for block in post.streamfield %}
-                        {% if block.block_type == 'question' %}
-                            {% include_block block %} 
-                        {% endif %}
-                    {% endfor %}		
+                    {{self.question}}		
                     </h1>  		
 		</div><!-- /.vessel -->
 	</div><!-- /.content-title-inner -->
@@ -41,11 +37,7 @@
                                     <div class="faq-item">
                                         <div class="faq-item-answer">
                                             <p>
-                                            {% for block in post.streamfield %}
-                                                        {% if block.block_type == 'answer' %}
-                                                            {% include_block block %} 
-                                                        {% endif %}
-                                            {% endfor %}
+                                            {{self.answer}}
                                             </p>
                                         </div>
                                         
