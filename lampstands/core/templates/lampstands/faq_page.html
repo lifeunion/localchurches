@@ -6,7 +6,7 @@
 	<div class="content-title">
 	<div class="content-title-inner">
 		<div class="vessel">		
-                    <h1>{{self.title}}</h1>  		
+                    <h1>{{self.questions}}</h1>  		
 		</div><!-- /.vessel -->
 	</div><!-- /.content-title-inner -->
 	</div><!-- /.content-title -->			
@@ -19,7 +19,7 @@
                         {% if tags %}
                             {% for tag in tags %}
                                 <li>
-                                    <a href="{% pageurl self.blog_index %}?tag={{ tag.tag.slug }}">{{ tag.tag }}</a>
+                                    <a href="{% pageurl self.faq_index %}?tag={{ tag.tag.slug }}">{{ tag.tag }}</a>
                                 </li>
                             {% endfor %}
                         {% endif %}
@@ -29,20 +29,23 @@
         </div>
     </div>
 
-	<div class="vessel">
-		<div class="row">
-
-					<div class="col-md-12 col-lg-9">
-				         	<div class="content">	               
-				          		<div class="post-detail">
-				                	<p>{{self.streamfield}}</p>
-					            	{% include "lampstands/includes/streamfield.html" %}
-
-								</div><!-- /.post-detail -->
-
-				            </div><!-- /.content -->
-			        </div><!-- /.col-* -->
-
-		</div><!-- /.row -->
-	</div><!-- /.vessel -->    
+    <div class="col-md-12 col-lg-12">
+                     <div class="content">                 
+                                <div class="faq">
+                                    <div class="faq-item">
+                                        <div class="faq-item-answer">
+                                            <p>
+                                            {% for block in post.streamfield %}
+                                                        {% if block.block_type == 'answer' %}
+                                                            {% include_block block %} 
+                                                        {% endif %}
+                                            {% endfor %}
+                                            </p>
+                                        </div>
+                                        
+                                    </div><!-- /.faq-item -->
+                                </div><!-- /.faq -->
+                    </div><!-- /.content-->
+	</div><!-- /.col-* -->
+  
 {% endblock %}
