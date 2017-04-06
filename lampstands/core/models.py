@@ -469,6 +469,7 @@ class FAQPage(Page):
 
     content_panels = [
         FieldPanel('title', classname="full title"),
+        FieldPanel('question'),
         StreamFieldPanel('streamfield'),
         InlinePanel('tags', label="Tags")
     ]
