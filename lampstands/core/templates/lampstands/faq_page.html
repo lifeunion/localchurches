@@ -26,14 +26,24 @@
     </div>
 
     <div class="vessel">
-        <div class="row">
-                    <div class="col-md-12 col-lg-9">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12">
                             <div class="content">                  
-                                <div class="post-detail">
-                                    <p>{{self.answer}}</p>
-                                    {% include "lampstands/includes/streamfield.html" %}
-                                </div><!-- /.post-detail -->
+                                <div class="faq">
+    
+                                    <div class="faq-item">
+                                        <div class="faq-item-question">
+                                            <h2>{{self.question}}</h2>
+                                        </div><!-- /.faq-item-question -->
 
+                                        <div class="faq-item-answer">
+                                            <p>{{self.answer}}</p>
+                                    {% include "lampstands/includes/streamfield.html" %}
+                                        </div><!-- /.faq-item-answer -->
+
+                                    </div><!-- /.faq-item -->
+
+                                </div>
                             </div><!-- /.content -->
                     </div><!-- /.col-* -->
         </div><!-- /.row -->

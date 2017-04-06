@@ -8,11 +8,7 @@
                                     <div class="faq-item">
                                         <div class="faq-item-question">
                                             <h2>
-                                                {% for block in post.streamfield %}
-                                                        {% if block.block_type == 'question' %}
-                                                            {% include_block block %} 
-                                                        {% endif %}
-                                                {% endfor %}
+                                                {{post.question}}
                                             </h2>
                                         </div>
 

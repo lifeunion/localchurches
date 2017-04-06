@@ -448,8 +448,8 @@ class FAQPageTagSelect(Orderable):
     )
 
 class FAQPage(Page):
+    question = models.CharField(max_length=255, blank=True)
     streamfield = StreamField([
-        ('question', StoryBlock()),
         ('answer', StoryBlock()),
         ], help_text="Question and answer are to appear in same block")
     search_fields = Page.search_fields + [
