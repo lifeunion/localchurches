@@ -349,9 +349,6 @@ class HomePage(Page):
 
 # FAQ index page
 
-class FAQIndexPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('lampstands.FAQIndexPage', related_name='related_links')
-
 class FAQIndexPage(Page):
     intro = models.TextField(blank=True)
 
@@ -424,12 +421,7 @@ class FAQIndexPage(Page):
         FieldPanel('show_in_play_menu'),
     ]
 
-
-# faq page
-class FAQPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('lampstands.FAQPage', related_name='related_links')
-
-
+# FAQ page
 class FAQPageTagList(models.Model):
     name = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
@@ -479,26 +471,6 @@ class FAQPage(Page):
 class StandardPageContentBlock(Orderable, ContentBlock):
     page = ParentalKey('lampstands.StandardPage', related_name='content_block')
 
-
-class StandardPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('lampstands.StandardPage', related_name='related_links')
-
-
-class StandardPageClient(Orderable, RelatedLink):
-    page = ParentalKey('lampstands.StandardPage', related_name='clients')
-    image = models.ForeignKey(
-        'lampstands.LampstandsImage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+'
-    )
-
-    panels = RelatedLink.panels + [
-        ImageChooserPanel('image')
-    ]
-
-
 class StandardPage(Page):
     heading = models.CharField(max_length=255, blank=True)
     content = StreamField(StoryBlock())
@@ -516,6 +488,25 @@ class StandardPage(Page):
         StreamFieldPanel('content'),
     ]
 
+    promote_panels = [
+        MultiFieldPanel(Page.promote_panels, "Common page configuration"),
+        FieldPanel('show_in_play_menu'),
+    ]
+
+# Privacy page
+class PrivacyPageContentBlock(Orderable, ContentBlock):
+    page = ParentalKey('lampstands.PrivacyPage', related_name='content_block')
+
+class PrivacyPage(Page):
+    content = StreamField(StoryBlock())
+    show_in_play_menu = models.BooleanField(default=False)
+    search_fields = Page.search_fields + [
+        index.SearchField('content'),
+    ]
+    content_panels = [
+        FieldPanel('title', classname="full title"),
+        StreamFieldPanel('content'),
+    ]
     promote_panels = [
         MultiFieldPanel(Page.promote_panels, "Common page configuration"),
         FieldPanel('show_in_play_menu'),
