@@ -1,0 +1,26 @@
+{% extends "lampstands/base_blog.html" %}
+{% load staticfiles lampstands_tags wagtailcore_tags wagtailimages_tags %}
+{% block title %}
+{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %} | The Local Churches
+{% endblock %}
+
+{% block content %}
+<div class="content-title">
+    <div class="content-title-inner">
+        <div class="container">     
+            <h1>{{self.heading}}</h1>             
+        </div><!-- /.container -->
+    </div><!-- /.content-title-inner -->
+</div><!-- /.content-title -->
+                
+
+                <div class="content">
+                    <div class="container">
+
+            <p align="center"> {{self.content}}
+            </p>
+
+                    </div><!-- /.container -->
+                </div><!-- /.content -->
+   
+{% endblock %}

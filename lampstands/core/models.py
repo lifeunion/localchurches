@@ -498,6 +498,7 @@ class PrivacyPageContentBlock(Orderable, ContentBlock):
     page = ParentalKey('lampstands.PrivacyPage', related_name='content_block')
 
 class PrivacyPage(Page):
+    heading = models.CharField(max_length=255, blank=True)
     content = StreamField(StoryBlock())
     show_in_play_menu = models.BooleanField(default=False)
     search_fields = Page.search_fields + [
@@ -505,6 +506,7 @@ class PrivacyPage(Page):
     ]
     content_panels = [
         FieldPanel('title', classname="full title"),
+        FieldPanel('heading'),
         StreamFieldPanel('content'),
     ]
     promote_panels = [
