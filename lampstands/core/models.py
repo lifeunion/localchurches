@@ -499,7 +499,7 @@ class PrivacyPageContentBlock(Orderable, ContentBlock):
 
 class PrivacyPage(Page):
     heading = models.CharField(max_length=255, blank=True)
-    content = StreamField(StoryBlock())
+    content = models.CharField(max_length=255)
     show_in_play_menu = models.BooleanField(default=False)
     search_fields = Page.search_fields + [
         index.SearchField('content'),
@@ -507,7 +507,7 @@ class PrivacyPage(Page):
     content_panels = [
         FieldPanel('title', classname="full title"),
         FieldPanel('heading'),
-        StreamFieldPanel('content'),
+        FieldPanel('content'),
     ]
     promote_panels = [
         MultiFieldPanel(Page.promote_panels, "Common page configuration"),
