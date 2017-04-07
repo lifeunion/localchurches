@@ -8,19 +8,23 @@
 <div class="content-title">
     <div class="content-title-inner">
         <div class="container">     
-            <h1>{{self.heading}}</h1>             
+            <h1>{{self.heading}}</h1>        
+    
         </div><!-- /.container -->
     </div><!-- /.content-title-inner -->
-</div><!-- /.content-title -->
-                
+    </div><!-- /.content-title -->          
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-12">
+                            <div class="content">                  
+                                <div class="post-detail">     
+                                    {{self.content}}
+                                </div><!-- /.post-detail -->
 
-                <div class="content">
-                    <div class="container">
+                            </div><!-- /.content -->
+                        </div><!-- /.col-* -->
 
-            <p align="center"> {{self.content}}
-            </p>
-
-                    </div><!-- /.container -->
-                </div><!-- /.content -->
+                    </div><!-- /.row -->
+                </div><!-- /.container -->
    
 {% endblock %}

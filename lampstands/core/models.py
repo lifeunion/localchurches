@@ -514,6 +514,27 @@ class PrivacyPage(Page):
         FieldPanel('show_in_play_menu'),
     ]
 
+# About page
+class AboutPageContentBlock(Orderable, ContentBlock):
+    page = ParentalKey('lampstands.AboutPage', related_name='content_block')
+
+class AboutPage(Page):
+    heading = models.CharField(max_length=255, blank=True)
+    content = StreamField(StoryBlock())
+    show_in_play_menu = models.BooleanField(default=False)
+    search_fields = Page.search_fields + [
+        index.SearchField('content'),
+    ]
+    content_panels = [
+        FieldPanel('title', classname="full title"),
+        FieldPanel('heading'),
+        StreamFieldPanel('content'),
+    ]
+    promote_panels = [
+        MultiFieldPanel(Page.promote_panels, "Common page configuration"),
+        FieldPanel('show_in_play_menu'),
+    ]
+
 # Services page
 class ServicesPageService(Orderable):
     page = ParentalKey('lampstands.ServicesPage', related_name='services')
