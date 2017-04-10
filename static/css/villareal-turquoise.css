@@ -8887,7 +8887,6 @@ label {
  */
 .popular-tags {
   margin: 10px 0 20px 0;
-  border-left: 1px solid rgba(0, 0, 0, 0.1);
   display: none; }
   .popular-tags p {
     margin: 0; }
@@ -8897,12 +8896,13 @@ label {
       display: block; } }
   .popular-tags a {
     display: inline-block;
-    margin-left: -5px;
+    margin-left: -10px;
     color: #2b3033;
     text-transform: uppercase;
     font-weight: 500;
     font-size: 13px;
     letter-spacing: 0.5px;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
     border-right: 1px solid rgba(0, 0, 0, 0.1);
     border-top: 1px solid white;
     border-bottom: 1px solid white;
