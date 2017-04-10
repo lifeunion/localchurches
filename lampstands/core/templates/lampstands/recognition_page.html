@@ -16,21 +16,25 @@
 	</div><!-- /.content-title -->			
 	
 	<div class="specifications--no-visit">
+		<div class="vessel">
             <div class="popular-tags">
-                <p>
+            	<h2 class="widgettitle">Categories</h2>
+                <ul style="list-style: none;">
                     {% with self.tags.all as tags %}
                         {% if tags %}
                             {% for tag in tags %}
-                              
+                                <li>
                                     <a href="{% pageurl self.recognition_index %}?tag={{ tag.tag.slug }}">{{ tag.tag }}</a>
-                                
-                                	<a class="before" href="/recognition">show all</a>
-                             
+                                </li>
+                                <li>
+                                	<a class="before" href="/recognition_index">show all</a>
+                                </li>
                             {% endfor %}
                         {% endif %}
                     {% endwith %}
-                </p>
+                </ul>
             </div>
+        </div>    
     </div>
 
 	<div class="vessel">
