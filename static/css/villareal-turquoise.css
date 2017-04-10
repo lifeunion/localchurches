@@ -8892,7 +8892,7 @@ label {
     margin: 0; }
   @media (min-width: 768px) {
     .popular-tags {
-      margin: 20px 0 0 15px;
+      margin: 20px 0 0 0;
       display: block; } }
   .popular-tags a {
     display: inline-block;
