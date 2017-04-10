@@ -24,6 +24,9 @@
                                 <li>
                                     <a href="{% pageurl self.recognition_index %}?tag={{ tag.tag.slug }}">{{ tag.tag }}</a>
                                 </li>
+                                <li>
+                                	<a class="before" href="/recognition_index">show all</a>
+                                </li>
                             {% endfor %}
                         {% endif %}
                     {% endwith %}
