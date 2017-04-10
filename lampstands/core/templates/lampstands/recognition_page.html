@@ -18,21 +18,19 @@
 	<div class="specifications--no-visit">
 		<div class="vessel">
             <div class="popular-tags">
-            	<h2 class="widgettitle">Categories</h2>
-                <ul style="list-style: none;">
+                <p>Categories:
                     {% with self.tags.all as tags %}
                         {% if tags %}
                             {% for tag in tags %}
-                                <li>
+                                
                                     <a href="{% pageurl self.recognition_index %}?tag={{ tag.tag.slug }}">{{ tag.tag }}</a>
-                                </li>
-                                <li>
+                 
                                 	<a class="before" href="/recognition_index">show all</a>
-                                </li>
+                                
                             {% endfor %}
                         {% endif %}
                     {% endwith %}
-                </ul>
+                </p>
             </div>
         </div>    
     </div>
