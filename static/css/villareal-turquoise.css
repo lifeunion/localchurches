@@ -8896,7 +8896,6 @@ label {
       display: block; } }
   .popular-tags a {
     display: inline-block;
-    margin-left: -10px;
     color: #2b3033;
     text-transform: uppercase;
     font-weight: 500;
