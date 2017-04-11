@@ -50,19 +50,17 @@
         </div><!-- /.row -->
     </div><!-- /.vessel -->
 
-     {% if prev_page %}
+    {% if prev_page %}
             <div class="nextprev prev">
-                <a href="{% pageurl prev_page %}">{% image prev_page.homepage_image fill-80x80 class="thumb" %} <span>{{ prev_page.title }}</span></a>
+                <a href="{% pageurl prev_page %}"><span>{{ prev_page.title }}</span></a>
             </div>
-        {% endif %}
+    {% endif %}
 
         {% if next_page %}
             <a href="{% pageurl next_page %}">
                 <div class="next">
-                    {% image next_page.homepage_image fill-2000x600 class="thumb" %}
                     <div class="container">
                         <div class="content">
-                            <h2>{{next_page.descriptive_title}}</h2>
                             <p class="client">{{ next_page.title }}</p>
                         </div>
                     </div>
