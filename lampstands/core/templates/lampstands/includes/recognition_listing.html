@@ -27,7 +27,7 @@
          <li class="active page-item"><a class="page-link">{{ i }}</a> 
          </li>
       {% else %}
-        <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+        <li class="page-item"><a class="page-link" href="?page={{ i }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&amp;{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">{{ i }}</a></li>
       {% endif %}
     {% endfor %}
     {% if recognition_posts.has_next %}
