@@ -1471,6 +1471,8 @@ class HistoryPage(Page):
 
 class MapPage(Page):
     last_update = models.DateField(null=True, blank=True)
+    google_url_js = models.TextField(max_length=50, blank=True)
+    google_key_js = models.TextField(max_length=50, blank=True)
 
     @property
     def geoinfo_lat(self):
@@ -1513,6 +1515,8 @@ class MapPage(Page):
 MapPage.content_panels = [
     FieldPanel('title', classname="full title"),
     FieldPanel('last_update'),
+    FieldPanel('google_url_js'),
+    FieldPanel('google_key_js')
 ]
 
 # Sign-up for something page
