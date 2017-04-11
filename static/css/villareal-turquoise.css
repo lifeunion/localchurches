@@ -4700,8 +4700,8 @@ a {
     color: #08877a; }
 
 p {
-  font-size: 1.3em;
-  line-height: 28px;
+  font-size: 1.5em;
+  line-height: 30px;
   margin: 0 0 20px 0; 
   font-family: serif;}
 
@@ -5603,9 +5603,9 @@ label {
   background-color: #0BB7A5;
   background-image: linear-gradient(to right, #0a9f8f, #0ccfbb);
   color: #fff;
-  font-size: 1.2em;
+  font-size: 1.4em;
   font-weight: 400;
-  line-height: 2;
+  line-height: 1.5;
   padding: 20px 0;
   text-align: center; }
   .information-bar .fa {
@@ -6159,7 +6159,7 @@ label {
     width: 40px; }
 
 .faq-item-question h2 {
-  font-size: 1.4em;
+  font-size: 1.6em;
   font-weight: 700;
   margin: 0 0 20px 0;
   padding: 0; }
@@ -6461,7 +6461,7 @@ label {
   margin: 0 0 30px 0; }
   .widget .widgettitle {
     border-bottom: 1px solid rgba(0, 0, 0, 0.04);
-    font-size: 1.5em;
+    font-size: 1.6em;
     margin: 0 0 20px 0;
     padding: 20px 0; }
   .widget .menu {
@@ -6788,11 +6788,11 @@ label {
   .post-title h2 {
     font-weight: 700;
     overflow: hidden;
-    line-height: 1.2;
+    line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp:1; /*truncation to only 1 row */
     -webkit-box-orient:vertical;
-    font-size: 2.7rem;
+    font-size: 2.9rem;
     margin: 0;
     padding: 0;
     white-space: normal; }
@@ -6806,14 +6806,14 @@ label {
   }
   .post-title a {
     color: #323232;
-    font-size: .6em; }
+    font-size: .7em; }
     .post-title a:hover {
       text-decoration: none; }
 
 .post-meta {
   border-bottom: 1px solid rgba(0, 0, 0, 0.04);
   border-top: 1px solid rgba(0, 0, 0, 0.04);
-  font-size: 1.1em;
+  font-size: 1.3em;
   font-style: italic;
   margin: 0 0 20px 0;
   padding: 7px 0; }
@@ -6832,21 +6832,21 @@ label {
 
 .post-content p {
   color: gray;
-  font-size: 1.3em;
+  font-size: 1.5em;
   margin: 0; }
   .post-content .rich-text h3 {
-    font-size: 1.25em;
+    font-size: 1.55em;
     padding-top: 10px;}
 
 .post-read-more {
   margin: 10px 0 0 0; 
-  font-size:1.1em;}
+  font-size:1.2em;}
   .post-read-more a {
     float: right;
     font-weight: 600;
     transition: color .15s linear; }
     .post-read-more a .fa {
-      font-size: .7em;
+      font-size: .8em;
       margin: 0 0 0 9px; }
     .post-read-more a:hover {
       text-decoration: none; }
@@ -8879,7 +8879,7 @@ label {
 
  .top-mobile-icon {
   padding: 5px 10px;
-  font-size:25px;
+  font-size:28px;
  }
 
 /**
@@ -8899,7 +8899,7 @@ label {
     color: #2b3033;
     text-transform: uppercase;
     font-weight: 500;
-    font-size: 13px;
+    font-size: 14px;
     letter-spacing: 0.5px;
     border-left: 1px solid rgba(0, 0, 0, 0.1);
     border-right: 1px solid rgba(0, 0, 0, 0.1);
