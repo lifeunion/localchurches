@@ -50,27 +50,21 @@
         </div><!-- /.row -->
     </div><!-- /.vessel -->
 
-<div class="nextprev-nav">
+<div class="container pagination">
      {% if prev_page %}
-        <div class="nextprev prev">
+         <div class="previous">
             <a class="page-link" aria-label="Previous" href="{% pageurl prev_page %}">
-                <span aria-hidden="true">&laquo;</span>
-                <span class="sr-only">Previous</span>
+                <p> Previous &nbsp;</p>
             </a>
         </div>
-
     {% endif %}
     {% if next_page %}
-        <li class="page-item">
-        <div class="nextprev prev">
+        <div class="next">
             <a class="page-link" aria-label="Next" href="{% pageurl next_page %}">
-                <span aria-hidden="true">&raquo;</span>
-                <span class="sr-only">Next</span>
+                <p> Next </p>
             </a>
         </div>
-        </li>
     {% endif %}
-
 </div>
 
 {% endblock %}
