@@ -323,6 +323,8 @@ class HomePage(Page):
     hero_intro_secondary = models.TextField(blank=True)
     information_bar_content = models.TextField(blank=True)
     blogs_tag_line = models.TextField(blank=True)
+    google_url_js = models.TextField(max_length=50, blank=True)
+    google_key_js = models.TextField(max_length=50, blank=True)
 
     class Meta:
         verbose_name = "Homepage"
@@ -338,7 +340,9 @@ class HomePage(Page):
         ),
         InlinePanel('hero', label="Hero"),
         FieldPanel('information_bar_content'),
-        FieldPanel('blogs_tag_line')
+        FieldPanel('blogs_tag_line'),
+        FieldPanel('google_url_js'),
+        FieldPanel('google_key_js'),
     ]
 
     @property
