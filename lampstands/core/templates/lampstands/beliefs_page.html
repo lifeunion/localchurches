@@ -44,13 +44,7 @@
                                     {% include "lampstands/includes/streamfield.html" %}
                                 </div><!-- /.post-detail -->
 
-                            </div><!-- /.content -->
-                    </div><!-- /.col-* -->
-
-        </div><!-- /.row -->
-    </div><!-- /.vessel -->
-
-<div class="container pagination">
+<div class="vessel pagination">
      {% if prev_page %}
          <div class="previous">
             <a href="{% pageurl prev_page %}">
@@ -65,6 +59,13 @@
             </a>
         </div>
     {% endif %}
-</div>
+</div><!-- /.vessel pagination -->
+                            </div><!-- /.content -->
+                    </div><!-- /.col-* -->
+
+        </div><!-- /.row -->
+    </div><!-- /.vessel -->
+
+
 
 {% endblock %}
