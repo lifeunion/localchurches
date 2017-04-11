@@ -6801,7 +6801,7 @@ label {
       display: -webkit-box;
       -webkit-line-clamp:2;
       -webkit-box-orient:vertical;
-      line-height: 0.95;
+      line-height: 0.98;
     }
   }
   .post-title a {
