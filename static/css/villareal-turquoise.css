@@ -5209,7 +5209,7 @@ hr {
         font-size: .8em;
         font-weight: 400;
         display: block;
-        padding: 10px 10px 10px 12px;
+        padding: 9px;
         transition: all .15s linear; }
         .nav-primary .sub-menu a:hover {
           background-color: rgba(0, 0, 0, 0.02);
