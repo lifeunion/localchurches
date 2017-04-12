@@ -1694,7 +1694,6 @@ class SignUpFormPage(Page):
 class ContactFormField(AbstractFormField):
     page = ParentalKey('Contact', related_name='form_fields')
 
-
 class ContactLandingPageRelatedLinkButton(Orderable, RelatedLink):
     page = ParentalKey('lampstands.Contact', related_name='related_link_buttons')
 
@@ -1735,7 +1734,6 @@ class Contact(AbstractEmailForm):
             FieldPanel('landing_page_button_title'),
         ], "Landing page"),
     ]
-
 
 @register_setting
 class GlobalSettings(BaseSetting):
