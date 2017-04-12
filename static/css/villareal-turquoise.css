@@ -6193,6 +6193,7 @@ label {
   border-radius: 3px;
   color: #666666;
   font-weight: 600;
+  font-size: 1.25em;
   margin: 0 5px;
   padding: 8px 15px;
   transition: all .15s linear; }
@@ -6209,7 +6210,7 @@ label {
   background-color: #fff;
   border-radius: 50%;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-  width: 37px; }
+  width: 43px; }
   .page-item:first-child .page-link:hover, .page-item:last-child .page-link:hover {
     background-color: #4E4A4A;
     color: #fff; }
@@ -6806,7 +6807,7 @@ label {
   }
   .post-title a {
     color: #323232;
-    font-size: .85em; }
+    font-size: .8em; }
     .post-title a:hover {
       text-decoration: none; }
 

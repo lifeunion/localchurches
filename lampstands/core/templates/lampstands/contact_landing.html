@@ -1,20 +1,9 @@
-{% extends "lampstands/base.html" %}
+{% extends "lampstands/base_blog.html" %}
 {% load static lampstands_tags wagtailcore_tags wagtailimages_tags %}
-{% block googlemap %}
-    <script src="https://maps.googleapis.com/maps/api/js"></script>
-{% endblock %}
 {% block title %}
 {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %} | The Local Churches
 {% endblock %}
-
 {% block content %}
-
-<style>
-    .about-hero {
-        {% image page.landing_image original as landing_image %}
-        background-image: url("{{ landing_image.url }}");
-    }
-</style>
 
 <div class="about-hero">
     <div class="main-content">
