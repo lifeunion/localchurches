@@ -24,26 +24,18 @@
                                 {{ page.intro|richtext }}
                                 {% csrf_token %}
                                 {% spaceless %}
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label>Full Name</label>
-                                        <input type="text" class="form-control">
-                                    </div><!-- /.form-group -->
-                                </div><!-- /.col-* -->
-
-                                <div class="col-sm-6">
-                                    <div class="form-group">
-                                        <label>E-mail</label>
-                                        <input type="mail" class="form-control">
-                                    </div><!-- /.form-group -->
-                                </div><!-- /.col-* -->
-
-                                <div class="col-sm-12">
-                                    <div class="form-group">
-                                        <label>Message</label>
-                                        <textarea class="form-control" rows="6" placeholder="Please keep your message as simple as possible"></textarea>
-                                    </div><!-- /.form-control -->
-                                </div><!-- /.col-* -->
+                                
+                                {% for field in form %}
+                                <div class="contact-form__row contact-form__row--{{ field.id_for_label }}">
+                                    {{ field.errors }}
+                                    <label for="{{ field.id_for_label }}" class="contact-form__label {% if field.field.required %} contact-form__label--required {% endif %}">
+                                        {{ field.label }}
+                                    </label>
+                                    <div class="contact-form__field-wrapper">
+                                    {{ field }}
+                                    </div>
+                                </div>
+                                {% endfor %}
 
                                 {% endspaceless %}
 
@@ -51,9 +43,6 @@
                                     <button type="submit" class="btn btn-primary pull-right" id="contact-us-submit"> Post Message</button>
                                 </div><!-- /.col-* -->
 
-                                <div class="contact-action">
-                                    <button type="submit" class="contact-form__submit" id="contact-us-submit">Submit</button>
-                                </div>  
                         </form>
                     </div><!-- /.row -->
             </div><!-- /.col-* -->
