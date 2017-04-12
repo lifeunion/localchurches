@@ -8253,8 +8253,9 @@ label {
     width: 100%;
     z-index: 11; }
     .listing-box-image-links a .fa {
-      font-size: 1.2em;
-      width: 30px; }
+      font-size: 1.3em;
+      width: 30px;
+      margin-top: 13px; }
     .listing-box-image-links a:first-child {
       background-color: rgba(7, 111, 100, 0.9); }
       .listing-box-image-links a:first-child:hover {
