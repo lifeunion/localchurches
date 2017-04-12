@@ -6788,7 +6788,7 @@ label {
   .post-title h2 {
     font-weight: 700;
     overflow: hidden;
-    line-height: 1.4;
+    line-height: 1.2;
     display: -webkit-box;
     -webkit-line-clamp:1; /*truncation to only 1 row */
     -webkit-box-orient:vertical;

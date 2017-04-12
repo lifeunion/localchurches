@@ -191,6 +191,8 @@ WAGTAIL_SITE_NAME = "lampstands"
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
 BASE_URL = 'http://safe-cove-64619.herokuapp.com'
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 # Override the Image class used by wagtailimages with a custom one
 WAGTAILIMAGES_IMAGE_MODEL = 'lampstands.LampstandsImage'
 

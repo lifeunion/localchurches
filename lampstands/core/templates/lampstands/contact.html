@@ -24,15 +24,17 @@
                                 {{ page.intro|richtext }}
                                 {% csrf_token %}
                                 {% spaceless %}
-                                
+
                                 {% for field in form %}
                                 <div class="contact-form__row contact-form__row--{{ field.id_for_label }}">
-                                    {{ field.errors }}
-                                    <label for="{{ field.id_for_label }}" class="contact-form__label {% if field.field.required %} contact-form__label--required {% endif %}">
-                                        {{ field.label }}
-                                    </label>
-                                    <div class="contact-form__field-wrapper">
-                                    {{ field }}
+                                    <div class="form-group">
+                                        {{ field.errors }}
+                                        <label for="{{ field.id_for_label }}" class="contact-form__label {% if field.field.required %} contact-form__label--required {% endif %}">
+                                            {{ field.label }}
+                                        </label>
+                                        <div class="contact-form__field-wrapper">
+                                        {{ field }}
+                                        </div>
                                     </div>
                                 </div>
                                 {% endfor %}
