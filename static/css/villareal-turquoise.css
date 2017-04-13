@@ -1472,14 +1472,12 @@ pre {
 .form-control textarea{
   border:none;
   width:100%;
-  padding: 0 0.9375rem;}
+  }
 
-input[type="text"] .form-control, 
-input[type="email"] .form-control{
-  width:50%;
-  position: relative;
-  float: left;
-  padding: 0 0.9375rem;}
+input[type="text"].form-control, 
+input[type="email"].form-control {
+  width:100%;
+  }
 
 .form-control-file,
 .form-control-range {
