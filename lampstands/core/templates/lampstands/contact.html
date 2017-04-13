@@ -25,7 +25,6 @@
                                 {% csrf_token %}
                                 {% spaceless %}
 
-                                <fieldset class="contact-form__group">
                                 {% for field in form %}
                                 <div class="contact-form__row contact-form__row--{{ field.id_for_label }}">
                                     <div class="col-sm-6 form-group">
@@ -38,7 +37,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                </fieldset>
                                 {% endfor %}
 
                                 {% endspaceless %}
