@@ -4477,7 +4477,7 @@ ul.image-tiles {
 
 .contact-form__row {
   padding: 10px 0; 
-  border:none;}
+  }
   @media (min-width: 768px) {
     .contact-form__row {
       padding: 10px 15px 0; } }
@@ -4486,7 +4486,7 @@ ul.image-tiles {
   .contact-form__row textarea {
     width: 100%;
     padding: 10px 15px;
-    border:none;
+
     /*border: 1px solid rgba(253, 89, 56, 0.7);
     border-radius: 3px;
     font-family: "proxima-nova", helvetica, arial, sans-serif;*/
@@ -4500,10 +4500,13 @@ ul.image-tiles {
   .contact-form__row textarea {
     min-height: 200px;
     resize: vertical; }
-
+    
+.contact-form__row--id_email .contact-form__row--id_email .contact-form--id_message {
+    border: none;
+}
 .contact-form__row--id_email {
   display: inline-block;
-  width: 100%; }
+  width: 100%;}
   @media (min-width: 768px) {
     .contact-form__row--id_email {
       width: 50%; } }
