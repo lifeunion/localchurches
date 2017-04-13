@@ -19,14 +19,14 @@
     <div class="vessel">
         <div class="row">   
             <div class="col-md-9 col-lg-12">
-                   
+                   <div class="row">
                         <form class="listing-contact-form" action="{% pageurl page %}" method="post" id="contact-us-form">
                                 {{ page.intro|richtext }}
                                 {% csrf_token %}
                                 {% spaceless %}
 
                                 {% for field in form %}
-                                <div class="contact-form__row contact-form__row--{{ field.id_for_label }}">
+                                <div class="col-sm-6 contact-form__row contact-form__row--{{ field.id_for_label }}">
                                     <div class="form-group">
                                         {{ field.errors }}
                                         <label for="{{ field.id_for_label }}" class="contact-form__label {% if field.field.required %} contact-form__label--required {% endif %}">
@@ -42,10 +42,10 @@
                                 {% endspaceless %}
 
                                 <div class="col-sm-12">
-                                    <button type="submit" class="btn btn-primary pull-right" id="contact-us-submit"> Post Message</button>
+                                    <button type="submit" class="btn btn-primary pull-left" id="contact-us-submit"> Post Message</button>
                                 </div><!-- /.col-* -->
                         </form>
-                    
+                    </div> <!-- /.row -->
             </div><!-- /.col-* -->
         </div><!-- /.row -->        
     </div><!-- /.vessel -->
