@@ -172,6 +172,11 @@ input[type="submit"] {
   -webkit-appearance: button;
   cursor: pointer; }
 
+input[type="text"], input[type="textarea"],
+input[type="email"] {
+  border:none;
+}
+
 button[disabled],
 html input[disabled] {
   cursor: default; }
