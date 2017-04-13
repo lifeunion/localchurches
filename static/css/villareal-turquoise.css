@@ -176,7 +176,10 @@ input[type="submit"] {
 input[type="text"], 
 input[type="email"] {
   border:none;
-  width:100%;
+  width:50%;
+  float: left;
+  position: relative;
+  padding: 0 0.9375rem;
 }
 
 button[disabled],
