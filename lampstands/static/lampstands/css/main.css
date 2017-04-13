@@ -4484,7 +4484,7 @@ ul.image-tiles {
   .contact-form__row input[type='text'],
   .contact-form__row input[type='email'],
   .contact-form__row textarea {
-    width: 100%;
+    width: auto;
     padding: 10px 15px;
 
     /*border: 1px solid rgba(253, 89, 56, 0.7);
