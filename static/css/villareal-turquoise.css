@@ -176,6 +176,7 @@ input[type="submit"] {
 input[type="text"], 
 input[type="email"] {
   border:none;
+  width:100%;
 }
 
 button[disabled],

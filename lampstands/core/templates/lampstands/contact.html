@@ -26,17 +26,19 @@
                                 {% spaceless %}
 
                                 {% for field in form %}
+                            <fieldset class="contact-form__group" >
                                 <div class="contact-form__row contact-form__row--{{ field.id_for_label }}">
-                                    <div class="col-sm-6 form-group">
+                                    
                                         {{ field.errors }}
                                         <label for="{{ field.id_for_label }}" class="contact-form__label {% if field.field.required %} contact-form__label--required {% endif %}">
                                             {{ field.label }}
                                         </label>
-                                        <div class="form-control">
+                                        <div class="contact-form__field-wrapper">
                                         {{ field }}
                                         </div>
-                                    </div>
+                                    
                                 </div>
+                            </fieldset>    
                                 {% endfor %}
 
                                 {% endspaceless %}
@@ -44,6 +46,7 @@
                                 <div class="col-sm-12">
                                     <button type="submit" class="btn btn-primary pull-left" id="contact-us-submit"> Post Message</button>
                                 </div><!-- /.col-* -->
+
                         </form>
                     </div> <!-- /.row -->
             </div><!-- /.col-* -->
