@@ -522,7 +522,7 @@ p {
 input, textarea {
   transition: all 0.25s ease 0s;
   outline: none;
-  border: 1px solid #DDD; }
+  /*border: 1px solid #DDD;*/ }
 
 input:focus, textarea:focus {
   box-shadow: 0 0 5px #fd5938;
@@ -3109,10 +3109,10 @@ footer {
   .contact-us input, .contact-us textarea {
     width: 100%;
     background: #f7f7f7;
-    border: 1px solid rgba(43, 48, 51, 0.1);
+    /*border: 1px solid rgba(43, 48, 51, 0.1);*/
     padding: 15px 25px;
-    font-size: 16px;
-    border-radius: 3px; }
+    font-size: 1.3em; /*orig 16px;*/
+    /*border-radius: 3px; }*/
     .contact-us input.btn, .contact-us textarea.btn {
       display: inline-block;
       width: auto;

@@ -18,7 +18,7 @@
 <div class="content">
     <div class="vessel">
         <div class="row">   
-            <div class="col-md-9 col-lg-12">
+            <div class="col-md-12 col-lg-12">
                    <div class="row">
                         <form class="listing-contact-form" action="{% pageurl page %}" method="post" id="contact-us-form">
                                 {{ page.intro|richtext }}
@@ -32,7 +32,7 @@
                                         <label for="{{ field.id_for_label }}" class="contact-form__label {% if field.field.required %} contact-form__label--required {% endif %}">
                                             {{ field.label }}
                                         </label>
-                                        <div class="contact-form__field-wrapper">
+                                        <div class="form-control">
                                         {{ field }}
                                         </div>
                                     </div>
