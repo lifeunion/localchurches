@@ -1530,7 +1530,7 @@ pre {
   border-radius: 0.3rem; }
 
 .form-group {
-  margin:0  0 1rem 1rem; }
+  margin-bottom:1rem; }
 
 .radio,
 .checkbox {

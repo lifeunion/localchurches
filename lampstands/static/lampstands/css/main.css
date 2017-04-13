@@ -4485,9 +4485,9 @@ ul.image-tiles {
   .contact-form__row textarea {
     width: 100%;
     padding: 10px 15px;
-    border: 1px solid rgba(253, 89, 56, 0.7);
+    /*border: 1px solid rgba(253, 89, 56, 0.7);
     border-radius: 3px;
-    font-family: "proxima-nova", helvetica, arial, sans-serif;
+    font-family: "proxima-nova", helvetica, arial, sans-serif;*/
     font-size: 18px;
     background: rgba(255, 255, 255, 0.8);
     font-weight: 500; }
