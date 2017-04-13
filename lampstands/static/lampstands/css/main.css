@@ -4501,14 +4501,14 @@ ul.image-tiles {
 
 .contact-form__row--id_email {
   display: inline-block;
-  width: 100%; }
+  width: 50%; }
   @media (min-width: 768px) {
     .contact-form__row--id_email {
       width: 50%; } }
 
 .contact-form__row--id_name {
   display: inline-block;
-  width: 100%; }
+  width: 50%; }
   @media (min-width: 768px) {
     .contact-form__row--id_name {
       width: 50%; } }
