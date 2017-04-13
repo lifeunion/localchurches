@@ -4500,10 +4500,7 @@ ul.image-tiles {
   .contact-form__row textarea {
     min-height: 200px;
     resize: vertical; }
-    
-.contact-form__row--id_email .contact-form__row--id_email .contact-form--id_message {
-    border: none;
-}
+
 .contact-form__row--id_email {
   display: inline-block;
   width: 100%;}
