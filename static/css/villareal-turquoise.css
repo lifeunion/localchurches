@@ -1472,11 +1472,10 @@ pre {
 .form-control textarea{
   border:none;
   width:100%;
-  float: left;
   padding: 0 0.9375rem;}
 
-.form-control input[type="text"], 
-input[type="email"] {
+input[type="text"] .form-control, 
+input[type="email"] .form-control{
   width:50%;
   position: relative;
   float: left;
