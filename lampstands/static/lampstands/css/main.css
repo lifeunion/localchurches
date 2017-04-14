@@ -4537,7 +4537,7 @@ ul.image-tiles {
   content: '*';
   position: absolute;
   right: -5px;
-  font-size: 18px;
+  font-size: 1.2em;
   color: #fd5938; }
 
 .contact-action {
