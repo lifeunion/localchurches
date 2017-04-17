@@ -549,23 +549,7 @@
 <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>    
     <script>
     $(document).ready(function() {
-        var table = $('#example').DataTable({
-            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
-            "columnDefs": [ {
-                "searchable": false,
-                "orderable": false,
-                "targets": 0
-            } ],
-            "order": [[ 1, 'asc' ]]
-            "aoColumns": [
-                null,
-                null,
-                { "orderSequence": [ "desc" ] },
-                { "orderSequence": [ "asc"] },
-                null, null,
-                null
-            ]
-        } );     
+        var table = $('#example').DataTable();     
     } );
     </script>
 
