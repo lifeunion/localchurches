@@ -5199,7 +5199,7 @@ hr {
       position: absolute;
       top: 48px;
       visibility: hidden;
-      width: 230px;
+      width: 240px;
       z-index: 1000; }
       .nav-primary .sub-menu .sub-menu {
         left: 230px;
@@ -5305,7 +5305,7 @@ hr {
       color: #323232;
       display: block;
       font-size: .95em;
-      padding: 8px 15px;
+      padding: 7px 15px;
       transition: background-color .15s linear; }
       .nav-primary .sub-menu a:hover {
         background-color: rgba(0, 0, 0, 0.12);
