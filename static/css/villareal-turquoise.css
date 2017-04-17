@@ -8952,3 +8952,9 @@ label {
 .wf-active .popular-tags {
   opacity: 1; }
 
+/**
+Datatable
+*//
+.toolbar {
+    float: left;
+}
