@@ -529,15 +529,12 @@
     $(document).ready(function() {
         var table = $('#example').DataTable({
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
-        "aoColumns": [
-            { "orderSequence": [ "asc"]},
-            null,
-            { "orderSequence": [ "desc" ] },
-            { "orderSequence": [ "asc"] },
-            null, 
-            null,
-            null
-        ],
+         "columnDefs": [ {
+            "searchable": false,
+            "orderable": false,
+            "targets": 0
+        } ],
+        "order": [[ 1, 'asc' ]],
         });
         t.on( 'order.dt search.dt', function () {
             t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
