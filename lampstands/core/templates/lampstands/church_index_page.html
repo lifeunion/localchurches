@@ -529,6 +529,7 @@
     $(document).ready(function() {
         var table = $('#example').DataTable({
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        "order": [[ 1, 'asc' ]],
         });
         t.on( 'order.dt search.dt', function () {
             t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
