@@ -65,11 +65,13 @@
     </div><!-- /.listing-box-image -->          
 </div><!-- /.listing-box -->
     </div><!-- /.col-* -->
+
 <section id="posts" class="vessel">
      <div class="col-md-6">
-                <div class="row">    
+        <div class="row">    
+                    
                     <div class="content">
-            <div class="image-container" {% if not post.colour %}style="background-image: url('{{ background.url }}');"{% endif %}></div>
+                <div class="image-container" {% if not post.colour %}style="background-image: url('{{ background.url }}');"{% endif %}></div>
             <div class="blog-text">
                 
                     <div class="col-sm-6">
@@ -140,20 +142,15 @@
                         </div><!-- /.listing-box -->
                     </div><!-- /.col-* -->
                 
-            </div>
-        </div>       
+            </div> <!--.blog-text -->
+        </div> <!-- .content  -->      
 
                  <!--   {% homepage_blog_listing %} -->
 
                 </div><!-- /.row -->        
         </div><!-- /.col-* -->
  </section>
-    <div class="col-md-6">
-        <div class="row">
-            
-        </div><!-- /.row -->        
-    </div><!-- /.col-* -->
-        
+    
 </div><!-- /.row -->  
 </div><!-- /.vessel -->
 
