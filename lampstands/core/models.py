@@ -1126,6 +1126,7 @@ class ChurchPageRelatedLink(Orderable, RelatedLink):
 
 class ChurchPage(Page):
     locality_name = models.CharField(max_length=255)
+    locality_city = models.CharField(max_length=60, blank=True)
     locality_state_or_province = models.CharField(max_length=255, blank=True)
     locality_country = CountryField(blank_label='(select country)')
     short_intro = models.CharField(
@@ -1143,6 +1144,7 @@ class ChurchPage(Page):
     
     search_fields = Page.search_fields + [
         index.SearchField('locality_name'),
+        index.SearchField('locality_city')
         index.SearchField('locality_state_or_province'),
         index.SearchField('locality_country'),
         index.SearchField('meeting_address'),
@@ -1162,6 +1164,7 @@ class ChurchPage(Page):
     content_panels = [
         FieldPanel('title', classname="full title"),
         FieldPanel('locality_name'),
+        FieldPanel('locality_city')
         FieldPanel('locality_state_or_province'),
         FieldPanel('locality_country'),
         FieldPanel('short_intro'),
