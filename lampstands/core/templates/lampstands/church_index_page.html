@@ -25,8 +25,7 @@
             <div class="posts posts-grid">  
                 <div class="row">
                 <br>
-                <br>
-                {% include "lampstands/includes/church_listing.html" %}    
+                <br>  
 
         <table class="table order-column stripe hover display" id="churches-table" cellspacing="0" width="100%">
             <thead>
@@ -62,6 +61,49 @@
             </div><!-- /.posts-->
         </div><!-- /.vessel -->
     </div><!-- /.content -->
+
+    <div class="content">
+        <div class="vessel">
+            <div class="posts posts-grid">  
+                <div class="row">
+                <br>
+                <br>  
+
+        <table class="table order-column stripe hover display" id="churches-table" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Index</th>
+                    <th>City</th>
+                    <th>Address</th>
+                    <th>State/Prov.</th>
+                    <th>Country</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Website</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for branch in church_posts %} 
+                    <tr>
+                        <td></td>
+                        <td>{{branch.locality_name}}</td>
+                        <td>{{branch.meeting_address}}</td>
+                        <td>{{branch.locality_state_or_province}}
+                        <td>{{branch.locality_country}}</td>
+                        <td>{{branch.locality_phone_number}}</td>
+                        <td>{{branch.locality_email}}</td>
+                        <td>{{branch.locality_web}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+  
+                </div><!-- /.row -->
+            </div><!-- /.posts-->
+        </div><!-- /.vessel -->
+    </div><!-- /.content -->
+    
 
 
 {% endblock %}

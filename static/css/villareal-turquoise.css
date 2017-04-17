@@ -8310,7 +8310,7 @@ label {
   top: 0;
   z-index: 11; }
   .listing-box-image-title h2 {
-    bottom: 55px;
+    bottom: 40px;
     display: block;
     font-size: 1.9em;
     font-weight: 600;
@@ -8322,8 +8322,8 @@ label {
     position: absolute;
     text-overflow: ellipsis;
     transition: bottom .15s linear;
-    width: 100%;
-    white-space: nowrap; }
+    width: 97%;
+    white-space: normal; }
     .listing-box-image-title h2 a {
       color: #fff; }
       .listing-box-image-title h2 a:hover {
