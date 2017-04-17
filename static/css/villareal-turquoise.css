@@ -8958,3 +8958,11 @@ Datatable
 .toolbar {
     float: left;
 }
+
+td.details-control {
+    background: url('details_open.png') no-repeat center center;
+    cursor: pointer;
+}
+tr.shown td.details-control {
+    background: url('details_close.png') no-repeat center center;
+}
