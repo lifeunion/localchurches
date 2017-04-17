@@ -527,7 +527,16 @@
             "orderable": false,
             "targets": 0
         } ],
-        "order": [[ 1, 'asc' ]]
+        "order": [[ 1, 'asc' ]],
+        "aoColumns": [
+            null,
+            null,
+            null,
+            { "orderSequence": [ "desc" ] },
+            { "orderSequence": [ "asc" ] },
+            null,
+            null
+        ]
     } );
  
     t.on( 'order.dt search.dt', function () {
