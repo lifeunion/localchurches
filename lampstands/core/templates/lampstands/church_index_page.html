@@ -519,13 +519,7 @@
 {% block extra_js %}
 <script src="https:////code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>    
-    <script>
-
-    $.extend( true, $.fn.dataTable.defaults, {
-    "searching": true,
-    "ordering": true
-    } );
-    
+    <script>    
     $(document).ready(function() {
         var table = $('#example').DataTable({
         "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
