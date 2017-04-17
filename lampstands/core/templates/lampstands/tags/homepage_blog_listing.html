@@ -1,6 +1,4 @@
 {% if blog_posts %}
-{% get_popular_tags self as poptags %}
-
         {% for post in blog_posts %}
             {% include "lampstands/tags/blog_list_item.html" with post=post %}
         {% endfor %}
