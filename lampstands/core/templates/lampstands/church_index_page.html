@@ -10,8 +10,6 @@
 
 {% block content %}
     
-    {% get_popular_tags self as poptags %}
-
     <div class="content-title">
             <div class="content-title-inner">
                 <div class="vessel">
@@ -27,12 +25,6 @@
             <div class="posts posts-grid">  
                 <div class="row">   
                     {% include "lampstands/includes/church_listing.html" %}               
-                </div><!-- /.row -->
-            </div><!-- /.posts-->
-
-        </div><!-- /.vessel -->
-    </div><!-- /.content -->
-
        <table id="example" class="order-column stripe hover display" cellspacing="0" width="100%">
         <thead>
             <tr>
@@ -513,6 +505,11 @@
             </tr>
         </tbody>
     </table>
+                </div><!-- /.row -->
+            </div><!-- /.posts-->
+        </div><!-- /.vessel -->
+    </div><!-- /.content -->
+
 
 {% endblock %}
 
