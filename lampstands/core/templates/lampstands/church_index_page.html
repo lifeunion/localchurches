@@ -61,7 +61,7 @@
         </div><!-- /.vessel -->
     </div><!-- /.content -->
 
-    <table id="example" class="display" cellspacing="0" width="100%">
+    <table id="example" class="order-column stripe hover display" cellspacing="0" width="100%">
         <thead>
             <tr>
                 <th>Name</th>
@@ -548,9 +548,37 @@
 <script src="https:////code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js"></script>    
     <script>
-      $(document).ready(function() {
-        $('#example').DataTable();
+    $.extend( true, $.fn.dataTable.defaults, {
+        "searching": true,
+        "ordering": true
+    } );
+
+    $(document).ready(function() {
+        var table = $('#example').DataTable({
+            "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+            "columnDefs": [ {
+                "searchable": false,
+                "orderable": false,
+                "targets": 0
+            } ],
+            "order": [[ 1, 'asc' ]]
+            "aoColumns": [
+                null,
+                null,
+                { "orderSequence": [ "desc" ] },
+                { "orderSequence": [ "asc"] },
+                null, null,
+                null
+            ]
         } );
+
+    t.on( 'order.dt search.dt', function () {
+            t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+                cell.innerHTML = i+1;
+            } );
+        } ).draw();
+     
+    } );
     </script>
 
 {% endblock %}
