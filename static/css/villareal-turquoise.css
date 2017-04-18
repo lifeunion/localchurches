@@ -8195,7 +8195,7 @@ label {
 .listing-box-image {
   background-image: url("img/placeholder.png");
   background-size: cover;
-  background-position: center center;
+  background-position: center right;
   background-repeat: no-repeat;
   border-radius: 3px 3px 0 0;
   height: 160px;
