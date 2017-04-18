@@ -142,14 +142,12 @@
 $(document).ready(function() {
     var table = $('#example').DataTable( {
         "ajax": "{% static 'css/objects.txt' %}",
-        "columns": [
-            {
-                "className":      'details-control',
-                "orderable":      false,
-                "data":           null,
-                "defaultContent": ''
-            },
-        ],
+        "columnDefs": [ {
+            "targets": -1,
+            "data": null,
+            "defaultContent": '',
+            "className":      'details-control',
+        } ],
         "order": [[1, 'asc']]
     } );
      
