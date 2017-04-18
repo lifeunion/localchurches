@@ -69,33 +69,26 @@
                 <br>
                 <br>  
 
-        <table class="table order-column stripe hover display" id="example" cellspacing="0" width="100%">
-            <thead>
-                <tr>
-                    <th>City</th>
-                    <th>Address</th>
-                    <th>State/Prov.</th>
-                    <th>Country</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th>Website</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {% for branch in church_posts %} 
-                    <tr>
-                        <td>{{branch.locality_name}}</td>
-                        <td>{{branch.meeting_address}}</td>
-                        <td>{{branch.locality_state_or_province}}
-                        <td>{{branch.locality_country}}</td>
-                        <td>{{branch.locality_phone_number}}</td>
-                        <td>{{branch.locality_email}}</td>
-                        <td>{{branch.locality_web}}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+       <table id="example" class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Salary</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Salary</th>
+            </tr>
+        </tfoot>
+    </table>
   
                 </div><!-- /.row -->
             </div><!-- /.posts-->
