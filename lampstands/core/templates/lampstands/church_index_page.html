@@ -30,6 +30,7 @@
         <table class="table order-column stripe hover display" id="churches-table" cellspacing="0" width="100%">
             <thead>
                 <tr>
+                    <th>Index</th>
                     <th>City</th>
                     <th>Address</th>
                     <th>State/Prov.</th>
@@ -37,13 +38,13 @@
                     <th>Phone</th>
                     <th>Email</th>
                     <th>Website</th>
-                    <th>Index</th>
                 </tr>
             </thead>
 
             <tbody>
                 {% for branch in church_posts %} 
                     <tr>
+                        <td></td>
                         <td>{{branch.locality_name}}</td>
                         <td>{{branch.meeting_address}}</td>
                         <td>{{branch.locality_state_or_province}}
@@ -51,7 +52,6 @@
                         <td>{{branch.locality_phone_number}}</td>
                         <td>{{branch.locality_email}}</td>
                         <td>{{branch.locality_web}}</td>
-                        <td></td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -79,7 +79,6 @@
                     <th>Phone</th>
                     <th>Email</th>
                     <th>Website</th>
-                    <th>Index</th>
                 </tr>
             </thead>
 
@@ -93,7 +92,6 @@
                         <td>{{branch.locality_phone_number}}</td>
                         <td>{{branch.locality_email}}</td>
                         <td>{{branch.locality_web}}</td>
-                        <td></td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -119,11 +117,11 @@
             "orderable": false,
             "targets": 0
         } ],
-        "order": [[ 0, 'asc' ]],
+        "order": [[ 1, 'asc' ]],
     } );
  
     t.on( 'order.dt search.dt', function () {
-        t.column(7, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
+        t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
             cell.innerHTML = i+1;
         } );
     } ).draw();
@@ -151,6 +149,13 @@
      
     $(document).ready(function() {
     var t = $('#churches-mobile').DataTable( {
+        "columns":[
+        {   "className": "details-control",
+            "orderable":      false,
+            "data":           null,
+            "defaultContent": ''
+        },
+        ],
         "columnDefs": [ {
             "searchable": false,
             "orderable": false,
@@ -158,12 +163,6 @@
         } ],
         "order": [[ 1, 'asc' ]],
     } );
- 
-    t.on( 'order.dt search.dt', function () {
-        t.column(7, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-            cell.innerHTML = i+1;
-        } );
-    } ).draw();
          
         // Add event listener for opening and closing details
         $('#churches-mobile tbody').on('click', 'td.details-control', function () {
