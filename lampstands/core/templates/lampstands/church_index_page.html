@@ -8,8 +8,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.14/css/jquery.dataTables.min.css" >
 <link rel="stylesheet" href="{% static 'css/table/bootstrap.min.css' %}">
 <link rel="stylesheet" href="{% static 'css/table/bootstrap-table.css' %}">
-<link rel="stylesheet" href="https://rawgit.com/vitalets/x-editable/master/dist/bootstrap3-editable/css/bootstrap-editable.css">
-<link rel="stylesheet" href="{% static 'css/tables/examples.css' %}">
+<link rel="stylesheet" href="{% static 'css/table/examples.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -136,14 +135,14 @@
     } ).draw();
 } );
 </script>
-<script src="{% static 'js/jquery.min.js' %}"></script>
-<script src="{% static 'bootstrap.min.js' %}"></script>
-<script src="{% static 'ga.js' %"></script>
+<script src="{% static 'js/table/jquery.min.js' %}"></script>
+<script src="{% static 'js/table/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/table/ga.js' %"></script>
 
 <script type="text/javascript">
     $(document).ready(function(){
         $('#table').bootstrapTable({
-           data:{{church_posts|safe}}
+           data: {{church_posts}}
         });    
     });
 </script>
