@@ -3,7 +3,7 @@ from .models import ChurchPage
 from django_countries.serializer_fields import CountryField
 
 class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
-    #id = serializers.IntegerField(read_only=True)
+    id = serializers.IntegerField(read_only=False)
     locality_name = serializers.CharField(required=True, allow_blank=True, max_length=255)
     meeting_address = serializers.CharField(required=True, allow_blank=True, max_length=255)
     locality_state_or_province = serializers.CharField(required=True, allow_blank=True, max_length=255)
@@ -11,10 +11,11 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
     locality_phone_number = serializers.CharField(required=False, allow_blank=True, max_length=255)
     locality_email = serializers.EmailField(required=False, allow_blank=True, max_length=255)
     locality_web = serializers.CharField(style={'base_template': 'textarea.html'})
+    improved_url = 
 
     class Meta:
         model = ChurchPage
-        fields = ('url','locality_name', 'meeting_address', 'locality_state_or_province', 
+        fields = ('url','id','locality_name', 'meeting_address', 'locality_state_or_province', 
             'locality_country', 'locality_phone_number', 'locality_email','locality_web')
 
     def create(self, validated_data):
