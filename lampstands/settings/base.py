@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'search',
     'storages',
     'geoposition',
+    'rest_framework',
 
     # added from tbx settings
     'wagtail.contrib.wagtailsearchpromotions',
@@ -203,4 +204,8 @@ WAGTAILADMIN_RICH_TEXT_EDITORS = {
     'default': {
         'WIDGET': 'wagtailtinymce.rich_text.TinyMCERichTextArea'
     },
+}
+
+REST_FRAMEWORK = {
+    'PAGE_SIZE': 10
 }
