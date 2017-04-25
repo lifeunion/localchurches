@@ -1586,7 +1586,7 @@ class ChurchEntryFormPage(Page):
         return context
 
     def serve(self, request):
-        form = church_entry_form_class()
+        form = ChurchEntryFormPageForm
         return render(request, 'lampstands/includes/church_form.html', {
             'page': self,
             'form': form,
