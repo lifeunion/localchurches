@@ -1158,14 +1158,6 @@ class ChurchPage(Page):
         # No ancestors are blog indexes,
         # just return first blog index in database
         return ChurchIndexPage.objects.first()
-
-    def serve(self, request):
-        from .forms import LocalityEntryForm
-        form = LocalityEntryForm()
-        return render(request, 'lampstands/includes/church_form.html', {
-            'page': self,
-            'form': form,
-        })
     
     content_panels = [
         FieldPanel('title', classname="full title"),
@@ -1529,7 +1521,7 @@ MapPage.content_panels = [
 
 # Sign-up for something page
 class SignUpFormPageBullet(Orderable):
-    page = ParentalKey('lampstands.SignUpFormPage', related_name='bullet_points')
+    page = ParentalKey('lampstands.ChurchFormPage', related_name='bullet_points')
     icon = models.CharField(max_length=100, choices=(
         ('lampstands/includes/svg/bulb-svg.html', 'Light bulb'),
         ('lampstands/includes/svg/pro-svg.html', 'Chart'),
@@ -1652,6 +1644,14 @@ class SignUpFormPage(Page):
             FieldPanel('email_from_address'),
         ], 'Email'),
     ]
+
+    def serve(self, request):
+        from .forms import LocalityEntryForm
+        form = LocalityEntryForm()
+        return render(request, 'lampstands/includes/church_form.html', {
+            'page': self,
+            'form': form,
+        })
 
     def get_context(self, request, *args, **kwargs):
         context = super(SignUpFormPage, self).get_context(request, *args, **kwargs)
