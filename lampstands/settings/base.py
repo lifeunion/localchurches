@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'storages',
     'geoposition',
     'rest_framework',
+    'crispy_forms',
 
     # added from tbx settings
     'wagtail.contrib.wagtailsearchpromotions',
