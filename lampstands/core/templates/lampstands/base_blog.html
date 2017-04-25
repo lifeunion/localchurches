@@ -45,6 +45,12 @@
                 <li><a href="https://safe-cove-64619.herokuapp.com/churches">Church Listing</a></li>
             </ul> 
         </li>
+       
+        <li class="nav-item">
+            <a href="https://safe-cove-64619.herokuapp.com/testimonies" class="nav-link menu button">
+                Testimonies
+            </a>
+        </li>    
 
         <li class="nav-item nav-item-parent">
             <a href="https://safe-cove-64619.herokuapp.com/beliefs" class="nav-link menu button">
@@ -62,8 +68,15 @@
                 <li><a href="https://safe-cove-64619.herokuapp.com/beliefs/church-life">Concerning Church Life</a></li>
             </ul>           
         </li>   
-        
-        <li class="nav-item nav-item-parent ">
+       
+
+        <li class="nav-item">
+            <a href="https://safe-cove-64619.herokuapp.com/recognition" class="nav-link menu button">
+                Recognition
+            </a>        
+        </li>   
+              
+         <li class="nav-item nav-item-parent ">
             <a href="https://safe-cove-64619.herokuapp.com/history" class="nav-link menu button">
                 History
             </a>    
@@ -74,18 +87,6 @@
             </ul>       
         </li>
 
-        <li class="nav-item">
-            <a href="https://safe-cove-64619.herokuapp.com/testimonies" class="nav-link menu button">
-                Testimonies
-            </a>
-        </li>       
-
-        <li class="nav-item">
-            <a href="https://safe-cove-64619.herokuapp.com/recognition" class="nav-link menu button">
-                Recognition
-            </a>        
-        </li>   
-                                                            
     </ul><!-- /.nav -->
 </div><!-- /.nav-primary -->
 
@@ -116,11 +117,21 @@
     </div><!-- /.main-wrapper -->
 
 <div class="icon-bar navbar-fixed-bottom hidden-md-up">
-    <a href="https://safe-cove-64619.herokuapp.com/map"><i class="fa fa-search"></i></a>
-    <a {% block belieficon %} {% endblock %} href="https://safe-cove-64619.herokuapp.com/beliefs"><i class="fa fa-book"></i></a>
-    <a {% block histicon %} {% endblock %} href="https://safe-cove-64619.herokuapp.com/history"><i class="fa fa-history"></i></a>
-    <a {% block testimicon %} {% endblock %} href="https://safe-cove-64619.herokuapp.com/testimonies"><i class="fa fa-users"></i></a>
-    <a {% block recogicon %} {% endblock %} href="https://safe-cove-64619.herokuapp.com/recognition"><i class="fa fa-comments"></i></a>
+    <a href="https://safe-cove-64619.herokuapp.com/map"><i class="fa fa-search"></i>
+        <p style="font-size: small; font-family: sans-serif;">Find</p>
+    </a>
+    <a href="https://safe-cove-64619.herokuapp.com/testimonies"><i class="fa fa-users"></i>
+        <p style="font-size: small; font-family: sans-serif;">Testimonies</p>    
+    </a>
+    <a href="https://safe-cove-64619.herokuapp.com/beliefs"><i class="fa fa-book"></i>
+        <p style="font-size: small; font-family: sans-serif;">Beliefs</p>
+    </a>
+    <a href="https://safe-cove-64619.herokuapp.com/recognition"><i class="fa fa-comments"></i>
+        <p style="font-size: small; font-family: sans-serif;">Recognition</p>
+    </a>
+    <a href="https://safe-cove-64619.herokuapp.com/history"><i class="fa fa-history"></i>
+    <p style="font-size: small; font-family: sans-serif;">History</p>
+    </a>
 </div>
 
     <div class="footer-wrapper hidden-md-down">

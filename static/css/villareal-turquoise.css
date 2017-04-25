@@ -2806,7 +2806,8 @@ input[type="button"].pricing-btn {
   top: 0; }
 
 .navbar-fixed-bottom {
-  bottom: 0; }
+  bottom: 0; 
+  margin-bottom: -10px; }
 
 .navbar-sticky-top {
   position: sticky;
@@ -8882,7 +8883,7 @@ label {
 
  .icon-bar a{
   width: 20%;
-  padding: 10px 0;
+  padding: 12px 0 0 0;
   float: left;
   transition: all 0.3s ease;
   color: white;
