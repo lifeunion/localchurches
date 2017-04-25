@@ -1520,8 +1520,8 @@ MapPage.content_panels = [
 ]
 
 # Sign-up for something page
-class SignUpFormPageBullet(Orderable):
-    page = ParentalKey('lampstands.ChurchFormPage', related_name='bullet_points')
+class ChurchEntryFormPageBullet(Orderable):
+    page = ParentalKey('lampstands.ChurchEntryFormPage', related_name='bullet_points')
     icon = models.CharField(max_length=100, choices=(
         ('lampstands/includes/svg/bulb-svg.html', 'Light bulb'),
         ('lampstands/includes/svg/pro-svg.html', 'Chart'),
@@ -1536,58 +1536,13 @@ class SignUpFormPageBullet(Orderable):
         FieldPanel('body'),
     ]
 
-
-class SignUpFormPageLogo(Orderable):
-    page = ParentalKey('lampstands.SignUpFormPage', related_name='logos')
-    logo = models.ForeignKey(
-        'lampstands.LampstandsImage',
-        null=True,
-        blank=True,
-        on_delete=models.SET_NULL,
-        related_name='+'
-    )
-
-    panels = [
-        ImageChooserPanel('logo'),
-    ]
-
-
-class SignUpFormPageQuote(Orderable):
-    page = ParentalKey('lampstands.SignUpFormPage', related_name='quotes')
-    quote = models.TextField()
-    author = models.CharField(max_length=100)
-    organisation = models.CharField(max_length=100)
-
-    panels = [
-        FieldPanel('quote'),
-        FieldPanel('author'),
-        FieldPanel('organisation'),
-    ]
-
-
-class SignUpFormPageResponse(models.Model):
-    date = models.DateTimeField(auto_now_add=True)
-    email = models.EmailField()
-
+class ChurchEntryFormPageForm(forms.ModelForm):
     class Meta:
-        ordering = ['-date']
+        model = ChurchPage
+        fields = ['id','locality_name', 'meeting_address', 'locality_state_or_province', 
+            'locality_country', 'locality_phone_number', 'locality_email','locality_web']
 
-    def __str__(self):
-        return self.email
-
-
-class SignUpFormPageForm(forms.ModelForm):
-    class Meta:
-        model = SignUpFormPageResponse
-        fields = [
-            'email',
-        ]
-        widgets = {
-            'email': forms.TextInput(attrs={'placeholder': "Enter your email address"}),
-        }
-
-
-class SignUpFormPage(Page):
+class ChurchEntryFormPage(Page):
     formatted_title = models.CharField(
         max_length=255, blank=True,
         help_text="This is the title displayed on the page, not the document "
@@ -1607,20 +1562,8 @@ class SignUpFormPage(Page):
     form_button_text = models.CharField(max_length=255)
     thank_you_text = models.CharField(max_length=255,
                                       help_text="Displayed on successful form submission.")
-    email_subject = models.CharField(max_length=100, verbose_name='subject')
-    email_body = models.TextField(verbose_name='body')
-    email_attachment = models.ForeignKey(
-        'wagtaildocs.Document',
-        null=True,
-        related_name='+',
-        on_delete=models.SET_NULL,
-        verbose_name='attachment',
-    )
-    email_from_address = models.EmailField(
-        verbose_name='from address',
-        help_text="Anything ending in @lampstands.com is good.")
 
-    sign_up_form_class = SignUpFormPageForm
+    church_entry_form_class = ChurchEntryFormPageForm
 
     content_panels = [
         MultiFieldPanel([
@@ -1629,21 +1572,18 @@ class SignUpFormPage(Page):
         ], 'Title'),
         FieldPanel('intro', classname="full"),
         InlinePanel('bullet_points', label="Bullet points"),
-        InlinePanel('logos', label="Logos"),
-        InlinePanel('quotes', label="Quotes"),
         MultiFieldPanel([
             FieldPanel('call_to_action_text'),
             ImageChooserPanel('call_to_action_image'),
             FieldPanel('form_button_text'),
             FieldPanel('thank_you_text'),
         ], 'Form'),
-        MultiFieldPanel([
-            FieldPanel('email_subject'),
-            FieldPanel('email_body'),
-            DocumentChooserPanel('email_attachment'),
-            FieldPanel('email_from_address'),
-        ], 'Email'),
     ]
+
+    def get_context(self, request, *args, **kwargs):
+        context = super(ChurchEntryFormPage, self).get_context(request, *args, **kwargs)
+        context['form'] = self.church_entry_form_class()
+        return context
 
     def serve(self, request):
         from .forms import LocalityEntryForm
@@ -1652,51 +1592,7 @@ class SignUpFormPage(Page):
             'page': self,
             'form': form,
         })
-
-    def get_context(self, request, *args, **kwargs):
-        context = super(SignUpFormPage, self).get_context(request, *args, **kwargs)
-        context['form'] = self.sign_up_form_class()
-        return context
-
-    @vary_on_headers('X-Requested-With')
-    def serve(self, request, *args, **kwargs):
-        if request.is_ajax() and request.method == "POST":
-            form = self.sign_up_form_class(request.POST)
-
-            if form.is_valid():
-                form.save()
-                self.send_email_response(form.cleaned_data['email'])
-                return render(
-                    request,
-                    'lampstands/includes/sign_up_form_page_landing.html',
-                    {
-                        'page': self,
-                        'form': form,
-                        'legend': self.call_to_action_text
-                     }
-                )
-            else:
-                return render(
-                    request,
-                    'lampstands/includes/sign_up_form_page_form.html',
-                    {
-                        'page': self,
-                        'form': form,
-                        'legend': self.call_to_action_text
-                    }
-                )
-        else:
-            return super(SignUpFormPage, self).serve(request)
-
-    def send_email_response(self, to_address):
-        email_message = EmailMessage(
-            subject=self.email_subject,
-            body=self.email_body,
-            from_email=self.email_from_address,
-            to=[to_address],
-        )
-        email_message.attach_file(self.email_attachment.file.path)
-        email_message.send()
+        
 
 # Contact page
 class ContactFormField(AbstractFormField):
