@@ -1159,6 +1159,14 @@ class ChurchPage(Page):
         # just return first blog index in database
         return ChurchIndexPage.objects.first()
 
+    def serve(self, request):
+        from .forms import LocalityEntryForm
+        form = LocalityEntryForm()
+        return render(request, '"lampstands/includes/church_form.html"', {
+            'page': self,
+            'form': form,
+        })
+    
     content_panels = [
         FieldPanel('title', classname="full title"),
         FieldPanel('locality_name'),

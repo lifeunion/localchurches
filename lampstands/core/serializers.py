@@ -10,8 +10,7 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
     locality_country = CountryField(required=True)
     locality_phone_number = serializers.CharField(required=False, allow_blank=True, max_length=255)
     locality_email = serializers.EmailField(required=False, allow_blank=True, max_length=255)
-    locality_web = serializers.CharField(style={'base_template': 'textarea.html'})
-    improved_url = 
+    locality_web = serializers.CharField(style={'base_template': 'textarea.html'}) 
 
     class Meta:
         model = ChurchPage
