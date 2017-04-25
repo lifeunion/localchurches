@@ -8887,7 +8887,7 @@ label {
   float: left;
   transition: all 0.3s ease;
   color: white;
-  font-size: 30px;
+  font-size: 32px;
  }
 
  .icon-bar a:hover{
@@ -8900,7 +8900,7 @@ label {
  }
 
  .top-mobile-icon {
-  padding: 5px 8px;
+  padding: 10px 7px;
   font-size:1.7em;
  }
 
