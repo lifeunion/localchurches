@@ -1162,7 +1162,7 @@ class ChurchPage(Page):
     def serve(self, request):
         from .forms import LocalityEntryForm
         form = LocalityEntryForm()
-        return render(request, '"lampstands/includes/church_form.html"', {
+        return render(request, 'lampstands/includes/church_form.html', {
             'page': self,
             'form': form,
         })
