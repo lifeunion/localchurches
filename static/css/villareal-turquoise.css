@@ -8882,11 +8882,11 @@ label {
 
  .icon-bar a{
   width: 20%;
-  padding: 12px 0;
+  padding: 10px 0;
   float: left;
   transition: all 0.3s ease;
   color: white;
-  font-size: 36px;
+  font-size: 30px;
  }
 
  .icon-bar a:hover{
