@@ -5457,12 +5457,12 @@ label {
 
 /**
  * ezMark
-
+*/
 .ez-hide {
   opacity: 0; }
 
 .ez-checkbox {
-  background-image: url("img/checkbox.png");
+ /* background-image: url("img/checkbox.png");
   background-size: 17px 17px;
   cursor: pointer;
   display: inline-block;
@@ -5471,12 +5471,18 @@ label {
   vertical-align: -1px;
   width: 17px; }
   .checkbox-light .ez-checkbox {
-    background-image: url("img/checkbox-light.png"); }
+    background-image: url("img/checkbox-light.png");*/ }
 
 .ez-checked {
-  background-image: url("img/checkbox-open.png"); }
+  /*background-image: url("img/checkbox-open.png"); }
   .checkbox-light .ez-checked {
-    background-image: url("img/checkbox-light-open.png"); }
+    background-image: url("img/checkbox-light-open.png"); */
+  background-color: ##0BB7A5;}
+.ez-checked:before {
+  -webkit-transform:translateX(26px);
+  -ms-transform:translateX(26px);
+  transform: translateX(26px); }
+
 
 .ez-radio {
   background-image: url("img/radio.png");
@@ -5495,7 +5501,6 @@ label {
   .checkbox-light .ez-selected {
     background-image: url("img/radio-light-open.png"); }
 
-*/
 
 /**
  * 7. Buttons
