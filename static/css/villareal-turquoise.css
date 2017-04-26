@@ -7617,7 +7617,7 @@ label {
 
 .map-toggle {
     display: block;
-    padding:10px;
+    padding:0 10px 10px;
 }
 
 @media only screen and (min-width: 1024px) {
@@ -9000,12 +9000,11 @@ tr.shown td.details-control {
   display: inline-block;
   width: 60px;
   height: 34px;
+  top:0.75em;
 }
 
 /* Hide default HTML checkbox */
 .switch input {display:none !important;}
-
-.switch .ez-checkbox, .switch .ez-checked, .switch .ez-hide {display: none;}
 
 
 /* The slider */
@@ -9033,7 +9032,7 @@ tr.shown td.details-control {
   transition: .4s;
 }
 
-input:checked + .slider {
+/*input:checked + .slider {
   background-color: #2196F3;
 }
 
@@ -9045,7 +9044,8 @@ input:checked + .slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
-}
+
+} --MOVED TO .EZ-CHECKBOX AND .EZ-CHECKED*/
 
 /* Rounded sliders */
 .slider.round {
