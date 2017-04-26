@@ -1,4 +1,4 @@
-{% load wagtailcore_tags wagtailimages_tags staticfiles %}
+{% load wagtailcore_tags wagtailimages_tags staticfiles crispy_forms_tags %}
 
 {% block content %}
     <h1>{{ page.title }}</h1>
@@ -7,7 +7,7 @@
 
     <form action="." method="POST">
         {% csrf_token %}
-
+        {% crispy form %}
         {{ form.as_p }}
         
         <p><input type="submit" value="Submit my locality"></p>
