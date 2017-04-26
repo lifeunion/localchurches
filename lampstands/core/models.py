@@ -1594,7 +1594,7 @@ class ChurchEntryFormPage(Page):
 
     @vary_on_headers('X-Requested-With')
     def serve(self, request, *args, **kwargs):
-        if request.method == "POST":
+        if request.is_ajax() and request.method == "POST":
             form = self.church_entry_form_class(request.POST)
             #form = ChurchEntryFormPageForm
 
