@@ -1602,7 +1602,7 @@ class ChurchEntryFormPage(Page):
                 form.save()
                 return render(
                     request,
-                    'lampstands/includes/church_entry_form_page.html',
+                    'lampstands/church_entry_form_page.html',
                     {
                         'page': self,
                         'form': form,
