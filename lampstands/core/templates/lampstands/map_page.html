@@ -103,12 +103,13 @@
                          
                     </div><!-- /.header-top-inner -->
                 </div><!-- /.header-top -->
+
             </div><!-- /.vessel -->
 
-<div class="icon-bar hidden-lg-up">
+<!-- <div class="icon-bar hidden-lg-up">
   <a style="padding-bottom: 5px; width: 50%; font-size:small;" href="/map/" class="active">MAP</a>
-  <a style="padding-bottom: 5px; width: 50%; font-size:small;" href="/churches/">LISTING</a></div>
-            
+  <a style="padding-bottom: 5px; width: 50%; font-size:small;" href="/churches/">LISTING</a></div> -->
+
         </div><!-- /.header-inner -->
     </div><!-- /.header -->
 </div><!-- /.header-wrapper-->
@@ -120,8 +121,21 @@
 
 
 <div class="map_wrapper">
+    <div class="vessel" style="width: 100%; text-align: center;">
+    <button onclick="myFunction()">List it</button>
+    </div>
     <div id="map" class="map_container">
     </div>
+    <script type="text/javascript">
+        function myFunction() {
+    var x = document.getElementById('map');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}     
+    </script>
     <div class="map_results hidden-md-down">
 
         <div class="map_detail"></div>
@@ -171,14 +185,14 @@
                     breakpoint: 768,
                     settings: {
                         mapHeight: 1000,
-                        
+                        listHeight: 1000,
                     }
                 },
                 {
                     breakpoint: 480,
                     settings: {
                         mapHeight: 600,
-                    
+                        listHeight: 600,
                     }
                 }
             ],

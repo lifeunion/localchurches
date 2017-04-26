@@ -7607,6 +7607,8 @@ label {
     height: 100%;
     width: 100%; }
 
+#map {width: 100%;}
+
 .map-marker {
   height: 36px;
   width: 36px; }
