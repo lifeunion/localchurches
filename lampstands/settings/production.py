@@ -35,7 +35,6 @@ COMPRESS_CSS_FILTERS = [
     'compressor.filters.cssmin.CSSMinFilter',
 ]
 COMPRESS_CSS_HASHING_METHOD = 'content'
-CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 try:
     from .local import *
