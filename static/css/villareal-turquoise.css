@@ -7617,8 +7617,9 @@ label {
 
 .map-toggle {
     display: block;
-    padding:0 10px 10px;
-}
+    padding:0 10px 8px 0;
+    margin-top: -0.7em;
+} 
 
 @media only screen and (min-width: 1024px) {
   .map-toggle {
@@ -9000,7 +9001,7 @@ tr.shown td.details-control {
   display: inline-block;
   width: 60px;
   height: 34px;
-  top:0.75em;
+  top:0.95em;
 }
 
 /* Hide default HTML checkbox */
