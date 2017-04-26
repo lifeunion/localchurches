@@ -7607,7 +7607,10 @@ label {
     height: 100%;
     width: 100%; }
 
-#map {}
+@media only screen and (min-width: 768px) and (max-width: 1028px) {
+    #map {
+      display:none !important;}
+}      
 
 .map-marker {
   height: 36px;
