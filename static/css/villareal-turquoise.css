@@ -1563,9 +1563,9 @@ input[type="email"].form-control {
     margin-bottom: 0;
     font-weight: normal;
     cursor: pointer; }
-    .radio label input:only-child,
+    /*.radio label input:only-child,
     .checkbox label input:only-child {
-      position: static; }
+      position: static; } -- HIDDEN FOR TOGGLE SWITCH*/
 
 .radio input[type="radio"],
 .radio-inline input[type="radio"],
@@ -5477,8 +5477,8 @@ label {
   /*background-image: url("img/checkbox-open.png"); }
   .checkbox-light .ez-checked {
     background-image: url("img/checkbox-light-open.png"); */
-  background-color: ##0BB7A5;}
-.ez-checked:before {
+  background-color: #0BB7A5;}
+.ez-checked + .slider:before {
   -webkit-transform:translateX(26px);
   -ms-transform:translateX(26px);
   transform: translateX(26px); }
