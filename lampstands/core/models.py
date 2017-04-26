@@ -1591,6 +1591,36 @@ class ChurchEntryFormPage(Page):
             'page': self,
             'form': form,
         })
+
+    @vary_on_headers('X-Requested-With')
+    def serve(self, request, *args, **kwargs):
+        if request.is_ajax() and request.method == "POST":
+            form = self.church_entry_form_class(request.POST)
+            #form = ChurchEntryFormPageForm
+
+            if form.is_valid():
+                form.save()
+                return render(
+                    request,
+                    'lampstands/includes/sign_up_form_page_landing.html',
+                    {
+                        'page': self,
+                        'form': form,
+                        'legend': self.call_to_action_text
+                     }
+                )
+            else:
+                return render(
+                    request,
+                    'lampstands/includes/church_form.html',
+                    {
+                        'page': self,
+                        'form': form,
+                        'legend': self.call_to_action_text
+                    }
+                )
+        else:
+            return super(ChurchEntryFormPage, self).serve(request)
         
 
 # Contact page

@@ -116,7 +116,7 @@
 <div class="map_wrapper">
     <div id="map" class="map_container">
     </div>
-    <div class="map_results">
+    <div class="map_results hidden-md-down">
 
         <div class="map_detail"></div>
 
@@ -164,15 +164,15 @@
                 {
                     breakpoint: 768,
                     settings: {
-                        mapHeight: 400,
-                        listHeight: 400
+                        mapHeight: 1000,
+                        
                     }
                 },
                 {
                     breakpoint: 480,
                     settings: {
-                        mapHeight: 300,
-                        listHeight: 400
+                        mapHeight: 600,
+                    
                     }
                 }
             ],
@@ -305,11 +305,21 @@
     </div><!-- /.main-wrapper -->
 
 <div class="icon-bar navbar-fixed-bottom hidden-md-up">
-    <a class="icon-bar active" href="https://safe-cove-64619.herokuapp.com/map"><i class="fa fa-search"></i></a>
-    <a href="https://safe-cove-64619.herokuapp.com/beliefs"><i class="fa fa-book"></i></a>
-    <a href="https://safe-cove-64619.herokuapp.com/history"><i class="fa fa-history"></i></a>
-    <a href="https://safe-cove-64619.herokuapp.com/testimonies"><i class="fa fa-users"></i></a>
-    <a href="https://safe-cove-64619.herokuapp.com/recognition"><i class="fa fa-comments"></i></a>
+    <a href="https://safe-cove-64619.herokuapp.com/map"><i class="fa fa-search"></i>
+        <p style="font-size: small; font-family: sans-serif;">Find</p>
+    </a>
+    <a href="https://safe-cove-64619.herokuapp.com/testimonies"><i class="fa fa-users"></i>
+        <p style="font-size: small; font-family: sans-serif;">Testimonies</p>    
+    </a>
+    <a href="https://safe-cove-64619.herokuapp.com/beliefs"><i class="fa fa-book"></i>
+        <p style="font-size: small; font-family: sans-serif;">Beliefs</p>
+    </a>
+    <a href="https://safe-cove-64619.herokuapp.com/recognition"><i class="fa fa-comments"></i>
+        <p style="font-size: small; font-family: sans-serif;">Recognition</p>
+    </a>
+    <a href="https://safe-cove-64619.herokuapp.com/history"><i class="fa fa-history"></i>
+    <p style="font-size: small; font-family: sans-serif;">History</p>
+    </a>
 </div>
 
     <div class="footer-wrapper hidden-md-down">
