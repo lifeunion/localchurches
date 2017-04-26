@@ -8905,7 +8905,8 @@ label {
 
  .icon-bar a{
   width: 20%;
-  padding: 12px 0 0 0;
+  padding-top: 0.4em;
+  margin-bottom:-0.25em;
   float: left;
   transition: all 0.3s ease;
   color: white;
