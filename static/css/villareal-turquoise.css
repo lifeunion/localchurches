@@ -4632,11 +4632,11 @@ a.bg-danger:focus, a.bg-danger:hover {
   .hidden-sm-up {
     display: none !important; } }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .hidden-sm-down {
     display: none !important; } }
 
-@media (min-width: 768px) {
+@media (min-width: 769px) {
   .hidden-md-up {
     display: none !important; } }
 
