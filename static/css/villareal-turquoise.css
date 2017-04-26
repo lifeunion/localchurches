@@ -7613,8 +7613,7 @@ label {
     padding:10px;
 }
 
-@media only screen and (min-width: 768px) and (max-width: 1024px) 
-and (orientation: landscape) {
+@media only screen and (min-width: 1024px) {
   .map-toggle {
     display: none !important; }
 }

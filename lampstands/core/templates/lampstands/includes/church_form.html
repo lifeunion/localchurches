@@ -7,7 +7,7 @@
 
 	    {{ page.intro | richtext }}
 
-	    <form action="." method="POST">
+	    <form action="{%pageurl page %}" method="POST" id="church-entry-form">
 	        {% csrf_token %}
 	        {% crispy form %}
 	        <p><input type="submit" value="Submit my locality"></p>
