@@ -8997,7 +8997,7 @@ tr.shown td.details-control {
 }
 
 /* Hide default HTML checkbox */
-.switch input {display:none;}
+.switch input[type="checkbox"] {display:none;}
 
 /* The slider */
 .slider {
@@ -9024,7 +9024,7 @@ tr.shown td.details-control {
   transition: .4s;
 }
 
-input:checked + .slider {
+input:checked[type="checkbox"] + .slider {
   background-color: #2196F3;
 }
 
@@ -9032,7 +9032,7 @@ input:focus + .slider {
   box-shadow: 0 0 1px #2196F3;
 }
 
-input:checked + .slider:before {
+input:checked[type="checkbox"] + .slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
