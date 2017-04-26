@@ -5457,7 +5457,7 @@ label {
 
 /**
  * ezMark
- */
+
 .ez-hide {
   opacity: 0; }
 
@@ -5494,6 +5494,8 @@ label {
   background-image: url("img/radio-open.png"); }
   .checkbox-light .ez-selected {
     background-image: url("img/radio-light-open.png"); }
+
+*/
 
 /**
  * 7. Buttons

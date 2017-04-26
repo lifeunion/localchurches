@@ -1602,7 +1602,7 @@ class ChurchEntryFormPage(Page):
                 form.save()
                 return render(
                     request,
-                    'lampstands/church_entry_form_page.html',
+                    'lampstands/church_entry_landing_page.html',
                     {
                         'page': self,
                         'form': form,
@@ -1612,7 +1612,7 @@ class ChurchEntryFormPage(Page):
             else:
                 return render(
                     request,
-                    'lampstands/church_form.html',
+                    'lampstands/church_entry_form_page.html',
                     {
                         'page': self,
                         'form': form,

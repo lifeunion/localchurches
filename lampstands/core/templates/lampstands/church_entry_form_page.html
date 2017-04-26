@@ -1,7 +1,17 @@
-{% load wagtailimages_tags %}
+{% extends "lampstands/base_blog.html" %}
+{% load wagtailcore_tags wagtailimages_tags lampstands_tags crispy_forms_tags %}
 
-{% image page.call_to_action_image original %}
+{% block content %}
+	<div class="vessel">
+	    <h1>{{ page.title }}</h1>
 
-<div class="success">
-    {{ page.thank_you_text }}
-</div>
+	    {{ page.intro | richtext }}
+
+	    <form action="{%pageurl page %}" method="POST" id="church-entry-form">
+	        {% csrf_token %}
+	        {% crispy form %}
+	        <p><input type="submit" value="Submit my locality"></p>
+	    </form>
+	</div>
+{% endblock %}
+
