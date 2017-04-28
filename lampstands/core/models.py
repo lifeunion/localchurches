@@ -1521,7 +1521,7 @@ MapPage.content_panels = [
 
 # ChurchEntry page
 class ChurchentryFormField(AbstractFormField):
-    page = ParentalKey('Churchentry', related_name='form_churchentry_fields')
+    page = ParentalKey('Churchentry', related_name='form_fields')
 
 class ChurchentryLandingPageRelatedLinkButton(Orderable, RelatedLink):
     page = ParentalKey('lampstands.Churchentry', related_name='related_link_buttons')
@@ -1542,7 +1542,7 @@ class Churchentry(AbstractForm):
     content_panels = [
         FieldPanel('title', classname="full title"),
         FieldPanel('intro', classname="full"),
-        InlinePanel('form_churchentry_fields', label="Form fields"),
+        InlinePanel('form_fields', label="Form fields"),
         MultiFieldPanel([
             FieldPanel('thank_you_text'),
             FieldPanel('thank_you_follow_up'),
