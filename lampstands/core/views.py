@@ -19,6 +19,8 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView
+from rest_framework.settings import api_settings
+from rest_framework_csv import renderers as r
 
 #from rest_framework.views import APIView
 #from rest_framework import status, mixins, generics
@@ -42,13 +44,11 @@ class LocalitiesList(generics.ListCreateAPIView):
     queryset = ChurchPage.objects.all()
     serializer_class = LocalitiesSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    renderer_classes = (JSONRenderer,)
 
 class LocalitiesDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ChurchPage.objects.all()
     serializer_class = LocalitiesSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    renderer_classes = (JSONRenderer,)
 
 """
 class LocalitiesList(mixins.ListModelMixin,
