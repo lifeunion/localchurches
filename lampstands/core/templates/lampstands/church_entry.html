@@ -1,0 +1,30 @@
+{% extends "lampstands/base_blog.html" %}
+{% load static wagtailcore_tags wagtailimages_tags lampstands_tags crispy_forms_tags %}
+{% block title %}
+{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %} | The Local Churches
+{% endblock %}
+
+{% block content %}
+<div class="content-title">
+    <div class="content-title-inner">
+        <div class="vessel">     
+            <h1>Locality Entry Form</h1>       
+    
+        </div><!-- /.vessel -->
+    </div><!-- /.content-title-inner -->
+</div><!-- /.content-title -->          
+
+<div class="content">
+	<div class="vessel">
+	    <h1>{{ page.title }}</h1>
+
+	    {{ page.intro | richtext }}
+
+	    <form action="{%pageurl page %}" method="POST" id="church-entry-form">
+	        {% csrf_token %}
+	        {% crispy form %}
+	        <button type="submit" class="btn btn-primary pull-left" id="contact-us-submit"> Post Message</button>
+	    </form>
+	</div>
+</div>
+{% endblock %}
