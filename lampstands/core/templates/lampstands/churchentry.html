@@ -23,8 +23,10 @@
 	    <form action="{%pageurl page %}" method="POST" id="church-entry-form">
 	        {% csrf_token %}
 	        {% crispy form %}
-	        <button type="submit" class="btn btn-primary pull-left" id="contact-us-submit"> Post Message</button>
+	        <button type="submit" class="btn btn-primary pull-left" id="church-entry-submit"> Submit</button>
 	    </form>
+
 	</div>
 </div>
 {% endblock %}
+
