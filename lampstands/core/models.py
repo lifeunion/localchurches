@@ -15,7 +15,7 @@ from wagtail.contrib.settings.models import BaseSetting, register_setting
 from wagtail.wagtailadmin.edit_handlers import (FieldPanel, InlinePanel,
                                                 MultiFieldPanel,
                                                 PageChooserPanel,
-                                                StreamFieldPanel, FieldRowPanel)
+                                                StreamFieldPanel)
 from wagtail.wagtailcore import blocks
 from wagtail.wagtailadmin.utils import send_mail
 from wagtail.wagtailcore.blocks import (CharBlock, FieldBlock, ListBlock,
@@ -1587,7 +1587,7 @@ class ChurchEntryFormPage(Page):
 
     def serve(self, request):
         form = ChurchEntryFormPageForm
-        return render(request, 'lampstands/includes/church_entry.html', {
+        return render(request, 'lampstands/church_entry.html', {
             'page': self,
             'form': form,
         })
@@ -1596,13 +1596,12 @@ class ChurchEntryFormPage(Page):
     def serve(self, request, *args, **kwargs):
         if request.is_ajax() and request.method == "POST":
             form = self.church_entry_form_class(request.POST)
-            #form = ChurchEntryFormPageForm
 
             if form.is_valid():
                 form.save()
                 return render(
                     request,
-                    'lampstands/church_entry_landing_page.html',
+                    'lampstands/includes/church_entry.html',
                     {
                         'page': self,
                         'form': form,
@@ -1612,7 +1611,7 @@ class ChurchEntryFormPage(Page):
             else:
                 return render(
                     request,
-                    'lampstands/church_entry.html',
+                    'lampstands/church_entry_landing_page.html',
                     {
                         'page': self,
                         'form': form,
