@@ -34,7 +34,7 @@ def error404(request):
     else:
         return render(request, '404.html', status=404)
 
-@api_view(['GET'])
+@api_view(['GET','POST'])
 def api_root(request, format=None):
     return Response({
         'localities': reverse('localities-list', request=request, format=format)
