@@ -1542,7 +1542,7 @@ class Churchentry(AbstractForm):
     content_panels = [
         FieldPanel('title', classname="full title"),
         FieldPanel('intro', classname="full"),
-        InlinePanel('form_fields', label="Form fields"),
+        InlinePanel('form_churchentry_fields', label="Form fields"),
         MultiFieldPanel([
             FieldPanel('thank_you_text'),
             FieldPanel('thank_you_follow_up'),
