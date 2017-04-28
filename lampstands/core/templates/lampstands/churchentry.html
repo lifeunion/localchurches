@@ -23,8 +23,34 @@
 	    <form action="{%pageurl page %}" method="POST" id="church-entry-form">
 	        {% csrf_token %}
 	        {% crispy form %}
-	        <button type="submit" class="btn btn-primary pull-left" id="church-entry-submit"> Submit</button>
+	        <button type="submit" class="btn btin-prmary pull-left" id="church-entry-submit"> Submit</button>
 	    </form>
+
+	    <form class="listing-contact-form" action="{% pageurl page %}" method="post" id="church-entry-form">
+                                {{ page.intro|richtext }}
+                                {% csrf_token %}
+                                {% spaceless %}
+
+                                {% for field in form %}
+                                <div class="col-md-7 contact-form__row contact-form__row--{{ field.id_for_label }}">
+                                    <div class="form-group">
+                                        {{ field.errors }}
+                                        <label for="{{ field.id_for_label }}" class="contact-form__label {% if field.field.required %} contact-form__label--required {% endif %}">
+                                            {{ field.label }}
+                                        </label>
+                                        <div class="form-control">
+                                        {{ field }}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+
+                                {% endspaceless %}
+
+                                <div class="col-sm-12">
+                                    <button type="submit" class="btn btn-primary pull-left" id="church-entry-submit"> Submit</button>
+                                </div><!-- /.col-* -->
+                        </form>
 
 	</div>
 </div>
