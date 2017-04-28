@@ -15,7 +15,7 @@ from wagtail.contrib.settings.models import BaseSetting, register_setting
 from wagtail.wagtailadmin.edit_handlers import (FieldPanel, InlinePanel,
                                                 MultiFieldPanel,
                                                 PageChooserPanel,
-                                                StreamFieldPanel)
+                                                StreamFieldPanel, FieldRowPanel)
 from wagtail.wagtailcore import blocks
 from wagtail.wagtailadmin.utils import send_mail
 from wagtail.wagtailcore.blocks import (CharBlock, FieldBlock, ListBlock,

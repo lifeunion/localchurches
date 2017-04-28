@@ -21,7 +21,7 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
         """
         Create and return a new `localities` instance, given the validated data.
         """
-        return ChurchIndexPage.objects.create(**validated_data)
+        return ChurchPage.objects.create(**validated_data)
 
     def update(self, instance, validated_data):
         """
