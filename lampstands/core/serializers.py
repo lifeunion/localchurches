@@ -3,6 +3,7 @@ from .models import ChurchPage, ChurchIndexPage
 from django_countries.serializer_fields import CountryField
 
 class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
+    url = serializers.CharField(source='get_absolute_url', read_only=True)
     id = serializers.IntegerField(read_only=False)
     locality_name = serializers.CharField(required=True, allow_blank=True, max_length=255)
     meeting_address = serializers.CharField(required=True, allow_blank=True, max_length=255)
