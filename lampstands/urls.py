@@ -11,12 +11,25 @@ from wagtail.wagtailcore import urls as wagtail_urls
 from wagtail.wagtaildocs import urls as wagtaildocs_urls
 from lampstands.core import urls as lampstands_urls
 
+from wagtail.contrib.wagtailapi import urls as wagtailapi_urls
+from wagtail.api.v2.router import WagtailAPIRouter
+from wagtail.api.v2.endpoints import PagesAPIEndpoint
+from wagtail.wagtaildocs.api.v2.endpoints import DocumentsAPIEndpoint
+from wagtail.wagtailimages.api.v2.endpoints import ImagesAPIEndpoint
+
+api = WagtailAPIRouter('api')
+api.register_endpoint('pages', PagesAPIEndpoint)
+api.register_endpoint('images', ImagesAPIEndpoint)
+api.register_endpoint('documents', DocumentsAPIEndpoint)
+
 urlpatterns = [
     url(r'^django-admin/', include(admin.site.urls)),
     url(r'^admin/', include(wagtailadmin_urls)),
     url(r'^documents/', include(wagtaildocs_urls)),
     url(r'^sitemap\.xml$', sitemap),
     url(r'^search/$', search_views.search, name='search'),
+    url(r'^api/', include(wagtailapi_urls)),
+    url(r'^api/v2/', include(api.urls)),
 
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's page serving mechanism. This should be the last pattern in
