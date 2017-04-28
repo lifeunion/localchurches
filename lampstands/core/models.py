@@ -1525,7 +1525,7 @@ class ChurchEntryFormPageForm(forms.ModelForm):
         fields = ['id','locality_name', 'meeting_address', 'locality_state_or_province', 
             'locality_country', 'locality_phone_number', 'locality_email','locality_web']
 
-class ChurchEntry(AbstractForm):
+class ChurchEntry(Page):
     formatted_title = models.CharField(
         max_length=255, blank=True,
         help_text="This is the title displayed on the page, not the document "
