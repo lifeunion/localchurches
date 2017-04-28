@@ -31,6 +31,7 @@ def error404(request):
         return render(request, '404.html', status=404)
 
 @api_view(['GET'])
+@renderer_classes((JSONRenderer,))
 def api_root(request, format=None):
     return Response({
         'localities': reverse('localities-list', request=request, format=format)
