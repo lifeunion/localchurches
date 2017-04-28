@@ -25,6 +25,7 @@ django-taggit==0.22.0
 django-toolbelt==0.0.1
 django-treebeard==4.1.0
 djangorestframework==3.5.4
+djangorestframework-csv==2.0.0
 docutils==0.13.1
 geopy==1.11.0
 gunicorn==19.6.0
@@ -49,6 +50,7 @@ s3transfer==0.1.10
 six==1.10.0
 sphinx-me==0.3
 static3==0.7.0
+unicodecsv==0.14.1
 Unidecode==0.4.20
 uritemplate==3.0.0
 wagtail==1.9
