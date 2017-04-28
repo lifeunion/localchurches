@@ -5,6 +5,7 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from lampstands.core import views
 from django.conf.urls import include
 from .views import LocalitiesList, LocalitiesDetail
+from wagtail.contrib.wagtailapi import urls as wagtailapi_urls
 
 urlpatterns = [
 	url(r'^$', views.api_root),
@@ -24,4 +25,5 @@ urlpatterns = format_suffix_patterns([
 urlpatterns += [
     url(r'^api-auth/', include('rest_framework.urls',
                                namespace='rest_framework')),
+    url(r'^api/', include(wagtailapi_urls)),
 ]
