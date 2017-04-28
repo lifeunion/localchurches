@@ -21,7 +21,6 @@
 	    {{ page.intro | richtext }}
 
 	    <form class="listing-contact-form" action="{% pageurl page %}" method="post" id="church-entry-form">
-                                {{ page.intro|richtext }}
                                 {% csrf_token %}
                                 {% spaceless %}
 
