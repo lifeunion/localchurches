@@ -23,13 +23,13 @@ api.register_endpoint('images', ImagesAPIEndpoint)
 api.register_endpoint('documents', DocumentsAPIEndpoint)
 
 urlpatterns = [
+    url(r'^api/', include(wagtailapi_urls)),
+    url(r'^api/v2/', include(api.urls)),
     url(r'^django-admin/', include(admin.site.urls)),
     url(r'^admin/', include(wagtailadmin_urls)),
     url(r'^documents/', include(wagtaildocs_urls)),
     url(r'^sitemap\.xml$', sitemap),
     url(r'^search/$', search_views.search, name='search'),
-    url(r'^api/', include(wagtailapi_urls)),
-    url(r'^api/v2/', include(api.urls)),
 
     # For anything not caught by a more specific rule above, hand over to
     # Wagtail's page serving mechanism. This should be the last pattern in
