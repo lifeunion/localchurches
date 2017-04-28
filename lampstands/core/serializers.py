@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ChurchPage
+from .models import ChurchPage, ChurchIndexPage
 from django_countries.serializer_fields import CountryField
 
 class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
