@@ -42,11 +42,13 @@ class LocalitiesList(generics.ListCreateAPIView):
     queryset = ChurchPage.objects.all()
     serializer_class = LocalitiesSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    renderer_classes = (JSONRenderer,)
 
 class LocalitiesDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ChurchPage.objects.all()
     serializer_class = LocalitiesSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    renderer_classes = (JSONRenderer,)
 
 """
 class LocalitiesList(mixins.ListModelMixin,
