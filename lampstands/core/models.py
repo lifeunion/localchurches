@@ -26,7 +26,7 @@ from wagtail.wagtailcore.fields import RichTextField, StreamField
 from wagtail.wagtailcore.models import Orderable, Page
 from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
 from wagtail.wagtailembeds.blocks import EmbedBlock
-from wagtail.wagtailforms.models import AbstractEmailForm, AbstractFormField, AbstractForm
+from wagtail.wagtailforms.models import AbstractEmailForm, AbstractFormField
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailimages.models import (AbstractImage, AbstractRendition,
@@ -1519,13 +1519,30 @@ MapPage.content_panels = [
     FieldPanel('google_key_js')
 ]
 
+# Sign-up for something page
+class ChurchEntryFormPageBullet(Orderable):
+    page = ParentalKey('lampstands.ChurchEntryFormPage', related_name='bullet_points')
+    icon = models.CharField(max_length=100, choices=(
+        ('lampstands/includes/svg/bulb-svg.html', 'Light bulb'),
+        ('lampstands/includes/svg/pro-svg.html', 'Chart'),
+        ('lampstands/includes/svg/tick-svg.html', 'Tick'),
+    ))
+    title = models.CharField(max_length=100)
+    body = models.TextField()
+
+    panels = [
+        FieldPanel('icon'),
+        FieldPanel('title'),
+        FieldPanel('body'),
+    ]
+
 class ChurchEntryFormPageForm(forms.ModelForm):
     class Meta:
         model = ChurchPage
         fields = ['id','locality_name', 'meeting_address', 'locality_state_or_province', 
             'locality_country', 'locality_phone_number', 'locality_email','locality_web']
 
-class ChurchEntry(Page):
+class ChurchEntryFormPage(Page):
     formatted_title = models.CharField(
         max_length=255, blank=True,
         help_text="This is the title displayed on the page, not the document "
@@ -1554,6 +1571,7 @@ class ChurchEntry(Page):
             FieldPanel('formatted_title'),
         ], 'Title'),
         FieldPanel('intro', classname="full"),
+        InlinePanel('bullet_points', label="Bullet points"),
         MultiFieldPanel([
             FieldPanel('call_to_action_text'),
             ImageChooserPanel('call_to_action_image'),
@@ -1569,7 +1587,7 @@ class ChurchEntry(Page):
 
     def serve(self, request):
         form = ChurchEntryFormPageForm
-        return render(request, 'lampstands/includes/church_form.html', {
+        return render(request, 'lampstands/includes/church_entry.html', {
             'page': self,
             'form': form,
         })
@@ -1594,7 +1612,7 @@ class ChurchEntry(Page):
             else:
                 return render(
                     request,
-                    'lampstands/church_entry_form_page.html',
+                    'lampstands/church_entry.html',
                     {
                         'page': self,
                         'form': form,
