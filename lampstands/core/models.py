@@ -1519,23 +1519,39 @@ MapPage.content_panels = [
     FieldPanel('google_key_js')
 ]
 
-# Sign-up for something page
-class ChurchEntryFormPageBullet(Orderable):
-    page = ParentalKey('lampstands.ChurchEntryFormPage', related_name='bullet_points')
-    icon = models.CharField(max_length=100, choices=(
-        ('lampstands/includes/svg/bulb-svg.html', 'Light bulb'),
-        ('lampstands/includes/svg/pro-svg.html', 'Chart'),
-        ('lampstands/includes/svg/tick-svg.html', 'Tick'),
-    ))
-    title = models.CharField(max_length=100)
-    body = models.TextField()
+# ChurchEntry page
+class ChurchentryFormField(AbstractFormField):
+    page = ParentalKey('Churchentry', related_name='form_churchentry_fields')
 
-    panels = [
-        FieldPanel('icon'),
-        FieldPanel('title'),
-        FieldPanel('body'),
+class ChurchentryLandingPageRelatedLinkButton(Orderable, RelatedLink):
+    page = ParentalKey('lampstands.Churchentry', related_name='related_link_buttons')
+
+class Churchentry(AbstractForm):
+    intro = RichTextField(blank=True)
+    thank_you_text = models.CharField(max_length=255, help_text='e.g. Thanks!')
+    thank_you_follow_up = models.CharField(max_length=255, help_text='e.g. We\'ll be in touch')
+    landing_page_button_title = models.CharField(max_length=255, blank=True)
+    landing_page_button_link = models.ForeignKey(
+        'wagtailcore.Page', null=True, blank=True, related_name='+',
+        on_delete=models.SET_NULL
+    )
+
+    class Meta:
+        verbose_name = "Churchentry Page"
+
+    content_panels = [
+        FieldPanel('title', classname="full title"),
+        FieldPanel('intro', classname="full"),
+        InlinePanel('form_fields', label="Form fields"),
+        MultiFieldPanel([
+            FieldPanel('thank_you_text'),
+            FieldPanel('thank_you_follow_up'),
+            PageChooserPanel('landing_page_button_link'),
+            FieldPanel('landing_page_button_title'),
+        ], "Landing page"),
     ]
 
+"""
 class ChurchEntryFormPageForm(forms.ModelForm):
     class Meta:
         model = ChurchPage
@@ -1620,7 +1636,8 @@ class ChurchEntryFormPage(Page):
                 )
         else:
             return super(ChurchEntryFormPage, self).serve(request)
-        
+
+"""    
 
 # Contact page
 class ContactFormField(AbstractFormField):
