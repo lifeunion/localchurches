@@ -26,7 +26,7 @@ from wagtail.wagtailcore.fields import RichTextField, StreamField
 from wagtail.wagtailcore.models import Orderable, Page
 from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
 from wagtail.wagtailembeds.blocks import EmbedBlock
-from wagtail.wagtailforms.models import AbstractEmailForm, AbstractFormField
+from wagtail.wagtailforms.models import AbstractEmailForm, AbstractFormField, AbstractForm
 from wagtail.wagtailimages.blocks import ImageChooserBlock
 from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
 from wagtail.wagtailimages.models import (AbstractImage, AbstractRendition,
@@ -1124,7 +1124,7 @@ class ChurchPageTagSelect(Orderable):
 class ChurchPageRelatedLink(Orderable, RelatedLink):
     page = ParentalKey('lampstands.ChurchPage', related_name='related_links')
 
-class ChurchPage(Page):
+class ChurchPage(AbstractForm):
     locality_name = models.CharField(max_length=255)
     locality_state_or_province = models.CharField(max_length=255, blank=True)
     locality_country = CountryField(blank_label='(select country)')
@@ -1138,7 +1138,7 @@ class ChurchPage(Page):
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     locality_phone_number = models.CharField(blank=True, max_length=20) # validators should be a list
     locality_email = models.EmailField(blank=True)
-    locality_web = models.TextField(validators=[URLValidator()], blank=True)
+    locality_web = models.TextField(validators=[URLValidator()], blank=True, help_text= "Please type: 'http://' in the front of the URL")
     last_update = models.DateField(null=True, blank=True)
     
     search_fields = Page.search_fields + [
