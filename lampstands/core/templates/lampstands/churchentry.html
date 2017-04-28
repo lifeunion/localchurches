@@ -20,12 +20,6 @@
 
 	    {{ page.intro | richtext }}
 
-	    <form action="{%pageurl page %}" method="POST" id="church-entry-form">
-	        {% csrf_token %}
-	        {% crispy form %}
-	        <button type="submit" class="btn btin-prmary pull-left" id="church-entry-submit"> Submit</button>
-	    </form>
-
 	    <form class="listing-contact-form" action="{% pageurl page %}" method="post" id="church-entry-form">
                                 {{ page.intro|richtext }}
                                 {% csrf_token %}
