@@ -1,7 +1,38 @@
-{% load wagtailimages_tags %}
+{% extends "lampstands/base_blog.html" %}
+{% load static lampstands_tags wagtailcore_tags wagtailimages_tags %}
+{% block title %}
+{% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %} | The Local Churches
+{% endblock %}
+{% block content %}
 
-{% image page.call_to_action_image original %}
+<div class="content-title">
+    <div class="content-title-inner">
+        <div class="vessel">     
+            <h1>Locality Entry Form</h1>       
+    
+        </div><!-- /.vessel -->
+    </div><!-- /.content-title-inner -->
+</div><!-- /.content-title -->     
 
-<div class="success">
-    {{ page.thank_you_text }}
+<div class="about-hero">
+    <div class="main-content">
+        
+            <form action="{% pageurl page %}" method="post" id="church-entry-form">
+                    <div class="vessel">
+                        <div class="content" style="text-align: center;">
+                            <h3 style="padding: 20px 0 35px 0;">
+                                {{ page.thank_you_text }} {{ page.thank_you_follow_up }}
+                                <br>
+                                </h3>
+                                <a style="text-decoration:underline;" class="btn thanks-btn" href="{% pageurl page.landing_page_button_link %}"> << {{ page.landing_page_button_title }}</a>
+                            
+                        </div>
+                    </div>
+                   {% csrf_token %}
+                   {{ form.as_p }} 
+            </form>
+       
+    </div>
 </div>
+
+{% endblock %}
