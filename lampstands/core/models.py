@@ -1124,7 +1124,7 @@ class ChurchPageTagSelect(Orderable):
 class ChurchPageRelatedLink(Orderable, RelatedLink):
     page = ParentalKey('lampstands.ChurchPage', related_name='related_links')
 
-class ChurchPage(AbstractForm):
+class ChurchPage(Page):
     locality_name = models.CharField(max_length=255)
     locality_state_or_province = models.CharField(max_length=255, blank=True)
     locality_country = CountryField(blank_label='(select country)')
