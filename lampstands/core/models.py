@@ -41,6 +41,7 @@ from django.core.validators import RegexValidator, URLValidator
 from django_countries.fields import CountryField
 
 from geoposition.fields import GeopositionField
+from urllib.request import urlopen
 
 # Streamfield blocks and config
 
@@ -1475,6 +1476,11 @@ class MapPage(Page):
     google_key_js = models.TextField(max_length=50, blank=True)
 
     @property
+    def get_locality_json(self):
+        json_locality_url = 'https://safe-cove-64619.herokuapp.com/api-localities/?format=json'
+        locality_data = json.loads(urlopen(json_locality_url).read())
+        return locality_data
+
     def geoinfo_lat(self):
         geoinfo_lat = '0' 
         return geoinfo_lat
@@ -1491,7 +1497,7 @@ class MapPage(Page):
         # Filter by tag
         geoinfo_lat = request.GET.get('lat')
         geoinfo_lng = request.GET.get('lng')
-        zoom_deflevel = 7
+        zoom_deflevel = 2
 
         print (geoinfo_lat)
         print (geoinfo_lng)
