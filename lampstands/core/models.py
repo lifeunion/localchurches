@@ -1479,6 +1479,7 @@ class MapPage(Page):
     def get_locality_json(self):
         json_locality_url = 'https://safe-cove-64619.herokuapp.com/api-localities/?format=json'
         locality_data = json.loads(urlopen(json_locality_url).read())
+        print (locality_data)
         return locality_data
 
     def geoinfo_lat(self):
