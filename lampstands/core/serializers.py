@@ -12,7 +12,7 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
     locality_phone_number = serializers.CharField(required=False, allow_blank=True, max_length=255)
     locality_email = serializers.EmailField(required=False, allow_blank=True, max_length=255)
     locality_web = serializers.CharField(style={'base_template': 'textarea.html'})
-    position = GeopositionField(reqired=False, allow_blank=True) 
+    position = GeopositionField(required=False, allow_blank=True) 
 
     class Meta:
         model = ChurchPage
