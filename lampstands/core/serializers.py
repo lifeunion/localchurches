@@ -28,6 +28,7 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
         """
         Update and return an existing `localities` instance, given the validated data.
         """
+        instance.url = validated_data.get('url', instance.get_absolute_url())
         instance.locality_name = validated_data.get('locality_name', instance.locality_name)
         instance.meeting_address = validated_data.get('meeting_address', instance.meeting_address)
         instance.locality_state_or_province = validated_data.get('locality_state_or_province', instance.locality_state_or_province)
