@@ -42,6 +42,7 @@ from django_countries.fields import CountryField
 
 from geoposition.fields import GeopositionField
 from urllib.request import urlopen
+import json
 
 # Streamfield blocks and config
 
