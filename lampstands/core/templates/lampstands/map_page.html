@@ -168,7 +168,7 @@
 <script>
     $(function() {
         $('.map_container').storeLocator({
-            remote: "{% static 'lampstands/css/packages/src/churches.json' %}",
+            remote: {{get_locality_json}},
             defaultLocation:['{{geoinfo_lat}}','{{geoinfo_lng}}'],
             listOptions:{
                 sortByDistance: true,
