@@ -14,7 +14,7 @@ django-compressor==2.1.1
 django-countries==4.2
 django-crispy-forms==1.6.1
 django-easy-maps==0.9.3
-django-embed-video==1.1.0
+django-embed-video==1.1.2
 django-geojson==2.10.0
 django-geoposition==0.3.0
 django-leaflet==0.21.0
@@ -39,7 +39,7 @@ olefile==0.44
 packaging==16.8
 Pillow==4.0.0
 psycopg2==2.6.2
-pyparsing==2.1.10
+pyparsing==2.2.0
 python-dateutil==2.6.0
 pytz==2016.10
 raven==5.32.0
