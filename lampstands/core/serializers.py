@@ -3,7 +3,7 @@ from .models import ChurchPage, ChurchIndexPage
 from django_countries.serializer_fields import CountryField
 
 class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
-    url = serializers.CharField(source='get_absolute_url', read_only=True)
+    url = serializers.CharField(source='get_absolute_url')
     id = serializers.IntegerField(read_only=False)
     locality_name = serializers.CharField(required=True, allow_blank=True, max_length=255)
     meeting_address = serializers.CharField(required=True, allow_blank=True, max_length=255)
@@ -11,12 +11,13 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
     locality_country = CountryField(required=True)
     locality_phone_number = serializers.CharField(required=False, allow_blank=True, max_length=255)
     locality_email = serializers.EmailField(required=False, allow_blank=True, max_length=255)
-    locality_web = serializers.CharField(style={'base_template': 'textarea.html'}) 
+    locality_web = serializers.CharField(style={'base_template': 'textarea.html'})
+    position = GeopositionField(reqired=False, allow_blank=True) 
 
     class Meta:
         model = ChurchPage
         fields = ('url','id','locality_name', 'meeting_address', 'locality_state_or_province', 
-            'locality_country', 'locality_phone_number', 'locality_email','locality_web')
+            'locality_country', 'locality_phone_number', 'locality_email','locality_web', 'position')
 
     def create(self, validated_data):
         """
@@ -37,5 +38,6 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
         instance.locality_phone_number = validated_data.get('locality_phone_number', instance.locality_phone_number)
         instance.locality_email = validated_data.get('locality_email', instance.locality_email)
         instance.locality_web = validated_data.get('locality_web', instance.locality_web)
+        instance.position = validated_data.get('position', instance.position)
         instance.save()
         return instance

@@ -280,14 +280,14 @@
 </script>
 <script id="mapListEntryTemplate" type="text/x-jQuery-tmpl">
 <div class="result_item" data-id="${id}">
-    <a href= "https://safe-cove-64619.herokuapp.com/churches/${slug}"><h3>${name}</h3></a>
+    <a href= "https://safe-cove-64619.herokuapp.com/churches/${url}"><h3>${locality_name}</h3></a>
     <div class="result_item_info">
         <div class="info">
             <ul class="list-unstyled">
-                <li><b>Address</b>: ${address}</li>
-                <li><b>Phone</b>: ${phone}</li>
-                <li><b>E-Mail</b>: ${email}</li>
-                <li><b>Website</b>: <a href="${website}">${website}</a></li>
+                <li><b>Address</b>: ${meeting_address}</li>
+                <li><b>Phone</b>: ${locality_phone_number}</li>
+                <li><b>E-Mail</b>: ${locality_email}</li>
+                <li><b>Website</b>: <a href="${locality_web}">${locality_web}</a></li>
             </ul>
             <div class="label label-danger">${distance} km</div>
         </div>
@@ -297,14 +297,14 @@
 <script id="mapListDetailTemplate" type="text/x-jQuery-tmpl">
 <div class="result_item_detail">
 <a href="#" class="map_details_close"><img src="{% static 'lampstands/css/packages/src/close.png' %}" alt="Close"></a>
-    <h3><a href="https://safe-cove-64619.herokuapp.com/churches/${slug}">${name}</a></h3>
+    <h3><a href="https://safe-cove-64619.herokuapp.com/churches/${url}">${locality_name}</a></h3>
     <div class="result_item_detail_info">
         <div class="info">
             <ul class="list-unstyled">
-                <li><b>Address</b>: ${address}</li>
-                <li><b>Phone</b>: ${phone}</li>
-                <li><b>E-Mail</b>: ${email}</li>
-                <li><b>Website</b>: <a href="${website}">${website}</a></li>
+                <li><b>Address</b>: ${meeting_address}</li>
+                <li><b>Phone</b>: ${locality_phone_number}</li>
+                <li><b>E-Mail</b>: ${locality_email}</li>
+                <li><b>Website</b>: <a href="${locality_web}">${locality_web}</a></li>
             </ul>
             <a class="map_direction_trigger label label-danger">get route</a>
         </div>
