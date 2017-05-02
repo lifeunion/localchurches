@@ -36,6 +36,7 @@ def error404(request):
 
 @api_view(['GET','POST'])
 def api_root(request, format=None):
+    context={'request': request}
     return Response({
         'localities': reverse('localities-list', request=request, format=format)
     })
