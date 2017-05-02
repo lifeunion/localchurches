@@ -1492,10 +1492,10 @@ class MapPage(Page):
     @property
     def get_locality_json(self):
         json_locality_url = 'https://safe-cove-64619.herokuapp.com/api-localities/?format=json'
-        locality_data = json.loads(urlopen(json_locality_url).read())
-        local_address = "lampstands/css/packages/src/updated_churches.json"
-        with open(local_address,'w') as f:
-            json.dump(locality_data, f)
+        #locality_data = json.loads(urlopen(json_locality_url).read())
+        #local_address = "lampstands/css/packages/src/updated_churches.json"
+        #with open(local_address,'w') as f:
+        #    json.dump(locality_data, f)
 
         return json_locality_url
 
