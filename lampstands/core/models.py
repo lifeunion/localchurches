@@ -1160,7 +1160,19 @@ class ChurchPage(Page):
         # No ancestors are blog indexes,
         # just return first blog index in database
         return ChurchIndexPage.objects.first()
-    
+
+    def get_latitude_location(self):
+        latitude = self.location.latitude
+        return str(latitude)
+
+    def get_longitude_location(self):
+        longitude = self.location.longitude
+        return str(longitude)
+
+    def get_dict_location(self):
+        dictified_loc = dict([ ("latitude", self.get_latitude_location()), ("longitude", self.get_longitude_location())])
+        return dictified_loc
+        
     content_panels = [
         FieldPanel('title', classname="full title"),
         FieldPanel('locality_name'),
