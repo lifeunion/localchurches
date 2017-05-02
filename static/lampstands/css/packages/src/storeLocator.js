@@ -681,7 +681,7 @@
                     });
 
                     marker.addListener('click', function() {
-                      infowindow.open(map, marker);
+                      infowindow.open(marker.map, marker);
                     });
 
                     if(this.settings.markerOptions.dropAnimation)
