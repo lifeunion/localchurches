@@ -668,12 +668,20 @@
                     }
                     var latLng = new google.maps.LatLng(data.location.latitude, data.location.longitude);
 
+                    var infowindow = new google.maps.InfoWindow({
+                      content: "A"
+                    });
+
                     var marker = new google.maps.Marker({
                         position: latLng,
                         map: this.map,
                         icon: markerIcon,
                         draggable: this.settings.markerOptions.draggable,
                         itemId: data.id,
+                    });
+
+                    marker.addListener('click', function() {
+                      infowindow.open(map, marker);
                     });
 
                     if(this.settings.markerOptions.dropAnimation)
