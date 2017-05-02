@@ -42,7 +42,8 @@ from django_countries.fields import CountryField
 
 from geoposition.fields import GeopositionField
 from urllib.request import urlopen
-import json
+import json, os
+from django.conf import settings
 
 # Streamfield blocks and config
 
@@ -1492,6 +1493,11 @@ class MapPage(Page):
     def get_locality_json(self):
         json_locality_url = 'https://safe-cove-64619.herokuapp.com/api-localities/?format=json'
         locality_data = json.loads(urlopen(json_locality_url).read())
+        local_address = os.path.join(STATIC_ROOT,"lampstands/css/packages/src/updated_churches.json")
+
+        with open(local_address,'w') as f:
+            json.dump(locality_data, f)
+
         return json_locality_url
 
     def geoinfo_lat(self):
