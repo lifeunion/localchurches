@@ -217,12 +217,3 @@ REST_FRAMEWORK = {
 }
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
-
-import json
-from urllib.request import urlopen
-json_locality_url = 'https://safe-cove-64619.herokuapp.com/api-localities/?format=json'
-locality_data = json.loads(urlopen(json_locality_url).read())
-local_address = os.path.join(STATIC_ROOT,"lampstands/css/packages/src/updated_churches.json")
-
-with open(local_address,'w') as f:
-    json.dump(locality_data, f)
