@@ -38,6 +38,6 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
         instance.locality_phone_number = validated_data.get('locality_phone_number', instance.locality_phone_number)
         instance.locality_email = validated_data.get('locality_email', instance.locality_email)
         instance.locality_web = validated_data.get('locality_web', instance.locality_web)
-        instance.location = validated_data.get('location', instance.location)
+        instance.position = validated_data.get('position', instance.position)
         instance.save()
         return instance

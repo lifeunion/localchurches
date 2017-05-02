@@ -1162,11 +1162,11 @@ class ChurchPage(Page):
         return ChurchIndexPage.objects.first()
 
     def get_latitude_location(self):
-        latitude = self.location.latitude
+        latitude = self.position.latitude
         return str(latitude)
 
     def get_longitude_location(self):
-        longitude = self.location.longitude
+        longitude = self.position.longitude
         return str(longitude)
 
     def get_dict_location(self):
