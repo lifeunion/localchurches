@@ -210,7 +210,7 @@
 <script>
     $(function() {
         $('.map_container').storeLocator({
-            remote: {{self.get_locality_json}},
+            remote: "{{self.get_locality_json}}",
             defaultLocation:['{{geoinfo_lat}}','{{geoinfo_lng}}'],
             listOptions:{
                 sortByDistance: true,
