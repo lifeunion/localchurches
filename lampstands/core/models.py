@@ -1497,7 +1497,7 @@ class MapPage(Page):
         with open(local_address,'w') as f:
             json.dump(locality_data, f)
 
-        return local_address
+        return json_locality_url
 
     def geoinfo_lat(self):
         geoinfo_lat = '0' 

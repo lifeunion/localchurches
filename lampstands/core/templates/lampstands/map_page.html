@@ -144,7 +144,7 @@
 
         <div class="map_listings">
             <div class="map_listings_headline">
-                <h2>Results {{self.get_locality_json}}<span class="map_listings_number"></span></h2>
+                <h2>Results<span class="map_listings_number"></span></h2>
             </div>
             <div class="map_listings_results">
 
@@ -210,7 +210,7 @@
 <script>
     $(function() {
         $('.map_container').storeLocator({
-            remote: "{% static 'lampstands/css/packages/src/updated_churches.json' %}",
+            remote: {{self.get_locality_json}},
             defaultLocation:['{{geoinfo_lat}}','{{geoinfo_lng}}'],
             listOptions:{
                 sortByDistance: true,
