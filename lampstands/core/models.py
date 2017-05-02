@@ -1169,7 +1169,7 @@ class ChurchPage(Page):
         longitude = self.position.longitude
         return str(longitude)
 
-    def get_dict_location(self):
+    def location(self):
         dictified_loc = dict([ ("latitude", self.get_latitude_location()), ("longitude", self.get_longitude_location())])
         return dictified_loc
         
