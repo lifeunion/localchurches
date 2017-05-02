@@ -1494,7 +1494,7 @@ class MapPage(Page):
         json_locality_url = 'https://safe-cove-64619.herokuapp.com/api-localities/?format=json'
         locality_data = json.loads(urlopen(json_locality_url).read())
         local_address = os.path.join(settings.STATIC_ROOT,"lampstands/css/packages/src/updated_churches.json")
-
+        local_address = settings.STATIC_ROOT
         with open(local_address,'w') as f:
             json.dump(locality_data, f)
 
