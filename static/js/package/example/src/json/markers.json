@@ -1,0 +1,22 @@
+[
+  {"lat":"40.7149805", "lng":"-74.0000549", "title":"Middle Town", "street":"3848 Burning Hollow", "city":"New York", "zip":"12316-1136"},
+  {"lat":"40.7129962", "lng":"-74.0072966", "title":"Village Branch", "street":"5862 Shady Butterfly Trail", "city":"New York", "zip":"13512-0587"},
+  {"lat":"40.973394", "lng":"-73.93632", "title":"Latexo", "street":"3971 Hazy Circle", "city":"New York", "zip":"14420-2055"},
+  {"lat":"40.957345", "lng":"-74.134443", "title":"Pipyak", "street":"3548 Tawny Forest Valley", "city":"New York", "zip":"14040-0906"},
+  {"lat":"40.913945", "lng":"-74.136068", "title":"Bozoo", "street":"1632 Umber Extension", "city":"New York", "zip":"11505-4127"},
+  {"lat":"40.885276", "lng":"-74.215158", "title":"Chocowinity", "street":"7621 Misty Avenue", "city":"New York", "zip":"11132-0700"},
+  {"lat":"40.834228", "lng":"-74.045609", "title":"Dime Box", "street":"2610 Fallen Island", "city":"New York", "zip":"11446-6593"},
+  {"lat":"40.855451", "lng":"-73.922913", "title":"New Harmony", "street":"7925 Hidden Pathway", "city":"New York", "zip":"13058-7299"},
+  {"lat":"40.723283", "lng":"-74.332023", "title":"Dollar Settlement", "street":"7464 Velvet Cove", "city":"New York", "zip":"11969-6524"},
+  {"lat":"40.645752", "lng":"-73.911033", "title":"Raisin", "street":"7646 High River Place", "city":"New York", "zip":"13767-8628"},
+  {"lat":"40.643627", "lng":"-73.88293", "title":"Tintown", "street":"1619 Blue Goose Point", "city":"New York", "zip":"13819-4742"},
+  {"lat":"40.65974", "lng":"-73.718139", "title":"Gretna", "street":"8488 Dewy Spring Bend", "city":"New York", "zip":"12508-1105"},
+  {"lat":"40.588881", "lng":"-74.114289", "title":"Goodwater", "street":"9960 Rocky Route", "city":"New York", "zip":"13192-1339"},
+  {"lat":"40.550086", "lng":"-74.139682", "title":"Shields", "street":"5349 Tawny Nectar Private", "city":"New York", "zip":"14100-0757"},
+  {"lat":"40.856107", "lng":"-74.255355", "title":"Wolf Pen", "street":"1883 Blue Chase", "city":"New York", "zip":"12314-7807"},
+  {"lat":"40.777775", "lng":"-74.315999", "title":"Big Sky", "street":"9984 Grand Deer Knoll", "city":"New York", "zip":"14093-9303"},
+  {"lat":"40.743923", "lng":"-74.053845", "title":"Witch Lake", "street":"9356 Fallen Beacon Heights", "city":"New York", "zip":"12778-9535"},
+  {"lat":"40.761478", "lng":"-73.968767", "title":"New Deal", "street":"4238 Hidden Hills Way", "city":"New York", "zip":"10463-3063"},
+  {"lat":"40.746931", "lng":"-73.886746", "title":"Okotoks", "street":"2790 Heather Fawn Wood", "city":"New York", "zip":"13764-0380"},
+  {"lat":"40.68538", "lng":"-73.91833", "title":"Smiths Falls", "street":"9518 Green Plaza", "city":"New York", "zip":"13973-5947"}
+]
