@@ -676,6 +676,17 @@
                         itemId: data.id,
                     });
 
+                    var infowindow = new google.maps.InfoWindow();
+                    var content = '<b>' +  data.name+ '</b><br> ' + data.address;
+                    var _map = this.map;
+
+                    google.maps.event.addListener(marker,'click', (function(marker,content,infowindow, _map){
+                        return function() {
+                            infowindow.setContent(content);
+                            infowindow.open(_map,marker);
+                        };
+                     })(marker,content,infowindow));
+
                     if(this.settings.markerOptions.dropAnimation)
                     {
                         marker.setAnimation(google.maps.Animation.DROP);
