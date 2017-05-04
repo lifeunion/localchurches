@@ -1,104 +1,64 @@
 {% extends "lampstands/base_blog.html" %}
 {% load staticfiles lampstands_tags wagtailcore_tags wagtailimages_tags %}
+
 {% block title %}
 {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %} | The Local Churches
 {% endblock %}
 
-{% block extra_links %} 
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.14/css/jquery.dataTables.min.css" >
-{% endblock %}
 {% block content %}
     
+    {% get_popular_tags self as poptags %}
+
     <div class="content-title">
             <div class="content-title-inner">
-                <div class="vessel">
+                <div class="vessel">     
                     <a href="https://safe-cove-64619.herokuapp.com/churches">  
-                    <h1>Localities</h1> 
-                    </a>              
+                    <h1>Localities</h1>
+                    </a>           
                 </div><!-- /.vessel -->
             </div><!-- /.content-title-inner -->
     </div><!-- /.content-title -->                          
 
-    <div class="content">
-        <div class="vessel">
-            <div class="posts posts-grid">  
-                <div class="row">
-                <br>
-                <br>  
-
-        <table class="table order-column stripe hover display" id="churches-table" cellspacing="0" width="100%">
-            <thead>
-                <tr>
-                    <th>Index</th>
-                    <th>City</th>
-                    <th>Address</th>
-                    <th>State/Prov.</th>
-                    <th>Country</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th>Website</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {% for branch in church_posts %} 
-                    <tr>
-                        <td></td>
-                        <td>{{branch.locality_name}}</td>
-                        <td>{{branch.meeting_address}}</td>
-                        <td>{{branch.locality_state_or_province}}
-                        <td>{{branch.locality_country}}</td>
-                        <td>{{branch.locality_phone_number}}</td>
-                        <td>{{branch.locality_email}}</td>
-                        <td>{{branch.locality_web}}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-  
-                </div><!-- /.row -->
-            </div><!-- /.posts-->
-        </div><!-- /.vessel -->
-    </div><!-- /.content -->
+    <section class="blog">
+    <div class="vessel">
+            <div class="popular-tags">
+                {% if poptags %}
+                    <div class="closed">
+                        <p>
+                            {% for tag in poptags %}
+                                {% if request.GET.tag|length and request.GET.tag|safe == tag.slug %}
+                                    <a class="filtering" href="?tag={{ tag.slug }}">{{ tag }}</a>
+                                {% else %}
+                                    <a href="?tag={{ tag.slug }}">{{ tag }}</a>
+                                {% endif %}
+                            {% endfor %}
+                            {# Optional 'show all' appears if filtering by tag #}
+                            {% if request.GET.tag|length %}
+                                {% for tag in poptags %}
+                                    {% if request.GET.tag|safe == tag.slug %}
+                                        <a class="before" href="{% pageurl self %}">  show all</a>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+    </div>
+    </section>
 
     <div class="content">
         <div class="vessel">
             <div class="posts posts-grid">  
-                <div class="row">
-                <br>
-                <br>  
-
-                
-
+                <div class="row">   
+                    {% include "lampstands/includes/churches_listing.html" %}               
                 </div><!-- /.row -->
             </div><!-- /.posts-->
+
         </div><!-- /.vessel -->
     </div><!-- /.content -->
-
-
-
 {% endblock %}
 
-{% block extra_js %}
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://cdn.datatables.net/1.10.14/js/jquery.dataTables.min.js"></script>    
-<script>    
-    $(document).ready(function() {
-   var t = $('#churches-table').DataTable( {
-        "columnDefs": [ {
-            "searchable": false,
-            "orderable": false,
-            "targets": 0
-        } ],
-        "order": [[ 1, 'asc' ]],
-    } );
- 
-    t.on( 'order.dt search.dt', function () {
-        t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-            cell.innerHTML = i+1;
-        } );
-    } ).draw();
-} );
-</script>
-
+{% block recogicon %}
+class="icon-bar active"
 {% endblock %}
