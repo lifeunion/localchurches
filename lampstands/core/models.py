@@ -1178,8 +1178,11 @@ class ChurchPage(Page):
         return dictified_loc
 
     def clean(self):
+        super (ChurchPage, self).clean()
         if self.locality_email == "":
             self.locality_email = "Unavailable"
+
+        #self.slug = text.slugify(self.locality)
         
     content_panels = [
         FieldPanel('title', classname="full title"),
