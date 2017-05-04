@@ -678,7 +678,7 @@
 
                     var infowindow = new google.maps.InfoWindow();
                     //var content = '<b>' +  data.locality_name+ '</b><br> ' + data.meeting_address;
-                    var content = '<b>' + '<a href='+ 'http://safe-cove-64619.herokuapp.com'+ data.url + '>'+ 'Church in ' + data.locality_name + '</a></b><br><br> ' + data.meeting_address;
+                    var content = '<b>' + '<h6><a href='+ 'http://safe-cove-64619.herokuapp.com'+ data.url + '>'+ 'Church in ' + data.locality_name + '</a></h6></b>' + data.meeting_address;
                     var _map = this.map;
 
                     google.maps.event.addListener(marker,'click', (function(marker,content,infowindow, _map){
