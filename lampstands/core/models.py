@@ -44,6 +44,7 @@ from geoposition.fields import GeopositionField
 from urllib.request import urlopen
 import json
 from django.conf import settings as localitySettings
+from django.utils import text
 
 # Streamfield blocks and config
 
@@ -1145,7 +1146,7 @@ class ChurchPage(Page):
     #locality_web = models.TextField(validators=[URLValidator()], blank=True, help_text= "Please type: 'http://' in the front of the URL")
     locality_web = models.TextField(blank=True, help_text= "Please type: 'http://' in the front of the URL")
     last_update = models.DateField(null=True, blank=True)
-    slug = text.slugify(self.locality_name + "-" + self.location_state_or_province + "-" + self.locality_country)
+    #slug = text.slugify(name_slu)
 
     def clean_locality_email(self):
         if self.locality_email == "":
