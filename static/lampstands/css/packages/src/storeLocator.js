@@ -676,7 +676,7 @@
                         itemId: data.id,
                     });
 
-                    var infowindow = new google.maps.InfoWindow();
+                    infowindow = new google.maps.InfoWindow();
                     var content = '<b>' +  data.locality_name+ '</b><br> ' + data.meeting_address;
                     var _map = this.map;
 
