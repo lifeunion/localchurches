@@ -1145,16 +1145,15 @@ class ChurchPage(Page):
     #locality_web = models.TextField(validators=[URLValidator()], blank=True, help_text= "Please type: 'http://' in the front of the URL")
     locality_web = models.TextField(blank=True, help_text= "Please type: 'http://' in the front of the URL")
     last_update = models.DateField(null=True, blank=True)
+    slug = text.slugify(self.locality_name + "-" + self.location_state_or_province + "-" + self.locality_country)
 
-    def clean(self):
-        super(ChurchPage, self).clean()
+    def clean_locality_email(self):
         if self.locality_email == "":
             self.locality_email = "Unavailable"
 
+    def clean_locality_web(self):
         if self.locality_web == "":
             self.locality_web = "Unavailable"
-
-        self.slug = text.slugify(self.locality_name + "-" + self.location_state_or_province + "-" + self.locality_country)
     
     search_fields = Page.search_fields + [
         index.SearchField('locality_name'),
