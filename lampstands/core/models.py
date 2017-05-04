@@ -1086,7 +1086,7 @@ class ChurchIndexPage(Page):
             church_posts = church_posts.filter(tags__tag__slug=tag)
 
         if request.is_ajax():
-            return render(request, "lampstands/includes/church_listing.html", {
+            return render(request, "lampstands/includes/localities_listing.html", {
                 'self': self,
                 'church_posts': church_posts,
             })
