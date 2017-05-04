@@ -1178,9 +1178,12 @@ class ChurchPage(Page):
         return dictified_loc
 
     def clean(self):
-        super (ChurchPage, self).clean()
+        super(ChurchPage, self).clean()
         if self.locality_email == "":
             self.locality_email = "Unavailable"
+
+        if self.locality_web == "":
+            self.locality_web = "Unavailable"
 
         self.slug = text.slugify(self.locality_name + "-" + self.location_state_or_province + "-" + self.locality_country)
         
