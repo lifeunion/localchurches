@@ -1067,6 +1067,7 @@ class ChurchIndexPage(Page):
         # Getting them individually to preserve the order
         return [ChurchPageTagList.objects.get(id=tag['tag']) for tag in popular_tags[:10]]
 
+    @property
     def church_posts(self):
         # Get list of church pages that are descendants of this page
         church_posts = ChurchPage.objects.filter(
