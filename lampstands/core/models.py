@@ -1177,7 +1177,7 @@ class ChurchPage(Page):
         dictified_loc = dict([ ("latitude", self.get_latitude_location()), ("longitude", self.get_longitude_location())])
         return dictified_loc
 
-    def clean_locality_email(self):
+    def clean(self):
         if self.locality_email == "":
             self.locality_email = "Unavailable"
         
