@@ -264,7 +264,7 @@
                 if(this.settings.autocompleteOptions.show)
                 {
                     var autocompleteContainer = document.createElement('div');
-                    autocompleteContainer.style.margin = '10px';
+                    autocompleteContainer.style.margin = '8px';
 
                     var autocompleteInput = document.createElement('input');
                     autocompleteInput.setAttribute('type', 'text');
