@@ -6,7 +6,7 @@
 
 <div class="pagination-wrapper">
 	<ul class="pagination">
-     {% if _posts.has_previous %}
+     {% if church_posts.has_previous %}
       	<li class="page-item">
       		<a class="page-link" aria-label="Previous" href="?page={{ church_posts.previous_page_number }}{% for key,value in request.GET.items %}{% ifnotequal key 'page' %}&amp;{{ key }}={{ value }}{% endifnotequal %}{% endfor %}">
       			<span aria-hidden="true">&laquo;</span>
