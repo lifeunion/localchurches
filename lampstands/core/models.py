@@ -1142,19 +1142,11 @@ class ChurchPage(Page):
     position = GeopositionField(blank=True, null=True)
     phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     locality_phone_number = models.CharField(blank=True, max_length=20) # validators should be a list
-    locality_email = models.EmailField(blank=True)
+    locality_email = models.EmailField(blank=True, default="Unavailable")
     #locality_web = models.TextField(validators=[URLValidator()], blank=True, help_text= "Please type: 'http://' in the front of the URL")
-    locality_web = models.TextField(blank=True, help_text= "Please type: 'http://' in the front of the URL")
+    locality_web = models.TextField(blank=True, default="Unavailable", help_text= "Please type: 'http://' in the front of the URL")
     last_update = models.DateField(null=True, blank=True)
     #slug = text.slugify(name_slu)
-
-    def clean_locality_email(self):
-        if self.locality_email == "":
-            self.locality_email = "Unavailable"
-
-    def clean_locality_web(self):
-        if self.locality_web == "":
-            self.locality_web = "Unavailable"
     
     search_fields = Page.search_fields + [
         index.SearchField('locality_name'),
