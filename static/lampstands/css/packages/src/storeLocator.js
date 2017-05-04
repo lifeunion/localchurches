@@ -683,7 +683,7 @@
                     google.maps.event.addListener(marker,'click', (function(marker,content,infowindow, _map){
                         return function() {
                             infowindow.setContent(content);
-                            infowindow.open(_map,marker);
+                            infowindow.open(_map,this);
                         };
                      })(marker,content,infowindow));
 
