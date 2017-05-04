@@ -682,7 +682,6 @@
 
                     google.maps.event.addListener(marker,'click', (function(marker,content,infowindow, _map){
                         return function() {
-                            infowindow = new.google.maps.InfoWindow();
                             infowindow.setContent(content);
                             infowindow.open(_map,marker);
                         };
