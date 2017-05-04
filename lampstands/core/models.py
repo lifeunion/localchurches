@@ -1146,6 +1146,15 @@ class ChurchPage(Page):
     locality_web = models.TextField(blank=True, help_text= "Please type: 'http://' in the front of the URL")
     last_update = models.DateField(null=True, blank=True)
 
+    def clean(self):
+        super(ChurchPage, self).clean()
+        if self.locality_email == "":
+            self.locality_email = "Unavailable"
+
+        if self.locality_web == "":
+            self.locality_web = "Unavailable"
+
+        self.slug = text.slugify(self.locality_name + "-" + self.location_state_or_province + "-" + self.locality_country)
     
     search_fields = Page.search_fields + [
         index.SearchField('locality_name'),
@@ -1176,16 +1185,6 @@ class ChurchPage(Page):
     def location(self):
         dictified_loc = dict([ ("latitude", self.get_latitude_location()), ("longitude", self.get_longitude_location())])
         return dictified_loc
-
-    def clean(self):
-        super(ChurchPage, self).clean()
-        if self.locality_email == "":
-            self.locality_email = "Unavailable"
-
-        if self.locality_web == "":
-            self.locality_web = "Unavailable"
-
-        self.slug = text.slugify(self.locality_name + "-" + self.location_state_or_province + "-" + self.locality_country)
         
     content_panels = [
         FieldPanel('title', classname="full title"),
