@@ -286,7 +286,7 @@ html {
 *,
 *::before,
 *::after {
-  box-sizing: initial; }
+  box-sizing: inherit; }
 
 @-moz-viewport {
   width: device-width; }
