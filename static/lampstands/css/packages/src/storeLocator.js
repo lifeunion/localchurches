@@ -676,14 +676,14 @@
                         itemId: data.id,
                     });
 
-                    var infowindow = new google.maps.InfoWindow();
+                    infowindow = new google.maps.InfoWindow();
                     var content = '<b>' +  data.locality_name+ '</b><br> ' + data.meeting_address;
                     var _map = this.map;
 
                     google.maps.event.addListener(marker,'click', (function(marker,content,infowindow, _map){
                         return function() {
                             infowindow.setContent(content);
-                            infowindow.open(_map,this);
+                            infowindow.open(_map,marker);
                         };
                      })(marker,content,infowindow));
 
