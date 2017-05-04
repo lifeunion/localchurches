@@ -1491,7 +1491,7 @@ class MapPage(Page):
 
     @property
     def get_locality_json(self):
-        json_locality_url = 'http://safe-cove-64619.herokuapp.com/api-localities/?format=json'
+        json_locality_url = 'https://safe-cove-64619.herokuapp.com/api-localities/?format=json'
         return json_locality_url
 
     def geoinfo_lat(self):
