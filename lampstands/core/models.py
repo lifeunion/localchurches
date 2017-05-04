@@ -1182,7 +1182,7 @@ class ChurchPage(Page):
         if self.locality_email == "":
             self.locality_email = "Unavailable"
 
-        #self.slug = text.slugify(self.locality)
+        self.slug = text.slugify(self.locality_name + "-" + self.location_state_or_province + "-" + self.locality_country)
         
     content_panels = [
         FieldPanel('title', classname="full title"),
