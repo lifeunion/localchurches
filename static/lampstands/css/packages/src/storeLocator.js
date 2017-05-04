@@ -677,7 +677,8 @@
                     });
 
                     var infowindow = new google.maps.InfoWindow();
-                    var content = '<b>' + '<a href='+ data.locality_web + '>'+ data.locality_web + '</a></b><br>' + data.meeting_address;
+                    //var content = '<b>' +  data.locality_name+ '</b><br> ' + data.meeting_address;
+                    var content = '<b>' + '<a href='+ 'http://safe-cove-64619.herokuapp.com'+ data.url + '>'+ data.url + '</a></b><br> ' + data.meeting_address;
                     var _map = this.map;
 
                     google.maps.event.addListener(marker,'click', (function(marker,content,infowindow, _map){
