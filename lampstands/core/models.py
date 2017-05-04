@@ -1176,6 +1176,10 @@ class ChurchPage(Page):
     def location(self):
         dictified_loc = dict([ ("latitude", self.get_latitude_location()), ("longitude", self.get_longitude_location())])
         return dictified_loc
+
+    def clean_locality_email(self):
+        if self.locality_email == "":
+            self.locality_email = "Unavailable"
         
     content_panels = [
         FieldPanel('title', classname="full title"),
