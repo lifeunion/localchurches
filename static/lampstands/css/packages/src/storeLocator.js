@@ -180,7 +180,7 @@
             this._markerCluster = null;
             this._filterNavigationHeight = null;
             this._activeCategories = [];
-            this.infoWindow = null;
+            this.infowindow = null;
             this.zoomListener = null;
             this.init();
 		}
@@ -676,17 +676,17 @@
                         itemId: data.id,
                     });
 
-                    this.infoWindow = new google.maps.InfoWindow();
+                    this.infowindow = new google.maps.InfoWindow();
                     var content = '<b>' + '<h6>'+ 'Church in ' + data.locality_name + '</h6></b>' + data.meeting_address + '<br>' + '<a href='+ 'http://safe-cove-64619.herokuapp.com'+ data.url + '>'+ 'More info' + '</a>';
                     var _map = this.map;
 
-                    google.maps.event.addListener(marker,'click', (function(marker,content,infoWindow, _map){
+                    google.maps.event.addListener(marker,'click', (function(marker,content,infowindow, _map){
                         return function() {
-                            if (this.infoWindow) {
-                                this.infoWindow.close();
+                            if (this.infowindow) {
+                                this.infowindow.close();
                             }
-                            this.infoWindow.setContent(content);
-                            this.infoWindow.open(_map,marker);
+                            this.infowindow.setContent(marker.content);
+                            this.infowindow.open(_map,marker);
                         };
                      })(marker,content,infoWindow));
 
