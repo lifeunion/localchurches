@@ -284,11 +284,12 @@
             <ul class="list-unstyled">
                 <li><b>Address</b>: ${meeting_address}</li>
                 <li><b>Phone</b>: ${locality_phone_number}</li>
+                <li><b>E-Mail</b>: 
                 {% if locality_email is '' %}
-                    <li><b>E-Mail</b>: Unavailable </li>
+                <p>Unavailable</p> 
                 {% else %}
-                    <li><b>E-Mail</b>: ${locality_email} </li>
-                {% endif %}
+                    ${locality_email} 
+                {% endif %}</li>
 
                 {% if locality_web == blank %}
                     <li><b>Website</b>: Unavailable</li>
