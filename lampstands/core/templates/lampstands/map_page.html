@@ -288,7 +288,7 @@
                     <li><b>E-Mail</b>: {{locality_email|default_if_none:"Unavailable"}} </li>
                
 
-                {% if locality_web is_empty %}
+                {% if locality_web is empty %}
                     <li><b>Website</b>: Unavailable </li>
                 {% else %}
                     <li><b>Website</b>: <a href="${locality_web}">${locality_web}</a></li>
