@@ -674,10 +674,11 @@
                         icon: markerIcon,
                         draggable: this.settings.markerOptions.draggable,
                         itemId: data.id,
+                        content = '<b>' + '<h6>'+ 'Church in ' + data.locality_name + '</h6></b>' + data.meeting_address + '<br>' + '<a href='+ 'http://safe-cove-64619.herokuapp.com'+ data.url + '>'+ 'More info' + '</a>';
                     });
 
                     this.infowindow = new google.maps.InfoWindow();
-                    var content = '<b>' + '<h6>'+ 'Church in ' + data.locality_name + '</h6></b>' + data.meeting_address + '<br>' + '<a href='+ 'http://safe-cove-64619.herokuapp.com'+ data.url + '>'+ 'More info' + '</a>';
+                    //var content = '<b>' + '<h6>'+ 'Church in ' + data.locality_name + '</h6></b>' + data.meeting_address + '<br>' + '<a href='+ 'http://safe-cove-64619.herokuapp.com'+ data.url + '>'+ 'More info' + '</a>';
                     var _map = this.map;
 
                     google.maps.event.addListener(marker,'click', (function(marker){
