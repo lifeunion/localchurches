@@ -1118,7 +1118,6 @@ class ChurchPageTagList(models.Model):
 
 register_snippet(ChurchPageTagList)
 
-
 class ChurchPageTagSelect(Orderable):
     page = ParentalKey('lampstands.ChurchPage', related_name='tags')
     tag = models.ForeignKey(
@@ -1132,7 +1131,7 @@ class ChurchPageRelatedLink(Orderable, RelatedLink):
 class ChurchPage(Page):
     locality_name = models.CharField(max_length=255)
     locality_state_or_province = models.CharField(max_length=255, blank=True)
-    locality_country = CountryField(blank_label='(select country)')
+    locality_country = CountryField(max_length= 95, blank_label='(select country)')
     short_intro = models.CharField(
         max_length=255, blank=True,
         help_text='A short summary of when the locality started meeting'
