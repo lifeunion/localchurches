@@ -13,7 +13,7 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
     locality_email = serializers.EmailField(required=False, allow_blank=True, max_length=255)
     locality_web = serializers.CharField(style={'base_template': 'textarea.html'})
     position = GeopositionField()
-    tags = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    tags = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = ChurchPage
