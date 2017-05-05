@@ -85,6 +85,16 @@
 <script>
     // Read a page's GET URL variables and return them as an associative array.
     
+    $.urlParam = function(name){
+    var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
+    if (!results)
+    {
+        return;
+    }
+    return results[1] || "";
+    };
+
+
     $(document).ready(function() {
     if (window.location.href.indexOf("tag")>-1) {
         var arr = window.location.href.split('='),
@@ -98,6 +108,7 @@
         "oSearch": {"sSearch": "Texas"}
     } );
     
-} );
+    } );
+
 </script>
 {% endblock %}
