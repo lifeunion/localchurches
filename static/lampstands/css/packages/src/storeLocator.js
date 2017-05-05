@@ -680,7 +680,7 @@
                     var content = '<b>' + '<h6>'+ 'Church in ' + data.locality_name + '</h6></b>' + data.meeting_address + '<br>' + '<a href='+ 'http://safe-cove-64619.herokuapp.com'+ data.url + '>'+ 'More info' + '</a>';
                     var _map = this.map;
 
-                    google.maps.event.addListener(marker,'click', (function(marker,content,infowindow, _map){
+                    google.maps.event.addListener(marker,'click', (function(marker){
                         return function() {
                             if (this.infowindow) {
                                 this.infowindow.close();
@@ -688,7 +688,7 @@
                             this.infowindow.setContent(marker.content);
                             this.infowindow.open(_map,marker);
                         };
-                     })(marker,content,infowindow));
+                     })(marker));
 
                     /*google.maps.event.addListener(marker,'click', (function(marker,content,infowindow, _map){
                         return function() {
