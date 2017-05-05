@@ -96,13 +96,6 @@
 
 
     $(document).ready(function() {
-    if (window.location.href.indexOf("tag")>-1) {
-        var arr = window.location.href.split('='),
-        search = arr[arr.length-1].replace(/%20/g," ");
-    }
-    else {
-        search = "";
-    }
     
     var table =$('#churches-table').DataTable( {
         "oSearch": {"sSearch": $.urlParam('tag')}
