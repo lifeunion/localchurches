@@ -17,7 +17,7 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ChurchPage
         fields = ('url','id','locality_name', 'meeting_address', 'locality_state_or_province', 
-            'locality_country', 'locality_phone_number', 'locality_email','locality_web', 'position', 'location')
+            'locality_country', 'locality_phone_number', 'locality_email','locality_web', 'position', 'location', 'tags')
 
     def create(self, validated_data):
         """
@@ -40,5 +40,6 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
         instance.locality_web = validated_data.get('locality_web', instance.locality_web)
         instance.position = validated_data.get('position', instance.position)
         instance.location = validated_data.get('location', instance.location)
+        instance.tags = validated_data.get('tags', instance.tags)
         instance.save()
         return instance
