@@ -682,8 +682,8 @@
                     var _map = this.map;
                     var _ = this;
 
-                    google.maps.event.addListener(marker,'click', (function(marker) {
-                        return function() {
+                    google.maps.event.addListener(marker,'click', (function (marker) {
+                        return function () {
                             if (_.infowindow) {
                                 _.infowindow.close();
                             }
