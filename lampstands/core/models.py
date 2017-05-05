@@ -1140,7 +1140,7 @@ class ChurchPage(Page):
     #mailaddr = models.CharField(max_length=255, blank=True, null=True)
     meeting_address = models.CharField(max_length=255, blank=True, null=True)
     position = GeopositionField(blank=True, null=True)
-    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,20}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
     locality_phone_number = models.CharField(blank=True, max_length=20) # validators should be a list
     locality_email = models.EmailField(blank=False, null=True)
     #locality_web = models.TextField(validators=[URLValidator()], blank=True, help_text= "Please type: 'http://' in the front of the URL")
