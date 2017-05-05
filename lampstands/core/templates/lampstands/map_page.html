@@ -284,7 +284,7 @@
             <ul class="list-unstyled">
                 <li><b>Address</b>: ${meeting_address}</li>
                 <li><b>Phone</b>: ${locality_phone_number}</li>
-                {% if locality_email = '' %}
+                {% if locality_email == '' %}
                     <li><b>E-Mail</b>: Unavailable </li>
                 {% else %}
                     <li><b>E-Mail</b>: ${locality_email} </li>
