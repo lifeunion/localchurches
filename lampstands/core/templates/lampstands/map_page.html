@@ -290,11 +290,11 @@
                     <li><b>E-Mail</b>: ${locality_email} </li>
                 {% endif %}
 
-                {{ locality_web|default_if_blank:"--" }}
-                 <!--   <li><b>Website</b>: Unavailable</li>
+                {% if locality_web == '' }}
+                    <li><b>Website</b>: Unavailable</li>
                 {% else %}
                     <li><b>Website</b>: <a href="${locality_web}">${locality_web}</a> </li>
-                {% endif %}-->
+                {% endif %}
             </ul>
             <div class="label label-danger">${distance} km</div>
         </div>
