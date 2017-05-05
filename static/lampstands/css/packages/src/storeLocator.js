@@ -688,7 +688,18 @@
                             this.infowindow.setContent(marker.content);
                             this.infowindow.open(_map,marker);
                         };
+                     })(marker,content,infowindow));
+
+                    /*google.maps.event.addListener(marker,'click', (function(marker,content,infowindow, _map){
+                        return function() {
+                            if (this.infowindow) {
+                                this.infowindow.close();
+                            }
+                            this.infowindow.setContent(marker.content);
+                            this.infowindow.open(_map,marker);
+                        };
                      })(marker,content,infoWindow));
+                    */
 
                     if(this.settings.markerOptions.dropAnimation)
                     {
