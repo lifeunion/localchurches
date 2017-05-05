@@ -90,7 +90,7 @@
     search = arr[arr.length-1].replace(/%20/g," ");
     alert (search);
     var t = $('#churches-table').DataTable( {
-        "oSearch": {"sSearch": search}
+        "oSearch": {"sSearch": search},
         "columnDefs": [ {
             "searchable": false,
             "orderable": false,
