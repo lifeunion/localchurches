@@ -284,17 +284,17 @@
             <ul class="list-unstyled">
                 <li><b>Address</b>: ${meeting_address}</li>
                 <li><b>Phone</b>: ${locality_phone_number}</li>
-                {% ifequal locality_email "" %}
+                {% if locality_email is None %}
                     <li><b>E-Mail</b>: Unavailable </li>
                 {% else %}
                     <li><b>E-Mail</b>: ${locality_email} </li>
-                {% endifequal %}
+                {% endif %}
 
-                {% ifequal locality_web "" %}
+                {% if locality_web false %}
                     <li><b>Website</b>: Unavailable </li>
                 {% else %}
                     <li><b>Website</b>: <a href="${locality_web}">${locality_web}</a></li>
-                {% endifequal %}
+                {% endif %}
             </ul>
             <div class="label label-danger">${distance} km</div>
         </div>
