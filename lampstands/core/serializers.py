@@ -40,6 +40,5 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
         instance.locality_web = validated_data.get('locality_web', instance.locality_web)
         instance.position = validated_data.get('position', instance.position)
         instance.location = validated_data.get('location', instance.location)
-        instance.tags = validated_data.get('tags', instance.tags)
         instance.save()
         return instance

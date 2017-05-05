@@ -286,10 +286,11 @@
                 <li><b>Phone</b>: ${locality_phone_number}</li>
                 <li><b>E-Mail</b>: ${locality_email}</li>
 
+                {{locality_web}}
                 {% if locality_web == "Unavailable" %}
                     <li><b>Website</b>: Unavailable </li>
                 {% else %}
-                    <li><b>Website</b>: <a href="${locality_web}">{{locality_web}}</a> </li>
+                    <li><b>Website</b>: <a href="${locality_web}">${locality_web}</a> </li>
                 {% endif %}
 
             </ul>
