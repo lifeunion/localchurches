@@ -93,21 +93,11 @@
     else {
         search = "";
     }
-    var t = $('#churches-table').DataTable( {
-        "oSearch": {"sSearch": search},
-        "columnDefs": [ {
-            "searchable": false,
-            "orderable": false,
-            "targets": 0
-        } ],
-        "order": [[ 1, 'asc' ]],
+    
+        $('#churches-table').DataTable( {
+        "oSearch": {"sSearch": search},  
     } );
     
-    t.on( 'order.dt search.dt', function () {
-        t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-            cell.innerHTML = i+1;
-        } );
-    } ).draw();
 } );
 </script>
 {% endblock %}
