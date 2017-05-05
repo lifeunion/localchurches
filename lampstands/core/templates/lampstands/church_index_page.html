@@ -94,7 +94,9 @@
         search = "";
     }
     
-        $('#churches-table').DataTable();
+        $('#churches-table').DataTable( {
+        "oSearch": {"sSearch": search},  
+    } );
     
 } );
 </script>
