@@ -290,7 +290,7 @@
                     <li><b>E-Mail</b>: Unavailable </li>
                 {% endif %}
 
-                {% if locality_web|length = 0 %}
+                {% if locality_web|length == 0 %}
                     <li><b>Website</b>: Unavailable </li>
                 {% else %}
                     <li><b>Website</b>: <a href="${locality_web}">${locality_web}</a></li>
