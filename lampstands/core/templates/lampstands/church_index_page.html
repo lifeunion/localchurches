@@ -86,8 +86,9 @@
     // Read a page's GET URL variables and return them as an associative array.
     
     $(document).ready(function() {
-    var arr = window.location.href.split('=');
+    var arr = window.location.href.split('='),
     search = arr[arr.length-1].replace(/%20/g," ");
+    alert (search);
     var t = $('#churches-table').DataTable( {
         "oSearch": {"sSearch": search}
         "columnDefs": [ {
@@ -105,5 +106,3 @@
     } ).draw();
 } );
 </script>
-
-{% endblock %}
