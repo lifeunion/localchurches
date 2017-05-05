@@ -284,7 +284,7 @@
             <ul class="list-unstyled">
                 <li><b>Address</b>: ${meeting_address}</li>
                 <li><b>Phone</b>: ${locality_phone_number}</li>
-                <li><b>E-Mail</b>: ${locality_email} {{if locality_email() !=null}} Unavailable {{/if}} </li>
+                <li><b>E-Mail</b>: ${locality_email} {{if locality_email()}} <input value ="Unavailable"> {{/if}} </li>
                 <li><b>Website</b>: <a href="${locality_web}">${locality_web}</a></li>
             </ul>
             <div class="label label-danger">${distance} km</div>
