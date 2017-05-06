@@ -139,7 +139,9 @@
     } );
 
     var mobiletable = $('#churches-mobile-table').DataTable( {
-        "ajax": "{{self.get_locality_json}}",
+        "ajax": {
+            "dataSrc": {{self.get_locality_json}},
+        },
         "columns": [
             {
                 "className":      'details-control',
@@ -147,10 +149,10 @@
                 "data":           null,
                 "defaultContent": ''
             },
-            { "": "locality_name" },
-            { "": "meeting_address" },
-            { "": "locality_state_or_province" },
-            { "": "locality_country" }
+            { "data": "locality_name" },
+            { "data": "meeting_address" },
+            { "data": "locality_state_or_province" },
+            { "data": "locality_country" }
         ],
         "order": [[1, 'asc']]
     } );
