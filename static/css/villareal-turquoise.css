@@ -5381,7 +5381,7 @@ hr {
 select {
   background-position: right 1rem top 50%;
   background-repeat: no-repeat;
-  background-image: url("img/caret.svg") !important;
+  background-image: url("img/caret.png") !important;
   cursor: pointer;
   -webkit-appearance: none;
   -moz-appearance: none; }
@@ -8984,11 +8984,11 @@ Datatable
 }
 
 td.details-control {
-    background: url('details_open.png') no-repeat center center;
+    background: url("img/open.png") no-repeat center center;
     cursor: pointer;
 }
 tr.shown td.details-control {
-    background: url('details_close.png') no-repeat center center;
+    background: url("img/close.png") no-repeat center center;
 }
 
 div.dataTables_wrapper {
