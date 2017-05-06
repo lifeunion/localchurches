@@ -450,7 +450,8 @@ legend {
 
 input[type="search"] {
   box-sizing: inherit;
-  -webkit-appearance: none; }
+  -webkit-appearance: none; 
+  padding: 0 0.3em; }
 
 output {
   display: inline-block; }
@@ -5383,7 +5384,8 @@ select {
   background-repeat: no-repeat;
   cursor: pointer;
   -webkit-appearance: none;
-  -moz-appearance: none; }
+  -moz-appearance: none; 
+  padding: 0 0.3em;}
 
 select::-ms-expand {
   display: none; }
