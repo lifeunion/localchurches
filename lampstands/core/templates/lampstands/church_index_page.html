@@ -97,12 +97,12 @@
     $(document).ready(function() {    
     var table = $('#churches-table').DataTable( {
         "oSearch": {"sSearch": $.urlParam('area')},
-         "columnDefs": [ {
-            "searchable": false,
+        "columnDefs": [ {
+            "searchable": true,
             "orderable": false,
             "targets": 0
         } ],
-        "order": [[ 1, 'asc' ]],
+        "order": [[ 1, 'asc' ]]
     } );
 
     t.on( 'order.dt search.dt', function () {
