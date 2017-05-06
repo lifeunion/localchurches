@@ -163,7 +163,11 @@
             },
             { "data": "locality_name" },
             { "data": "locality_state_or_province" },
-            { "data": "locality_country" }
+            { "data": "locality_country" },
+            { "data": "meeting_address" },
+            { "data": "locality_phone_number" },
+            { "data": "locality_email" },
+            { "data": "locality_web" },
         ],
         "order": [[1, 'asc']]
     } );
@@ -186,7 +190,7 @@
         }
         else {
             // Open this row
-            row.child( format(mobiletable.dataSrc)).show();
+            row.child( format(row.data())).show();
             tr.addClass('shown');
         }
     } );
