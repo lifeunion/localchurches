@@ -139,7 +139,21 @@
     } );
 
     var mobiletable = $('#churches-mobile-table').DataTable( {
-        "ajax": "{{self.get_locality_json}}",
+        "ajax": {
+            "url": "{{self.get_locality_json}}",
+            "dataSrc": function (json) {
+              var return_data = new Array();
+              for(var i=0;i< json.length; i++){
+                return_data.push({
+                  'locality_name': json[i].locality_name,
+                  'meeting_address': json[i].meeting_address,
+                  'locality_state_or_province': json[i].locality_state_or_province,
+                  'locality_name': json[i].locality_country,
+                })
+              }
+              return return_data;
+            }
+        },
         "columns": [
             {
                 "className":      'details-control',
