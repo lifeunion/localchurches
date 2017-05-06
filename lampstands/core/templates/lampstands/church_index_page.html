@@ -147,6 +147,7 @@
     } );
 
     var mobiletable = $('#churches-mobile-table').DataTable( {
+        "oSearch": {"sSearch": $.urlParam('area')},
         "ajax": {
             "url": "{{self.get_locality_json}}",
             "dataSrc": function (json) {
@@ -166,7 +167,6 @@
             }
         },
         "scrollX": true,
-        "oSearch": {"sSearch": $.urlParam('area')},
         "order": [[1, 'asc']],
         "columnDefs": [
             { "width": "33%", "targets": 1 }

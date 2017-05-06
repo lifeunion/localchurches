@@ -8985,11 +8985,11 @@ Datatable
 }
 
 td.details-control {
-    background: url("img/open.png") no-repeat center center;
+    background: url("img/open.svg") no-repeat center center;
     cursor: pointer;
 }
 tr.shown td.details-control {
-    background: url("img/close.png") no-repeat center center;
+    background: url("img/close.svg") no-repeat center center;
 }
 
 div.dataTables_wrapper {
