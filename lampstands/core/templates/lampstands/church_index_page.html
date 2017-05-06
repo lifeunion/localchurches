@@ -148,7 +148,7 @@
                 return_data.push({
                   'locality_name': json[i].locality_name,
                   'locality_state_or_province': json[i].locality_state_or_province,
-                  'locality_country': json[i].locality_country,
+                  'locality_country': json[i].locality_country.name,
                 })
               }
               return return_data;
@@ -187,7 +187,7 @@
         }
         else {
             // Open this row
-            row.child( format(row.dataSrc()) ).show();
+            row.child( format(row.data())).show();
             tr.addClass('shown');
         }
     } );
