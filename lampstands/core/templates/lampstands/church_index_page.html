@@ -73,7 +73,6 @@
                 <tr>
                     <th></th>
                     <th>City</th>
-                    <th>Address</th>
                     <th>State/Prov.</th>
                     <th>Country</th>
                 </tr>
@@ -110,16 +109,20 @@
         // `d` is the original data object for the row
         return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
             '<tr>'+
-                '<td>Full name:</td>'+
-                '<td>'+d.name+'</td>'+
+                '<td>Meeting address:</td>'+
+                '<td>'+d.meeting_address+'</td>'+
             '</tr>'+
             '<tr>'+
-                '<td>Extension number:</td>'+
-                '<td>'+d.extn+'</td>'+
+                '<td>Phone number:</td>'+
+                '<td>'+d.locality_phone_number+'</td>'+
             '</tr>'+
             '<tr>'+
-                '<td>Extra info:</td>'+
-                '<td>And any further details here (images etc)...</td>'+
+                '<td>Email:</td>'+
+                '<td>'+d.locality_email+'</td>'+
+            '</tr>'+
+            '<tr>'+
+                '<td>Website:</td>'+
+                '<td>'+d.website+'</td>'+
             '</tr>'+
         '</table>';
     }
@@ -144,7 +147,6 @@
               for(var i=0;i< json.length; i++){
                 return_data.push({
                   'locality_name': json[i].locality_name,
-                  'meeting_address': json[i].meeting_address,
                   'locality_state_or_province': json[i].locality_state_or_province,
                   'locality_country': json[i].locality_country,
                 })
@@ -161,7 +163,6 @@
                 "defaultContent": ''
             },
             { "data": "locality_name" },
-            { "data": "meeting_address" },
             { "data": "locality_state_or_province" },
             { "data": "locality_country" }
         ],
