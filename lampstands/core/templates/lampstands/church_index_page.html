@@ -110,7 +110,7 @@
         return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
             '<tr>'+
                 '<td>Meeting address:</td>'+
-                '<td>'+d.locality_name+'</td>'+
+                '<td>'+d.meeting_address+'</td>'+
             '</tr>'+
             '<tr>'+
                 '<td>Phone number:</td>'+
@@ -155,6 +155,7 @@
             }
         },
         "scrollX": true,
+        "order": [[1, 'asc']],
         "columns": [
             {
                 "className":      'details-control',
@@ -164,8 +165,8 @@
             { "data": "locality_name" },
             { "data": "locality_state_or_province" },
             { "data": "locality_country" },
+            { "data": "meeting_address"},
         ],
-        "order": [[1, 'asc']]
     } );
  
     t.on( 'order.dt search.dt', function () {
