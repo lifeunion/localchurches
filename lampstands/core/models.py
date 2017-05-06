@@ -1069,6 +1069,10 @@ class ChurchIndexPage(Page):
         return [ChurchPageTagList.objects.get(id=tag['tag']) for tag in popular_tags[:10]]
 
     @property
+    def get_locality_json(self):
+        json_locality_url = 'https://safe-cove-64619.herokuapp.com/api-localities/?format=json'
+        return json_locality_url
+
     def church_posts(self):
         # Get list of church pages that are descendants of this page
         church_posts = ChurchPage.objects.filter(
