@@ -139,9 +139,7 @@
     } );
 
     var mobiletable = $('#churches-mobile-table').DataTable( {
-        "ajax": {
-            "dataSrc": {{self.get_locality_json}},
-        },
+        "ajax": "{{self.get_locality_json}}",
         "columns": [
             {
                 "className":      'details-control',
