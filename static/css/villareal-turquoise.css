@@ -5381,6 +5381,7 @@ hr {
 select {
   background-position: right 1rem top 50%;
   background-repeat: no-repeat;
+  background-image: url("img/caret.png") !important;
   cursor: pointer;
   -webkit-appearance: none;
   -moz-appearance: none; }
