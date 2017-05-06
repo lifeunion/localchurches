@@ -80,20 +80,6 @@
                     <th>Website</th>
                 </tr>
             </thead>
-
-            <tbody>
-                {% for branch in church_posts %} 
-                    <tr>
-                        <td><a href="https://safe-cove-64619.herokuapp.com{{branch.url}}">{{branch.locality_name}}</a></td>
-                        <td>{{branch.meeting_address}}</td>
-                        <td>{{branch.locality_state_or_province}}
-                        <td>{{branch.locality_country.name}}</td>
-                        <td>{{branch.locality_phone_number}}</td>
-                        <td>{{branch.locality_email}}</td>
-                        <td>{{branch.locality_web}}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
         </table>
                 
 
