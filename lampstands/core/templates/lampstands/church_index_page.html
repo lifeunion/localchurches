@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block extra_links %} 
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.14/css/jquery.dataTables.min.css" >
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" >
 {% endblock %}
 {% block content %}
     
@@ -68,6 +68,33 @@
                 <br>
                 <br>  
 
+                 <table class="table order-column stripe hover display" id="churches-table" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>City</th>
+                    <th>Address</th>
+                    <th>State/Prov.</th>
+                    <th>Country</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Website</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for branch in church_posts %} 
+                    <tr>
+                        <td><a href="https://safe-cove-64619.herokuapp.com{{branch.url}}">{{branch.locality_name}}</a></td>
+                        <td>{{branch.meeting_address}}</td>
+                        <td>{{branch.locality_state_or_province}}
+                        <td>{{branch.locality_country.name}}</td>
+                        <td>{{branch.locality_phone_number}}</td>
+                        <td>{{branch.locality_email}}</td>
+                        <td>{{branch.locality_web}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
                 
 
                 </div><!-- /.row -->
@@ -81,7 +108,7 @@
  
 {% block extra_js %}
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://cdn.datatables.net/1.10.14/js/jquery.dataTables.min.js"></script>    
+<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>    
 <script>
     // Read a page's GET URL variables and return them as an associative array.
     
@@ -97,6 +124,7 @@
     $(document).ready(function() {
     var t = $('#churches-table').DataTable( {
         "oSearch": {"sSearch": $.urlParam('area')},
+        "scrollX": true,
         "columnDefs": [ {
             "searchable": false,
             "orderable": false,

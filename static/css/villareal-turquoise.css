@@ -8991,6 +8991,10 @@ tr.shown td.details-control {
     background: url('details_close.png') no-repeat center center;
 }
 
+div.dataTables_wrapper {
+        width: 800px;
+        margin: 0 auto;
+    }
 
 /**
  * 34. Toggle Switch (added by KL)
