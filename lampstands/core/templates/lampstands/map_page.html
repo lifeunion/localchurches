@@ -291,7 +291,6 @@
                 <li><b>E-Mail</b>: ${locality_email}</li>
                 <li><b>Website</b>: <a href="${locality_web}">${locality_web}</a> </li>
             </ul>
-            <div class="label label-danger">${distance} km from map center</div>
             <a class="map_direction_trigger label label-danger">get route</a>
         </div>
     </div>
@@ -299,7 +298,7 @@
 </script>
 <script id="mapListDetailTemplate" type="text/x-jQuery-tmpl">
 <div class="result_item_detail">
-<a href="#" class="map_details_close"><img src="{% static 'lampstands/css/packages/src/close.png' %}" alt="Close"></a>
+<a href="#" class="map_details_close"><img src="{% static 'lampstands/css/packages/src/close.svg' %}" alt="Close"></a>
     <h3><a href="https://safe-cove-64619.herokuapp.com${url}">${locality_name}</a></h3>
     <div class="result_item_detail_info">
         <div class="info">
