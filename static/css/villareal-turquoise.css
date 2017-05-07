@@ -8987,9 +8987,11 @@ Datatable
 td.details-control {
     background: url("img/open.svg") no-repeat center center;
     cursor: pointer;
+    background-size: 45%;
 }
 tr.shown td.details-control {
     background: url("img/close.svg") no-repeat center center;
+    background-size: 45%;
 }
 
 div.dataTables_wrapper {
