@@ -115,21 +115,26 @@
 
 
 
-<div class="map_wrapper" style="height: 80%;">
+<div class="map_wrapper" style="height: 800px !important;">
+<div class="map-toggle" style="background-color: #555; width: 100%;">
+
     <div class="row">
-
-    <div class="map-toggle" style="background-color: #555; width: 100%; text-align: right;">
-        <h6 style="color: white;">Hide Map:
-        <label class="switch">
-            <input type="checkbox" onclick="myFunction()">
-            <div class="slider"></div>
-        </label>
-        </h6>
-
-    <!--<button onclick="myFunction()">List it</button>-->
+    <div class="col-sm-6">
+            <button class="button"><a href="/churches">Show Listing</a></button>
     </div>
-
+    <div class="col-sm-6">
+       
+            <h6 style="color: white; text-align: right;">Hide Map:
+             <label class="switch">
+              <input type="checkbox" onclick="myFunction()">
+                 <div class="slider"></div>
+             </label>
+            </h6>
+        <!--<button onclick="myFunction()">List it</button>-->
+         
+    </div> <!--col-->     
     </div> <!--row-->
+</div> <!--map-toggle-->
 
     <div id="map" class="map_container">
     </div>
