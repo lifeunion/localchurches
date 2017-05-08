@@ -8,7 +8,7 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
     locality_name = serializers.CharField(required=True, allow_blank=True, max_length=255)
     meeting_address = serializers.CharField(required=True, allow_blank=True, max_length=255)
     locality_state_or_province = serializers.CharField(required=True, allow_blank=True, max_length=255)
-    locality_country = CountryField(required=True)
+    locality_country = CountryField(required=True, country_dict=True)
     locality_phone_number = serializers.CharField(required=False, allow_blank=True, max_length=255)
     locality_email = serializers.EmailField(required=False, allow_blank=True, max_length=255)
     locality_web = serializers.CharField(style={'base_template': 'textarea.html'})
