@@ -7618,8 +7618,8 @@ label {
 
 .map-toggle {
     display: block;
-    padding:5px;
-    margin-top: -0.7em;
+    padding:10px 5px 5px 5px;
+    
 } 
 
 @media only screen and (min-width: 1024px) {
