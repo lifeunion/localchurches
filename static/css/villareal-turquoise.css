@@ -177,7 +177,7 @@ input[type="submit"] {
 input[type="text"], 
 input[type="email"] {
   border:none;
-  width:100%;
+  width:120%;
 }
 
 button[disabled],
@@ -6286,7 +6286,8 @@ label {
   background-position: center center;
   background-repeat: repeat;
   line-height: 1.5;
-  padding: 104px 0 44px 0; }
+  padding: 104px 0 44px 0; } 
+  /**Originally padding: 44px 0; but done to delete .main padding-top:60px and delete space above table**/
 
 /**
  * 16. Comments
