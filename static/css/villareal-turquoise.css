@@ -4638,7 +4638,7 @@ a.bg-danger:focus, a.bg-danger:hover {
   .hidden-sm-down {
     display: none !important; } }
 
-@media (min-width: 769px) {
+@media (min-width: 990px) {
   .hidden-md-up {
     display: none !important; } }
 
