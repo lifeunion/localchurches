@@ -5398,7 +5398,8 @@ label {
   cursor: pointer;
   font-size: 1.2em;
   font-weight: 600;
-  text-transform: uppercase; }
+  text-transform: uppercase; 
+  padding: 0.1em;}
 
 .form-control {
   background-color: #fff;
