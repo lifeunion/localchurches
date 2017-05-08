@@ -12,10 +12,10 @@
                 <h1>Find a local church.</h1>
             </div><!-- /.cover-title-->
 
-           <form method='GET' action="/map/">
+           <form method='GET' action="/map/" class="hidden-md-up">
                 {% csrf_token %}
                 <div class="form-group col-sm-6">
-                <input class="form-control" type="text" name="searchterm" placeholder="City or Region or Country Name"/>
+                <input class="form-control" type="text" name="searchterm" placeholder="Enter City, State/Province, or Country"/>
                 </div>
                 <div class="form-group col-sm-2">
                 <input class="btn btn-primary btn-block find" type="submit" value="Search">
@@ -27,6 +27,9 @@
                       <input name="lng" type="text" value="">
                     </fieldset>
             </form>
+
+            <button class="btn btn-primary btn-block hidden-lg-down" onclick="location.href='/churches/'">Search Now</button>
+
 
         </div><!-- /.vessel -->
     </div><!-- /.cover-title -->
