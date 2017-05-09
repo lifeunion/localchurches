@@ -118,16 +118,7 @@
 
     <div id="map" class="map_container">
     </div>
-    <script type="text/javascript">
-        function myFunction() {
-    var x = document.getElementById('map');
-    if (x.style.display === 'none') {
-        x.style.display = 'block';
-    } else {
-        x.style.display = 'none';
-    }
-}     
-    </script>
+    
     <div class="map_results">
 
         <div class="map_detail"></div>
@@ -142,6 +133,62 @@
         </div>
     </div>
 </div>
+
+ </div><!-- /.main-inner -->
+    </div><!-- /.main-wrapper -->
+
+<div class="icon-bar navbar-fixed-bottom hidden-md-up">
+    <a class="active" href="https://safe-cove-64619.herokuapp.com/churches"><i class="fa fa-search"></i>
+        <p style="font-size: small; font-family: sans-serif;">Find Us</p>
+    </a>
+    <a href="https://safe-cove-64619.herokuapp.com/testimonies"><i class="fa fa-users"></i>
+        <p style="font-size: small; font-family: sans-serif;">Testimonies</p>    
+    </a>
+    <a href="https://safe-cove-64619.herokuapp.com/beliefs"><i class="fa fa-book"></i>
+        <p style="font-size: small; font-family: sans-serif;">Beliefs</p>
+    </a>
+    <a href="https://safe-cove-64619.herokuapp.com/recognition"><i class="fa fa-comments"></i>
+        <p style="font-size: small; font-family: sans-serif;">Recognition</p>
+    </a>
+    <a href="https://safe-cove-64619.herokuapp.com/history"><i class="fa fa-history"></i>
+    <p style="font-size: small; font-family: sans-serif;">History</p>
+    </a>
+</div>
+
+    <div class="footer-wrapper hidden-md-down">
+    <div class="vessel">
+        <div class="footer-inner">
+            
+
+            <div class="footer-bottom">
+                <div class="footer-left">
+                    &copy; 2017 All Rights reserved.
+                </div><!-- /.footer-left -->
+
+                <div class="footer-right">
+                    <ul class="nav nav-pills">
+                        <li class="nav-item"><a href="https://safe-cove-64619.herokuapp.com/faq" class="nav-link">FAQ's</a></li>
+                        <li class="nav-item"><a href="https://safe-cove-64619.herokuapp.com/privacy" class="nav-link">Privacy Policy</a></li>
+                        <li class="nav-item"><a href="https://safe-cove-64619.herokuapp.com/contact" class="nav-link">Contact</a></li>
+                    </ul>
+                </div><!-- /.footer-right -->           
+            </div><!-- /.footer-bottom -->
+        </div><!-- /.footer-inner -->
+    </div><!-- /.vessel -->
+</div><!-- /.footer-wrapper -->
+</div><!-- /.page-wrapper -->
+
+<script type="text/javascript">
+        function myFunction() {
+    var x = document.getElementById('map');
+    if (x.style.display === 'none') {
+        x.style.display = 'block';
+    } else {
+        x.style.display = 'none';
+    }
+}     
+    </script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="{{self.google_url_js}}{{self.google_key_js}}&libraries=places,geometry"></script>
 <script>
@@ -318,49 +365,6 @@
     -->
 </div>
 </script>
- </div><!-- /.main-inner -->
-    </div><!-- /.main-wrapper -->
-
-<div class="icon-bar navbar-fixed-bottom hidden-md-up">
-    <a class="active" href="https://safe-cove-64619.herokuapp.com/churches"><i class="fa fa-search"></i>
-        <p style="font-size: small; font-family: sans-serif;">Find Us</p>
-    </a>
-    <a href="https://safe-cove-64619.herokuapp.com/testimonies"><i class="fa fa-users"></i>
-        <p style="font-size: small; font-family: sans-serif;">Testimonies</p>    
-    </a>
-    <a href="https://safe-cove-64619.herokuapp.com/beliefs"><i class="fa fa-book"></i>
-        <p style="font-size: small; font-family: sans-serif;">Beliefs</p>
-    </a>
-    <a href="https://safe-cove-64619.herokuapp.com/recognition"><i class="fa fa-comments"></i>
-        <p style="font-size: small; font-family: sans-serif;">Recognition</p>
-    </a>
-    <a href="https://safe-cove-64619.herokuapp.com/history"><i class="fa fa-history"></i>
-    <p style="font-size: small; font-family: sans-serif;">History</p>
-    </a>
-</div>
-
-    <div class="footer-wrapper hidden-md-down">
-    <div class="vessel">
-        <div class="footer-inner">
-            
-
-            <div class="footer-bottom">
-                <div class="footer-left">
-                    &copy; 2017 All Rights reserved.
-                </div><!-- /.footer-left -->
-
-                <div class="footer-right">
-                    <ul class="nav nav-pills">
-                        <li class="nav-item"><a href="https://safe-cove-64619.herokuapp.com/faq" class="nav-link">FAQ's</a></li>
-                        <li class="nav-item"><a href="https://safe-cove-64619.herokuapp.com/privacy" class="nav-link">Privacy Policy</a></li>
-                        <li class="nav-item"><a href="https://safe-cove-64619.herokuapp.com/contact" class="nav-link">Contact</a></li>
-                    </ul>
-                </div><!-- /.footer-right -->           
-            </div><!-- /.footer-bottom -->
-        </div><!-- /.footer-inner -->
-    </div><!-- /.vessel -->
-</div><!-- /.footer-wrapper -->
-</div><!-- /.page-wrapper -->
 
 </body>
 </html>
