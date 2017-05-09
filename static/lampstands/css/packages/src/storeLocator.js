@@ -679,9 +679,9 @@
                     this.infowindow = new google.maps.InfoWindow();
                     var _map = this.map;
                     var trimmed_address = encodeURIComponent(data.meeting_address.trim());
-                    var content = '<b>' + '<h6>'+ 'Church in ' + data.locality_name + '</h6></b>' + data.meeting_address + '<br>' 
-                    + '<a class="label label-success" href='+ 'httpss://safe-cove-64619.herokuapp.com'+ data.url + '>'+ 'More info' + '</a>' + '<br>'+
-                    '<a class="label label-danger" href=' + 'https://maps.google.com/?saddr=Current%20Location&daddr='+ trimmed_address + '>'+ 'Get directions here' + '</a>';
+                    var content = '<b>' + '<h6>'+ 'Church in ' + data.locality_name + '</h6></b>' + data.meeting_address + '<br>' + '<br>'
+                    + '<a style="padding:0.5em; margin:0.5em 0.5em 0 0;" class="label label-success" href='+ 'https://safe-cove-64619.herokuapp.com'+ data.url + '>'+ 'More info' + '</a>' +
+                    '<a style="padding:0.5em; margin:0.5em 0.5em 0 0;" class="label label-danger" href=' + 'https://maps.google.com/?saddr=Current%20Location&daddr='+ trimmed_address + '>'+ 'Get directions here' + '</a>';
 
                     var _ = this;
 
