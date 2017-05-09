@@ -69,7 +69,7 @@
                         <td>{{branch.locality_country.name}}</td>
                         <td>{{branch.locality_phone_number}}</td>
                         <td>{{branch.locality_email}}</td>
-                        <td>{{branch.locality_web}}</td>
+                        <td><a href={{branch.locality_web}}><a></td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -142,7 +142,7 @@
             '</tr>'+
             '<tr>'+
                 '<td>Website:</td>'+
-                '<td>'+'<a href='+ d.locality_web+'</a></td>'+
+                '<td>'+'<a href='+ d.locality_web+'></a></td>'+
             '</tr>'+
         '</table>';
     }
