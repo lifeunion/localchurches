@@ -42,6 +42,7 @@ from django_countries.fields import CountryField
 
 from geoposition.fields import GeopositionField
 from urllib.request import urlopen
+from urllib.parse import quote
 import json
 from django.conf import settings as localitySettings
 from django.utils import text
@@ -1179,6 +1180,10 @@ class ChurchPage(Page):
     def location(self):
         dictified_loc = dict([ ("latitude", self.get_latitude_location()), ("longitude", self.get_longitude_location())])
         return dictified_loc
+
+    def trimmed_address(self):
+        trimmed_address = quote(self.meeting_address)
+        return trimmed_address
         
     content_panels = [
         FieldPanel('title', classname="full title"),
