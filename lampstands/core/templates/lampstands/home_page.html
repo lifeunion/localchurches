@@ -1,5 +1,5 @@
 {% extends "lampstands/base.html" %}
-{% load lampstands_tags cache staticfiles wagtailuserbar wagtailcore_tags wagtailimages_tags wagtailsettings_tags %}
+{% load lampstands_tags cache staticfiles wagtailcore_tags wagtailimages_tags wagtailsettings_tags %}
 {% block title%} The Local Churches {% endblock %}
 {% block content %}
 
@@ -85,10 +85,7 @@
 {% endblock %}
 {% block extra_js %}
 <script src="{{self.google_url_js}}{{self.google_key_js}}&libraries=places,geometry"  type="text/javascript"</script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<!--
 <script type="text/javascript" src="{% static 'js/villareal/jquery1.7.1googapi.min.js' %}"></script>  
--->
 <script type="text/javascript" src="{% static 'js/villareal/jquery.geocomplete.js' %}"></script>    
     <script>
       $(function(){
