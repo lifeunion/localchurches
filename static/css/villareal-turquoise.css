@@ -5765,7 +5765,8 @@ label {
   font-size: 1.2em;
   width: 100%; }
   .contact td, .contact th {
-    padding: 20px;
+    padding: 18px;
+    line-height: 1.2em;
     vertical-align: top; }
 
 .contact-map {
