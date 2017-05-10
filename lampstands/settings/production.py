@@ -2,7 +2,7 @@ from __future__ import absolute_import, unicode_literals
 
 from .base import *
 import os
-from lampstands.customstorages import *
+from lampstands.custom_storages import *
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 ALLOWED_HOSTS = ['safe-cove-64619.herokuapp.com']
