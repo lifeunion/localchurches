@@ -2,7 +2,7 @@ from __future__ import absolute_import, unicode_literals
 
 from .base import *
 import os
-from lampstands.custom_storages import *
+from .custom_storages import *
 
 env = os.environ.copy()
 SECRET_KEY = env['SECRET_KEY']
