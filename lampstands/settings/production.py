@@ -2,8 +2,7 @@ from __future__ import absolute_import, unicode_literals
 
 from .base import *
 import os
-from django.conf import settings
-from settings import custom_storages
+from lampstands.custom_storages import *
 
 env = os.environ.copy()
 SECRET_KEY = env['SECRET_KEY']
