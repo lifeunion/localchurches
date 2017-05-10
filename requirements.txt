@@ -1,5 +1,6 @@
 appdirs==1.4.3
 beautifulsoup4==4.5.3
+boto==2.46.1
 boto3==1.4.4
 botocore==1.5.9
 contextlib2==0.5.4
