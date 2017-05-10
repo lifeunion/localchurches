@@ -55,13 +55,13 @@ if settings.DEBUG:
         url(r'^test500/$', TemplateView.as_view(template_name='500.html')),
     ]
 
-urlpatterns += patterns('',
-    (r'^static/(?P.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
-)
-
 urlpatterns += [
     url(r'', include(lampstands_urls)),
     url(r'', include(wagtail_urls)),
 ]
+
+urlpatterns += patterns('',
+    (r'^static/(?P.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
+)
 
 handler404 = 'lampstands.core.views.error404'
