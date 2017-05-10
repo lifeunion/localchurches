@@ -680,8 +680,10 @@
                     var _map = this.map;
                     var trimmed_address = encodeURIComponent(data.meeting_address.trim());
                     var content = '<b>' + '<h6>'+ 'Church in ' + data.locality_name + '</h6></b>' + data.meeting_address + '<br>'
-                    + '<a style="padding:0.5em; margin:0.5em 0.5em 0 0;" class="label label-success" href='+ 'https://safe-cove-64619.herokuapp.com'+ data.url + '>'+ 'more info' + '</a>' +
-                    '<a style="padding:0.5em; margin:0.5em 0.5em 0 0;" class="label label-danger" href=' + 'https://maps.google.com/?saddr=Current%20Location&daddr='+ trimmed_address + '>'+ 'get directions here' + '</a>';
+                    + '<a class="label label-success label-map" href='+
+                    'https://safe-cove-64619.herokuapp.com'+ data.url + '>'+ 'more info' + '</a>' +
+                    '<a class="label label-danger label-map" href=' + 
+                    'https://maps.google.com/?saddr=Current%20Location&daddr='+ trimmed_address + '>'+ 'get directions here' + '</a>';
 
                     var _ = this;
 

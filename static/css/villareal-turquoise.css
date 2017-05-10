@@ -3301,6 +3301,10 @@ a.label:focus, a.label:hover {
     background-color: #c9302c;
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif; }
 
+.label-map {  /**added by Kat**/
+  padding: 0.5em;
+  margin: 0.5em 0.5em 0 0; }
+
 .jumbotron {
   padding: 2rem 1rem;
   margin-bottom: 2rem;
