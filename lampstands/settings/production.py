@@ -5,7 +5,7 @@ import os
 from lampstands.custom_storages import *
 
 env = os.environ.copy()
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = env['SECRET_KEY']
 ALLOWED_HOSTS = ['safe-cove-64619.herokuapp.com']
 DEBUG = False
 
