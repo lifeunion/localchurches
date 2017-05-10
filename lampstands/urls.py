@@ -60,8 +60,4 @@ urlpatterns += [
     url(r'', include(wagtail_urls)),
 ]
 
-urlpatterns += patterns('',
-    (r'^static/(?P.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
-)
-
 handler404 = 'lampstands.core.views.error404'
