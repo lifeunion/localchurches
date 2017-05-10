@@ -58,6 +58,6 @@ if settings.DEBUG:
 urlpatterns += [
     url(r'', include(lampstands_urls)),
     url(r'', include(wagtail_urls)),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]
 
 handler404 = 'lampstands.core.views.error404'
