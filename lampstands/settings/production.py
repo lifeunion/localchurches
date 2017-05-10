@@ -5,7 +5,7 @@ import os
 
 env = os.environ.copy()
 SECRET_KEY = env['SECRET_KEY']
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['safe-cove-64619.herokuapp.com']
 DEBUG = False
 
 # Parse database configuration from $DATABASE_URL
