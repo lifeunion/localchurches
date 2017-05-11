@@ -13,7 +13,6 @@ DATABASES['default'] =  dj_database_url.config()
 	
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
 AWS_STORAGE_BUCKET_NAME = os.environ.get('S3_BUCKET_NAME')
 #AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 #MEDIAFILES_LOCATION="images"
