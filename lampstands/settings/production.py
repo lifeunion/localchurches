@@ -4,7 +4,8 @@ from .base import *
 import os
 from lampstands.custom_storages import *
 
-SECRET_KEY = os.environ.get('SECRET_KEY')
+#SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = '4tp-x_*%a=nrobcg%ykb48p%b%9^$00=&q82!-i5&v8lfi=*h5'
 ALLOWED_HOSTS = ['safe-cove-64619.herokuapp.com']
 DEBUG = False
 
