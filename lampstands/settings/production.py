@@ -4,7 +4,7 @@ from .base import *
 import os
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
-ALLOWED_HOSTS = ['safe-cove-64619.herokuapp.com']
+ALLOWED_HOSTS = ['*']
 DEBUG = False
 
 # Parse database configuration from $DATABASE_URL
@@ -14,11 +14,11 @@ DATABASES['default'] =  dj_database_url.config()
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 AWS_STORAGE_BUCKET_NAME = os.environ.get('S3_BUCKET_NAME')
-#AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
-#MEDIAFILES_LOCATION="images"
-#MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+MEDIAFILES_LOCATION="media"
+MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
 #DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
-#DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.sendgrid.net'
 EMAIL_HOST_USER = os.environ.get('SENDGRID_USERNAME')
