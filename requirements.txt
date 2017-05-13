@@ -8,7 +8,7 @@ coreapi==2.3.0
 coreschema==0.0.4
 dj-database-url==0.4.2
 dj-static==0.0.6
-Django==1.11.1
+Django==1.10
 django-appconf==1.0.2
 django-classy-tags==0.8.0
 django-compressor==2.1.1
@@ -55,7 +55,7 @@ static3==0.7.0
 unicodecsv==0.14.1
 Unidecode==0.4.20
 uritemplate==3.0.0
-wagtail==1.10
+wagtail==1.9.1
 wagtailembedder==1.1
 wagtailfontawesome==1.0.6
 wagtailfroala==0.2.9
