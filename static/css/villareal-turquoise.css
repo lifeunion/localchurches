@@ -8910,7 +8910,7 @@ label {
   width: 100%;
   text-align: center;
   background-color: #555;
-  overflow: auto;
+  overflow: hidden;
  }
 
  .icon-bar a{
