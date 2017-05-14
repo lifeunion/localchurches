@@ -6838,9 +6838,10 @@ label {
   @media (max-width: 767px) {
     .post-title h2 {
       display: -webkit-box;
-      -webkit-line-clamp:2;
+      -webkit-line-clamp:3;
       -webkit-box-orient:vertical;
       line-height: 1;
+      font-size: 2.6rem;
     }
   }
   .post-title a {
