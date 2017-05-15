@@ -121,7 +121,9 @@
     {
         return;
     }
-    return results[1] || "";
+    var trimmed = results[1]
+    trimmed = decodeURI(trimmed)
+    return trimmed || "";
     };
 
     /* Formatting function for row details - modify as you need */

@@ -1184,6 +1184,14 @@ class ChurchPage(Page):
     def trimmed_address(self):
         trimmed_address = quote(self.meeting_address)
         return trimmed_address
+
+    def trimmed_country(self):
+        trimmed_country = unquote(self.locality_country)
+        return trimmed_country
+
+    def trimmed_state_or_province(self):
+        trimmed_state_or_province = unquote(self.locality_state_or_province)
+        return trimmed_state_or_province
         
     content_panels = [
         FieldPanel('title', classname="full title"),
