@@ -42,7 +42,7 @@ from django_countries.fields import CountryField
 
 from geoposition.fields import GeopositionField
 from urllib.request import urlopen
-from urllib.parse import quote, unquote
+from urllib.parse import quote
 import json
 from django.conf import settings as localitySettings
 from django.utils import text
@@ -1118,6 +1118,10 @@ class ChurchPageTagList(models.Model):
     name = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
 
+    search_fields = [
+        index.SearchField('name', partial_match=True),
+    ]
+
     def __str__(self):
         return self.name
 
@@ -1184,14 +1188,6 @@ class ChurchPage(Page):
     def trimmed_address(self):
         trimmed_address = quote(self.meeting_address)
         return trimmed_address
-
-    def trimmed_country(self):
-        trimmed_country = unquote(self.locality_country)
-        return trimmed_country
-
-    def trimmed_state_or_province(self):
-        trimmed_state_or_province = unquote(self.locality_state_or_province)
-        return trimmed_state_or_province
         
     content_panels = [
         FieldPanel('title', classname="full title"),
