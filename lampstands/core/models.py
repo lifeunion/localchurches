@@ -42,7 +42,7 @@ from django_countries.fields import CountryField
 
 from geoposition.fields import GeopositionField
 from urllib.request import urlopen
-from urllib.parse import quote
+from urllib.parse import quote, unquote
 import json
 from django.conf import settings as localitySettings
 from django.utils import text
