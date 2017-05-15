@@ -1114,7 +1114,7 @@ class ChurchIndexPage(Page):
     ]
 
 # Church page
-class ChurchPageTagList(models.Model):
+class ChurchPageTagList(index.Indexed, models.Model):
     name = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
 
