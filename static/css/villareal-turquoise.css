@@ -6839,7 +6839,7 @@ label {
     .post-title h2 {
       overflow: hidden;
       display: -webkit-box;
-      -webkit-line-clamp: inherit;
+      -webkit-line-clamp: 3;
       -webkit-box-orient:vertical;
       line-height: 1;
       font-size: 2.6rem;
