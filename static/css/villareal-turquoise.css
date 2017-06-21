@@ -331,7 +331,7 @@ p {
   float: left;
   width: auto;
   margin-right: 0.1em;
-  font-size: 580%;
+  font-size: 520%;
   font-family: serif;
   line-height: 80%;
   }
@@ -5155,7 +5155,8 @@ hr {
       font-weight: 700;
       padding: 5px 0;
       position: relative;
-      transition: color .15s linear;
+      transition: color .5s ease-out 0.75s;
+      -moz-transition: color .5s ease-out 0.75s;
       text-transform: uppercase; }
       .header-transparent .nav-primary .nav-link {
         color: #fff; }
@@ -5766,12 +5767,15 @@ label {
   background-color: #fff;
   border-radius: 3px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
-  font-size: 1.2em;
+  font-size: 1.1em;
   width: 100%; }
   .contact td, .contact th {
-    padding: 18px;
-    line-height: 1.2em;
+    padding: 18px 7px 18px 10px;
+    line-height: 1.5em;
     vertical-align: top; }
+  .contact td {
+    word-break: break-word;
+  }
 
 .contact-map {
   height: 300px;
@@ -8337,7 +8341,7 @@ label {
         display: none; }
 
 .listing-box-image-title {
-  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent 160px);
+  background-image: linear-gradient(to top, rgba(0, 0, 0, 0.3), transparent 100px);
   bottom: 0;
   left: 0;
   position: absolute;
@@ -8374,7 +8378,7 @@ label {
     transition: bottom .15s linear; }
 
 .listing-box-title {
-  background-color: #4E4A4A;
+  background-color: gray;
   color: #fff;
   padding: 14px 20px;
   transition: background-color .15s linear; }
