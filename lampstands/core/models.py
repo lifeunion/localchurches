@@ -1525,7 +1525,6 @@ class MapPage(Page):
         # Filter by tag
         geoinfo_lat = request.GET.get('lat')
         geoinfo_lng = request.GET.get('lng')
-        zoom_deflevel = 3
 
         print (geoinfo_lat)
         print (geoinfo_lng)
