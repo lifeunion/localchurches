@@ -8378,7 +8378,7 @@ label {
     transition: bottom .15s linear; }
 
 .listing-box-title {
-  background-color: gray;
+  background-color: darkgrey;
   color: #fff;
   padding: 14px 20px;
   transition: background-color .15s linear; }
