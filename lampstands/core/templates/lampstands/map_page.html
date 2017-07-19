@@ -244,10 +244,14 @@
             mapOptions: {
                 mapTypeControl: false,
                 zoom: {{zoom_deflevel}},
+                zoomControlOptions: {
+                        position: google.maps.ControlPosition.RIGHT_BOTTOM
+                    },
                 minZoom: 1,
                 maxZoom: 18
             },
             geoLocationOptions: {
+                position: google.maps.ControlPosition.BOTTOM_RIGHT,
                 zoom: 10
             },
             autocompleteOptions: {
