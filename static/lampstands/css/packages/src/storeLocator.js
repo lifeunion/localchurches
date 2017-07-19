@@ -26,7 +26,7 @@
                     },
                     zoomControl: true,
                     zoomControlOptions: {
-                        position: google.maps.ControlPosition.RIGHT_TOP
+                        position: google.maps.ControlPosition.BOTTOM_RIGHT
                     },
                     scaleControl: true,
                     streetViewControl: false,
@@ -113,7 +113,7 @@
                     icon: BUL,
                     title: 'Show your Location',
                     zoom: 10,
-                    position: google.maps.ControlPosition.TOP_LEFT,
+                    position: google.maps.ControlPosition.RIGHT_BOTTOM,
                     index: 1
                 },
                 autocompleteOptions: {
