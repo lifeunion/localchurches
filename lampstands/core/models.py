@@ -1518,14 +1518,14 @@ class MapPage(Page):
         return geoinfo_lng
 
     def zoom_deflevel(self):
-        zoom_deflevel = 7 
+        zoom_deflevel = 5 
         return zoom_deflevel
 
     def serve(self, request):
         # Filter by tag
         geoinfo_lat = request.GET.get('lat')
         geoinfo_lng = request.GET.get('lng')
-        zoom_deflevel = 7
+        zoom_deflevel = 5
 
         print (geoinfo_lat)
         print (geoinfo_lng)
