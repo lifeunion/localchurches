@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'geoposition',
     'rest_framework',
     'crispy_forms',
+    'wagtailcaptcha',
     'wagtail.contrib.wagtailapi',
 
     # added from tbx settings
