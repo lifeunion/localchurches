@@ -46,7 +46,7 @@ from urllib.parse import quote
 import json
 from django.conf import settings as localitySettings
 from django.utils import text
-from wagtailcaptcha.models import WagtailCaptchaForm
+#from wagtailcaptcha.models import WagtailCaptchaForm
 
 # Streamfield blocks and config
 
