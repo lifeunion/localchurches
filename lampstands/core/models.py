@@ -1593,7 +1593,7 @@ class ContactFormField(AbstractFormField):
 class ContactLandingPageRelatedLinkButton(Orderable, RelatedLink):
     page = ParentalKey('lampstands.Contact', related_name='related_link_buttons')
 
-class Contact(AbstractEmailForm):
+class Contact(WagtailCaptchaEmailForm):
     intro = RichTextField(blank=True)
     main_image = models.ForeignKey('lampstands.LampstandsImage', null=True,
                                    blank=True, on_delete=models.SET_NULL,
