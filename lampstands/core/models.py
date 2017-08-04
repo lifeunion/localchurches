@@ -46,7 +46,7 @@ from urllib.parse import quote
 import json
 from django.conf import settings as localitySettings
 from django.utils import text
-from wagtailcaptcha.models import WagtailCaptchaForm
+from wagtailcaptcha.models import WagtailCaptchaEmailForm
 
 # Streamfield blocks and config
 
@@ -1593,7 +1593,7 @@ class ContactFormField(AbstractFormField):
 class ContactLandingPageRelatedLinkButton(Orderable, RelatedLink):
     page = ParentalKey('lampstands.Contact', related_name='related_link_buttons')
 
-class Contact(AbstractEmailForm):
+class Contact(WagtailCaptchaEmailForm):
     intro = RichTextField(blank=True)
     main_image = models.ForeignKey('lampstands.LampstandsImage', null=True,
                                    blank=True, on_delete=models.SET_NULL,
