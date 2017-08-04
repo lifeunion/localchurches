@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'crispy_forms',
     'wagtailcaptcha',
+    'captcha',
     'wagtail.contrib.wagtailapi',
 
     # added from tbx settings
