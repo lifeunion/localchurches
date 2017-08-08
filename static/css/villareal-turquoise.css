@@ -1783,7 +1783,7 @@ hr{border-color:#eaeaea;margin:60px 0;padding:0;}
 .header-small .nav-primary{float:right;}
 .nav-primary .nav-item{margin:0 40px 0 0;position:relative;}
 .nav-primary .nav-item:last-child{margin:0;}
-.nav-primary .nav-item-parent > .nav-link:after{-webkit-font-smoothing:antialiased;content:'\f0d7';font-family:'FontAwesome';margin:0 0 0 0px;}
+/**.nav-primary .nav-item-parent > .nav-link:after{-webkit-font-smoothing:antialiased;content:'\f0d7';font-family:'FontAwesome';margin:0 0 0 0px;}**/
 .nav-primary .nav-item-parent:hover > a{color:#0BB7A5;}
 .header-transparent .nav-primary .nav-item-parent:hover > a{color:#fff;}
 .nav-primary .nav-item-parent:hover > .sub-menu{opacity:1;transition:opacity .15s linear;visibility:visible;}
@@ -2034,7 +2034,7 @@ label{color:#666666;cursor:pointer;font-size:1.2em;font-weight:600;text-transfor
 .listing-detail .call-to-action-small h2, .call-to-action-small h2{border:0;color:gray;font-size:1.2em;margin:15px 0 40px 0;padding:0;}
 .listing-detail .call-to-action-small .btn, .listing-detail .call-to-action-small .pricing-btn, .call-to-action-small .btn, .call-to-action-small .pricing-btn{margin:0 10px;}
 .call-to-action-small-buttons{background-color:rgba(0, 0, 0, 0.02);border-radius:0 0 3px 3px;margin:0 -20px -20px -20px;padding:20px 20px 20px 20px;}
-.faq-item{background-color:#fff;border-radius:3px;box-shadow:0 1px 2px rgba(0, 0, 0, 0.08);margin:15px 0 30px 60px;padding:20px 30px;position:relative;}
+.faq-item{background-color:#fff;border-radius:3px;box-shadow:0 1px 2px rgba(0, 0, 0, 0.08);margin:15px 0 30px 60px;padding:35px;position:relative;}
 .faq-item:before{background-color:#4E4A4A;border-radius:3px;color:#fff;content:'Q';display:block;font-size:1.25em;font-weight:600;height:40px;left:-60px;line-height:40px;position:absolute;text-align:center;top:0;width:40px;}
 .faq-item-question h2{font-size:1.6em;font-weight:700;margin:0 0 20px 0;padding:0;}
 .faq-item-answer{color:gray;}
@@ -2167,7 +2167,7 @@ label{color:#666666;cursor:pointer;font-size:1.2em;font-weight:600;text-transfor
 .pricing-boxed .pricing-features li{margin:0;padding:12px 0;}
 .pricing-boxed .pricing-features li:nth-child(odd){background-color:rgba(0, 0, 0, 0.03);}
 .pricing-bold .pricing-features{text-align:right;}
-.post{background-color:#fff;border-radius:3px;box-shadow:0 1px 2px rgba(0, 0, 0, 0.08);margin:0 0 30px 70px;padding:30px;position:relative;}
+.post{background-color:#fff;border-radius:3px;box-shadow:0 1px 2px rgba(0, 0, 0, 0.08);margin:0 0 30px 70px;padding:35px;position:relative;}
 .posts-grid .post{margin-left:0;}
 .post:hover .post-image:after, .post:hover .post-image:before{opacity:1;}
 .post:hover .post-author{bottom:25px;}
@@ -2625,7 +2625,7 @@ label{color:#666666;cursor:pointer;font-size:1.2em;font-weight:600;text-transfor
 .listing-compare-list li.yes{color:#25b45b;}
 .listing-compare-list li.no{color:#F75156;}
 .icon-bar{width:100%;text-align:center;background-color:#555;overflow:hidden;}
-.icon-bar a{width:20%;padding-top:0.23em;float:left;transition:all 0.3s ease;color:white;font-size:32px;}
+.icon-bar a{width:20%;padding-top:0.3em;float:left;transition:all 0.3s ease;color:white;font-size:20px;}
 .icon-bar a:hover{background-color:#000;}
 .icon-bar .active{background-color:#0BB7A5;background-image:linear-gradient(to right, #0a9f8f, #0ccfbb)}
 .top-mobile-icon{padding:8px 7px;font-size:1.7em;}
