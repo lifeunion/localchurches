@@ -14,7 +14,7 @@
                 height: null,
                 defaultLocation: null,
                 mapOptions: {
-                    zoom: 10,
+                    zoom: 9,
                     minZoom: 4,
                     maxZoom: 16,
                     scrollwheel: true,
@@ -112,7 +112,7 @@
                     show: true,
                     icon: BUL,
                     title: 'Show your Location',
-                    zoom: 10,
+                    zoom: 9,
                     position: google.maps.ControlPosition.TOP_LEFT,
                     index: 1
                 },
@@ -122,7 +122,7 @@
                     placeholder: 'find location by city',
                     country: 'all',
                     types: '(cities)',
-                    zoom: 10,
+                    zoom: 9,
                     class: 'map_btn_custom',
                     index: 2,
                     errorNotFound: 'No result for your search!'
