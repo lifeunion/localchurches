@@ -104,11 +104,6 @@
           }
         });
 
-        $(".form-control").click(function() {
-            $(".find").click();
-        });
-
-
         $(".find").click(function(){
           $(this).parents(".location").find(".form-control").trigger("geocode");
         });
