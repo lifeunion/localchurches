@@ -95,7 +95,7 @@
           types: ["(regions)"],
         });
 
-        $(".form-control").keypress(function (e) {
+        /*$(".form-control").keypress(function (e) {
          var key = e.which;
          if(key == 13)  // the enter key code
           {
@@ -103,7 +103,7 @@
             return false;  
           }
         });
-
+        */
         $(".find").click(function(){
           $(this).parents(".location").find(".form-control").trigger("geocode");
         });
