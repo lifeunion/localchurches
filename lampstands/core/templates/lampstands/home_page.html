@@ -99,7 +99,11 @@
          var key = e.which;
          if(key == 13)  // the enter key code
           {
-            $(this).parents(".location").find(".form-control").trigger("geocode");
+            $(".form-control").geocomplete({
+              details: ".details",
+              detailsScope: '.location',
+              types: ["(regions)"],
+            });
             $(".find").click();
             return false;  
           }
