@@ -20,6 +20,9 @@ urlpatterns = format_suffix_patterns([
     url(r'^api-localities/(?P<pk>[0-9]+)/$',
         views.LocalitiesDetail.as_view(),
         name='snippet-detail'),
+    url(r'^api-localities-book/$',
+        views.LocalitiesList.as_view(),
+        name='snippet-list'),
 ])
 
 urlpatterns += [
