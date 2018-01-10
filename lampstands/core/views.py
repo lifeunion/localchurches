@@ -1,5 +1,5 @@
 import requests
-import django_filters.rest_framework
+
 from django.conf import settings
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
@@ -45,8 +45,6 @@ class LocalitiesList(generics.ListCreateAPIView):
     queryset = ChurchPage.objects.all()
     serializer_class = LocalitiesSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('locality_name', 'locality_country')
 
 class LocalitiesDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ChurchPage.objects.all()
