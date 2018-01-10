@@ -21,7 +21,7 @@ urlpatterns = format_suffix_patterns([
         views.LocalitiesDetail.as_view(),
         name='snippet-detail'),
     url(r'^api-localities-book/$',
-        views.LocalitiesList.as_view(),
+        views.LocalitiesBook.as_view(),
         name='snippet-list'),
 ])
 

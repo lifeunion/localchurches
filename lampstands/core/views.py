@@ -45,6 +45,7 @@ class LocalitiesList(generics.ListCreateAPIView):
     queryset = ChurchPage.objects.all()
     serializer_class = LocalitiesSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
 
 class LocalitiesDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ChurchPage.objects.all()
