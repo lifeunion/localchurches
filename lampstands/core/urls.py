@@ -10,6 +10,7 @@ urlpatterns = [
 	url(r'^$', views.api_root),
 	url(r'^api-localities/$', views.LocalitiesList.as_view()),
     url(r'^api-localities/(?P<pk>[0-9]+)/$', views.LocalitiesDetail.as_view()),
+    url(r'^api-localities-book/$', views.LocalitiesBook.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns = format_suffix_patterns([

@@ -51,6 +51,11 @@ class LocalitiesDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = LocalitiesSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
+class LocalitiesBook(generics.ListCreateAPIView):
+    queryset = ChurchPage.objects.filter(locality_name = "Austin")
+    serializer_class = LocalitiesSerializer
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
 """
 class LocalitiesList(mixins.ListModelMixin,
                   mixins.CreateModelMixin,
