@@ -1,5 +1,5 @@
 import requests
-
+import django_filters.rest_framework
 from django.conf import settings
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
