@@ -85,6 +85,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_countries',
+    'rest_framework_word_filter',
+
 ]
 
 MIDDLEWARE = [
@@ -218,8 +220,7 @@ REST_FRAMEWORK = {
         'rest_framework.renderers.JSONRenderer',
         'rest_framework.renderers.BrowsableAPIRenderer',
         'rest_framework_csv.renderers.CSVRenderer',
-    ),
-    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
+    )
 }
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'

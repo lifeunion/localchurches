@@ -21,6 +21,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.views import APIView
 from rest_framework.settings import api_settings
 from rest_framework_csv import renderers as r
+from rest_framework_word_filter import FullWordSearchFilter
 
 #from rest_framework.views import APIView
 #from rest_framework import status, mixins, generics
@@ -44,7 +45,9 @@ def api_root(request, format=None):
 class LocalitiesList(generics.ListCreateAPIView):
     queryset = ChurchPage.objects.all()
     serializer_class = LocalitiesSerializer
+    filter_backends=(FullWordSearchFilter,)
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    word_field = ('locality_name')
 
 class LocalitiesDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ChurchPage.objects.all()
