@@ -52,7 +52,7 @@ class LocalitiesDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 class LocalitiesBook(generics.ListCreateAPIView):
-    queryset = ChurchPage.objects.filter(locality_country.name = "United States of America")
+    queryset = ChurchPage.objects.filter(locality_country = "Austin")
     serializer_class = LocalitiesSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
