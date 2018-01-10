@@ -1,4 +1,5 @@
 import requests
+import django_filters.rest_framework
 
 from django.conf import settings
 from django.shortcuts import render
@@ -45,7 +46,8 @@ class LocalitiesList(generics.ListCreateAPIView):
     queryset = ChurchPage.objects.all()
     serializer_class = LocalitiesSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
-
+    filter_backends = (django_filters.rest_framework.DjangoFilterBackend,)
+    
 class LocalitiesDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ChurchPage.objects.all()
     serializer_class = LocalitiesSerializer
