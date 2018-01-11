@@ -1155,7 +1155,19 @@ class ChurchPage(Page):
     #locality_web = models.TextField(validators=[URLValidator()], blank=True, help_text= "Please type: 'http://' in the front of the URL")
     locality_web = models.TextField(blank=True, help_text= "Please type: 'http://' in the front of the URL")
     last_update = models.DateField(null=True, blank=True)
-    
+    locality_contact_brother_one = models.CharField(max_length=255, blank=True, null=True)
+    locality_contact_brother_two = models.CharField(max_length=255, blank=True, null=True)
+    locality_contact_brother_three = models.CharField(max_length=255, blank=True, null=True)
+    locality_contact_brother_four = models.CharField(max_length=255, blank=True, null=True)
+    locality_contact_brother_five = models.CharField(max_length=255, blank=True, null=True)
+    locality_contact_brother_six = models.CharField(max_length=255, blank=True, null=True)
+    locality_contact_brother_one_phone = models.CharField(max_length=25, blank=True, null=True)
+    locality_contact_brother_two_phone = models.CharField(max_length=25, blank=True, null=True)
+    locality_contact_brother_three_phone = models.CharField(max_length=25, blank=True, null=True)
+    locality_contact_brother_four_phone = models.CharField(max_length=25, blank=True, null=True)
+    locality_contact_brother_five_phone = models.CharField(max_length=25, blank=True, null=True)
+    locality_contact_brother_six_phone = models.CharField(max_length=25, blank=True, null=True)
+
     search_fields = Page.search_fields + [
         index.SearchField('locality_name'),
         index.SearchField('locality_state_or_province'),
@@ -1203,6 +1215,18 @@ class ChurchPage(Page):
         FieldPanel('locality_web'),
         FieldPanel('last_update'),
         InlinePanel('tags', label="Tags"),
+        FieldPanel('locality_contact_brother_one'),
+        FieldPanel('locality_contact_brother_one_phone'),
+        FieldPanel('locality_contact_brother_two'),
+        FieldPanel('locality_contact_brother_two_phone'),
+        FieldPanel('locality_contact_brother_three'),
+        FieldPanel('locality_contact_brother_three_phone'),
+        FieldPanel('locality_contact_brother_four'),
+        FieldPanel('locality_contact_brother_four_phone'),
+        FieldPanel('locality_contact_brother_five'),
+        FieldPanel('locality_contact_brother_five_phone'),
+        FieldPanel('locality_contact_brother_six'),
+        FieldPanel('locality_contact_brother_six_phone'),
     ]
 
 # recognition index page
