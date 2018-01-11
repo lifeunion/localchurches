@@ -343,6 +343,38 @@
     </div>
 </div>
 </script>
+<script id="mapListDetailTemplate" type="text/x-jQuery-tmpl">
+<div class="result_item_detail">
+<a href="#" class="map_details_close"><img src="{% static 'lampstands/css/packages/src/close.png' %}" alt="Close"></a>
+    <h3><a href="https://www.localchurches.org${url}">${locality_name}</a></h3>
+    <div class="result_item_detail_info">
+        <div class="info">
+            <ul class="list-unstyled">
+                <li><b>Address</b>: ${meeting_address}</li>
+                <li><b>Phone</b>: ${locality_phone_number}</li>
+                <li><b>E-Mail</b>: ${locality_email}</li>
+                <li><b>Website</b>: <a href="${locality_web}">${locality_web}</a></li>
+            </ul>
+            <a class="label label-success label-map" style="color:white;" href="https://www.localchurches.org${url}">more info</a>
+            <a class="label label-danger label-map" href= "https://maps.google.com/?saddr=Current%20Location&daddr=${trimmed_address}">get directions here</a>
+        </div>
+    </div>
 
+    <!--
+    <div class="result_item_detail_info">
+        <h4>Tags</h4>
+           ${tags}
+    </div>
+    <div class="result_item_detail_info">
+    <h4>About</h4>
+    ${about}
+    </div>
+    <div class="result_item_detail_info">
+    <h4>Panorama View</h4>
+        <div id="pano"> </div>
+    </div>
+    -->
+</div>
+</script>
 </body>
 </html>
