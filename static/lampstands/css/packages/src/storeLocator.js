@@ -508,14 +508,14 @@
             },
             _initClicks: function () {
                 var _ = this;
-                /*$(document).on('click', '.result_item a', function(e) {
+                $(document).on('click', '.result_item a', function(e) {
                     e.preventDefault();
                     var templateItem = $(this).tmplItem();
                     if($.isEmptyObject(templateItem.data) === false)
                     {
                         _._updateDetail(templateItem.data);
                     }
-                });*/
+                });
 
                 $(document).on('click', '.filter_minimize', function () {
 
