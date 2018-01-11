@@ -1207,14 +1207,13 @@ class ChurchPage(Page):
         FieldPanel('locality_name'),
         FieldPanel('locality_state_or_province'),
         FieldPanel('locality_country'),
+        InlinePanel('tags', label="Tags"),
         FieldPanel('short_intro'),
         FieldPanel('meeting_address'),
         FieldPanel('position'),
         FieldPanel('locality_phone_number'),
         FieldPanel('locality_email'),
         FieldPanel('locality_web'),
-        FieldPanel('last_update'),
-        InlinePanel('tags', label="Tags"),
         FieldPanel('locality_contact_brother_one'),
         FieldPanel('locality_contact_brother_one_phone'),
         FieldPanel('locality_contact_brother_two'),
@@ -1227,6 +1226,7 @@ class ChurchPage(Page):
         FieldPanel('locality_contact_brother_five_phone'),
         FieldPanel('locality_contact_brother_six'),
         FieldPanel('locality_contact_brother_six_phone'),
+        FieldPanel('last_update'),
     ]
 
 # recognition index page
