@@ -1552,9 +1552,6 @@ class MapPage(Page):
         geoinfo_lng = request.GET.get('lng')
         zoom_deflevel = 9
 
-        print (geoinfo_lat)
-        print (geoinfo_lng)
-
         if not geoinfo_lat:
             print ('execute default:')
             geoinfo_lat = '36.7783'

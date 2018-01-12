@@ -759,14 +759,17 @@
             },
             _getInViewportMarkers: function () {
                 this.viewPortMarkers = [];
-
+                var savedNum = 0;
                 for(var i = 0; i < this.markers.length; i++)
                 {
                     if (this.map.getBounds().contains(this.markers[i].position))
                     {
                         this.viewPortMarkers[i] = this.markers[i].itemId;
+                        savedNum = i;
                     }
                 }
+                var latLngSmart = new google.maps.LatLng(this.markers[savedNum].position.lat(), this.markers[savedNum].position.lng());
+                this.map.setCenter(latLngSmart);
                 google.maps.event.removeListener(this._boundInitListener);
                 this._updateList();
             },
