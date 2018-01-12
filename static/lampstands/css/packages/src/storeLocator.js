@@ -760,16 +760,24 @@
             _getInViewportMarkers: function () {
                 this.viewPortMarkers = [];
                 var savedNum = 0;
+                var firstTaken = false;
                 for(var i = 0; i < this.markers.length; i++)
                 {
                     if (this.map.getBounds().contains(this.markers[i].position))
                     {
                         this.viewPortMarkers[i] = this.markers[i].itemId;
-                        savedNum = i;
+                        if (!firstTaken) { 
+                            savedNum = i;
+                            firstTaken = true;
+                        }
                     }
                 }
-                var latLngSmart = new google.maps.LatLng(this.markers[savedNum].position.lat(), this.markers[savedNum].position.lng());
-                this.map.setCenter(latLngSmart);
+
+                var latLngSmart = null;
+                if (firstTaken) {
+                    latLngSmart = new google.maps.LatLng(this.markers[savedNum].position.lat(), this.markers[savedNum].position.lng());
+                    this.map.setCenter(latLngSmart);
+                }
                 google.maps.event.removeListener(this._boundInitListener);
                 this._updateList();
             },
