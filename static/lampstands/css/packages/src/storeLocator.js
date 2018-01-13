@@ -495,6 +495,7 @@
                 var defaultLocation = this.settings.defaultLocation, latLng;
                 var countMarkers = 0;
                 var tempZoom = 20;
+                tempZoom = this.settings.geoLocationOptions.zoom;
 
                 if (defaultLocation instanceof Array) {
                     latLng = new google.maps.LatLng(defaultLocation[0], defaultLocation[1]);

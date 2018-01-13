@@ -243,7 +243,7 @@
             ],
             mapOptions: {
                 mapTypeControl: false,
-                zoom: 18,
+                zoom: {{zoom_deflevel}},
                 zoomControlOptions: {
                         position: google.maps.ControlPosition.RIGHT_TOP
                     },
@@ -252,10 +252,10 @@
             },
             geoLocationOptions: {
                 position: google.maps.ControlPosition.TOP_RIGHT,
-                zoom: 9
+                zoom: {{zoom_deflevel}}
             },
             autocompleteOptions: {
-                zoom: 9,
+                zoom: {{zoom_deflevel}},
                 placeholder: 'Enter city name here',
                 country: 'all',
                 types: '(regions)',
