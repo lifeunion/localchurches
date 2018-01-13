@@ -503,7 +503,7 @@
                 this.map.setCenter(latLng);
                 
                 //tempZoom = tempZoom-2;
-                //this.settings.geoLocationOptions.zoom = str(tempZoom);
+                this.settings.geoLocationOptions.zoom = 14;
                 this.map.setZoom(this.settings.geoLocationOptions.zoom);
 
                 var _t = this;

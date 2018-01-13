@@ -105,7 +105,7 @@
         var input = document.getElementById("searchphrase");
         input.addEventListener("keyup", function(event) {
             event.preventDefault();
-            if (event.keyCode === 13 && $('.pac-container:visible').length) {
+            if (event.keyCode === 13) {
                     document.getElementById("searchdesktop").click(function(){
                         $(this).parents(".location").find(".form-control").trigger("geocode");
                 });
