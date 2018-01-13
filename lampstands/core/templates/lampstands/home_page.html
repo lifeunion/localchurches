@@ -106,8 +106,8 @@
         input.addEventListener("keyup", function(event) {
             event.preventDefault();
             if (event.keyCode === 13) {
-                    //$(this).parents(".location").find(".form-control").trigger("geocode");
-                    document.getElementById("searchdesktop")
+                    $(this).parents(".location").find(".form-control").trigger("geocode");
+                    document.getElementById("searchdesktop").click();
                 }
         });
     </script>
