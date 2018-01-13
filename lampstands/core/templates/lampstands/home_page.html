@@ -103,7 +103,8 @@
 
     <script>
         var input = document.getElementById("searchphrase");
-        input.addEventListener("keydown", function(event) {
+        input.addEventListener("keyup", function(event) {
+            event.preventDefault();
             if (event.keyCode === 13) {
                  $(".find").click(function(){
           $(this).parents(".location").find(".form-control").trigger("geocode");
