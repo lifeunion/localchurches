@@ -501,7 +501,7 @@
                 }
                 
                 this.map.setCenter(latLng);
-                this.map.setZoom(tempZoom);
+                this.map.setZoom(tempZoom-2);
 
                 while countMarkers < 3: 
                     for(var i = 0; i < this.markers.length; i++)
@@ -780,7 +780,7 @@
                         this.viewPortMarkers[i] = this.markers[i].itemId;
                     }
                 }
-                
+
                 google.maps.event.removeListener(this._boundInitListener);
                 this._updateList();
             },
