@@ -105,11 +105,11 @@
         var input = document.getElementById("searchphrase");
         input.addEventListener("keyup", function(event) {
             event.preventDefault();
-            if (event.keyCode === 13) {
+            if (event.keyCode === 13 && $('.pac-container:visible').length) {
                     document.getElementById("searchdesktop").click(function(){
-                        $(this).parents(".location").find(".pac-item:first").trigger("geocode");
-                    });
-                }
+                        $(this).parents(".location").find(".form-control").trigger("geocode");
+                });
+            }
         });
     </script>
 {% endblock %}
