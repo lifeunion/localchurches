@@ -500,53 +500,8 @@
                 }
                 
                 this.map.setCenter(latLng);
-                this.settings.geoLocationOptions.zoom = 16;
+                this.settings.geoLocationOptions.zoom = 12;
                 this.map.setZoom(this.settings.geoLocationOptions.zoom);
-
-                if (countMarkers < 6) {
-                    for(var i = 0; i < this.markers.length; i++) {
-                            if (this.map.getBounds().contains(this.markers[i].position))
-                            {
-                                countMarkers = countMarkers+1;
-                            }
-                    }
-                    this.settings.geoLocationOptions.zoom = 14;
-                    this.map.setZoom(this.settings.geoLocationOptions.zoom);
-                }
-
-                if (countMarkers < 6) {
-                    for(var i = 0; i < this.markers.length; i++) {
-                            if (this.map.getBounds().contains(this.markers[i].position))
-                            {
-                                countMarkers = countMarkers+1;
-                            }
-                    }
-                    this.settings.geoLocationOptions.zoom = 12;
-                    this.map.setZoom(this.settings.geoLocationOptions.zoom);
-                }
-
-                if (countMarkers < 6) {
-                    for(var i = 0; i < this.markers.length; i++) {
-                            if (this.map.getBounds().contains(this.markers[i].position))
-                            {
-                                countMarkers = countMarkers+1;
-                            }
-                    }
-                    this.settings.geoLocationOptions.zoom = 10;
-                    this.map.setZoom(this.settings.geoLocationOptions.zoom);
-                }
-
-                if (countMarkers < 6) {
-                    for(var i = 0; i < this.markers.length; i++) {
-                            if (this.map.getBounds().contains(this.markers[i].position))
-                            {
-                                countMarkers = countMarkers+1;
-                            }
-                    }
-                    this.settings.geoLocationOptions.zoom = 8;
-                    this.map.setZoom(this.settings.geoLocationOptions.zoom);
-                }
-
 
                 var _t = this;
                 this._boundInitListener = google.maps.event.addListener(_t.map, 'bounds_changed', function () {
