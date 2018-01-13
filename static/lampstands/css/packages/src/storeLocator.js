@@ -503,6 +503,8 @@
                 this.map.setCenter(latLng);
                 this.map.setZoom(tempZoom-2);
 
+                
+
                 var _t = this;
                 this._boundInitListener = google.maps.event.addListener(_t.map, 'bounds_changed', function () {
                     _t._getInViewportMarkers();
