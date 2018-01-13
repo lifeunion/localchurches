@@ -18,7 +18,7 @@
                 <input class="form-control" type="text" name="searchterm" id="searchphrase" placeholder="Enter City, State, Province, or Country"/>
                 </div>
                 <div class="form-group col-sm-2">
-                <input class="btn btn-primary btn-block find" type="submit" value="Search">
+                <input id="searchdesktop" class="btn btn-primary btn-block find" type="submit" value="Search">
                 </div>
                     <fieldset hidden class="details">
                       <label>Latitude</label>
@@ -28,7 +28,7 @@
                     </fieldset>
             </form>
 
-            <button id="searchBtn" class="btn btn-primary btn-block hidden-md-up" onclick="location.href='https://www.localchurches.org/churches/'" style="margin: auto; width: 50%;">Search Now</button>
+            <button id="searchbtnmobile" class="btn btn-primary btn-block hidden-md-up" onclick="location.href='https://www.localchurches.org/churches/'" style="margin: auto; width: 50%;">Search Now</button>
 
 
         </div><!-- /.vessel -->
@@ -106,7 +106,7 @@
         input.addEventListener("keyup", function(event) {
             event.preventDefault();
             if (event.keyCode === 13) {
-                document.getElementById("searchBtn").click();
+                document.getElementById("searchdesktop").click();
             }
         });
     </script>
