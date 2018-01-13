@@ -493,16 +493,15 @@
             _initDefaultLocation: function () {
 
                 var defaultLocation = this.settings.defaultLocation, latLng;
-                //var countMarkers = 0;
+                var countMarkers = 0;
                 var tempZoom = 20;
-                tempZoom = this.settings.mapOptions.zoom;
 
                 if (defaultLocation instanceof Array) {
                     latLng = new google.maps.LatLng(defaultLocation[0], defaultLocation[1]);
                 }
                 
                 this.map.setCenter(latLng);
-                this.map.setZoom(tempZoom);
+                this.map.setZoom(tempZoom-2);
 
                 var _t = this;
                 this._boundInitListener = google.maps.event.addListener(_t.map, 'bounds_changed', function () {
