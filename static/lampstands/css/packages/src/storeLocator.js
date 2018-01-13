@@ -493,9 +493,9 @@
             _initDefaultLocation: function () {
 
                 var defaultLocation = this.settings.defaultLocation, latLng;
-                var countMarkers = 0;
+                //var countMarkers = 0;
                 var tempZoom = 20;
-                tempZoom = this.settings.geoLocationOptions.zoom;
+                tempZoom = this.settings.mapOptions.zoom;
 
                 if (defaultLocation instanceof Array) {
                     latLng = new google.maps.LatLng(defaultLocation[0], defaultLocation[1]);
@@ -503,17 +503,6 @@
                 
                 this.map.setCenter(latLng);
                 this.map.setZoom(tempZoom);
-
-                while countMarkers < 3: 
-                    for(var i = 0; i < this.markers.length; i++)
-                    {
-                        if (this.map.getBounds().contains(this.markers[i].position))
-                        {
-                            countMarkers = countMarkers + 1;
-                        }
-                    }
-                    tempZoom = tempZoom - 2;
-                    this.map.setZoom(tempZoom);
 
                 var _t = this;
                 this._boundInitListener = google.maps.event.addListener(_t.map, 'bounds_changed', function () {
@@ -781,7 +770,6 @@
                         this.viewPortMarkers[i] = this.markers[i].itemId;
                     }
                 }
-
                 google.maps.event.removeListener(this._boundInitListener);
                 this._updateList();
             },
