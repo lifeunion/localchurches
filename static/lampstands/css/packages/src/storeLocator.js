@@ -503,7 +503,7 @@
                 this.settings.geoLocationOptions.zoom = 16;
                 this.map.setZoom(this.settings.geoLocationOptions.zoom);
 
-                if (countMarkers < 3) {
+                if (countMarkers < 6) {
                     for(var i = 0; i < this.markers.length; i++) {
                             if (this.map.getBounds().contains(this.markers[i].position))
                             {
@@ -514,7 +514,7 @@
                     this.map.setZoom(this.settings.geoLocationOptions.zoom);
                 }
 
-                if (countMarkers < 3) {
+                if (countMarkers < 6) {
                     for(var i = 0; i < this.markers.length; i++) {
                             if (this.map.getBounds().contains(this.markers[i].position))
                             {
@@ -525,7 +525,7 @@
                     this.map.setZoom(this.settings.geoLocationOptions.zoom);
                 }
 
-                if (countMarkers < 3) {
+                if (countMarkers < 6) {
                     for(var i = 0; i < this.markers.length; i++) {
                             if (this.map.getBounds().contains(this.markers[i].position))
                             {
@@ -536,7 +536,7 @@
                     this.map.setZoom(this.settings.geoLocationOptions.zoom);
                 }
 
-                if (countMarkers < 3) {
+                if (countMarkers < 6) {
                     for(var i = 0; i < this.markers.length; i++) {
                             if (this.map.getBounds().contains(this.markers[i].position))
                             {
