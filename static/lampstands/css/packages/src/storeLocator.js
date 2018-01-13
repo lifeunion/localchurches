@@ -494,16 +494,59 @@
 
                 var defaultLocation = this.settings.defaultLocation, latLng;
                 var countMarkers = 0;
-                                
+
                 if (defaultLocation instanceof Array) {
                     latLng = new google.maps.LatLng(defaultLocation[0], defaultLocation[1]);
                 }
                 
                 this.map.setCenter(latLng);
-                
-                //tempZoom = tempZoom-2;
-                this.settings.geoLocationOptions.zoom = 14;
+                this.settings.geoLocationOptions.zoom = 16;
                 this.map.setZoom(this.settings.geoLocationOptions.zoom);
+
+                if (countMarkers < 3) {
+                    for(var i = 0; i < this.markers.length; i++) {
+                            if (this.map.getBounds().contains(this.markers[i].position))
+                            {
+                                countMarkers = countMarkers+1;
+                            }
+                    }
+                    this.settings.geoLocationOptions.zoom = 14;
+                    this.map.setZoom(this.settings.geoLocationOptions.zoom);
+                }
+
+                if (countMarkers < 3) {
+                    for(var i = 0; i < this.markers.length; i++) {
+                            if (this.map.getBounds().contains(this.markers[i].position))
+                            {
+                                countMarkers = countMarkers+1;
+                            }
+                    }
+                    this.settings.geoLocationOptions.zoom = 12;
+                    this.map.setZoom(this.settings.geoLocationOptions.zoom);
+                }
+
+                if (countMarkers < 3) {
+                    for(var i = 0; i < this.markers.length; i++) {
+                            if (this.map.getBounds().contains(this.markers[i].position))
+                            {
+                                countMarkers = countMarkers+1;
+                            }
+                    }
+                    this.settings.geoLocationOptions.zoom = 10;
+                    this.map.setZoom(this.settings.geoLocationOptions.zoom);
+                }
+
+                if (countMarkers < 3) {
+                    for(var i = 0; i < this.markers.length; i++) {
+                            if (this.map.getBounds().contains(this.markers[i].position))
+                            {
+                                countMarkers = countMarkers+1;
+                            }
+                    }
+                    this.settings.geoLocationOptions.zoom = 8;
+                    this.map.setZoom(this.settings.geoLocationOptions.zoom);
+                }
+
 
                 var _t = this;
                 this._boundInitListener = google.maps.event.addListener(_t.map, 'bounds_changed', function () {
