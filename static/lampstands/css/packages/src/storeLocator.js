@@ -494,14 +494,14 @@
 
                 var defaultLocation = this.settings.defaultLocation, latLng;
                 var countMarkers = 0;
-                var tempZoom = this.settings.mapOptions.zoom;
+                var tempZoom = 20;
 
                 if (defaultLocation instanceof Array) {
                     latLng = new google.maps.LatLng(defaultLocation[0], defaultLocation[1]);
                 }
                 
                 this.map.setCenter(latLng);
-                this.map.setZoom(tempZoom-2);
+                this.map.setZoom(tempZoom);
 
                 while countMarkers < 3: 
                     for(var i = 0; i < this.markers.length; i++)
