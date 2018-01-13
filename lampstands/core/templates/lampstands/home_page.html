@@ -110,7 +110,9 @@
               detailsScope: '.location',
               types: ["(regions)"],
             });
-            $(".form-control").trigger("geocode");
+            $(".find").click(function(){
+                $(this).parents(".location").find(".form-control").trigger("geocode");
+            });
             document.querySelector("#searchdesktop").click();
         })
     </script>
