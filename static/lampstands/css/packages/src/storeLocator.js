@@ -14,7 +14,7 @@
                 height: null,
                 defaultLocation: null,
                 mapOptions: {
-                    zoom: 9,
+                    zoom: 12,
                     minZoom: 4,
                     maxZoom: 16,
                     scrollwheel: true,
@@ -500,9 +500,24 @@
                 }
                 
                 this.map.setCenter(latLng);
-                this.settings.geoLocationOptions.zoom = 12;
+                this.settings.geoLocationOptions.zoom = 18;
                 this.map.setZoom(this.settings.geoLocationOptions.zoom);
 
+                var tempZoom = 18;
+                var tryLength = this.markers.length;
+
+                while (countMarkers < 10) {
+                    for(var i = 0; i < tryLength; i++) {
+                        if (this._bounds.contains(this.markers[i].position)) {
+                            ++countMarkers;
+                        }
+                    }
+
+                    tempZoom = tempZoom-6;
+                    this.settings.geoLocationOptions.zoom = tempZoom;
+                    this.map.setZoom(this.settings.geoLocationOptions.zoom);
+                }
+                
                 var _t = this;
                 this._boundInitListener = google.maps.event.addListener(_t.map, 'bounds_changed', function () {
                     _t._getInViewportMarkers();
