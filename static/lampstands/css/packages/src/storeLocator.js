@@ -499,8 +499,14 @@
                     latLng = new google.maps.LatLng(defaultLocation[0], defaultLocation[1]);
                 }
                 
-                this.map.setCenter(latLng);
-                this.settings.geoLocationOptions.zoom = 12;
+                this.map.setCenter(this._bounds.getCenter());
+                
+                var mapDim = {
+                    height: $(".map_container").height();
+                    width: $(".map_container").width();
+                }
+
+                this.settings.geoLocationOptions.zoom = this._getBoundsZoomLevel(this._bounds, mapDim);
                 this.map.setZoom(this.settings.geoLocationOptions.zoom);
 
                 var _t = this;
@@ -768,7 +774,7 @@
                     width: $(".map_container").width();
                 }
 
-                this.settings.geoLocationOptions.zoom = (this._getBoundsZoomLevel(this._bounds, mapDim))-2;
+                this.settings.geoLocationOptions.zoom = this._getBoundsZoomLevel(this._bounds, mapDim);
                 this.map.setZoom(this.settings.geoLocationOptions.zoom);
 
                 this.itemCount = itemCount;
