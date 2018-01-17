@@ -14,7 +14,7 @@
                 height: null,
                 defaultLocation: null,
                 mapOptions: {
-                    zoom: 12,
+                    zoom: 11,
                     minZoom: 4,
                     maxZoom: 16,
                     scrollwheel: true,
