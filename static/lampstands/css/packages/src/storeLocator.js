@@ -291,14 +291,21 @@
                     var autocomplete = new google.maps.places.Autocomplete(input, options);
 
                     google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                        if(!this.getPlace().geometry)
+                        if(!autocomplete.getPlace().geometry)
                         {
                             _t._showNotification(_t.settings.autocompleteOptions.errorNotFound);
                             return false;
                         }
-                        var latLng = new google.maps.LatLng(this.getPlace().geometry.location.lat(), this.getPlace().geometry.location.lng());
-                        _t.map.setCenter(latLng);
-                        _t.map.setZoom(_t.settings.autocompleteOptions.zoom);
+
+                        if(autocomplete.getPlace().geometry.viewport) 
+                        {
+                            this.map.fitBounds(autocomplete.getPlace().geometry.viewport);
+                        } else {
+                            var latLng = new google.maps.LatLng(autocomplete.getPlace().geometry.location.lat(), this.getPlace().geometry.location.lng());
+                            this.map.setCenter(latLng);
+                            this.map.setZoom(this.settings.autocompleteOptions.zoom);
+                        }
+
                     });
                 }
 
@@ -499,15 +506,17 @@
                     latLng = new google.maps.LatLng(defaultLocation[0], defaultLocation[1]);
                 }
                 
-                this.map.setCenter(this._bounds.getCenter());
-                
-                var mapDim = {
-                    height: $(".map_container").height();
-                    width: $(".map_container").width();
-                }
+                //this.map.setCenter(this._bounds.getCenter());
+                //this.map.setZoom(this.settings.geoLocationOptions.zoom);
 
-                this.settings.geoLocationOptions.zoom = this._getBoundsZoomLevel(this._bounds, mapDim);
-                this.map.setZoom(this.settings.geoLocationOptions.zoom);
+                 if(autocomplete.getPlace().geometry.viewport) 
+                        {
+                            this.map.fitBounds(autocomplete.getPlace().geometry.viewport);
+                        } else {
+                            var latLng = new google.maps.LatLng(autocomplete.getPlace().geometry.location.lat(), this.getPlace().geometry.location.lng());
+                            this.map.setCenter(latLng);
+                            this.map.setZoom(this.settings.autocompleteOptions.zoom);
+                        }
 
                 var _t = this;
                 this._boundInitListener = google.maps.event.addListener(_t.map, 'bounds_changed', function () {
@@ -767,15 +776,6 @@
                     ++itemCount;
                 }
                 this._bounds = bounds;
-                this.map.setCenter(this._bounds.getCenter());
-                
-                var mapDim = {
-                    height: $(".map_container").height();
-                    width: $(".map_container").width();
-                }
-
-                this.settings.geoLocationOptions.zoom = this._getBoundsZoomLevel(this._bounds, mapDim);
-                this.map.setZoom(this.settings.geoLocationOptions.zoom);
 
                 this.itemCount = itemCount;
                 if (this.settings.markerCluster.cluster) {
