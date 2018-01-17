@@ -518,6 +518,17 @@
                     this.map.setZoom(this.settings.geoLocationOptions.zoom);
                 }
                 
+                var GLOBE_WIDTH = 256; // a constant in Google's map projection
+                var globeWest = sw.lng();
+                var globeEast = ne.lng();
+                var globeAngle = globeEast - globeWest;
+                if (globeAngle < 0) {
+                  globalAngle += 360;
+                }
+                var globalZoom = Math.round(Math.log(pixelWidth * 360 / globalAngle / GLOBE_WIDTH) / Math.LN2);
+                this.settings.geoLocationOptions.zoom = globalZoom;
+                this.map.setZoom(this.settings.geoLocationOptions.zoom);
+                
                 var _t = this;
                 this._boundInitListener = google.maps.event.addListener(_t.map, 'bounds_changed', function () {
                     _t._getInViewportMarkers();
