@@ -765,10 +765,10 @@
                 
                 var mapDim = {
                     height: $(".map_container").height();
-                    width: (($(".map_container").width())*3)/2;
+                    width: $(".map_container").width();
                 }
 
-                this.settings.geoLocationOptions.zoom = this._getBoundsZoomLevel(this._bounds, mapDim);
+                this.settings.geoLocationOptions.zoom = (this._getBoundsZoomLevel(this._bounds, mapDim))-2;
                 this.map.setZoom(this.settings.geoLocationOptions.zoom);
 
                 this.itemCount = itemCount;
