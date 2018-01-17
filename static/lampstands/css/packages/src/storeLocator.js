@@ -500,35 +500,9 @@
                 }
                 
                 this.map.setCenter(latLng);
-                this.settings.geoLocationOptions.zoom = 18;
+                this.settings.geoLocationOptions.zoom = 12;
                 this.map.setZoom(this.settings.geoLocationOptions.zoom);
 
-                var tempZoom = 18;
-                var tryLength = this.markers.length;
-
-                while (countMarkers < 10) {
-                    for(var i = 0; i < tryLength; i++) {
-                        if (this._bounds.contains(this.markers[i].position)) {
-                            ++countMarkers;
-                        }
-                    }
-
-                    tempZoom = tempZoom-6;
-                    this.settings.geoLocationOptions.zoom = tempZoom;
-                    this.map.setZoom(this.settings.geoLocationOptions.zoom);
-                }
-                
-                var GLOBE_WIDTH = 256; // a constant in Google's map projection
-                var globeWest = sw.lng();
-                var globeEast = ne.lng();
-                var globeAngle = globeEast - globeWest;
-                if (globeAngle < 0) {
-                  globalAngle += 360;
-                }
-                var globalZoom = Math.round(Math.log(pixelWidth * 360 / globalAngle / GLOBE_WIDTH) / Math.LN2);
-                this.settings.geoLocationOptions.zoom = globalZoom;
-                this.map.setZoom(this.settings.geoLocationOptions.zoom);
-                
                 var _t = this;
                 this._boundInitListener = google.maps.event.addListener(_t.map, 'bounds_changed', function () {
                     _t._getInViewportMarkers();
@@ -662,6 +636,35 @@
 
                 return t;
             },
+
+            _latRad: function (lat) {
+                    var sin = Math.sin(lat * Math.PI / 180);
+                    var radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
+                    return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
+            }
+
+            _addingZoom: function (mapPx, worldPx, fraction) {
+                    return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
+                }
+
+            _getBoundsZoomLevel: function (bounds, mapDim) {
+                var WORLD_DIM = { height: 256, width: 256 };
+                var ZOOM_MAX = 21;
+
+                var ne = bounds.getNorthEast();
+                var sw = bounds.getSouthWest();
+
+                var latFraction = (this._latRad(ne.lat()) - this._latRad(sw.lat())) / Math.PI;
+                
+                var lngDiff = ne.lng() - sw.lng();
+                var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
+                
+                var latZoom = this._addingZoom(mapDim.height, WORLD_DIM.height, latFraction);
+                var lngZoom = this._addingZoom(mapDim.width, WORLD_DIM.width, lngFraction);
+
+                return Math.min(latZoom, lngZoom, ZOOM_MAX);
+            }
+
             _createMarkers: function () {
                 this._removeMarkers();
 
@@ -758,6 +761,15 @@
                     ++itemCount;
                 }
                 this._bounds = bounds;
+                this.map.setCenter(this._bounds.getCenter());
+                
+                var mapDim = {
+                    height: $(".map_container").height();
+                    width: $(".map_container").width()
+                }
+
+                this.settings.geoLocationOptions.zoom = this._getBoundsZoomLevel(this._bounds, mapDim);
+                this.map.setZoom(this.settings.geoLocationOptions.zoom);
 
                 this.itemCount = itemCount;
                 if (this.settings.markerCluster.cluster) {
