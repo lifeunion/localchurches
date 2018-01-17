@@ -765,7 +765,7 @@
                 
                 var mapDim = {
                     height: $(".map_container").height();
-                    width: $(".map_container").width()
+                    width: (($(".map_container").width())*3)/4;
                 }
 
                 this.settings.geoLocationOptions.zoom = this._getBoundsZoomLevel(this._bounds, mapDim);
