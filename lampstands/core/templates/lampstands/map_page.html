@@ -212,7 +212,7 @@
     $(function() {
         $('.map_container').storeLocator({
             remote: "{{self.get_locality_json}}",
-            //defaultLocation:['{{geoinfo_lat}}','{{geoinfo_lng}}'],
+            defaultLocation:['{{geoinfo_lat}}','{{geoinfo_lng}}'],
             viewport: "{{geoinfo_viewport}}",
             listOptions:{
                 sortByDistance: true,

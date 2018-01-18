@@ -488,6 +488,7 @@
                     {
                         this.map.setCenter(this._bounds.getCenter());
                     }
+                    
                     this.map.fitBounds(this._bounds);
                 }
             },
