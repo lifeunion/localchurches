@@ -1,7 +1,7 @@
 /*
  *  jquery store locator 1.5
  *
- *  Made by altsniffer
+ *  Made by altsniffer, modified by lifeunion(2018)
  */
 ;( function( $, window, document, undefined ) {
 
@@ -297,9 +297,30 @@
                             _t._showNotification(_t.settings.autocompleteOptions.errorNotFound);
                             return false;
                         }
+                        
+
                         var latLng = new google.maps.LatLng(this.getPlace().geometry.location.lat(), this.getPlace().geometry.location.lng());
-                        _t.map.setCenter(latLng);
+                        
+                        if (this.getPlace().geometry.viewport !== null) {
+                            var viewAuto = this.getPlace().geometry.viewport;
+                            var swlat = viewAuto.getSouthWest().lat();
+                            var swlng = viewAuto.getSouthWest().lng();
+                            var nelat = viewAuto.getNorthEast().lat();
+                            var nelng = viewAuto.getNorthEast().lng();
+                            var combineAuto = '' + swlat + ',' + swlng + ',' + nelat + ',' + nelng;
+                            _t.map.setCenter(latLng);
+
+                            var automapDim = {
+                                height: $(".map_container").height(),
+                                width: $(".map_container").width()
+                            }; 
+
+                            var autocompleteZoom = _t._getBoundsZoomLevel(combineAuto, automapDim);
+                            var finalZoom = autocompleteZoom - 1;
+                            _t.settings.autocompleteOptions.zoom = finalZoom;
+                        }
                         _t.map.setZoom(_t.settings.autocompleteOptions.zoom);
+
                     });
                 }
 
@@ -488,10 +509,41 @@
                     {
                         this.map.setCenter(this._bounds.getCenter());
                     }
-                    
+
                     this.map.fitBounds(this._bounds);
                 }
             },
+
+            _latRad: function (lat) {
+                var sin = Math.sin(lat * Math.PI / 180);
+                var radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
+                return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
+            },
+
+            _zoom: function (mapPx, worldPx, fraction) {
+                return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
+            },
+            
+            _getBoundsZoomLevel: function (bounds, mapDim) {
+                var WORLD_DIM = { height: 256, width: 256 };
+                var ZOOM_MAX = 18;
+
+                var first = bounds.split(',')[2];
+                var second = bounds.split(',')[3];
+                var third = bounds.split(',')[0];
+                var fourth = bounds.split(',')[1];
+
+                var latFraction = (this._latRad(first) - this._latRad(third)) / Math.PI;
+            
+                var lngDiff = second - fourth;
+                var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
+
+                var latZoom = this._zoom(mapDim.height, WORLD_DIM.height, latFraction);
+                var lngZoom = this._zoom(mapDim.width, WORLD_DIM.width, lngFraction);
+
+                return Math.min(latZoom, lngZoom, ZOOM_MAX);
+            },
+
             _initDefaultLocation: function () {
 
                 var defaultLocation = this.settings.defaultLocation, latLng;
@@ -499,7 +551,29 @@
                     latLng = new google.maps.LatLng(defaultLocation[0], defaultLocation[1]);
                 }
 
+                /*
+                var GLOBE_WIDTH = 256; // a constant in Google's map projection
+                var west = this.settings.viewport.split(',')[1];
+                var east = this.settings.viewport.split(',')[3];
+                var angle = east - west;
+
+                if (angle < 0) {
+                  angle += 360;
+                }
+                var tempZoom = Math.round(Math.log(960 * 360 / angle / GLOBE_WIDTH) / Math.LN2);
+                */
                 this.map.setCenter(latLng);
+
+                var mapDim = {
+                    height: $(".map_container").height(),
+                    width: $(".map_container").width()
+                }; 
+
+                if (this.setting.viewport !== null) {
+                    var completeZoom = this._getBoundsZoomLevel(this.settings.viewport, mapDim);
+                    this.settings.mapOptions.zoom = completeZoom;
+                }
+
                 this.map.setZoom(this.settings.mapOptions.zoom);
 
                 var _t = this;
