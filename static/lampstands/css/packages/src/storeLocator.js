@@ -15,7 +15,7 @@
                 defaultLocation: null,
                 viewport: null,
                 mapOptions: {
-                    zoom: 11,
+                    zoom: 9,
                     minZoom: 4,
                     maxZoom: 16,
                     scrollwheel: true,
@@ -292,21 +292,14 @@
                     var autocomplete = new google.maps.places.Autocomplete(input, options);
 
                     google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                        if(!autocomplete.getPlace().geometry)
+                        if(!this.getPlace().geometry)
                         {
                             _t._showNotification(_t.settings.autocompleteOptions.errorNotFound);
                             return false;
                         }
-
-                        if(autocomplete.getPlace().geometry.viewport) 
-                        {
-                            _t.map.fitBounds(autocomplete.getPlace().geometry.viewport);
-                        } else {
-                            var latLng = new google.maps.LatLng(autocomplete.getPlace().geometry.location.lat(), autocomplete.getPlace().geometry.location.lng());
-                            _t.map.setCenter(latLng);
-                            _t.map.setZoom(_t.settings.autocompleteOptions.zoom);
-                        }
-
+                        var latLng = new google.maps.LatLng(this.getPlace().geometry.location.lat(), this.getPlace().geometry.location.lng());
+                        _t.map.setCenter(latLng);
+                        _t.map.setZoom(_t.settings.autocompleteOptions.zoom);
                     });
                 }
 
@@ -501,17 +494,16 @@
             _initDefaultLocation: function () {
 
                 var defaultLocation = this.settings.defaultLocation, latLng;
-                var countMarkers = 0;
-
                 if (defaultLocation instanceof Array) {
                     latLng = new google.maps.LatLng(defaultLocation[0], defaultLocation[1]);
                 }
                 
-                if(this.defaults.viewport) 
-                {
-                    this.map.fitBounds(this.defaults.viewport);
+                console.log('defaultinit:', this.settings.viewport);
+
+                if (this.settings.viewport !=null) {
+                    this.map.fitBounds(this.settings.viewport);
                 } else {
-                    this.map.setCenter(this._bounds.getCenter());
+                    this.map.setCenter(latLng);
                     this.map.setZoom(this.settings.mapOptions.zoom);
                 }
 
@@ -648,35 +640,6 @@
 
                 return t;
             },
-
-            _latRad: function (lat) {
-                    var sin = Math.sin(lat * Math.PI / 180);
-                    var radX2 = Math.log((1 + sin) / (1 - sin)) / 2;
-                    return Math.max(Math.min(radX2, Math.PI), -Math.PI) / 2;
-            }
-
-            _addingZoom: function (mapPx, worldPx, fraction) {
-                    return Math.floor(Math.log(mapPx / worldPx / fraction) / Math.LN2);
-                }
-
-            _getBoundsZoomLevel: function (bounds, mapDim) {
-                var WORLD_DIM = { height: 256, width: 256 };
-                var ZOOM_MAX = 21;
-
-                var ne = bounds.getNorthEast();
-                var sw = bounds.getSouthWest();
-
-                var latFraction = (this._latRad(ne.lat()) - this._latRad(sw.lat())) / Math.PI;
-                
-                var lngDiff = ne.lng() - sw.lng();
-                var lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360;
-                
-                var latZoom = this._addingZoom(mapDim.height, WORLD_DIM.height, latFraction);
-                var lngZoom = this._addingZoom(mapDim.width, WORLD_DIM.width, lngFraction);
-
-                return Math.min(latZoom, lngZoom, ZOOM_MAX);
-            }
-
             _createMarkers: function () {
                 this._removeMarkers();
 
@@ -803,6 +766,7 @@
             },
             _getInViewportMarkers: function () {
                 this.viewPortMarkers = [];
+
                 for(var i = 0; i < this.markers.length; i++)
                 {
                     if (this.map.getBounds().contains(this.markers[i].position))

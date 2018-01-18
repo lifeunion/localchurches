@@ -213,7 +213,7 @@
         $('.map_container').storeLocator({
             remote: "{{self.get_locality_json}}",
             defaultLocation:['{{geoinfo_lat}}','{{geoinfo_lng}}'],
-            viewport:['{{viewport_one}}', '{{viewport_two}}', '{{viewport_three}}', '{{viewport_four}}'],
+            viewport: "{{geo_info_viewport}}",
             listOptions:{
                 sortByDistance: true,
                 distanceType: 'km',
