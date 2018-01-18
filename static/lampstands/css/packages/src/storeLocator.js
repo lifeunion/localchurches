@@ -500,12 +500,13 @@
                 
                 console.log('defaultinit:', this.settings.viewport);
 
-                if (this.settings.viewport !=null) {
+                /*if (this.settings.viewport !=null) {
                     this.map.fitBounds(this.settings.viewport);
                 } else {
+                    */
                     this.map.setCenter(latLng);
                     this.map.setZoom(this.settings.mapOptions.zoom);
-                }
+                //}
 
                 var _t = this;
                 this._boundInitListener = google.maps.event.addListener(_t.map, 'bounds_changed', function () {
