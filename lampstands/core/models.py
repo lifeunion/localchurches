@@ -1566,8 +1566,6 @@ class MapPage(Page):
             geoinfo_lng = '-119.4179'
             zoom_deflevel = 3
 
-        print (geoinfo_viewport)
-
         return render(request, self.template, {
                 'self': self,
                 'geoinfo_lat': geoinfo_lat,
