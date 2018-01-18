@@ -497,16 +497,9 @@
                 if (defaultLocation instanceof Array) {
                     latLng = new google.maps.LatLng(defaultLocation[0], defaultLocation[1]);
                 }
-                
-                console.log('defaultinit:', this.settings.viewport);
 
-                /*if (this.settings.viewport !=null) {
-                    this.map.fitBounds(this.settings.viewport);
-                } else {
-                    */
-                    this.map.setCenter(latLng);
-                    this.map.setZoom(this.settings.mapOptions.zoom);
-                //}
+                this.map.setCenter(latLng);
+                this.map.setZoom(this.settings.mapOptions.zoom);
 
                 var _t = this;
                 this._boundInitListener = google.maps.event.addListener(_t.map, 'bounds_changed', function () {
@@ -603,8 +596,10 @@
                                 google.maps.event.removeListener(_.zoomListener);
                             }
                         }
+                        
                         _.map.fitBounds(_._bounds);
                         _._initList();
+                        
                         if (_.settings.listOptions.updateOn.zoom) {
                             _.zoomListener = google.maps.event.addListener(_.map, 'zoom_changed', $.proxy(_._getInViewportMarkers, _));
                         }
