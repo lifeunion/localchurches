@@ -1554,10 +1554,6 @@ class MapPage(Page):
         geoinfo_viewport = '0'
         return geoinfo_viewport
 
-    def def_on(self):
-        def_on = false
-        return def_on
-
     def serve(self, request):
         # Filter by tag
         geoinfo_lat = request.GET.get('lat')
@@ -1574,7 +1570,6 @@ class MapPage(Page):
         if not geoinfo_lng:
             geoinfo_lng = '-119.4179'
             zoom_deflevel = 3
-            def_on = true
 
         return render(request, self.template, {
                 'self': self,
@@ -1582,7 +1577,6 @@ class MapPage(Page):
                 'geoinfo_lng': geoinfo_lng,
                 'zoom_deflevel': zoom_deflevel,
                 'geoinfo_viewport': geoinfo_viewport,
-                'def_on': def_on
             })
 
 MapPage.content_panels = [

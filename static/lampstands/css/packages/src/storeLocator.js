@@ -570,11 +570,8 @@
                     width: $(".map_container").width()
                 }; 
 
-                if (this.settings.def_on) {
-                    var completeZoom = this._getBoundsZoomLevel(this.settings.viewport, mapDim);
-                    this.settings.mapOptions.zoom = completeZoom;
-                }
-                
+                var completeZoom = this._getBoundsZoomLevel(this.settings.viewport, mapDim);
+                this.settings.mapOptions.zoom = completeZoom;
                 this.map.setZoom(this.settings.mapOptions.zoom);
 
                 var _t = this;
