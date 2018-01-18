@@ -1555,6 +1555,7 @@ class MapPage(Page):
         geoinfo_lat = request.GET.get('lat')
         geoinfo_lng = request.GET.get('lng')
         geoinfo_viewport = request.GET.get('viewport')
+        console.log("viewport", geoinfo_viewport)
         zoom_deflevel = 9
 
         if not geoinfo_lat:
