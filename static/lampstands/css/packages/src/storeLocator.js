@@ -14,6 +14,7 @@
                 height: null,
                 defaultLocation: null,
                 viewport: null,
+                def_on: false,
                 mapOptions: {
                     zoom: 9,
                     minZoom: 4,
@@ -569,8 +570,11 @@
                     width: $(".map_container").width()
                 }; 
 
-                var completeZoom = this._getBoundsZoomLevel(this.settings.viewport, mapDim);
-                this.settings.mapOptions.zoom = completeZoom;
+                if (this.settings.def_on) {
+                    var completeZoom = this._getBoundsZoomLevel(this.settings.viewport, mapDim);
+                    this.settings.mapOptions.zoom = completeZoom;
+                }
+                
                 this.map.setZoom(this.settings.mapOptions.zoom);
 
                 var _t = this;
