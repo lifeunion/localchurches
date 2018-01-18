@@ -14,7 +14,6 @@
                 height: null,
                 defaultLocation: null,
                 viewport: null,
-                def_on: false,
                 mapOptions: {
                     zoom: 9,
                     minZoom: 4,
