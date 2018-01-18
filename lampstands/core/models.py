@@ -1555,7 +1555,7 @@ class MapPage(Page):
         return geoinfo_viewport
 
     def default_on(self):
-        def_on = false;
+        def_on = false
         return def_on
 
     def serve(self, request):
