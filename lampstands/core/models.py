@@ -1554,7 +1554,7 @@ class MapPage(Page):
         geoinfo_viewport = '0'
         return geoinfo_viewport
 
-    def default_on(self):
+    def def_on(self):
         def_on = false
         return def_on
 
@@ -1574,7 +1574,7 @@ class MapPage(Page):
         if not geoinfo_lng:
             geoinfo_lng = '-119.4179'
             zoom_deflevel = 3
-            def_on = true;
+            def_on = true
 
         return render(request, self.template, {
                 'self': self,
