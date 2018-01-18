@@ -13,6 +13,7 @@
                 remote: null,
                 height: null,
                 defaultLocation: null,
+                viewport: null,
                 mapOptions: {
                     zoom: 11,
                     minZoom: 4,
@@ -299,11 +300,11 @@
 
                         if(autocomplete.getPlace().geometry.viewport) 
                         {
-                            this.map.fitBounds(autocomplete.getPlace().geometry.viewport);
+                            _t.map.fitBounds(autocomplete.getPlace().geometry.viewport);
                         } else {
-                            var latLng = new google.maps.LatLng(autocomplete.getPlace().geometry.location.lat(), this.getPlace().geometry.location.lng());
-                            this.map.setCenter(latLng);
-                            this.map.setZoom(this.settings.autocompleteOptions.zoom);
+                            var latLng = new google.maps.LatLng(autocomplete.getPlace().geometry.location.lat(), autocomplete.getPlace().geometry.location.lng());
+                            _t.map.setCenter(latLng);
+                            _t.map.setZoom(_t.settings.autocompleteOptions.zoom);
                         }
 
                     });
@@ -506,17 +507,13 @@
                     latLng = new google.maps.LatLng(defaultLocation[0], defaultLocation[1]);
                 }
                 
-                //this.map.setCenter(this._bounds.getCenter());
-                //this.map.setZoom(this.settings.geoLocationOptions.zoom);
-
-                 if(autocomplete.getPlace().geometry.viewport) 
-                        {
-                            this.map.fitBounds(autocomplete.getPlace().geometry.viewport);
-                        } else {
-                            var latLng = new google.maps.LatLng(autocomplete.getPlace().geometry.location.lat(), this.getPlace().geometry.location.lng());
-                            this.map.setCenter(latLng);
-                            this.map.setZoom(this.settings.autocompleteOptions.zoom);
-                        }
+                if(this.defaults.viewport) 
+                {
+                    this.map.fitBounds(this.defaults.viewport);
+                } else {
+                    this.map.setCenter(this._bounds.getCenter());
+                    this.map.setZoom(this.settings.mapOptions.zoom);
+                }
 
                 var _t = this;
                 this._boundInitListener = google.maps.event.addListener(_t.map, 'bounds_changed', function () {

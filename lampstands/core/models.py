@@ -1546,10 +1546,31 @@ class MapPage(Page):
         zoom_deflevel = 5 
         return zoom_deflevel
 
+    def viewport_one(self):
+        viewport_one = '0'
+        return viewport_one
+
+    def viewport_two(self):
+        viewport_two = '0'
+        return viewport_two
+
+    def viewport_three(self):
+        viewport_three = '0'
+        return viewport_three
+
+    def viewport_four(self):
+        viewport_four = '0'
+        return viewport_four
+
     def serve(self, request):
         # Filter by tag
         geoinfo_lat = request.GET.get('lat')
         geoinfo_lng = request.GET.get('lng')
+        geoinfo_viewport = request.GET.get('viewport').split(',')
+        viewport_one = geoinfo_viewport[0]
+        viewport_two = geoinfo_viewport[1]
+        viewport_three = geoinfo_viewport[2]
+        viewport_four = geoinfo_viewport[3]
         zoom_deflevel = 9
 
         if not geoinfo_lat:
@@ -1565,7 +1586,8 @@ class MapPage(Page):
                 'self': self,
                 'geoinfo_lat': geoinfo_lat,
                 'geoinfo_lng': geoinfo_lng,
-                'zoom_deflevel': zoom_deflevel
+                'zoom_deflevel': zoom_deflevel,
+                'geoinfo_viewport': geoinfo_viewport
             })
 
 MapPage.content_panels = [
