@@ -1547,7 +1547,7 @@ class MapPage(Page):
         return zoom_deflevel
 
     def empty_zoom_deflevel(self):
-        empty_zoom_deflevel = 9
+        empty_zoom_deflevel = 4
         return empty_zoom_deflevel
 
     def geoinfo_viewport(self):
@@ -1560,16 +1560,16 @@ class MapPage(Page):
         geoinfo_lng = request.GET.get('lng')
         geoinfo_viewport = request.GET.get('viewport')
         zoom_deflevel = 11
-        empty_zoom_deflevel = 9
+        empty_zoom_deflevel = 4
 
         if not geoinfo_lat:
             print ('execute default:')
-            geoinfo_lat = '36.7783'
-            zoom_deflevel = 3
+            geoinfo_lat = '31.905485'
+            zoom_deflevel = 4
 
         if not geoinfo_lng:
-            geoinfo_lng = '-119.4179'
-            zoom_deflevel = 3
+            geoinfo_lng = '-131.9525815'
+            zoom_deflevel = 4
 
         if not geoinfo_viewport:
             geoinfo_viewport = '25.82,-124.39,49.38,-66.94'
