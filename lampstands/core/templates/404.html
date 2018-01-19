@@ -9,8 +9,7 @@
         .page-standardpage.page-standardpage .heading {
             position: relative;
             top: 0;
-            text-align: center;
-            padding: 10px 0 20px 0;
+            
         }
         .page-standardpage .heading h2 {
             color: #434a4f;
@@ -35,12 +34,11 @@
     {% else %}
         <div class="page-standardpage">
             <div class="vessel">
-                <div class="heading">
+                <div class="heading" style="text-align: center; padding: 10px 0 20px 0;">
                     <h2>This page does not exist.</h2>
                 </div>
                 <div class="post-detail" style="color: #737373;">
                     <p>Actually, it's likely that either you've followed an out-of-date link, typed something in wrong, or have a bookmark to a page that no longer exists. Simply return to the main page or type the correct link.</p>
-                   {#  <p>One of the links above will help you on your way.</p> #}
                 </div>
             </div>
         </div>
