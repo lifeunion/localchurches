@@ -1559,12 +1559,14 @@ class MapPage(Page):
 
         if not geoinfo_lat:
             geoinfo_lat = '31.905485'
+            zoom_deflevel = 4
 
         if not geoinfo_lng:
             geoinfo_lng = '-131.9525815'
 
         if not geoinfo_viewport:
             geoinfo_viewport = '25.82,-124.39,49.38,-66.94'
+            zoom_deflevel = 4
 
         return render(request, self.template, {
                 'self': self,
