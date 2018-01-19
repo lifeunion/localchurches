@@ -4,19 +4,21 @@
     <style>
         .page-standardpage {
             padding: 2em 1em;
+            margin: 20px;
         }
         .page-standardpage.page-standardpage .heading {
             position: relative;
             top: 0;
-            padding: 0;
+            text-align: center;
+            padding: 10px 0 20px 0;
         }
         .page-standardpage .heading h2 {
             color: #434a4f;
             text-align: center;
         }
-        .page-standardpage .intro p {
+        /**.page-standardpage .intro p {
             text-align: center;
-            color: gray;
+            color: gray; **/
         }
 
         @media only screen and (min-width: 45em) {
@@ -36,8 +38,8 @@
                 <div class="heading">
                     <h2>This page does not exist.</h2>
                 </div>
-                <div class="were-tbx intro">
-                    <p class="intro">Actually, it's likely that either you've followed an out-of-date link, typed something in wrong, or have a bookmark to a page that no longer exists. Simply return to the main page or type the correct link.</p>
+                <div class="post-detail" style="color: #737373;">
+                    <p>Actually, it's likely that either you've followed an out-of-date link, typed something in wrong, or have a bookmark to a page that no longer exists. Simply return to the main page or type the correct link.</p>
                    {#  <p>One of the links above will help you on your way.</p> #}
                 </div>
             </div>
