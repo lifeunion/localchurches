@@ -1146,7 +1146,7 @@ class ChurchPage(Page):
         max_length=255, blank=True,
         help_text='A short summary of when the locality started meeting'
     )
-    #mailaddr = models.CharField(max_length=255, blank=True, null=True)
+    mailing_address = models.CharField(max_length=255, blank=True, null=True)
     meeting_address = models.CharField(max_length=255, blank=True, null=True)
     position = GeopositionField(blank=True, null=True)
     #phone_regex = RegexValidator(regex=r'^\+?1?\d{9,25}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
@@ -1161,12 +1161,12 @@ class ChurchPage(Page):
     locality_contact_brother_four = models.CharField(max_length=255, blank=True, null=True)
     locality_contact_brother_five = models.CharField(max_length=255, blank=True, null=True)
     locality_contact_brother_six = models.CharField(max_length=255, blank=True, null=True)
-    locality_contact_brother_one_phone = models.CharField(max_length=25, blank=True, null=True)
-    locality_contact_brother_two_phone = models.CharField(max_length=25, blank=True, null=True)
-    locality_contact_brother_three_phone = models.CharField(max_length=25, blank=True, null=True)
-    locality_contact_brother_four_phone = models.CharField(max_length=25, blank=True, null=True)
-    locality_contact_brother_five_phone = models.CharField(max_length=25, blank=True, null=True)
-    locality_contact_brother_six_phone = models.CharField(max_length=25, blank=True, null=True)
+    locality_contact_brother_1_phone = models.CharField(max_length=25, blank=True, null=True)
+    locality_contact_brother_2_phone = models.CharField(max_length=25, blank=True, null=True)
+    locality_contact_brother_3_phone = models.CharField(max_length=25, blank=True, null=True)
+    locality_contact_brother_4_phone = models.CharField(max_length=25, blank=True, null=True)
+    locality_contact_brother_5_phone = models.CharField(max_length=25, blank=True, null=True)
+    locality_contact_brother_6_phone = models.CharField(max_length=25, blank=True, null=True)
 
     search_fields = Page.search_fields + [
         index.SearchField('locality_name'),
@@ -1210,23 +1210,24 @@ class ChurchPage(Page):
         InlinePanel('tags', label="Tags"),
         FieldPanel('short_intro'),
         FieldPanel('meeting_address'),
+        FieldPanel('mailing_address'),
         FieldPanel('position'),
         FieldPanel('locality_phone_number'),
         FieldPanel('locality_email'),
         FieldPanel('locality_web'),
-        FieldPanel('locality_contact_brother_one'),
-        FieldPanel('locality_contact_brother_one_phone'),
-        FieldPanel('locality_contact_brother_two'),
-        FieldPanel('locality_contact_brother_two_phone'),
-        FieldPanel('locality_contact_brother_three'),
-        FieldPanel('locality_contact_brother_three_phone'),
-        FieldPanel('locality_contact_brother_four'),
-        FieldPanel('locality_contact_brother_four_phone'),
-        FieldPanel('locality_contact_brother_five'),
-        FieldPanel('locality_contact_brother_five_phone'),
-        FieldPanel('locality_contact_brother_six'),
-        FieldPanel('locality_contact_brother_six_phone'),
         FieldPanel('last_update'),
+        FieldPanel('locality_contact_brother_1'),
+        FieldPanel('locality_contact_brother_1_phone'),
+        FieldPanel('locality_contact_brother_2'),
+        FieldPanel('locality_contact_brother_2_phone'),
+        FieldPanel('locality_contact_brother_3'),
+        FieldPanel('locality_contact_brother_3_phone'),
+        FieldPanel('locality_contact_brother_4'),
+        FieldPanel('locality_contact_brother_4_phone'),
+        FieldPanel('locality_contact_brother_5'),
+        FieldPanel('locality_contact_brother_5_phone'),
+        FieldPanel('locality_contact_brother_6'),
+        FieldPanel('locality_contact_brother_6_phone'),
     ]
 
 # recognition index page
