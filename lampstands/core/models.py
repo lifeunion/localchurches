@@ -1155,12 +1155,12 @@ class ChurchPage(Page):
     #locality_web = models.TextField(validators=[URLValidator()], blank=True, help_text= "Please type: 'http://' in the front of the URL")
     locality_web = models.TextField(blank=True, help_text= "Please type: 'http://' in the front of the URL")
     last_update = models.DateField(null=True, blank=True)
-    locality_contact_brother_one = models.CharField(max_length=255, blank=True, null=True)
-    locality_contact_brother_two = models.CharField(max_length=255, blank=True, null=True)
-    locality_contact_brother_three = models.CharField(max_length=255, blank=True, null=True)
-    locality_contact_brother_four = models.CharField(max_length=255, blank=True, null=True)
-    locality_contact_brother_five = models.CharField(max_length=255, blank=True, null=True)
-    locality_contact_brother_six = models.CharField(max_length=255, blank=True, null=True)
+    locality_contact_brother_1 = models.CharField(max_length=255, blank=True, null=True)
+    locality_contact_brother_2 = models.CharField(max_length=255, blank=True, null=True)
+    locality_contact_brother_3 = models.CharField(max_length=255, blank=True, null=True)
+    locality_contact_brother_4 = models.CharField(max_length=255, blank=True, null=True)
+    locality_contact_brother_5 = models.CharField(max_length=255, blank=True, null=True)
+    locality_contact_brother_6 = models.CharField(max_length=255, blank=True, null=True)
     locality_contact_brother_1_phone = models.CharField(max_length=25, blank=True, null=True)
     locality_contact_brother_2_phone = models.CharField(max_length=25, blank=True, null=True)
     locality_contact_brother_3_phone = models.CharField(max_length=25, blank=True, null=True)
@@ -1209,8 +1209,8 @@ class ChurchPage(Page):
         FieldPanel('locality_country'),
         InlinePanel('tags', label="Tags"),
         FieldPanel('short_intro'),
-        FieldPanel('meeting_address'),
         FieldPanel('mailing_address'),
+        FieldPanel('meeting_address'),
         FieldPanel('position'),
         FieldPanel('locality_phone_number'),
         FieldPanel('locality_email'),
