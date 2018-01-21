@@ -4,7 +4,7 @@ from django_countries.serializer_fields import CountryField
 from geoposition.fields import GeopositionField
 
 class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
-    id = serializers.IntegerField(read_only=False)
+    #id = serializers.IntegerField(read_only=False)
     locality_name = serializers.CharField(required=True, allow_blank=True, max_length=255)
     meeting_address = serializers.CharField(required=True, allow_blank=True, max_length=255)
     locality_state_or_province = serializers.CharField(required=True, allow_blank=True, max_length=255)
@@ -16,7 +16,7 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ChurchPage
-        fields = ('url','id','locality_name', 'meeting_address', 'locality_state_or_province', 
+        fields = ('url','locality_name', 'meeting_address', 'locality_state_or_province', 
             'locality_country', 'locality_phone_number', 'locality_email','locality_web', 'location', 'trimmed_address')
 
     def create(self, validated_data):
