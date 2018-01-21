@@ -4,7 +4,8 @@ from .base import *
 import os
 
 env = os.environ.copy()
-SECRET_KEY = env['SECRET_KEY']
+#SECRET_KEY = env['SECRET_KEY']
+SECRET_KEY = '4tp-x_*%a=nrobcg%ykb48p%b%9^$00=&q82!-i5&v8lfi=*h5'
 ALLOWED_HOSTS = ['*']
 DEBUG = False
 
@@ -18,8 +19,10 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = env['SENDGRID_USERNAME']
-EMAIL_HOST_PASSWORD = env['SENDGRID_PASSWORD']
+#EMAIL_HOST_USER = env['SENDGRID_USERNAME']
+EMAIL_HOST_USER = 'app63314705@heroku.com'
+#EMAIL_HOST_PASSWORD = env['SENDGRID_PASSWORD']
+EMAIL_HOST_PASSWORD = 'luua8y0q8602'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
