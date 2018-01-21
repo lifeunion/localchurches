@@ -26,7 +26,7 @@ urlpatterns = [
     url(r'^api/', include(wagtailapi_urls)),
     url(r'^api/v2/', include(api.urls)),
     url(r'^django-admin/', include(admin.site.urls)),
-    url(r'^testimony-of-Jesus/', include(wagtailadmin_urls)),
+    url(r'^admin/', include(wagtailadmin_urls)),
     url(r'^documents/', include(wagtaildocs_urls)),
     url(r'^sitemap\.xml$', sitemap),
     url(r'^search/$', search_views.search, name='search'),
