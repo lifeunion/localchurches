@@ -12,7 +12,6 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lampstands.settings.production'
 django.setup()
 
 from wagtail.models import Site, Page
-from wagtailcore.models import Site as WagtailSite
 
 def main():
     print("=" * 60)
@@ -21,9 +20,9 @@ def main():
     
     # Get the default site or create one
     try:
-        site = WagtailSite.objects.get(is_default_site=True)
+        site = Site.objects.get(is_default_site=True)
         print(f"Found default site: {site.hostname}:{site.port}")
-    except WagtailSite.DoesNotExist:
+    except Site.DoesNotExist:
         print("No default site found. Creating one...")
         # Get the root page
         try:
@@ -32,7 +31,7 @@ def main():
                 print("ERROR: No root page found!")
                 return 1
             
-            site = WagtailSite.objects.create(
+            site = Site.objects.create(
                 hostname='localchurches.onrender.com',
                 port=80,
                 site_name='Local Churches',
