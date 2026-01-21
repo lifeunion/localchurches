@@ -55,14 +55,10 @@ python manage.py showmigrations --list | grep -E "\[ \]" && {
 } || echo "All migrations appear to be applied"
 
 # Migrate data from Heroku if HEROKU_DATABASE_URL is set
-# First try Django dumpdata/loaddata for Wagtail (handles foreign keys better)
-# Then use direct table copy for other data
+# Use direct table copy which handles Wagtail tables in proper dependency order
 if [ -n "$HEROKU_DATABASE_URL" ]; then
     echo "Heroku database URL detected. Running migration..."
-    echo "Step 1: Migrating Wagtail data using Django dumpdata/loaddata..."
-    python migrate_wagtail_data.py || echo "Wagtail data migration failed or skipped"
-    echo "Step 2: Migrating other data using direct table copy..."
-    python migrate_from_heroku.py || echo "Other data migration failed or skipped"
+    python migrate_from_heroku.py || echo "Migration failed or skipped"
 fi
 
 # Fix Wagtail site configuration after migration
