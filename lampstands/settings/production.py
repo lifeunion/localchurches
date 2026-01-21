@@ -12,18 +12,6 @@ ALLOWED_HOSTS = ['*']
 # Temporarily enable DEBUG to see error details - REMOVE AFTER FIXING
 DEBUG = True
 
-# Ensure STORAGES is set BEFORE any other code tries to use it
-# This must be set early to avoid KeyError when DEBUG=True
-# Always set it explicitly to ensure it exists
-STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
-    },
-}
-
 # Enable detailed error logging to console for debugging
 LOGGING = {
     'version': 1,
@@ -113,6 +101,15 @@ if AWS_STORAGE_BUCKET_NAME and AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
     STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
     STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
+    # Update STORAGES for S3
+    STORAGES = {
+        "default": {
+            "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        },
+        "staticfiles": {
+            "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        },
+    }
 else:
     # Use WhiteNoise for static files (no S3)
     # Using CompressedStaticFilesStorage instead of CompressedManifestStaticFilesStorage
@@ -120,6 +117,15 @@ else:
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
     STATIC_URL = '/static/'
     MEDIA_URL = '/media/'
+    # Update STORAGES for WhiteNoise (inherited from base.py but ensure it's set)
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+        },
+    }
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
