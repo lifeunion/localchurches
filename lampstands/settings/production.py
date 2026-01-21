@@ -9,7 +9,47 @@ if not SECRET_KEY:
     raise ValueError("SECRET_KEY environment variable is required")
 
 ALLOWED_HOSTS = ['*']
-DEBUG = False
+# Temporarily enable DEBUG to see error details - REMOVE AFTER FIXING
+DEBUG = True
+
+# Enable detailed error logging to console for debugging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'ERROR',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'wagtail': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    },
+}
 
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
