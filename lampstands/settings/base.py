@@ -182,7 +182,8 @@ WAGTAIL_SITE_NAME = "lampstands"
 
 # Base URL to use when referring to full URLs within the Wagtail admin backend -
 # e.g. in notification emails. Don't include '/admin' or a trailing slash
-WAGTAILADMIN_BASE_URL = 'http://safe-cove-64619.herokuapp.com'
+# Use environment variable if set, otherwise default to localhost for development
+WAGTAILADMIN_BASE_URL = os.environ.get('WAGTAILADMIN_BASE_URL', 'http://localhost:8000')
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 

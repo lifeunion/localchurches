@@ -73,6 +73,9 @@ STATICFILES_FINDERS = (
     'compressor.finders.CompressorFinder',
 )
 
+# Wagtail admin base URL - use environment variable or default to Render URL
+WAGTAILADMIN_BASE_URL = os.environ.get('WAGTAILADMIN_BASE_URL', 'https://localchurches.onrender.com')
+
 try:
     from .local import *
 except ImportError:
