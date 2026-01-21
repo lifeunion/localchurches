@@ -54,12 +54,25 @@ LOGGING = {
 # Parse database configuration from $DATABASE_URL
 # In production, DATABASE_URL must be set (automatically set when database is linked in Render)
 import dj_database_url
-db_config = dj_database_url.config()
+import sys
+
+# Debug: Log what DATABASE_URL is set to (masking password)
+database_url_raw = os.environ.get('DATABASE_URL', '')
+if database_url_raw:
+    # Mask password in URL for logging
+    import re
+    database_url_masked = re.sub(r':([^:@]+)@', r':****@', database_url_raw)
+    print(f"DEBUG: DATABASE_URL is set (masked): {database_url_masked[:80]}...", file=sys.stderr)
+else:
+    print("DEBUG: DATABASE_URL environment variable is NOT set!", file=sys.stderr)
+
+# Explicitly read from DATABASE_URL env var
+db_config = dj_database_url.config(env='DATABASE_URL', default=None)
 if db_config:
     DATABASES['default'] = db_config
+    print(f"DEBUG: Database configured - Host: {db_config.get('HOST', 'N/A')}, Name: {db_config.get('NAME', 'N/A')}", file=sys.stderr)
 else:
     # DATABASE_URL is required in production
-    import sys
     print("ERROR: DATABASE_URL environment variable is not set!", file=sys.stderr)
     print("Please link your Render Postgres database to this service in the Render dashboard.", file=sys.stderr)
     print("This will automatically set the DATABASE_URL environment variable.", file=sys.stderr)
