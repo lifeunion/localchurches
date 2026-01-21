@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from django import forms
 from django.core.mail import EmailMessage
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
@@ -11,28 +9,23 @@ from django.utils.functional import cached_property
 from django.views.decorators.vary import vary_on_headers
 
 from modelcluster.fields import ParentalKey
-from wagtail.contrib.settings.models import BaseSetting, register_setting
-from wagtail.wagtailadmin.edit_handlers import (FieldPanel, InlinePanel,
-                                                MultiFieldPanel,
-                                                PageChooserPanel,
-                                                StreamFieldPanel)
-from wagtail.wagtailcore import blocks
-from wagtail.wagtailadmin.utils import send_mail
-from wagtail.wagtailcore.blocks import (CharBlock, FieldBlock, ListBlock,
-                                        PageChooserBlock, RawHTMLBlock,
-                                        RichTextBlock, StreamBlock,
-                                        StructBlock, TextBlock, URLBlock)
-from wagtail.wagtailcore.fields import RichTextField, StreamField
-from wagtail.wagtailcore.models import Orderable, Page
-from wagtail.wagtaildocs.edit_handlers import DocumentChooserPanel
-from wagtail.wagtailembeds.blocks import EmbedBlock
-from wagtail.wagtailforms.models import AbstractEmailForm, AbstractFormField, AbstractForm
-from wagtail.wagtailimages.blocks import ImageChooserBlock
-from wagtail.wagtailimages.edit_handlers import ImageChooserPanel
-from wagtail.wagtailimages.models import (AbstractImage, AbstractRendition,
-                                          Image)
-from wagtail.wagtailsearch import index
-from wagtail.wagtailsnippets.models import register_snippet
+from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
+from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
+from wagtail import blocks
+from wagtail.admin.mail import send_mail
+from wagtail.blocks import (CharBlock, FieldBlock, ListBlock,
+                            PageChooserBlock, RawHTMLBlock,
+                            RichTextBlock, StreamBlock,
+                            StructBlock, TextBlock, URLBlock)
+from wagtail.fields import RichTextField, StreamField
+from wagtail.models import Orderable, Page
+from wagtail.documents.models import Document
+from wagtail.embeds.blocks import EmbedBlock
+from wagtail.contrib.forms.models import AbstractEmailForm, AbstractFormField, AbstractForm
+from wagtail.images.blocks import ImageChooserBlock
+from wagtail.images.models import AbstractImage, AbstractRendition, Image
+from wagtail.search import index
+from wagtail.snippets.models import register_snippet
 
 from .fields import ColorField
 
@@ -46,7 +39,13 @@ from urllib.parse import quote
 import json
 from django.conf import settings as localitySettings
 from django.utils import text
-from wagtailcaptcha.models import WagtailCaptchaEmailForm
+from wagtail_django_recaptcha.models import WagtailCaptchaEmailForm
+
+
+# Helper function to check for AJAX requests (replaces deprecated request.is_ajax())
+def is_ajax(request):
+    return request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+
 
 # Streamfield blocks and config
 
@@ -125,6 +124,7 @@ class StoryBlock(StreamBlock):
     raw_html = RawHTMLBlock(label='Raw HTML', icon="code")
     embed = EmbedBlock(icon="code")
 
+
 # A couple of abstract classes that contain commonly used fields
 class ContentBlock(models.Model):
     content = RichTextField()
@@ -143,13 +143,15 @@ class LinkFields(models.Model):
         'wagtailcore.Page',
         null=True,
         blank=True,
-        related_name='+'
+        related_name='+',
+        on_delete=models.SET_NULL
     )
     link_document = models.ForeignKey(
         'wagtaildocs.Document',
         null=True,
         blank=True,
-        related_name='+'
+        related_name='+',
+        on_delete=models.SET_NULL
     )
 
     @property
@@ -163,8 +165,8 @@ class LinkFields(models.Model):
 
     panels = [
         FieldPanel('link_external'),
-        PageChooserPanel('link_page'),
-        DocumentChooserPanel('link_document'),
+        FieldPanel('link_page'),
+        FieldPanel('link_document'),
     ]
 
     class Meta:
@@ -207,7 +209,7 @@ class CarouselItem(LinkFields):
     caption = models.CharField(max_length=255, blank=True)
 
     panels = [
-        ImageChooserPanel('image'),
+        FieldPanel('image'),
         FieldPanel('embed_url'),
         FieldPanel('caption'),
         MultiFieldPanel(LinkFields.panels, "Link"),
@@ -232,8 +234,8 @@ class RelatedLink(LinkFields):
 
 # Advert Snippet
 class AdvertPlacement(models.Model):
-    page = ParentalKey('wagtailcore.Page', related_name='advert_placements')
-    advert = models.ForeignKey('lampstands.Advert', related_name='+')
+    page = ParentalKey('wagtailcore.Page', related_name='advert_placements', on_delete=models.CASCADE)
+    advert = models.ForeignKey('lampstands.Advert', related_name='+', on_delete=models.CASCADE)
 
 
 class Advert(models.Model):
@@ -241,19 +243,21 @@ class Advert(models.Model):
         'wagtailcore.Page',
         related_name='+',
         null=True,
-        blank=True
+        blank=True,
+        on_delete=models.SET_NULL
     )
     url = models.URLField(null=True, blank=True)
     text = models.CharField(max_length=255)
 
     panels = [
-        PageChooserPanel('page'),
+        FieldPanel('page'),
         FieldPanel('url'),
         FieldPanel('text'),
     ]
 
     def __str__(self):
         return self.text
+
 
 register_snippet(Advert)
 
@@ -279,7 +283,7 @@ def image_delete(sender, instance, **kwargs):
 
 
 class LampstandsRendition(AbstractRendition):
-    image = models.ForeignKey('LampstandsImage', related_name='renditions')
+    image = models.ForeignKey('LampstandsImage', related_name='renditions', on_delete=models.CASCADE)
 
     class Meta:
         unique_together = (
@@ -297,7 +301,7 @@ def rendition_delete(sender, instance, **kwargs):
 # Home Page
 
 class HomePageHero(Orderable, RelatedLink):
-    page = ParentalKey('lampstands.HomePage', related_name='hero')
+    page = ParentalKey('lampstands.HomePage', related_name='hero', on_delete=models.CASCADE)
     colour = models.CharField(max_length=255, help_text="Hex ref colour of link and background gradient, use #23b0b0 for default blue")
     background = models.ForeignKey(
         'lampstands.LampstandsImage',
@@ -318,11 +322,12 @@ class HomePageHero(Orderable, RelatedLink):
     )
 
     panels = RelatedLink.panels + [
-        ImageChooserPanel('background'),
-        ImageChooserPanel('logo'),
+        FieldPanel('background'),
+        FieldPanel('logo'),
         FieldPanel('colour'),
         FieldPanel('text'),
     ]
+
 
 class HomePage(Page):
     hero_intro_primary = models.TextField(blank=True)
@@ -357,6 +362,7 @@ class HomePage(Page):
         blog_posts = BlogPage.objects.live().public()
         return blog_posts
 
+
 # FAQ index page
 
 class FAQIndexPage(Page):
@@ -369,38 +375,27 @@ class FAQIndexPage(Page):
     show_in_play_menu = models.BooleanField(default=False)
 
     def get_popular_tags(self):
-        # Get a ValuesQuerySet of tags ordered by most popular (exclude 'planet-drupal' as this is effectively
-        # the same as Drupal and only needed for the rss feed)
         popular_tags = FAQPageTagSelect.objects.all().values('tag').annotate(item_count=models.Count('tag')).order_by('-item_count')
-
-        # Return first 10 popular tags as tag objects
-        # Getting them individually to preserve the order
         return [FAQPageTagList.objects.get(id=tag['tag']) for tag in popular_tags[:10]]
 
     @property
     def faq_posts(self):
-        # Get list of faq pages that are descendants of this page
-        # and are not marketing_only
         faq_posts = FAQPage.objects.filter(
             live=True,
             path__startswith=self.path
         )
-
         return faq_posts
 
     def serve(self, request):
-        # Get faq_posts
         faq_posts = self.faq_posts
 
-        # Filter by tag
         tag = request.GET.get('tag')
         if tag:
             faq_posts = faq_posts.filter(tags__tag__slug=tag)
 
-        # Pagination
         per_page = 5
         page = request.GET.get('page')
-        paginator = Paginator(faq_posts, per_page)  # Show 5 faq_posts per page
+        paginator = Paginator(faq_posts, per_page)
         try:
             faq_posts = paginator.page(page)
         except PageNotAnInteger:
@@ -408,7 +403,7 @@ class FAQIndexPage(Page):
         except EmptyPage:
             faq_posts = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if is_ajax(request):
             return render(request, "lampstands/includes/faq_listing.html", {
                 'self': self,
                 'faq_posts': faq_posts,
@@ -431,6 +426,7 @@ class FAQIndexPage(Page):
         FieldPanel('show_in_play_menu'),
     ]
 
+
 # FAQ page
 class FAQPageTagList(models.Model):
     name = models.CharField(max_length=255)
@@ -439,51 +435,52 @@ class FAQPageTagList(models.Model):
     def __str__(self):
         return self.name
 
+
 register_snippet(FAQPageTagList)
 
 
 class FAQPageTagSelect(Orderable):
-    page = ParentalKey('lampstands.FAQPage', related_name='tags')
+    page = ParentalKey('lampstands.FAQPage', related_name='tags', on_delete=models.CASCADE)
     tag = models.ForeignKey(
         'lampstands.FAQPageTagList',
-        related_name='faq_page_tag_select'
+        related_name='faq_page_tag_select',
+        on_delete=models.CASCADE
     )
+
 
 class FAQPage(Page):
     question = models.CharField(max_length=255, blank=True)
     streamfield = StreamField([
         ('answer', StoryBlock()),
-        ], help_text="Question and answer are to appear in same block")
+    ], help_text="Question and answer are to appear in same block", use_json_field=True)
     search_fields = Page.search_fields + [
         index.SearchField('streamfield'),
     ]
 
     @property
     def faq_index(self):
-        # Find faq index in ancestors
         for ancestor in reversed(self.get_ancestors()):
-            if isinstance(ancestor.specific,FAQIndexPage):
+            if isinstance(ancestor.specific, FAQIndexPage):
                 return ancestor
-
-        # No ancestors are blog indexes,
-        # just return first blog index in database
         return FAQIndexPage.objects.first()
 
     content_panels = [
         FieldPanel('title', classname="full title"),
         FieldPanel('question'),
-        StreamFieldPanel('streamfield'),
+        FieldPanel('streamfield'),
         InlinePanel('tags', label="Tags")
     ]
+
 
 # Standard page
 
 class StandardPageContentBlock(Orderable, ContentBlock):
-    page = ParentalKey('lampstands.StandardPage', related_name='content_block')
+    page = ParentalKey('lampstands.StandardPage', related_name='content_block', on_delete=models.CASCADE)
+
 
 class StandardPage(Page):
     heading = models.CharField(max_length=255, blank=True)
-    content = StreamField(StoryBlock())
+    content = StreamField(StoryBlock(), use_json_field=True)
 
     show_in_play_menu = models.BooleanField(default=False)
 
@@ -495,7 +492,7 @@ class StandardPage(Page):
     content_panels = [
         FieldPanel('title', classname="full title"),
         FieldPanel('heading', classname="full"),
-        StreamFieldPanel('content'),
+        FieldPanel('content'),
     ]
 
     promote_panels = [
@@ -503,9 +500,11 @@ class StandardPage(Page):
         FieldPanel('show_in_play_menu'),
     ]
 
+
 # Privacy page
 class PrivacyPageContentBlock(Orderable, ContentBlock):
-    page = ParentalKey('lampstands.PrivacyPage', related_name='content_block')
+    page = ParentalKey('lampstands.PrivacyPage', related_name='content_block', on_delete=models.CASCADE)
+
 
 class PrivacyPage(Page):
     heading = models.CharField(max_length=255, blank=True)
@@ -524,13 +523,15 @@ class PrivacyPage(Page):
         FieldPanel('show_in_play_menu'),
     ]
 
+
 # About page
 class AboutPageContentBlock(Orderable, ContentBlock):
-    page = ParentalKey('lampstands.AboutPage', related_name='content_block')
+    page = ParentalKey('lampstands.AboutPage', related_name='content_block', on_delete=models.CASCADE)
+
 
 class AboutPage(Page):
     heading = models.CharField(max_length=255, blank=True)
-    content = StreamField(StoryBlock())
+    content = StreamField(StoryBlock(), use_json_field=True)
     show_in_play_menu = models.BooleanField(default=False)
     search_fields = Page.search_fields + [
         index.SearchField('content'),
@@ -538,16 +539,17 @@ class AboutPage(Page):
     content_panels = [
         FieldPanel('title', classname="full title"),
         FieldPanel('heading'),
-        StreamFieldPanel('content'),
+        FieldPanel('content'),
     ]
     promote_panels = [
         MultiFieldPanel(Page.promote_panels, "Common page configuration"),
         FieldPanel('show_in_play_menu'),
     ]
 
+
 # Services page
 class ServicesPageService(Orderable):
-    page = ParentalKey('lampstands.ServicesPage', related_name='services')
+    page = ParentalKey('lampstands.ServicesPage', related_name='services', on_delete=models.CASCADE)
     title = models.TextField()
     svg = models.TextField(null=True)
     description = models.TextField()
@@ -556,12 +558,13 @@ class ServicesPageService(Orderable):
         related_name='+',
         blank=True,
         null=True,
+        on_delete=models.SET_NULL
     )
 
     panels = [
         FieldPanel('title'),
         FieldPanel('description'),
-        PageChooserPanel('link'),
+        FieldPanel('link'),
         FieldPanel('svg')
     ]
 
@@ -583,7 +586,7 @@ class ServicesPage(Page):
 
     content_panels = [
         FieldPanel('title', classname='full title'),
-        ImageChooserPanel('main_image'),
+        FieldPanel('main_image'),
         FieldPanel('heading'),
         FieldPanel('intro', classname='full'),
         InlinePanel('services', label='Services'),
@@ -654,10 +657,9 @@ class FeaturedPagesBlock(StructBlock):
 class SignUpFormPageBlock(StructBlock):
     page = PageChooserBlock('lampstands.SignUpFormPage')
 
-    def get_context(self, value):
-        context = super(SignUpFormPageBlock, self).get_context(value)
+    def get_context(self, value, parent_context=None):
+        context = super(SignUpFormPageBlock, self).get_context(value, parent_context=parent_context)
         context['form'] = value['page'].sign_up_form_class()
-
         return context
 
     class Meta:
@@ -678,6 +680,7 @@ class LogosBlock(StructBlock):
         icon = 'site'
         template = 'blocks/logos_block.html'
 
+
 class ServicePageBlock(StreamBlock):
     case_studies = CaseStudyBlock()
     highlights = HighlightBlock()
@@ -691,7 +694,7 @@ class ServicePageBlock(StreamBlock):
 
 class ServicePage(Page):
     description = models.TextField()
-    streamfield = StreamField(ServicePageBlock())
+    streamfield = StreamField(ServicePageBlock(), use_json_field=True)
     particle = models.ForeignKey(
         'ParticleSnippet',
         blank=True,
@@ -701,7 +704,7 @@ class ServicePage(Page):
     content_panels = [
         FieldPanel('title', classname="full title"),
         FieldPanel('description', classname="full"),
-        StreamFieldPanel('streamfield'),
+        FieldPanel('streamfield'),
         FieldPanel('particle'),
     ]
 
@@ -777,7 +780,8 @@ class ParticleSnippet(models.Model):
 # blog index page
 
 class BlogIndexPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('lampstands.BlogIndexPage', related_name='related_links')
+    page = ParentalKey('lampstands.BlogIndexPage', related_name='related_links', on_delete=models.CASCADE)
+
 
 class BlogIndexPage(Page):
     intro = models.TextField(blank=True)
@@ -789,38 +793,27 @@ class BlogIndexPage(Page):
     show_in_play_menu = models.BooleanField(default=False)
 
     def get_popular_tags(self):
-        # Get a ValuesQuerySet of tags ordered by most popular (exclude 'planet-drupal' as this is effectively
-        # the same as Drupal and only needed for the rss feed)
         popular_tags = BlogPageTagSelect.objects.all().values('tag').annotate(item_count=models.Count('tag')).order_by('-item_count')
-
-        # Return first 10 popular tags as tag objects
-        # Getting them individually to preserve the order
         return [BlogPageTagList.objects.get(id=tag['tag']) for tag in popular_tags[:10]]
 
     @property
     def blog_posts(self):
-        # Get list of blog pages that are descendants of this page
-        # and are not marketing_only
         blog_posts = BlogPage.objects.filter(
             live=True,
             path__startswith=self.path
         )
-
         return blog_posts
 
     def serve(self, request):
-        # Get blog_posts
         blog_posts = self.blog_posts
 
-        # Filter by tag
         tag = request.GET.get('tag')
         if tag:
             blog_posts = blog_posts.filter(tags__tag__slug=tag)
 
-        # Pagination
         per_page = 6
         page = request.GET.get('page')
-        paginator = Paginator(blog_posts, per_page)  # Show 6 blog_posts per page
+        paginator = Paginator(blog_posts, per_page)
         try:
             blog_posts = paginator.page(page)
         except PageNotAnInteger:
@@ -828,7 +821,7 @@ class BlogIndexPage(Page):
         except EmptyPage:
             blog_posts = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if is_ajax(request):
             return render(request, "lampstands/includes/blog_listing.html", {
                 'self': self,
                 'blog_posts': blog_posts,
@@ -855,7 +848,7 @@ class BlogIndexPage(Page):
 
 # blog page
 class BlogPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('lampstands.BlogPage', related_name='related_links')
+    page = ParentalKey('lampstands.BlogPage', related_name='related_links', on_delete=models.CASCADE)
 
 
 class BlogPageTagList(models.Model):
@@ -865,31 +858,34 @@ class BlogPageTagList(models.Model):
     def __str__(self):
         return self.name
 
+
 register_snippet(BlogPageTagList)
 
 
 class BlogPageTagSelect(Orderable):
-    page = ParentalKey('lampstands.BlogPage', related_name='tags')
+    page = ParentalKey('lampstands.BlogPage', related_name='tags', on_delete=models.CASCADE)
     tag = models.ForeignKey(
         'lampstands.BlogPageTagList',
-        related_name='Blog_page_tag_select'
+        related_name='Blog_page_tag_select',
+        on_delete=models.CASCADE
     )
+
 
 class BlogPage(Page):
     previewstreamfield = StreamField([
         ('indexpreview', blocks.TextBlock(max_length=400)),
-        ], help_text="To show a summarized version in the index page only", blank=True)
+    ], help_text="To show a summarized version in the index page only", blank=True, use_json_field=True)
     streamfield = StreamField([
         ('wholestory', StoryBlock()),
         ('stats', StatsBlock()),
         ('wideimage', WideImage()),
         ('bustout', BustoutBlock()),
-        ('pullimgquote',PullQuoteImageBlock()),
+        ('pullimgquote', PullQuoteImageBlock()),
         ('pullquote', PullQuoteBlock()),
         ('photogrid', PhotoGridBlock()),
         ('img', ImageBlock()),
         ('imgchoice', ImageFormatChoiceBlock()),
-        ], help_text="Use Raw HTML option if dropcaps etc. are needed to customize look")
+    ], help_text="Use Raw HTML option if dropcaps etc. are needed to customize look", use_json_field=True)
     author = models.CharField(max_length=255, blank=True)
     from_area = models.CharField(max_length=255, blank=True)
     canonical_url = models.URLField(blank=True, max_length=255)
@@ -899,34 +895,31 @@ class BlogPage(Page):
 
     @property
     def blog_index(self):
-        # Find blog index in ancestors
         for ancestor in reversed(self.get_ancestors()):
             if isinstance(ancestor.specific, BlogIndexPage):
                 return ancestor
-
-        # No ancestors are blog indexes,
-        # just return first blog index in database
         return BlogIndexPage.objects.first()
 
     content_panels = [
         FieldPanel('title', classname="full title"),
         FieldPanel('author'),
         FieldPanel('from_area'),
-        StreamFieldPanel('previewstreamfield'),
-        StreamFieldPanel('streamfield'),
+        FieldPanel('previewstreamfield'),
+        FieldPanel('streamfield'),
         InlinePanel('related_links', label="Related links"),
         InlinePanel('tags', label="Tags")
     ]
 
+
 # beliefs index page
 
 class BeliefsIndexPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('lampstands.BeliefsIndexPage', related_name='related_links')
+    page = ParentalKey('lampstands.BeliefsIndexPage', related_name='related_links', on_delete=models.CASCADE)
+
 
 class BeliefsIndexPage(Page):
     intro = models.TextField(blank=True)
-    #content = StreamField(StoryBlock())
-    
+
     search_fields = Page.search_fields + [
         index.SearchField('intro'),
     ]
@@ -934,38 +927,27 @@ class BeliefsIndexPage(Page):
     show_in_play_menu = models.BooleanField(default=False)
 
     def get_popular_tags(self):
-        # Get a ValuesQuerySet of tags ordered by most popular (exclude 'planet-drupal' as this is effectively
-        # the same as Drupal and only needed for the rss feed)
         popular_tags = BeliefsPageTagSelect.objects.all().values('tag').annotate(item_count=models.Count('tag')).order_by('-item_count')
-
-        # Return first 10 popular tags as tag objects
-        # Getting them individually to preserve the order
         return [BeliefsPageTagList.objects.get(id=tag['tag']) for tag in popular_tags[:10]]
 
     @property
     def beliefs_posts(self):
-        # Get list of beliefs pages that are descendants of this page
-        # and are not marketing_only
         beliefs_posts = BeliefsPage.objects.filter(
             live=True,
             path__startswith=self.path
         )
-
         return beliefs_posts
 
     def serve(self, request):
-        # Get beliefs_posts
         beliefs_posts = self.beliefs_posts
 
-        # Filter by tag
         tag = request.GET.get('tag')
         if tag:
             beliefs_posts = beliefs_posts.filter(tags__tag__slug=tag)
 
-        # Pagination
         per_page = 9
         page = request.GET.get('page')
-        paginator = Paginator(beliefs_posts, per_page)  # Show 8 blog_posts per page
+        paginator = Paginator(beliefs_posts, per_page)
         try:
             beliefs_posts = paginator.page(page)
         except PageNotAnInteger:
@@ -973,7 +955,7 @@ class BeliefsIndexPage(Page):
         except EmptyPage:
             beliefs_posts = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if is_ajax(request):
             return render(request, "lampstands/includes/beliefs_listing.html", {
                 'self': self,
                 'beliefs_posts': beliefs_posts,
@@ -1000,7 +982,7 @@ class BeliefsIndexPage(Page):
 
 # beliefs page
 class BeliefsPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('lampstands.BeliefsPage', related_name='related_links')
+    page = ParentalKey('lampstands.BeliefsPage', related_name='related_links', on_delete=models.CASCADE)
 
 
 class BeliefsPageTagList(models.Model):
@@ -1010,23 +992,26 @@ class BeliefsPageTagList(models.Model):
     def __str__(self):
         return self.name
 
+
 register_snippet(BeliefsPageTagList)
 
 
 class BeliefsPageTagSelect(Orderable):
-    page = ParentalKey('lampstands.BeliefsPage', related_name='tags')
+    page = ParentalKey('lampstands.BeliefsPage', related_name='tags', on_delete=models.CASCADE)
     tag = models.ForeignKey(
         'lampstands.BeliefsPageTagList',
-        related_name='Beliefs_page_tag_select'
+        related_name='Beliefs_page_tag_select',
+        on_delete=models.CASCADE
     )
+
 
 class BeliefsPage(Page):
     previewstreamfield = StreamField([
         ('indexpreview', blocks.TextBlock(max_length=300)),
-        ], help_text="To show a summarized version in the index page only", blank=True)
+    ], help_text="To show a summarized version in the index page only", blank=True, use_json_field=True)
     streamfield = StreamField([
         ('wholestory', StoryBlock()),
-        ], help_text="Use Raw HTML option if dropcaps etc. are needed to customize look")
+    ], help_text="Use Raw HTML option if dropcaps etc. are needed to customize look", use_json_field=True)
     canonical_url = models.URLField(blank=True, max_length=255)
     search_fields = Page.search_fields + [
         index.SearchField('streamfield'),
@@ -1034,40 +1019,35 @@ class BeliefsPage(Page):
 
     @property
     def beliefs_index(self):
-        # Find beliefs index in ancestors
         for ancestor in reversed(self.get_ancestors()):
             if isinstance(ancestor.specific, BeliefsIndexPage):
                 return ancestor
-
-        # No ancestors are beliefs indexes,
-        # just return first beliefs index in database
         return BeliefsIndexPage.objects.first()
 
     content_panels = [
         FieldPanel('title', classname="full title"),
-        StreamFieldPanel('previewstreamfield'),
-        StreamFieldPanel('streamfield'),
+        FieldPanel('previewstreamfield'),
+        FieldPanel('streamfield'),
         InlinePanel('related_links', label="Related links"),
         InlinePanel('tags', label="Tags")
     ]
 
+
 # Church page
 class ChurchIndexPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('lampstands.ChurchIndexPage', related_name='related_links')
+    page = ParentalKey('lampstands.ChurchIndexPage', related_name='related_links', on_delete=models.CASCADE)
+
 
 # Church index
 class ChurchIndexPage(Page):
     intro = models.TextField(blank=True)
-    
+
     search_fields = Page.search_fields + [
         index.SearchField('intro'),
     ]
 
     def get_popular_tags(self):
         popular_tags = ChurchPageTagSelect.objects.all().values('tag').annotate(item_count=models.Count('tag')).order_by('-item_count')
-
-        # Return first 10 popular tags as tag objects
-        # Getting them individually to preserve the order
         return [ChurchPageTagList.objects.get(id=tag['tag']) for tag in popular_tags[:10]]
 
     @property
@@ -1076,24 +1056,20 @@ class ChurchIndexPage(Page):
         return json_locality_url
 
     def church_posts(self):
-        # Get list of church pages that are descendants of this page
         church_posts = ChurchPage.objects.filter(
             live=True,
             path__startswith=self.path
         )
-
         return church_posts
 
     def serve(self, request):
-        # Get church_posts
-        church_posts = self.church_posts
+        church_posts = self.church_posts()
 
-        # Filter by tag
         tag = request.GET.get('tag')
         if tag:
             church_posts = church_posts.filter(tags__tag__slug=tag)
 
-        if request.is_ajax():
+        if is_ajax(request):
             return render(request, "lampstands/includes/localities_listing.html", {
                 'self': self,
                 'church_posts': church_posts,
@@ -1114,34 +1090,40 @@ class ChurchIndexPage(Page):
         InlinePanel('related_links', label="Related links"),
     ]
 
+
 # Church page
 class ChurchPageTagList(index.Indexed, models.Model):
     name = models.CharField(max_length=255)
     slug = models.CharField(max_length=255)
 
     search_fields = [
-        index.SearchField('name', partial_match=True),
+        index.SearchField('name'),
     ]
 
     def __str__(self):
         return self.name
 
+
 register_snippet(ChurchPageTagList)
 
+
 class ChurchPageTagSelect(Orderable):
-    page = ParentalKey('lampstands.ChurchPage', related_name='tags')
+    page = ParentalKey('lampstands.ChurchPage', related_name='tags', on_delete=models.CASCADE)
     tag = models.ForeignKey(
         'lampstands.ChurchPageTagList',
-        related_name='church_page_tag_select'
+        related_name='church_page_tag_select',
+        on_delete=models.CASCADE
     )
 
+
 class ChurchPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('lampstands.ChurchPage', related_name='related_links')
+    page = ParentalKey('lampstands.ChurchPage', related_name='related_links', on_delete=models.CASCADE)
+
 
 class ChurchPage(Page):
     locality_name = models.CharField(max_length=255)
     locality_state_or_province = models.CharField(max_length=255, blank=True)
-    locality_country = CountryField(max_length= 95, blank_label='(select country)')
+    locality_country = CountryField(max_length=95, blank_label='(select country)')
     short_intro = models.CharField(
         max_length=255, blank=True,
         help_text='A short summary of when the locality started meeting'
@@ -1149,11 +1131,9 @@ class ChurchPage(Page):
     mailing_address = models.CharField(max_length=255, blank=True, null=True)
     meeting_address = models.CharField(max_length=255, blank=True, null=True)
     position = GeopositionField(blank=True, null=True)
-    #phone_regex = RegexValidator(regex=r'^\+?1?\d{9,25}$', message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.")
-    locality_phone_number = models.CharField(blank=True, max_length=25) # validators should be a list
+    locality_phone_number = models.CharField(blank=True, max_length=25)
     locality_email = models.EmailField(blank=True)
-    #locality_web = models.TextField(validators=[URLValidator()], blank=True, help_text= "Please type: 'http://' in the front of the URL")
-    locality_web = models.TextField(blank=True, help_text= "Please type: 'http://' in the front of the URL")
+    locality_web = models.TextField(blank=True, help_text="Please type: 'http://' in the front of the URL")
     last_update = models.DateField(null=True, blank=True)
     locality_contact_brother_1 = models.CharField(max_length=255, blank=True, null=True)
     locality_contact_brother_2 = models.CharField(max_length=255, blank=True, null=True)
@@ -1177,13 +1157,9 @@ class ChurchPage(Page):
 
     @property
     def church_index(self):
-        # Find church index in ancestors
         for ancestor in reversed(self.get_ancestors()):
             if isinstance(ancestor.specific, ChurchIndexPage):
                 return ancestor
-
-        # No ancestors are blog indexes,
-        # just return first blog index in database
         return ChurchIndexPage.objects.first()
 
     def get_latitude_location(self):
@@ -1195,13 +1171,13 @@ class ChurchPage(Page):
         return str(longitude)
 
     def location(self):
-        dictified_loc = dict([ ("latitude", self.get_latitude_location()), ("longitude", self.get_longitude_location())])
+        dictified_loc = dict([("latitude", self.get_latitude_location()), ("longitude", self.get_longitude_location())])
         return dictified_loc
 
     def trimmed_address(self):
         trimmed_address = quote(self.meeting_address)
         return trimmed_address
-        
+
     content_panels = [
         FieldPanel('title', classname="full title"),
         FieldPanel('locality_name'),
@@ -1230,10 +1206,12 @@ class ChurchPage(Page):
         FieldPanel('locality_contact_brother_6_phone'),
     ]
 
+
 # recognition index page
 
 class RecognitionIndexPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('lampstands.RecognitionIndexPage', related_name='related_links')
+    page = ParentalKey('lampstands.RecognitionIndexPage', related_name='related_links', on_delete=models.CASCADE)
+
 
 class RecognitionIndexPage(Page):
     intro = models.TextField(blank=True)
@@ -1245,38 +1223,27 @@ class RecognitionIndexPage(Page):
     show_in_play_menu = models.BooleanField(default=False)
 
     def get_popular_tags(self):
-        # Get a ValuesQuerySet of tags ordered by most popular (exclude 'planet-drupal' as this is effectively
-        # the same as Drupal and only needed for the rss feed)
         popular_tags = RecognitionPageTagSelect.objects.all().values('tag').annotate(item_count=models.Count('tag')).order_by('-item_count')
-
-        # Return first 10 popular tags as tag objects
-        # Getting them individually to preserve the order
         return [RecognitionPageTagList.objects.get(id=tag['tag']) for tag in popular_tags[:10]]
 
     @property
     def recognition_posts(self):
-        # Get list of blog pages that are descendants of this page
-        # and are not marketing_only
         recognition_posts = RecognitionPage.objects.filter(
             live=True,
             path__startswith=self.path
         )
-
         return recognition_posts
 
     def serve(self, request):
-        # Get blog_posts
         recognition_posts = self.recognition_posts
 
-        # Filter by tag
         tag = request.GET.get('tag')
         if tag:
             recognition_posts = recognition_posts.filter(tags__tag__slug=tag)
 
-        # Pagination
         per_page = 6
         page = request.GET.get('page')
-        paginator = Paginator(recognition_posts, per_page)  # Show 6 blog_posts per page
+        paginator = Paginator(recognition_posts, per_page)
         try:
             recognition_posts = paginator.page(page)
         except PageNotAnInteger:
@@ -1284,7 +1251,7 @@ class RecognitionIndexPage(Page):
         except EmptyPage:
             recognition_posts = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if is_ajax(request):
             return render(request, "lampstands/includes/recognition_listing.html", {
                 'self': self,
                 'recognition_posts': recognition_posts,
@@ -1311,7 +1278,7 @@ class RecognitionIndexPage(Page):
 
 # recognition page
 class RecognitionPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('lampstands.RecognitionPage', related_name='related_links')
+    page = ParentalKey('lampstands.RecognitionPage', related_name='related_links', on_delete=models.CASCADE)
 
 
 class RecognitionPageTagList(models.Model):
@@ -1321,35 +1288,39 @@ class RecognitionPageTagList(models.Model):
     def __str__(self):
         return self.name
 
+
 register_snippet(RecognitionPageTagList)
 
+
 class RecognitionPageTagSelect(Orderable):
-    page = ParentalKey('lampstands.RecognitionPage', related_name='tags')
+    page = ParentalKey('lampstands.RecognitionPage', related_name='tags', on_delete=models.CASCADE)
     tag = models.ForeignKey(
         'lampstands.RecognitionPageTagList',
-        related_name='Recognition_page_tag_select'
+        related_name='Recognition_page_tag_select',
+        on_delete=models.CASCADE
     )
+
 
 class RecognitionPage(Page):
     previewstreamfield = StreamField([
         ('indexpreview', blocks.TextBlock(max_length=400)),
-        ], help_text="To show a summarized version in the index page only", blank=True)
+    ], help_text="To show a summarized version in the index page only", blank=True, use_json_field=True)
     streamfield = StreamField([
         ('wholestory', StoryBlock()),
         ('stats', StatsBlock()),
         ('wideimage', WideImage()),
         ('bustout', BustoutBlock()),
-        ('pullimgquote',PullQuoteImageBlock()),
+        ('pullimgquote', PullQuoteImageBlock()),
         ('pullquote', PullQuoteBlock()),
         ('photogrid', PhotoGridBlock()),
         ('img', ImageBlock()),
         ('imgchoice', ImageFormatChoiceBlock()),
-        ], help_text="Use Raw HTML option if dropcaps etc. are needed to customize look")
+    ], help_text="Use Raw HTML option if dropcaps etc. are needed to customize look", use_json_field=True)
     author = models.CharField(max_length=255, blank=True)
     reference = models.CharField(max_length=255, blank=True)
     reference_images = models.ForeignKey('lampstands.LampstandsImage', null=True,
-                                   blank=True, on_delete=models.SET_NULL,
-                                   related_name='+')
+                                         blank=True, on_delete=models.SET_NULL,
+                                         related_name='+')
     canonical_url = models.URLField(blank=True, max_length=255)
     search_fields = Page.search_fields + [
         index.SearchField('streamfield'),
@@ -1357,30 +1328,28 @@ class RecognitionPage(Page):
 
     @property
     def recognition_index(self):
-        # Find recognition index in ancestors
         for ancestor in reversed(self.get_ancestors()):
             if isinstance(ancestor.specific, RecognitionIndexPage):
                 return ancestor
-
-        # No ancestors are recognition indexes,
-        # just return first recognition index in database
         return RecognitionIndexPage.objects.first()
 
     content_panels = [
         FieldPanel('title', classname="full title"),
         FieldPanel('author'),
         FieldPanel('reference'),
-        ImageChooserPanel('reference_images'),
-        StreamFieldPanel('previewstreamfield'),
-        StreamFieldPanel('streamfield'),
+        FieldPanel('reference_images'),
+        FieldPanel('previewstreamfield'),
+        FieldPanel('streamfield'),
         InlinePanel('related_links', label="Related links"),
         InlinePanel('tags', label="Tags")
     ]
 
+
 # history index page
 
 class HistoryIndexPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('lampstands.HistoryIndexPage', related_name='related_links')
+    page = ParentalKey('lampstands.HistoryIndexPage', related_name='related_links', on_delete=models.CASCADE)
+
 
 class HistoryIndexPage(Page):
     intro = models.TextField(blank=True)
@@ -1392,38 +1361,27 @@ class HistoryIndexPage(Page):
     show_in_play_menu = models.BooleanField(default=False)
 
     def get_popular_tags(self):
-        # Get a ValuesQuerySet of tags ordered by most popular (exclude 'planet-drupal' as this is effectively
-        # the same as Drupal and only needed for the rss feed)
         popular_tags = HistoryPageTagSelect.objects.all().values('tag').annotate(item_count=models.Count('tag')).order_by('-item_count')
-
-        # Return first 10 popular tags as tag objects
-        # Getting them individually to preserve the order
         return [HistoryPageTagList.objects.get(id=tag['tag']) for tag in popular_tags[:10]]
 
     @property
     def history_posts(self):
-        # Get list of history pages that are descendants of this page
-        # and are not marketing_only
         history_posts = HistoryPage.objects.filter(
             live=True,
             path__startswith=self.path
         )
-
         return history_posts
 
     def serve(self, request):
-        # Get history_posts
         history_posts = self.history_posts
 
-        # Filter by tag
         tag = request.GET.get('tag')
         if tag:
             history_posts = history_posts.filter(tags__tag__slug=tag)
 
-        # Pagination
         per_page = 6
         page = request.GET.get('page')
-        paginator = Paginator(history_posts, per_page)  # Show 6 blog_posts per page
+        paginator = Paginator(history_posts, per_page)
         try:
             history_posts = paginator.page(page)
         except PageNotAnInteger:
@@ -1431,7 +1389,7 @@ class HistoryIndexPage(Page):
         except EmptyPage:
             history_posts = paginator.page(paginator.num_pages)
 
-        if request.is_ajax():
+        if is_ajax(request):
             return render(request, "lampstands/includes/history_listing.html", {
                 'self': self,
                 'history_posts': history_posts,
@@ -1455,9 +1413,10 @@ class HistoryIndexPage(Page):
         FieldPanel('show_in_play_menu'),
     ]
 
+
 # history page
 class HistoryPageRelatedLink(Orderable, RelatedLink):
-    page = ParentalKey('lampstands.HistoryPage', related_name='related_links')
+    page = ParentalKey('lampstands.HistoryPage', related_name='related_links', on_delete=models.CASCADE)
 
 
 class HistoryPageTagList(models.Model):
@@ -1467,36 +1426,39 @@ class HistoryPageTagList(models.Model):
     def __str__(self):
         return self.name
 
+
 register_snippet(HistoryPageTagList)
 
 
 class HistoryPageTagSelect(Orderable):
-    page = ParentalKey('lampstands.HistoryPage', related_name='tags')
+    page = ParentalKey('lampstands.HistoryPage', related_name='tags', on_delete=models.CASCADE)
     tag = models.ForeignKey(
         'lampstands.HistoryPageTagList',
-        related_name='History_page_tag_select'
+        related_name='History_page_tag_select',
+        on_delete=models.CASCADE
     )
+
 
 class HistoryPage(Page):
     previewstreamfield = StreamField([
         ('indexpreview', blocks.TextBlock(max_length=400)),
-        ], help_text="To show a summarized version in the index page only", blank=True)
+    ], help_text="To show a summarized version in the index page only", blank=True, use_json_field=True)
     streamfield = StreamField([
         ('wholestory', StoryBlock()),
         ('stats', StatsBlock()),
         ('wideimage', WideImage()),
         ('bustout', BustoutBlock()),
-        ('pullimgquote',PullQuoteImageBlock()),
+        ('pullimgquote', PullQuoteImageBlock()),
         ('pullquote', PullQuoteBlock()),
         ('photogrid', PhotoGridBlock()),
         ('img', ImageBlock()),
         ('imgchoice', ImageFormatChoiceBlock()),
-        ], help_text="Use Raw HTML option if dropcaps etc. are needed to customize look")
+    ], help_text="Use Raw HTML option if dropcaps etc. are needed to customize look", use_json_field=True)
     main_category = models.CharField(max_length=255, blank=True)
     reference = models.CharField(max_length=255, blank=True)
     reference_images = models.ForeignKey('lampstands.LampstandsImage', null=True,
-                                   blank=True, on_delete=models.SET_NULL,
-                                   related_name='+')
+                                         blank=True, on_delete=models.SET_NULL,
+                                         related_name='+')
     canonical_url = models.URLField(blank=True, max_length=255)
     search_fields = Page.search_fields + [
         index.SearchField('streamfield'),
@@ -1504,22 +1466,18 @@ class HistoryPage(Page):
 
     @property
     def history_index(self):
-        # Find history index in ancestors
         for ancestor in reversed(self.get_ancestors()):
             if isinstance(ancestor.specific, HistoryIndexPage):
                 return ancestor
-
-        # No ancestors are history indexes,
-        # just return first history index in database
         return HistoryIndexPage.objects.first()
 
     content_panels = [
         FieldPanel('title', classname="full title"),
         FieldPanel('main_category'),
         FieldPanel('reference'),
-        ImageChooserPanel('reference_images'),
-        StreamFieldPanel('previewstreamfield'),
-        StreamFieldPanel('streamfield'),
+        FieldPanel('reference_images'),
+        FieldPanel('previewstreamfield'),
+        FieldPanel('streamfield'),
         InlinePanel('related_links', label="Related links"),
         InlinePanel('tags', label="Tags")
     ]
@@ -1536,15 +1494,15 @@ class MapPage(Page):
         return json_locality_url
 
     def geoinfo_lat(self):
-        geoinfo_lat = '0' 
+        geoinfo_lat = '0'
         return geoinfo_lat
 
     def geoinfo_lng(self):
-        geoinfo_lng = '0' 
+        geoinfo_lng = '0'
         return geoinfo_lng
 
     def zoom_deflevel(self):
-        zoom_deflevel = 11 
+        zoom_deflevel = 11
         return zoom_deflevel
 
     def geoinfo_viewport(self):
@@ -1552,7 +1510,6 @@ class MapPage(Page):
         return geoinfo_viewport
 
     def serve(self, request):
-        # Filter by tag
         geoinfo_lat = request.GET.get('lat')
         geoinfo_lng = request.GET.get('lng')
         geoinfo_viewport = request.GET.get('viewport')
@@ -1570,26 +1527,29 @@ class MapPage(Page):
             zoom_deflevel = 4
 
         return render(request, self.template, {
-                'self': self,
-                'geoinfo_lat': geoinfo_lat,
-                'geoinfo_lng': geoinfo_lng,
-                'zoom_deflevel': zoom_deflevel,
-                'geoinfo_viewport': geoinfo_viewport,
-            })
+            'self': self,
+            'geoinfo_lat': geoinfo_lat,
+            'geoinfo_lng': geoinfo_lng,
+            'zoom_deflevel': zoom_deflevel,
+            'geoinfo_viewport': geoinfo_viewport,
+        })
 
-MapPage.content_panels = [
-    FieldPanel('title', classname="full title"),
-    FieldPanel('last_update'),
-    FieldPanel('google_url_js'),
-    FieldPanel('google_key_js')
-]
+    content_panels = [
+        FieldPanel('title', classname="full title"),
+        FieldPanel('last_update'),
+        FieldPanel('google_url_js'),
+        FieldPanel('google_key_js')
+    ]
+
 
 # ChurchEntry page
 class ChurchentryFormField(AbstractFormField):
-    page = ParentalKey('Churchentry', related_name='form_fields')
+    page = ParentalKey('Churchentry', related_name='form_fields', on_delete=models.CASCADE)
+
 
 class ChurchentryLandingPageRelatedLinkButton(Orderable, RelatedLink):
-    page = ParentalKey('lampstands.Churchentry', related_name='related_link_buttons')
+    page = ParentalKey('lampstands.Churchentry', related_name='related_link_buttons', on_delete=models.CASCADE)
+
 
 class Churchentry(AbstractForm):
     intro = RichTextField(blank=True)
@@ -1611,17 +1571,20 @@ class Churchentry(AbstractForm):
         MultiFieldPanel([
             FieldPanel('thank_you_text'),
             FieldPanel('thank_you_follow_up'),
-            PageChooserPanel('landing_page_button_link'),
+            FieldPanel('landing_page_button_link'),
             FieldPanel('landing_page_button_title'),
         ], "Landing page"),
     ]
 
+
 # Contact page
 class ContactFormField(AbstractFormField):
-    page = ParentalKey('Contact', related_name='form_fields')
+    page = ParentalKey('Contact', related_name='form_fields', on_delete=models.CASCADE)
+
 
 class ContactLandingPageRelatedLinkButton(Orderable, RelatedLink):
-    page = ParentalKey('lampstands.Contact', related_name='related_link_buttons')
+    page = ParentalKey('lampstands.Contact', related_name='related_link_buttons', on_delete=models.CASCADE)
+
 
 class Contact(WagtailCaptchaEmailForm):
     intro = RichTextField(blank=True)
@@ -1645,7 +1608,7 @@ class Contact(WagtailCaptchaEmailForm):
     content_panels = [
         FieldPanel('title', classname="full title"),
         FieldPanel('intro', classname="full"),
-        ImageChooserPanel('main_image'),
+        FieldPanel('main_image'),
         InlinePanel('form_fields', label="Form fields"),
         MultiFieldPanel([
             FieldPanel('to_address', classname="full"),
@@ -1653,17 +1616,17 @@ class Contact(WagtailCaptchaEmailForm):
             FieldPanel('subject', classname="full"),
         ], "Email"),
         MultiFieldPanel([
-            ImageChooserPanel('landing_image'),
+            FieldPanel('landing_image'),
             FieldPanel('thank_you_text'),
             FieldPanel('thank_you_follow_up'),
-            PageChooserPanel('landing_page_button_link'),
+            FieldPanel('landing_page_button_link'),
             FieldPanel('landing_page_button_title'),
         ], "Landing page"),
     ]
 
-@register_setting
-class GlobalSettings(BaseSetting):
 
+@register_setting
+class GlobalSettings(BaseSiteSetting):
     contact_telephone = models.CharField(max_length=255, help_text='Telephone')
     contact_email = models.EmailField(max_length=255, help_text='Email address')
     contact_twitter = models.CharField(max_length=255, help_text='Twitter')
@@ -1704,9 +1667,7 @@ class GlobalSettings(BaseSetting):
         FieldPanel('phili_address'),
         FieldPanel('phili_address_link'),
         FieldPanel('phili_address_svg'),
-
         MultiFieldPanel([
-            PageChooserPanel('contact_person'),
             FieldPanel('contact_widget_intro'),
             FieldPanel('contact_widget_call_to_action'),
             FieldPanel('contact_widget_button_text'),
@@ -1731,9 +1692,9 @@ class MenuBlock(StreamBlock):
 
 
 @register_setting
-class MainMenu(BaseSetting):
-    menu = StreamField(MenuBlock(), blank=True)
+class MainMenu(BaseSiteSetting):
+    menu = StreamField(MenuBlock(), blank=True, use_json_field=True)
 
     panels = [
-        StreamFieldPanel('menu'),
+        FieldPanel('menu'),
     ]
