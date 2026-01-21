@@ -52,11 +52,18 @@ LOGGING = {
 }
 
 # Parse database configuration from $DATABASE_URL
+# In production, DATABASE_URL must be set (automatically set when database is linked in Render)
 import dj_database_url
 db_config = dj_database_url.config()
 if db_config:
     DATABASES['default'] = db_config
-# If DATABASE_URL is not set, keep the base.py database configuration
+else:
+    # DATABASE_URL is required in production
+    import sys
+    print("ERROR: DATABASE_URL environment variable is not set!", file=sys.stderr)
+    print("Please link your Render Postgres database to this service in the Render dashboard.", file=sys.stderr)
+    print("This will automatically set the DATABASE_URL environment variable.", file=sys.stderr)
+    raise ValueError("DATABASE_URL environment variable is required in production. Link your database in Render dashboard.")
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_SSL_REDIRECT = True
