@@ -185,6 +185,10 @@ WAGTAIL_SITE_NAME = "lampstands"
 # Use environment variable if set, otherwise default to localhost for development
 WAGTAILADMIN_BASE_URL = os.environ.get('WAGTAILADMIN_BASE_URL', 'http://localhost:8000')
 
+# Exclude admin paths from Wagtail page routing
+# This ensures that /testimony-of-Jesus/* URLs are handled by admin, not page routing
+WAGTAILADMIN_URL = 'testimony-of-Jesus/'
+
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Override the Image class used by wagtailimages with a custom one
