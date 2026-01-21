@@ -36,7 +36,7 @@ itypes==1.1.0
 Jinja2==2.9.6
 jmespath==0.9.1
 jsonfield==2.0.1
-MarkupSafe==1.0
+MarkupSafe==1.1.1
 olefile==0.44
 packaging==16.8
 Pillow==4.1.1
