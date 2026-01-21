@@ -12,6 +12,18 @@ ALLOWED_HOSTS = ['*']
 # Temporarily enable DEBUG to see error details - REMOVE AFTER FIXING
 DEBUG = True
 
+# Ensure STORAGES is set BEFORE any other code tries to use it
+# This must be set early to avoid KeyError when DEBUG=True
+if 'STORAGES' not in globals():
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+        },
+    }
+
 # Enable detailed error logging to console for debugging
 LOGGING = {
     'version': 1,
@@ -118,17 +130,6 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
     'compressor.finders.CompressorFinder',
 )
-
-# Ensure STORAGES is set correctly (inherited from base.py but ensure it's present)
-if 'STORAGES' not in locals() or 'staticfiles' not in STORAGES:
-    STORAGES = {
-        "default": {
-            "BACKEND": "django.core.files.storage.FileSystemStorage",
-        },
-        "staticfiles": {
-            "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
-        },
-    }
 
 # Wagtail admin base URL - use environment variable or default to Render URL
 WAGTAILADMIN_BASE_URL = os.environ.get('WAGTAILADMIN_BASE_URL', 'https://localchurches.onrender.com')
