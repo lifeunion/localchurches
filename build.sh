@@ -61,5 +61,9 @@ if [ -n "$HEROKU_DATABASE_URL" ]; then
     python migrate_from_heroku.py || echo "Migration failed or skipped"
 fi
 
+# Fix Wagtail site configuration after migration
+echo "Fixing Wagtail site configuration..."
+python fix_wagtail_site.py || echo "Site configuration fix failed or skipped"
+
 # Collect static files
 python manage.py collectstatic --no-input
