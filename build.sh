@@ -9,17 +9,16 @@ pip install -r requirements.txt
 echo "Checking migration status..."
 python manage.py showmigrations --list || true
 
-# Run syncdb first to ensure all models are created
-echo "Running syncdb to create all models..."
-python manage.py migrate --run-syncdb --no-input || true
-
+# Run migrations with error handling
 echo "Running migrations..."
-# Handle migration errors for problematic Wagtail migrations
-python manage.py migrate --no-input 2>&1 | tee /tmp/migrate.log || {
+python manage.py migrate --no-input --run-syncdb 2>&1 | tee /tmp/migrate.log || {
+    MIGRATE_EXIT_CODE=$?
     # If migration fails due to foreign key constraint on revisions, fix it
     if grep -q "wagtailcore_revision.*foreign key constraint" /tmp/migrate.log; then
         echo "Fixing revision content_type_id foreign key issues..."
         python -c "
+import os
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lampstands.settings.production')
 import django
 django.setup()
 from django.db import connection
@@ -35,13 +34,25 @@ with connection.cursor() as cursor:
 "
         # Retry migration
         echo "Retrying migrations after fixing revisions..."
-        python manage.py migrate --no-input
+        python manage.py migrate --no-input --run-syncdb || {
+            echo "Migration still failed after fix attempt"
+            cat /tmp/migrate.log
+            exit 1
+        }
     else
-        echo "Migration failed with unknown error"
+        echo "Migration failed with exit code: $MIGRATE_EXIT_CODE"
+        echo "Migration log:"
         cat /tmp/migrate.log
         exit 1
     fi
 }
+
+# Verify migrations completed successfully
+echo "Verifying migrations completed..."
+python manage.py showmigrations --list | grep -E "\[ \]" && {
+    echo "WARNING: Some migrations appear unapplied!"
+    python manage.py migrate --no-input
+} || echo "All migrations appear to be applied"
 
 # Migrate data from Heroku if HEROKU_DATABASE_URL is set and migration hasn't been done
 if [ -n "$HEROKU_DATABASE_URL" ] && [ ! -f /tmp/.heroku_migration_complete ]; then
