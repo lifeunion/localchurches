@@ -26,7 +26,6 @@ INSTALLED_APPS = [
     'lampstands.core',
     'search',
     'storages',
-    'geoposition',
     'rest_framework',
     'crispy_forms',
     'crispy_bootstrap4',
