@@ -4,13 +4,19 @@ from .base import *
 import os
 
 env = os.environ.copy()
-SECRET_KEY = env['SECRET_KEY']
+SECRET_KEY = env.get('SECRET_KEY')
+if not SECRET_KEY:
+    raise ValueError("SECRET_KEY environment variable is required")
+
 ALLOWED_HOSTS = ['*']
 DEBUG = False
 
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
-DATABASES['default'] = dj_database_url.config()
+db_config = dj_database_url.config()
+if db_config:
+    DATABASES['default'] = db_config
+# If DATABASE_URL is not set, keep the base.py database configuration
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_SSL_REDIRECT = True

@@ -32,5 +32,5 @@ modeladmin_register(ChurchAdmin)
 
 @hooks.register('before_serve_page')
 def change_geodef(page, request, serve_args, serve_kwargs):
-    print("Request:")
-    print(request)
+    # Hook for page serving - return None to continue normal processing
+    return None
