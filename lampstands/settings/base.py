@@ -53,9 +53,6 @@ INSTALLED_APPS = [
     # wagtail-modeladmin (external package for Wagtail 6.x)
     'wagtail_modeladmin',
 
-    # self-add fa
-    'wagtailfontawesome',
-
     'modelcluster',
     'taggit',
 

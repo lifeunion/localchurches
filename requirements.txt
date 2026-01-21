@@ -5,7 +5,7 @@ wagtail==6.4
 # Wagtail add-ons
 wagtail-modeladmin==2.1.0
 wagtail-django-recaptcha
-wagtailfontawesome==1.2.1
+# wagtailfontawesome==1.2.1  # Removed: incompatible with Wagtail 6.4 (uses old import paths)
 
 # Django extensions
 django-recaptcha==4.0.0
