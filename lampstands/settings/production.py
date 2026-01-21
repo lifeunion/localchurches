@@ -57,7 +57,9 @@ if AWS_STORAGE_BUCKET_NAME and AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
 else:
     # Use WhiteNoise for static files (no S3)
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    # Using CompressedStaticFilesStorage instead of CompressedManifestStaticFilesStorage
+    # to avoid issues with missing source map files
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
     STATIC_URL = '/static/'
     MEDIA_URL = '/media/'
 
