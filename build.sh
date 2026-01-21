@@ -54,10 +54,11 @@ python manage.py showmigrations --list | grep -E "\[ \]" && {
     python manage.py migrate --no-input
 } || echo "All migrations appear to be applied"
 
-# Migrate data from Heroku if HEROKU_DATABASE_URL is set and migration hasn't been done
-if [ -n "$HEROKU_DATABASE_URL" ] && [ ! -f /tmp/.heroku_migration_complete ]; then
+# Migrate data from Heroku if HEROKU_DATABASE_URL is set
+# Note: Uses ON CONFLICT DO NOTHING, so safe to re-run
+if [ -n "$HEROKU_DATABASE_URL" ]; then
     echo "Heroku database URL detected. Running migration..."
-    python migrate_from_heroku.py && touch /tmp/.heroku_migration_complete || echo "Migration failed or skipped"
+    python migrate_from_heroku.py || echo "Migration failed or skipped"
 fi
 
 # Collect static files

@@ -128,16 +128,31 @@ def main():
         dest_conn.close()
         return 1
     
-    # Copy data (skip Django/Wagtail system tables - they're created by migrations)
+    # Copy data
+    # Skip only Django system tables that are created by migrations
+    # Include Wagtail data tables (pages, sites, images, etc.) as they contain user content
     print("\nStep 3: Copying data...")
-    print("Note: Django/Wagtail system tables are skipped (created by migrations)")
+    print("Note: Django system tables are skipped (created by migrations)")
+    print("Note: Wagtail data tables (pages, sites, images, etc.) will be migrated")
+    
+    # Tables to skip (Django system tables created by migrations)
+    skip_tables = {
+        'django_migrations',
+        'django_content_type',
+        'django_admin_log',
+        'django_session',
+        'auth_permission',
+        'auth_group',
+        'auth_group_permissions',
+    }
+    
     total_rows = 0
     skipped = 0
     
     for table in tables:
-        # Skip Django/Wagtail system tables
-        if table.startswith('django_') or table.startswith('wagtail_'):
-            print(f"  Skipping {table} (created by migrations)")
+        # Skip Django system tables
+        if table in skip_tables or (table.startswith('django_') and table not in ['django_site']):
+            print(f"  Skipping {table} (Django system table)")
             skipped += 1
             continue
         
@@ -146,7 +161,11 @@ def main():
     
     print(f"\n✓ Migration complete!")
     print(f"  Copied {total_rows} total rows from {len(tables) - skipped} tables")
-    print(f"  Skipped {skipped} system tables")
+    print(f"  Skipped {skipped} Django system tables")
+    print(f"\n⚠ Important: After migration, verify:")
+    print(f"  1. Wagtail site root page is configured correctly")
+    print(f"  2. Pages are accessible in Wagtail admin")
+    print(f"  3. Site settings are properly configured")
     
     # Close connections
     source_conn.close()
