@@ -28,18 +28,10 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    from django.conf.urls.static import static
-    from django.contrib.staticfiles.urls import staticfiles_urlpatterns
     from django.views.generic import TemplateView
-
-    # Serve static and media files from development server
-    # Only add staticfiles_urlpatterns if not using WhiteNoise in production
-    # In production with DEBUG=True, we still use WhiteNoise, so skip this
-    if not hasattr(settings, 'STORAGES') or settings.STORAGES.get('staticfiles', {}).get('BACKEND') != 'whitenoise.storage.CompressedStaticFilesStorage':
-        urlpatterns += staticfiles_urlpatterns()
-    # Only serve media files if MEDIA_URL is not within STATIC_URL
-    if not settings.MEDIA_URL.startswith(settings.STATIC_URL):
-        urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    # Don't add static file serving in production even with DEBUG=True
+    # WhiteNoise handles static files, and we don't want to serve media files
+    # through Django's development server in production
 
     # Add views for testing 404 and 500 templates
     urlpatterns += [

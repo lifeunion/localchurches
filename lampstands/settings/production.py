@@ -14,15 +14,15 @@ DEBUG = True
 
 # Ensure STORAGES is set BEFORE any other code tries to use it
 # This must be set early to avoid KeyError when DEBUG=True
-if 'STORAGES' not in globals():
-    STORAGES = {
-        "default": {
-            "BACKEND": "django.core.files.storage.FileSystemStorage",
-        },
-        "staticfiles": {
-            "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
-        },
-    }
+# Always set it explicitly to ensure it exists
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+    },
+}
 
 # Enable detailed error logging to console for debugging
 LOGGING = {
