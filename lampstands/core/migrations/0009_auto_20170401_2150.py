@@ -11,7 +11,6 @@ class Migration(migrations.Migration):
         ('wagtailcore', '0032_add_bulk_delete_page_permission'),
         ('wagtailredirects', '0005_capitalizeverbose'),
         ('wagtailforms', '0003_capitalizeverbose'),
-        ('wagtailmenus', '0021_auto_20170106_2352'),
         ('wagtailsearchpromotions', '0002_capitalizeverbose'),
         ('lampstands', '0008_auto_20170330_1324'),
     ]
