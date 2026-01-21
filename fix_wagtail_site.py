@@ -74,11 +74,20 @@ def main():
     # List all pages
     print("\nPages in database:")
     pages = Page.objects.all().order_by('depth', 'path')
+    page_count = pages.count()
+    print(f"Total pages found: {page_count}")
+    
+    if page_count == 0:
+        print("⚠ WARNING: No pages found in database!")
+        print("This means the migration didn't copy Wagtail pages.")
+        print("The site will show the default Wagtail welcome page.")
+        return 1
+    
     for page in pages[:20]:  # Show first 20
         print(f"  - {page.title} (ID: {page.id}, depth: {page.depth}, path: {page.path})")
     
-    if pages.count() > 20:
-        print(f"  ... and {pages.count() - 20} more pages")
+    if page_count > 20:
+        print(f"  ... and {page_count - 20} more pages")
     
     print(f"\n✓ Site configuration complete!")
     print(f"  Site: {site.hostname}:{site.port}")

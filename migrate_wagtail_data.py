@@ -26,7 +26,11 @@ def run_django_command(command, env_vars=None):
     
     if result.returncode != 0:
         print(f"Error running: {' '.join(command)}")
-        print(result.stderr)
+        print(f"Exit code: {result.returncode}")
+        if result.stdout:
+            print(f"STDOUT: {result.stdout[:500]}")
+        if result.stderr:
+            print(f"STDERR: {result.stderr[:500]}")
         return False, result.stdout, result.stderr
     return True, result.stdout, result.stderr
 
