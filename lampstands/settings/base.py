@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'crispy_forms',
     'crispy_bootstrap4',
-    'wagtail_django_recaptcha',
+    'wagtailcaptcha',
     'django_recaptcha',
     'wagtail.api.v2',
 

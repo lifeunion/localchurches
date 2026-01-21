@@ -39,7 +39,7 @@ from urllib.parse import quote
 import json
 from django.conf import settings as localitySettings
 from django.utils import text
-from wagtail_django_recaptcha.models import WagtailCaptchaEmailForm
+from wagtailcaptcha.models import WagtailCaptchaEmailForm
 
 
 # Helper function to check for AJAX requests (replaces deprecated request.is_ajax())

@@ -4,7 +4,7 @@ wagtail==6.4
 
 # Wagtail add-ons
 wagtail-modeladmin==2.1.0
-wagtail-django-recaptcha==2.1.0
+wagtail-django-recaptcha
 wagtailfontawesome==1.2.1
 
 # Django extensions
