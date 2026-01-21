@@ -27,13 +27,11 @@ from wagtail.images.models import AbstractImage, AbstractRendition, Image
 from wagtail.search import index
 from wagtail.snippets.models import register_snippet
 
-from .fields import ColorField
+from .fields import ColorField, GeopositionField
 
 # added for phone numbers
 from django.core.validators import RegexValidator, URLValidator
 from django_countries.fields import CountryField
-
-from geoposition.fields import GeopositionField
 from urllib.request import urlopen
 from urllib.parse import quote
 import json

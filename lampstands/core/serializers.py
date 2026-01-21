@@ -1,7 +1,6 @@
 from rest_framework import serializers
 from .models import ChurchPage, ChurchIndexPage
 from django_countries.serializer_fields import CountryField
-from geoposition.fields import GeopositionField
 
 class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
     #id = serializers.IntegerField(read_only=False)
