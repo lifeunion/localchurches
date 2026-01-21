@@ -5,7 +5,7 @@ from __future__ import unicode_literals
 from django.db import migrations, models
 import django.db.models.deletion
 import modelcluster.fields
-import wagtail.wagtailcore.fields
+import wagtail.fields
 
 
 class Migration(migrations.Migration):
@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
             name='Churchentry',
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
-                ('intro', wagtail.wagtailcore.fields.RichTextField(blank=True)),
+                ('intro', wagtail.fields.RichTextField(blank=True)),
                 ('thank_you_text', models.CharField(help_text='e.g. Thanks!', max_length=255)),
                 ('thank_you_follow_up', models.CharField(help_text="e.g. We'll be in touch", max_length=255)),
                 ('landing_page_button_title', models.CharField(blank=True, max_length=255)),

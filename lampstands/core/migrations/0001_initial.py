@@ -7,18 +7,17 @@ import django.core.validators
 from django.db import migrations, models
 import django.db.models.deletion
 import django_countries.fields
-import geoposition.fields
 import lampstands.core.fields
 import lampstands.core.models
 import modelcluster.fields
 import taggit.managers
-import wagtail.wagtailcore.blocks
-import wagtail.wagtailcore.fields
-import wagtail.wagtailcore.models
-import wagtail.wagtailembeds.blocks
-import wagtail.wagtailimages.blocks
-import wagtail.wagtailimages.models
-import wagtail.wagtailsearch.index
+import wagtail.blocks
+import wagtail.fields
+import wagtail.models
+import wagtail.embeds.blocks
+import wagtail.images.blocks
+import wagtail.images.models
+import wagtail.search.index
 
 
 class Migration(migrations.Migration):
@@ -135,7 +134,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
                 ('colour', models.CharField(blank=True, choices=[('orange', 'Orange'), ('blue', 'Blue'), ('white', 'White')], max_length=255, verbose_name='Listing card colour if left blank will display image')),
-                ('streamfield', wagtail.wagtailcore.fields.StreamField((('firstparagraph', wagtail.wagtailcore.blocks.RichTextBlock()), ('story', wagtail.wagtailcore.blocks.StreamBlock((('h2', wagtail.wagtailcore.blocks.CharBlock(classname='title', icon='title')), ('h3', wagtail.wagtailcore.blocks.CharBlock(classname='title', icon='title')), ('h4', wagtail.wagtailcore.blocks.CharBlock(classname='title', icon='title')), ('intro', wagtail.wagtailcore.blocks.RichTextBlock(icon='pilcrow')), ('paragraph', wagtail.wagtailcore.blocks.RichTextBlock(icon='pilcrow')), ('aligned_image', wagtail.wagtailcore.blocks.StructBlock((('image', wagtail.wagtailimages.blocks.ImageChooserBlock()), ('alignment', lampstands.core.models.ImageFormatChoiceBlock()), ('caption', wagtail.wagtailcore.blocks.CharBlock()), ('attribution', wagtail.wagtailcore.blocks.CharBlock(required=False))), label='Aligned image')), ('wide_image', wagtail.wagtailcore.blocks.StructBlock((('image', wagtail.wagtailimages.blocks.ImageChooserBlock()),), label='Wide image')), ('bustout', wagtail.wagtailcore.blocks.StructBlock((('image', wagtail.wagtailimages.blocks.ImageChooserBlock()), ('text', wagtail.wagtailcore.blocks.RichTextBlock())))), ('pullquote', wagtail.wagtailcore.blocks.StructBlock((('quote', wagtail.wagtailcore.blocks.CharBlock(classname='quote title')), ('attribution', wagtail.wagtailcore.blocks.CharBlock())))), ('raw_html', wagtail.wagtailcore.blocks.RawHTMLBlock(icon='code', label='Raw HTML')), ('embed', wagtail.wagtailembeds.blocks.EmbedBlock(icon='code')))))), help_text='Always starts with the second letter after dropcap letter')),
+                ('streamfield', wagtail.fields.StreamField((('firstparagraph', wagtail.blocks.RichTextBlock()), ('story', wagtail.blocks.StreamBlock((('h2', wagtail.blocks.CharBlock(classname='title', icon='title')), ('h3', wagtail.blocks.CharBlock(classname='title', icon='title')), ('h4', wagtail.blocks.CharBlock(classname='title', icon='title')), ('intro', wagtail.blocks.RichTextBlock(icon='pilcrow')), ('paragraph', wagtail.blocks.RichTextBlock(icon='pilcrow')), ('aligned_image', wagtail.blocks.StructBlock((('image', wagtail.images.blocks.ImageChooserBlock()), ('alignment', lampstands.core.models.ImageFormatChoiceBlock()), ('caption', wagtail.blocks.CharBlock()), ('attribution', wagtail.blocks.CharBlock(required=False))), label='Aligned image')), ('wide_image', wagtail.blocks.StructBlock((('image', wagtail.images.blocks.ImageChooserBlock()),), label='Wide image')), ('bustout', wagtail.blocks.StructBlock((('image', wagtail.images.blocks.ImageChooserBlock()), ('text', wagtail.blocks.RichTextBlock())))), ('pullquote', wagtail.blocks.StructBlock((('quote', wagtail.blocks.CharBlock(classname='quote title')), ('attribution', wagtail.blocks.CharBlock())))), ('raw_html', wagtail.blocks.RawHTMLBlock(icon='code', label='Raw HTML')), ('embed', wagtail.embeds.blocks.EmbedBlock(icon='code')))))), help_text='Always starts with the second letter after dropcap letter')),
                 ('letterdropcap', models.CharField(blank=True, max_length=1)),
                 ('canonical_url', models.URLField(blank=True, max_length=255)),
             ],
@@ -210,7 +209,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
                 ('colour', models.CharField(blank=True, choices=[('orange', 'Orange'), ('blue', 'Blue'), ('white', 'White')], max_length=255, verbose_name='Listing card colour if left blank will display image')),
-                ('streamfield', wagtail.wagtailcore.fields.StreamField((('firstparagraph', wagtail.wagtailcore.blocks.RichTextBlock()), ('story', wagtail.wagtailcore.blocks.StreamBlock((('h2', wagtail.wagtailcore.blocks.CharBlock(classname='title', icon='title')), ('h3', wagtail.wagtailcore.blocks.CharBlock(classname='title', icon='title')), ('h4', wagtail.wagtailcore.blocks.CharBlock(classname='title', icon='title')), ('intro', wagtail.wagtailcore.blocks.RichTextBlock(icon='pilcrow')), ('paragraph', wagtail.wagtailcore.blocks.RichTextBlock(icon='pilcrow')), ('aligned_image', wagtail.wagtailcore.blocks.StructBlock((('image', wagtail.wagtailimages.blocks.ImageChooserBlock()), ('alignment', lampstands.core.models.ImageFormatChoiceBlock()), ('caption', wagtail.wagtailcore.blocks.CharBlock()), ('attribution', wagtail.wagtailcore.blocks.CharBlock(required=False))), label='Aligned image')), ('wide_image', wagtail.wagtailcore.blocks.StructBlock((('image', wagtail.wagtailimages.blocks.ImageChooserBlock()),), label='Wide image')), ('bustout', wagtail.wagtailcore.blocks.StructBlock((('image', wagtail.wagtailimages.blocks.ImageChooserBlock()), ('text', wagtail.wagtailcore.blocks.RichTextBlock())))), ('pullquote', wagtail.wagtailcore.blocks.StructBlock((('quote', wagtail.wagtailcore.blocks.CharBlock(classname='quote title')), ('attribution', wagtail.wagtailcore.blocks.CharBlock())))), ('raw_html', wagtail.wagtailcore.blocks.RawHTMLBlock(icon='code', label='Raw HTML')), ('embed', wagtail.wagtailembeds.blocks.EmbedBlock(icon='code')))))), help_text='Always starts with the second letter after dropcap letter')),
+                ('streamfield', wagtail.fields.StreamField((('firstparagraph', wagtail.blocks.RichTextBlock()), ('story', wagtail.blocks.StreamBlock((('h2', wagtail.blocks.CharBlock(classname='title', icon='title')), ('h3', wagtail.blocks.CharBlock(classname='title', icon='title')), ('h4', wagtail.blocks.CharBlock(classname='title', icon='title')), ('intro', wagtail.blocks.RichTextBlock(icon='pilcrow')), ('paragraph', wagtail.blocks.RichTextBlock(icon='pilcrow')), ('aligned_image', wagtail.blocks.StructBlock((('image', wagtail.images.blocks.ImageChooserBlock()), ('alignment', lampstands.core.models.ImageFormatChoiceBlock()), ('caption', wagtail.blocks.CharBlock()), ('attribution', wagtail.blocks.CharBlock(required=False))), label='Aligned image')), ('wide_image', wagtail.blocks.StructBlock((('image', wagtail.images.blocks.ImageChooserBlock()),), label='Wide image')), ('bustout', wagtail.blocks.StructBlock((('image', wagtail.images.blocks.ImageChooserBlock()), ('text', wagtail.blocks.RichTextBlock())))), ('pullquote', wagtail.blocks.StructBlock((('quote', wagtail.blocks.CharBlock(classname='quote title')), ('attribution', wagtail.blocks.CharBlock())))), ('raw_html', wagtail.blocks.RawHTMLBlock(icon='code', label='Raw HTML')), ('embed', wagtail.embeds.blocks.EmbedBlock(icon='code')))))), help_text='Always starts with the second letter after dropcap letter')),
                 ('letterdropcap', models.CharField(blank=True, max_length=1)),
                 ('author', models.CharField(blank=True, max_length=255)),
                 ('from_area', models.CharField(blank=True, max_length=255)),
@@ -290,12 +289,12 @@ class Migration(migrations.Migration):
                 ('locality_country', django_countries.fields.CountryField(max_length=2)),
                 ('short_intro', models.CharField(blank=True, help_text='A short summary of when the locality started meeting', max_length=255)),
                 ('address', models.CharField(blank=True, max_length=255, null=True)),
-                ('position', geoposition.fields.GeopositionField(blank=True, max_length=42, null=True)),
+                ('position', lampstands.core.fields.GeopositionField(blank=True, max_length=42, null=True)),
                 ('locality_phone_number', models.CharField(blank=True, max_length=16, validators=[django.core.validators.RegexValidator(message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.", regex='^\\+?1?\\d{9,15}$')])),
                 ('locality_fax_number', models.CharField(blank=True, max_length=16, validators=[django.core.validators.RegexValidator(message="Phone number must be entered in the format: '+999999999'. Up to 15 digits allowed.", regex='^\\+?1?\\d{9,15}$')])),
                 ('locality_email', models.EmailField(blank=True, max_length=254)),
                 ('locality_web', models.TextField(blank=True, validators=[django.core.validators.URLValidator()])),
-                ('meeting_info', wagtail.wagtailcore.fields.RichTextField(blank=True)),
+                ('meeting_info', wagtail.fields.RichTextField(blank=True)),
                 ('last_update', models.DateField(null=True)),
             ],
             options={
@@ -345,7 +344,7 @@ class Migration(migrations.Migration):
                 ('to_address', models.CharField(blank=True, help_text='Optional - form submissions will be emailed to these addresses. Separate multiple addresses by comma.', max_length=255, verbose_name='to address')),
                 ('from_address', models.CharField(blank=True, max_length=255, verbose_name='from address')),
                 ('subject', models.CharField(blank=True, max_length=255, verbose_name='subject')),
-                ('intro', wagtail.wagtailcore.fields.RichTextField(blank=True)),
+                ('intro', wagtail.fields.RichTextField(blank=True)),
                 ('thank_you_text', models.CharField(help_text='e.g. Thanks!', max_length=255)),
                 ('thank_you_follow_up', models.CharField(help_text="e.g. We'll be in touch", max_length=255)),
                 ('landing_page_button_title', models.CharField(blank=True, max_length=255)),
@@ -450,7 +449,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=255, verbose_name='title')),
-                ('file', models.ImageField(height_field='height', upload_to=wagtail.wagtailimages.models.get_upload_to, verbose_name='file', width_field='width')),
+                ('file', models.ImageField(height_field='height', upload_to=wagtail.images.models.get_upload_to, verbose_name='file', width_field='width')),
                 ('width', models.IntegerField(editable=False, verbose_name='width')),
                 ('height', models.IntegerField(editable=False, verbose_name='height')),
                 ('created_at', models.DateTimeField(auto_now_add=True, db_index=True, verbose_name='created at')),
@@ -460,21 +459,21 @@ class Migration(migrations.Migration):
                 ('focal_point_height', models.PositiveIntegerField(blank=True, null=True)),
                 ('file_size', models.PositiveIntegerField(editable=False, null=True)),
                 ('credit', models.CharField(blank=True, max_length=255)),
-                ('collection', models.ForeignKey(default=wagtail.wagtailcore.models.get_root_collection_id, on_delete=django.db.models.deletion.CASCADE, related_name='+', to='wagtailcore.Collection', verbose_name='collection')),
+                ('collection', models.ForeignKey(default=wagtail.models.get_root_collection_id, on_delete=django.db.models.deletion.CASCADE, related_name='+', to='wagtailcore.Collection', verbose_name='collection')),
                 ('tags', taggit.managers.TaggableManager(blank=True, help_text=None, through='taggit.TaggedItem', to='taggit.Tag', verbose_name='tags')),
                 ('uploaded_by_user', models.ForeignKey(blank=True, editable=False, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL, verbose_name='uploaded by user')),
             ],
             options={
                 'abstract': False,
             },
-            bases=(wagtail.wagtailsearch.index.Indexed, models.Model),
+            bases=(wagtail.search.index.Indexed, models.Model),
         ),
         migrations.CreateModel(
             name='LampstandsRendition',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('filter_spec', models.CharField(db_index=True, max_length=255)),
-                ('file', models.ImageField(height_field='height', upload_to=wagtail.wagtailimages.models.get_rendition_upload_to, width_field='width')),
+                ('file', models.ImageField(height_field='height', upload_to=wagtail.images.models.get_rendition_upload_to, width_field='width')),
                 ('width', models.IntegerField(editable=False)),
                 ('height', models.IntegerField(editable=False)),
                 ('focal_point_key', models.CharField(blank=True, default='', editable=False, max_length=16)),
@@ -485,7 +484,7 @@ class Migration(migrations.Migration):
             name='MainMenu',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('menu', wagtail.wagtailcore.fields.StreamField((('items', wagtail.wagtailcore.blocks.StructBlock((('page', wagtail.wagtailcore.blocks.PageChooserBlock()), ('subitems', wagtail.wagtailcore.blocks.StreamBlock((('subitem', wagtail.wagtailcore.blocks.PageChooserBlock()),)))))),), blank=True)),
+                ('menu', wagtail.fields.StreamField((('items', wagtail.blocks.StructBlock((('page', wagtail.blocks.PageChooserBlock()), ('subitems', wagtail.blocks.StreamBlock((('subitem', wagtail.blocks.PageChooserBlock()),)))))),), blank=True)),
                 ('site', models.OneToOneField(editable=False, on_delete=django.db.models.deletion.CASCADE, to='wagtailcore.Site')),
             ],
             options={
@@ -587,7 +586,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
                 ('description', models.TextField()),
-                ('streamfield', wagtail.wagtailcore.fields.StreamField((('case_studies', wagtail.wagtailcore.blocks.StructBlock((('title', wagtail.wagtailcore.blocks.CharBlock(required=True)), ('intro', wagtail.wagtailcore.blocks.TextBlock(required=True)), ('case_studies', wagtail.wagtailcore.blocks.ListBlock(wagtail.wagtailcore.blocks.StructBlock((('page', wagtail.wagtailcore.blocks.PageChooserBlock('lampstands.BeliefsPage')), ('title', wagtail.wagtailcore.blocks.CharBlock(required=False)), ('descriptive_title', wagtail.wagtailcore.blocks.CharBlock(required=False)), ('image', wagtail.wagtailimages.blocks.ImageChooserBlock(required=False))))))))), ('highlights', wagtail.wagtailcore.blocks.StructBlock((('title', wagtail.wagtailcore.blocks.CharBlock(required=True)), ('intro', wagtail.wagtailcore.blocks.TextBlock(required=False)), ('highlights', wagtail.wagtailcore.blocks.ListBlock(wagtail.wagtailcore.blocks.TextBlock()))))), ('pull_quote', wagtail.wagtailcore.blocks.StructBlock((('quote', wagtail.wagtailcore.blocks.CharBlock(classname='quote title')), ('attribution', wagtail.wagtailcore.blocks.CharBlock())), template='blocks/pull_quote_block.html')), ('process', wagtail.wagtailcore.blocks.StructBlock((('title', wagtail.wagtailcore.blocks.CharBlock(required=True)), ('intro', wagtail.wagtailcore.blocks.TextBlock(required=False)), ('steps', wagtail.wagtailcore.blocks.ListBlock(wagtail.wagtailcore.blocks.StructBlock((('subtitle', wagtail.wagtailcore.blocks.CharBlock(required=False)), ('title', wagtail.wagtailcore.blocks.CharBlock(required=True)), ('icon', wagtail.wagtailcore.blocks.CharBlock(help_text='Paste SVG code here', max_length=9000, required=True)), ('description', wagtail.wagtailcore.blocks.TextBlock(required=True))))))))), ('people', wagtail.wagtailcore.blocks.StructBlock((('title', wagtail.wagtailcore.blocks.CharBlock(required=True)), ('intro', wagtail.wagtailcore.blocks.TextBlock(required=True)), ('people', wagtail.wagtailcore.blocks.ListBlock(wagtail.wagtailcore.blocks.PageChooserBlock()))))), ('featured_pages', wagtail.wagtailcore.blocks.StructBlock((('title', wagtail.wagtailcore.blocks.CharBlock()), ('pages', wagtail.wagtailcore.blocks.ListBlock(wagtail.wagtailcore.blocks.StructBlock((('page', wagtail.wagtailcore.blocks.PageChooserBlock()), ('image', wagtail.wagtailimages.blocks.ImageChooserBlock()), ('text', wagtail.wagtailcore.blocks.TextBlock()), ('sub_text', wagtail.wagtailcore.blocks.CharBlock(max_length=100))))))))), ('sign_up_form_page', wagtail.wagtailcore.blocks.StructBlock((('page', wagtail.wagtailcore.blocks.PageChooserBlock('lampstands.SignUpFormPage')),))), ('logos', wagtail.wagtailcore.blocks.StructBlock((('title', wagtail.wagtailcore.blocks.CharBlock()), ('intro', wagtail.wagtailcore.blocks.CharBlock()), ('logos', wagtail.wagtailcore.blocks.ListBlock(wagtail.wagtailcore.blocks.StructBlock((('image', wagtail.wagtailimages.blocks.ImageChooserBlock()), ('link_page', wagtail.wagtailcore.blocks.PageChooserBlock(required=False)), ('link_external', wagtail.wagtailcore.blocks.URLBlock(required=False)))))))))))),
+                ('streamfield', wagtail.fields.StreamField((('case_studies', wagtail.blocks.StructBlock((('title', wagtail.blocks.CharBlock(required=True)), ('intro', wagtail.blocks.TextBlock(required=True)), ('case_studies', wagtail.blocks.ListBlock(wagtail.blocks.StructBlock((('page', wagtail.blocks.PageChooserBlock('lampstands.BeliefsPage')), ('title', wagtail.blocks.CharBlock(required=False)), ('descriptive_title', wagtail.blocks.CharBlock(required=False)), ('image', wagtail.images.blocks.ImageChooserBlock(required=False))))))))), ('highlights', wagtail.blocks.StructBlock((('title', wagtail.blocks.CharBlock(required=True)), ('intro', wagtail.blocks.TextBlock(required=False)), ('highlights', wagtail.blocks.ListBlock(wagtail.blocks.TextBlock()))))), ('pull_quote', wagtail.blocks.StructBlock((('quote', wagtail.blocks.CharBlock(classname='quote title')), ('attribution', wagtail.blocks.CharBlock())), template='blocks/pull_quote_block.html')), ('process', wagtail.blocks.StructBlock((('title', wagtail.blocks.CharBlock(required=True)), ('intro', wagtail.blocks.TextBlock(required=False)), ('steps', wagtail.blocks.ListBlock(wagtail.blocks.StructBlock((('subtitle', wagtail.blocks.CharBlock(required=False)), ('title', wagtail.blocks.CharBlock(required=True)), ('icon', wagtail.blocks.CharBlock(help_text='Paste SVG code here', max_length=9000, required=True)), ('description', wagtail.blocks.TextBlock(required=True))))))))), ('people', wagtail.blocks.StructBlock((('title', wagtail.blocks.CharBlock(required=True)), ('intro', wagtail.blocks.TextBlock(required=True)), ('people', wagtail.blocks.ListBlock(wagtail.blocks.PageChooserBlock()))))), ('featured_pages', wagtail.blocks.StructBlock((('title', wagtail.blocks.CharBlock()), ('pages', wagtail.blocks.ListBlock(wagtail.blocks.StructBlock((('page', wagtail.blocks.PageChooserBlock()), ('image', wagtail.images.blocks.ImageChooserBlock()), ('text', wagtail.blocks.TextBlock()), ('sub_text', wagtail.blocks.CharBlock(max_length=100))))))))), ('sign_up_form_page', wagtail.blocks.StructBlock((('page', wagtail.blocks.PageChooserBlock('lampstands.SignUpFormPage')),))), ('logos', wagtail.blocks.StructBlock((('title', wagtail.blocks.CharBlock()), ('intro', wagtail.blocks.CharBlock()), ('logos', wagtail.blocks.ListBlock(wagtail.blocks.StructBlock((('image', wagtail.images.blocks.ImageChooserBlock()), ('link_page', wagtail.blocks.PageChooserBlock(required=False)), ('link_external', wagtail.blocks.URLBlock(required=False)))))))))))),
                 ('particle', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='lampstands.ParticleSnippet')),
             ],
             options={
@@ -629,7 +628,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
                 ('formatted_title', models.CharField(blank=True, help_text='This is the title displayed on the page, not the document title tag. HTML is permitted. Be careful.', max_length=255)),
-                ('intro', wagtail.wagtailcore.fields.RichTextField()),
+                ('intro', wagtail.fields.RichTextField()),
                 ('call_to_action_text', models.CharField(help_text='Displayed above the email submission form.', max_length=255)),
                 ('form_button_text', models.CharField(max_length=255)),
                 ('thank_you_text', models.CharField(help_text='Displayed on successful form submission.', max_length=255)),
@@ -703,12 +702,12 @@ class Migration(migrations.Migration):
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
                 ('credit', models.CharField(blank=True, max_length=255)),
-                ('heading', wagtail.wagtailcore.fields.RichTextField(blank=True)),
+                ('heading', wagtail.fields.RichTextField(blank=True)),
                 ('quote', models.CharField(blank=True, max_length=255)),
-                ('intro', wagtail.wagtailcore.fields.RichTextField(blank=True, verbose_name='Intro (deprecated. Use streamfield instead)')),
-                ('middle_break', wagtail.wagtailcore.fields.RichTextField(blank=True)),
-                ('body', wagtail.wagtailcore.fields.RichTextField(blank=True, verbose_name='Body (deprecated. Use streamfield instead)')),
-                ('streamfield', wagtail.wagtailcore.fields.StreamField((('h2', wagtail.wagtailcore.blocks.CharBlock(classname='title', icon='title')), ('h3', wagtail.wagtailcore.blocks.CharBlock(classname='title', icon='title')), ('h4', wagtail.wagtailcore.blocks.CharBlock(classname='title', icon='title')), ('intro', wagtail.wagtailcore.blocks.RichTextBlock(icon='pilcrow')), ('paragraph', wagtail.wagtailcore.blocks.RichTextBlock(icon='pilcrow')), ('aligned_image', wagtail.wagtailcore.blocks.StructBlock((('image', wagtail.wagtailimages.blocks.ImageChooserBlock()), ('alignment', lampstands.core.models.ImageFormatChoiceBlock()), ('caption', wagtail.wagtailcore.blocks.CharBlock()), ('attribution', wagtail.wagtailcore.blocks.CharBlock(required=False))), label='Aligned image')), ('wide_image', wagtail.wagtailcore.blocks.StructBlock((('image', wagtail.wagtailimages.blocks.ImageChooserBlock()),), label='Wide image')), ('bustout', wagtail.wagtailcore.blocks.StructBlock((('image', wagtail.wagtailimages.blocks.ImageChooserBlock()), ('text', wagtail.wagtailcore.blocks.RichTextBlock())))), ('pullquote', wagtail.wagtailcore.blocks.StructBlock((('quote', wagtail.wagtailcore.blocks.CharBlock(classname='quote title')), ('attribution', wagtail.wagtailcore.blocks.CharBlock())))), ('raw_html', wagtail.wagtailcore.blocks.RawHTMLBlock(icon='code', label='Raw HTML')), ('embed', wagtail.wagtailembeds.blocks.EmbedBlock(icon='code'))))),
+                ('intro', wagtail.fields.RichTextField(blank=True, verbose_name='Intro (deprecated. Use streamfield instead)')),
+                ('middle_break', wagtail.fields.RichTextField(blank=True)),
+                ('body', wagtail.fields.RichTextField(blank=True, verbose_name='Body (deprecated. Use streamfield instead)')),
+                ('streamfield', wagtail.fields.StreamField((('h2', wagtail.blocks.CharBlock(classname='title', icon='title')), ('h3', wagtail.blocks.CharBlock(classname='title', icon='title')), ('h4', wagtail.blocks.CharBlock(classname='title', icon='title')), ('intro', wagtail.blocks.RichTextBlock(icon='pilcrow')), ('paragraph', wagtail.blocks.RichTextBlock(icon='pilcrow')), ('aligned_image', wagtail.blocks.StructBlock((('image', wagtail.images.blocks.ImageChooserBlock()), ('alignment', lampstands.core.models.ImageFormatChoiceBlock()), ('caption', wagtail.blocks.CharBlock()), ('attribution', wagtail.blocks.CharBlock(required=False))), label='Aligned image')), ('wide_image', wagtail.blocks.StructBlock((('image', wagtail.images.blocks.ImageChooserBlock()),), label='Wide image')), ('bustout', wagtail.blocks.StructBlock((('image', wagtail.images.blocks.ImageChooserBlock()), ('text', wagtail.blocks.RichTextBlock())))), ('pullquote', wagtail.blocks.StructBlock((('quote', wagtail.blocks.CharBlock(classname='quote title')), ('attribution', wagtail.blocks.CharBlock())))), ('raw_html', wagtail.blocks.RawHTMLBlock(icon='code', label='Raw HTML')), ('embed', wagtail.embeds.blocks.EmbedBlock(icon='code'))))),
                 ('email', models.EmailField(blank=True, max_length=254)),
                 ('show_in_play_menu', models.BooleanField(default=False)),
                 ('feed_image', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='+', to='lampstands.LampstandsImage')),
@@ -739,7 +738,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('sort_order', models.IntegerField(blank=True, editable=False, null=True)),
-                ('content', wagtail.wagtailcore.fields.RichTextField()),
+                ('content', wagtail.fields.RichTextField()),
                 ('page', modelcluster.fields.ParentalKey(on_delete=django.db.models.deletion.CASCADE, related_name='content_block', to='lampstands.StandardPage')),
             ],
             options={
@@ -800,12 +799,12 @@ class Migration(migrations.Migration):
             name='TurnkeyPage',
             fields=[
                 ('page_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='wagtailcore.Page')),
-                ('intro', wagtail.wagtailcore.fields.RichTextField()),
+                ('intro', wagtail.fields.RichTextField()),
                 ('form_title', models.CharField(max_length=255)),
                 ('form_subtitle', models.CharField(max_length=255)),
                 ('form_button_text', models.CharField(max_length=255)),
                 ('to_address', models.EmailField(blank=True, help_text='Optional - form submissions will be emailed to this address', max_length=254, verbose_name='to address')),
-                ('body', wagtail.wagtailcore.fields.RichTextField()),
+                ('body', wagtail.fields.RichTextField()),
                 ('events_managed_title', models.CharField(max_length=255)),
                 ('call_to_action_title', models.CharField(blank=True, max_length=255)),
                 ('call_to_action_embed_url', models.URLField(blank=True)),
