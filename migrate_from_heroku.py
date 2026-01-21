@@ -30,7 +30,7 @@ def get_all_tables(conn):
         """)
         return [row[0] for row in cur.fetchall()]
 
-def copy_table_data(source_conn, dest_conn, table_name):
+def copy_table_data(source_conn, dest_conn, table_name, skip_columns=None):
     """Copy data from source to destination table."""
     print(f"  Copying {table_name}...", end=' ', flush=True)
     
@@ -48,10 +48,45 @@ def copy_table_data(source_conn, dest_conn, table_name):
                 print("(table doesn't exist, skipping)")
                 return 0
         
-        # Get data from source
+        # Get column info from destination (to match schema)
+        with dest_conn.cursor() as dest_cur:
+            dest_cur.execute("""
+                SELECT column_name 
+                FROM information_schema.columns 
+                WHERE table_schema = 'public' 
+                AND table_name = %s
+                ORDER BY ordinal_position
+            """, (table_name,))
+            dest_columns = [row[0] for row in dest_cur.fetchall()]
+        
+        # Filter out columns that don't exist in destination
+        if skip_columns:
+            dest_columns = [col for col in dest_columns if col not in skip_columns]
+        
+        if not dest_columns:
+            print("(no matching columns, skipping)")
+            return 0
+        
+        # Get data from source (only columns that exist in destination)
         with source_conn.cursor() as src_cur:
-            src_cur.execute(sql.SQL("SELECT * FROM {}").format(sql.Identifier(table_name)))
-            columns = [desc[0] for desc in src_cur.description]
+            # Check which columns exist in source
+            src_cur.execute("""
+                SELECT column_name 
+                FROM information_schema.columns 
+                WHERE table_schema = 'public' 
+                AND table_name = %s
+            """, (table_name,))
+            source_columns = [row[0] for row in src_cur.fetchall()]
+            
+            # Only select columns that exist in both
+            common_columns = [col for col in dest_columns if col in source_columns]
+            
+            if not common_columns:
+                print("(no common columns, skipping)")
+                return 0
+            
+            cols_sql = sql.SQL(', ').join(map(sql.Identifier, common_columns))
+            src_cur.execute(sql.SQL("SELECT {} FROM {}").format(cols_sql, sql.Identifier(table_name)))
             rows = src_cur.fetchall()
         
         if not rows:
@@ -61,8 +96,8 @@ def copy_table_data(source_conn, dest_conn, table_name):
         # Insert into destination
         with dest_conn.cursor() as dest_cur:
             # Build INSERT statement with ON CONFLICT DO NOTHING to avoid duplicates
-            cols = sql.SQL(', ').join(map(sql.Identifier, columns))
-            placeholders = sql.SQL(', ').join(sql.Placeholder() * len(columns))
+            cols = sql.SQL(', ').join(map(sql.Identifier, common_columns))
+            placeholders = sql.SQL(', ').join(sql.Placeholder() * len(common_columns))
             insert_query = sql.SQL("INSERT INTO {} ({}) VALUES ({}) ON CONFLICT DO NOTHING").format(
                 sql.Identifier(table_name),
                 cols,
@@ -74,7 +109,8 @@ def copy_table_data(source_conn, dest_conn, table_name):
             print(f"✓ ({len(rows)} rows)")
             return len(rows)
     except Exception as e:
-        print(f"✗ Error: {str(e)[:100]}")
+        error_msg = str(e)
+        print(f"✗ Error: {error_msg[:150]}")
         dest_conn.rollback()
         return 0
 
@@ -129,10 +165,9 @@ def main():
         return 1
     
     # Copy data
-    # Skip Django system tables and Wagtail tables (Wagtail uses dumpdata/loaddata)
+    # Strategy: Copy Wagtail core tables first (in order), then other tables
     print("\nStep 3: Copying data...")
     print("Note: Django system tables are skipped (created by migrations)")
-    print("Note: Wagtail tables are skipped (migrated via dumpdata/loaddata)")
     
     # Tables to skip
     skip_tables = {
@@ -145,13 +180,47 @@ def main():
         'auth_group_permissions',
     }
     
-    # Skip all Wagtail tables (handled by migrate_wagtail_data.py)
+    # Wagtail tables to copy in order (respecting foreign key dependencies)
+    wagtail_tables_order = [
+        'wagtailcore_locale',
+        'wagtailcore_collection',
+        'wagtailcore_revision',  # Copy revisions first (pages reference them)
+        'wagtailcore_page',  # Copy pages (sites reference them)
+        'wagtailcore_site',  # Copy sites last (they reference pages)
+        'wagtailimages_image',
+        'wagtailimages_rendition',
+        'wagtaildocs_document',
+    ]
+    
+    # Other Wagtail tables (can be copied in any order)
     wagtail_prefixes = ['wagtailcore_', 'wagtailimages_', 'wagtaildocs_', 'wagtailforms_', 
                         'wagtailredirects_', 'wagtailsearch_', 'wagtailusers_', 'wagtailadmin_']
     
     total_rows = 0
     skipped = 0
     
+    # First, copy Wagtail core tables in order
+    print("\nCopying Wagtail core tables (in dependency order)...")
+    for table in wagtail_tables_order:
+        if table in tables:
+            # For wagtailcore_revision, skip JSON columns that cause issues
+            skip_cols = None
+            if table == 'wagtailcore_revision':
+                skip_cols = ['content']  # Skip JSON content field - will be NULL
+            rows = copy_table_data(source_conn, dest_conn, table, skip_columns=skip_cols)
+            total_rows += rows
+    
+    # Then copy other Wagtail tables
+    print("\nCopying other Wagtail tables...")
+    for table in tables:
+        if table in wagtail_tables_order:
+            continue  # Already copied
+        if any(table.startswith(prefix) for prefix in wagtail_prefixes):
+            rows = copy_table_data(source_conn, dest_conn, table)
+            total_rows += rows
+    
+    # Finally, copy non-Wagtail tables
+    print("\nCopying other tables...")
     for table in tables:
         # Skip Django system tables
         if table in skip_tables or (table.startswith('django_') and table not in ['django_site']):
@@ -159,10 +228,8 @@ def main():
             skipped += 1
             continue
         
-        # Skip Wagtail tables (handled by migrate_wagtail_data.py)
+        # Skip if already copied
         if any(table.startswith(prefix) for prefix in wagtail_prefixes):
-            print(f"  Skipping {table} (Wagtail table - migrated via dumpdata/loaddata)")
-            skipped += 1
             continue
         
         rows = copy_table_data(source_conn, dest_conn, table)
