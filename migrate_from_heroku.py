@@ -129,13 +129,12 @@ def main():
         return 1
     
     # Copy data
-    # Skip only Django system tables that are created by migrations
-    # Include Wagtail data tables (pages, sites, images, etc.) as they contain user content
+    # Skip Django system tables and Wagtail tables (Wagtail uses dumpdata/loaddata)
     print("\nStep 3: Copying data...")
     print("Note: Django system tables are skipped (created by migrations)")
-    print("Note: Wagtail data tables (pages, sites, images, etc.) will be migrated")
+    print("Note: Wagtail tables are skipped (migrated via dumpdata/loaddata)")
     
-    # Tables to skip (Django system tables created by migrations)
+    # Tables to skip
     skip_tables = {
         'django_migrations',
         'django_content_type',
@@ -146,6 +145,10 @@ def main():
         'auth_group_permissions',
     }
     
+    # Skip all Wagtail tables (handled by migrate_wagtail_data.py)
+    wagtail_prefixes = ['wagtailcore_', 'wagtailimages_', 'wagtaildocs_', 'wagtailforms_', 
+                        'wagtailredirects_', 'wagtailsearch_', 'wagtailusers_', 'wagtailadmin_']
+    
     total_rows = 0
     skipped = 0
     
@@ -153,6 +156,12 @@ def main():
         # Skip Django system tables
         if table in skip_tables or (table.startswith('django_') and table not in ['django_site']):
             print(f"  Skipping {table} (Django system table)")
+            skipped += 1
+            continue
+        
+        # Skip Wagtail tables (handled by migrate_wagtail_data.py)
+        if any(table.startswith(prefix) for prefix in wagtail_prefixes):
+            print(f"  Skipping {table} (Wagtail table - migrated via dumpdata/loaddata)")
             skipped += 1
             continue
         
