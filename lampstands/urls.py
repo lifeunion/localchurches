@@ -48,3 +48,4 @@ urlpatterns += [
 ]
 
 handler404 = 'lampstands.core.views.error404'
+handler500 = 'lampstands.core.views.error500'

@@ -21,6 +21,34 @@ def error404(request, exception=None):
         return render(request, '404.html', status=404)
 
 
+def error500(request):
+    """Custom 500 error handler that logs the error"""
+    import traceback
+    import sys
+    import logging
+    
+    logger = logging.getLogger('django.request')
+    
+    # Get the exception info if available
+    exc_type, exc_value, exc_traceback = sys.exc_info()
+    if exc_type:
+        logger.error(
+            "Internal Server Error: %s",
+            exc_value,
+            exc_info=(exc_type, exc_value, exc_traceback)
+        )
+        # Also print to console for immediate visibility
+        traceback.print_exception(exc_type, exc_value, exc_traceback)
+    
+    # If DEBUG is True, let Django handle it with the debug page
+    if settings.DEBUG:
+        from django.views.debug import technical_500_response
+        return technical_500_response(request, *sys.exc_info())
+    
+    # Otherwise render the 500.html template
+    return render(request, '500.html', status=500)
+
+
 @api_view(['GET', 'POST'])
 def api_root(request, format=None):
     context = {'request': request}

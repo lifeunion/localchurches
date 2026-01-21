@@ -30,22 +30,22 @@ LOGGING = {
     },
     'root': {
         'handlers': ['console'],
-        'level': 'ERROR',
+        'level': 'DEBUG',  # Changed to DEBUG to see all errors
     },
     'loggers': {
         'django': {
             'handlers': ['console'],
-            'level': 'ERROR',
+            'level': 'DEBUG',  # Changed to DEBUG
             'propagate': False,
         },
         'django.request': {
             'handlers': ['console'],
-            'level': 'ERROR',
+            'level': 'DEBUG',  # Changed to DEBUG
             'propagate': False,
         },
         'wagtail': {
             'handlers': ['console'],
-            'level': 'ERROR',
+            'level': 'DEBUG',  # Changed to DEBUG
             'propagate': False,
         },
     },
