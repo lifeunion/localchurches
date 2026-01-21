@@ -119,6 +119,17 @@ STATICFILES_FINDERS = (
     'compressor.finders.CompressorFinder',
 )
 
+# Ensure STORAGES is set correctly (inherited from base.py but ensure it's present)
+if 'STORAGES' not in locals() or 'staticfiles' not in STORAGES:
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+        },
+    }
+
 # Wagtail admin base URL - use environment variable or default to Render URL
 WAGTAILADMIN_BASE_URL = os.environ.get('WAGTAILADMIN_BASE_URL', 'https://localchurches.onrender.com')
 
