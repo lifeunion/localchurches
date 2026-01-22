@@ -44,11 +44,17 @@ def _json_dumps_default(obj):
     raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
 
 
-def copy_table_data(source_conn, dest_conn, table_name, skip_columns=None, json_columns=None, filter_null_columns=None):
-    """Copy data from source to destination table."""
+def copy_table_data(source_conn, dest_conn, table_name, skip_columns=None, json_columns=None, filter_null_columns=None, fk_fix_columns=None):
+    """Copy data from source to destination table.
+    
+    Args:
+        fk_fix_columns: List of tuples (column_name, referenced_table) to fix FK references.
+                       If referenced record doesn't exist, set to NULL.
+    """
     print(f"  Copying {table_name}...", end=' ', flush=True)
     json_columns = json_columns or []
     filter_null_columns = filter_null_columns or []
+    fk_fix_columns = fk_fix_columns or []
     
     try:
         # Check if table exists in destination
@@ -123,11 +129,36 @@ def copy_table_data(source_conn, dest_conn, table_name, skip_columns=None, json_
             print("(empty after filtering)")
             return 0
         
+        # Get valid foreign key IDs if we need to fix FK references
+        valid_fk_ids_map = {}
+        if fk_fix_columns:
+            for col_name, ref_table in fk_fix_columns:
+                if col_name in common_columns:
+                    col_idx = common_columns.index(col_name)
+                    try:
+                        with dest_conn.cursor() as fk_cur:
+                            fk_cur.execute(sql.SQL("SELECT id FROM {}").format(sql.Identifier(ref_table)))
+                            valid_ids = {row[0] for row in fk_cur.fetchall()}
+                            valid_fk_ids_map[col_idx] = (col_name, valid_ids)
+                            print(f"(checking {col_name} refs to {ref_table}: {len(valid_ids)} valid) ", end='', flush=True)
+                    except Exception as e:
+                        print(f"(warning: could not check {col_name} refs: {e}) ", end='', flush=True)
+        
         # Transform rows: wrap json_columns values in Jsonb for psycopg
+        # Also handle foreign key references that might not exist
         json_indices = {i for i, c in enumerate(common_columns) if c in json_columns}
-        if json_indices:
-            def adapt_row(row):
-                r = list(row)
+        
+        def adapt_row(row):
+            r = list(row)
+            
+            # Fix foreign key references to non-existent records
+            for col_idx, (col_name, valid_ids) in valid_fk_ids_map.items():
+                if r[col_idx] is not None and r[col_idx] not in valid_ids:
+                    # Set to NULL if referenced record doesn't exist
+                    r[col_idx] = None
+            
+            # Handle JSON columns
+            if json_indices:
                 for i in json_indices:
                     v = r[i]
                     if v is not None:
@@ -144,8 +175,9 @@ def copy_table_data(source_conn, dest_conn, table_name, skip_columns=None, json_
                                 r[i] = v
                         # For other types (None, int, etc.), pass through as-is
                         # None will fail if column is NOT NULL, which is expected
-                return tuple(r)
-            rows = [adapt_row(r) for r in rows]
+            return tuple(r)
+        
+        rows = [adapt_row(r) for r in rows]
         
         # Insert into destination - try batch insert, fall back to row-by-row on error
         with dest_conn.cursor() as dest_cur:
@@ -279,51 +311,33 @@ def main():
     # First, copy Wagtail core tables in order
     print("\nCopying Wagtail core tables (in dependency order)...")
     
-    # Track which revision IDs were successfully copied (for fixing page references)
-    copied_revision_ids = set()
-    
     for table in wagtail_tables_order:
         if table in tables:
             # For wagtailcore_revision, handle JSON content column properly and filter NULL content_type_id
             skip_cols = None
             json_cols = None
             filter_null_cols = None
+            fk_fix_cols = None
+            
             if table == 'wagtailcore_revision':
                 json_cols = ['content']  # Wrap content in Jsonb for proper JSON serialization
                 filter_null_cols = ['content_type_id']  # Filter out rows with NULL content_type_id (NOT NULL constraint)
             
-            rows = copy_table_data(source_conn, dest_conn, table, skip_columns=skip_cols, json_columns=json_cols, filter_null_columns=filter_null_cols)
+            elif table == 'wagtailcore_page':
+                # Fix foreign key references to revisions that might not exist (because we filtered them out)
+                fk_fix_cols = [
+                    ('live_revision_id', 'wagtailcore_revision'),
+                    ('latest_revision_id', 'wagtailcore_revision'),
+                ]
+            
+            rows = copy_table_data(
+                source_conn, dest_conn, table, 
+                skip_columns=skip_cols, 
+                json_columns=json_cols, 
+                filter_null_columns=filter_null_cols,
+                fk_fix_columns=fk_fix_cols
+            )
             total_rows += rows
-            
-            # If we copied revisions, track their IDs for later use
-            if table == 'wagtailcore_revision' and rows > 0:
-                # Get list of revision IDs that were copied
-                try:
-                    with dest_conn.cursor() as cur:
-                        cur.execute("SELECT id FROM wagtailcore_revision")
-                        copied_revision_ids = {row[0] for row in cur.fetchall()}
-                        print(f"  Tracked {len(copied_revision_ids)} revision IDs")
-                except Exception as e:
-                    print(f"  Warning: Could not track revision IDs: {e}")
-            
-            # For wagtailcore_page, fix live_revision_id references to revisions that don't exist
-            if table == 'wagtailcore_page' and copied_revision_ids:
-                try:
-                    with dest_conn.cursor() as cur:
-                        # Set live_revision_id to NULL for pages referencing non-existent revisions
-                        cur.execute("""
-                            UPDATE wagtailcore_page 
-                            SET live_revision_id = NULL 
-                            WHERE live_revision_id IS NOT NULL 
-                            AND live_revision_id NOT IN (SELECT id FROM wagtailcore_revision)
-                        """)
-                        fixed_count = cur.rowcount
-                        if fixed_count > 0:
-                            print(f"  Fixed {fixed_count} pages with invalid live_revision_id references")
-                        dest_conn.commit()
-                except Exception as e:
-                    print(f"  Warning: Could not fix page revision references: {e}")
-                    dest_conn.rollback()
     
     # Then copy other Wagtail tables
     print("\nCopying other Wagtail tables...")
