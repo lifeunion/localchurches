@@ -169,8 +169,7 @@ def diagnostic_view(request):
     output.append("")
     output.append("=" * 60)
     if homepage_count == 0:
-        output.append("→ Migration did not copy data. Run ./migrate_manual.sh locally.")
-        output.append("  See MANUAL_MIGRATION.md in the repo.")
+        output.append("→ Migration did not copy data. See MANUAL_MIGRATION.md for manual pg_dump/psql steps.")
     output.append("=" * 60)
     
     # Return as plain text
