@@ -7,6 +7,10 @@ import os
 import sys
 import django
 
+# Ensure all output is flushed immediately
+sys.stdout.reconfigure(line_buffering=True)
+sys.stderr.reconfigure(line_buffering=True)
+
 # Set Django settings
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lampstands.settings.production')
 django.setup()

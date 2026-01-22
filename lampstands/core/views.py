@@ -49,6 +49,128 @@ def error500(request):
     return render(request, '500.html', status=500)
 
 
+def diagnostic_view(request):
+    """Diagnostic endpoint to check database migration status"""
+    from django.db import connection
+    from wagtail.models import Site, Page
+    import json
+    
+    output = []
+    output.append("=" * 60)
+    output.append("Database Migration Diagnostic")
+    output.append("=" * 60)
+    output.append("")
+    
+    with connection.cursor() as cursor:
+        # Check revisions
+        cursor.execute("SELECT COUNT(*) FROM wagtailcore_revision")
+        rev_count = cursor.fetchone()[0]
+        output.append(f"1. Revisions: {rev_count}")
+        
+        # Check pages
+        cursor.execute("SELECT COUNT(*) FROM wagtailcore_page")
+        page_count = cursor.fetchone()[0]
+        output.append(f"2. Pages: {page_count}")
+        
+        # Check for HomePage
+        cursor.execute("""
+            SELECT COUNT(*) FROM wagtailcore_page p
+            JOIN django_content_type ct ON p.content_type_id = ct.id
+            WHERE ct.app_label = 'lampstands' AND ct.model = 'homepage'
+        """)
+        homepage_count = cursor.fetchone()[0]
+        output.append(f"   HomePage instances: {homepage_count}")
+        
+        # List all page types
+        cursor.execute("""
+            SELECT ct.app_label, ct.model, COUNT(*) as count
+            FROM wagtailcore_page p
+            JOIN django_content_type ct ON p.content_type_id = ct.id
+            GROUP BY ct.app_label, ct.model
+            ORDER BY count DESC
+        """)
+        page_types = cursor.fetchall()
+        output.append(f"\n   Page types breakdown:")
+        for app_label, model, count in page_types[:10]:
+            output.append(f"     - {app_label}.{model}: {count}")
+        
+        # Check sites
+        cursor.execute("SELECT COUNT(*) FROM wagtailcore_site")
+        site_count = cursor.fetchone()[0]
+        output.append(f"\n3. Sites: {site_count}")
+        
+        # Check site configuration
+        cursor.execute("""
+            SELECT id, hostname, port, root_page_id, is_default_site
+            FROM wagtailcore_site
+        """)
+        sites = cursor.fetchall()
+        for site_id, hostname, port, root_page_id, is_default in sites:
+            output.append(f"   Site {site_id}: {hostname}:{port}")
+            output.append(f"     Default: {is_default}")
+            output.append(f"     Root page ID: {root_page_id}")
+            if root_page_id:
+                cursor.execute("""
+                    SELECT p.title, p.depth, p.path, p.live, ct.app_label, ct.model
+                    FROM wagtailcore_page p
+                    JOIN django_content_type ct ON p.content_type_id = ct.id
+                    WHERE p.id = %s
+                """, [root_page_id])
+                page_info = cursor.fetchone()
+                if page_info:
+                    title, depth, path, live, app_label, model = page_info
+                    output.append(f"     Root page: '{title}' (ID: {root_page_id})")
+                    output.append(f"       Type: {app_label}.{model}")
+                    output.append(f"       Depth: {depth}, Path: {path}, Live: {live}")
+                    if app_label != 'lampstands' or model != 'homepage':
+                        output.append(f"       ⚠ WARNING: Root page is NOT a HomePage!")
+                else:
+                    output.append(f"     ⚠ Root page {root_page_id} does not exist!")
+        
+        # Check pages with IDs 1 and 2
+        output.append(f"\n4. Pages with IDs 1 and 2:")
+        cursor.execute("""
+            SELECT p.id, p.title, p.depth, p.path, p.live, ct.app_label, ct.model
+            FROM wagtailcore_page p
+            JOIN django_content_type ct ON p.content_type_id = ct.id
+            WHERE p.id IN (1, 2)
+            ORDER BY p.id
+        """)
+        for page_id, title, depth, path, live, app_label, model in cursor.fetchall():
+            output.append(f"   Page {page_id}: '{title}'")
+            output.append(f"     Type: {app_label}.{model}, Depth: {depth}, Path: {path}, Live: {live}")
+    
+    # Use Django ORM to check
+    output.append(f"\n5. Django ORM Check:")
+    try:
+        site = Site.objects.get(is_default_site=True)
+        output.append(f"   Default site: {site.hostname}:{site.port}")
+        if site.root_page:
+            output.append(f"   Root page: {site.root_page.title} (ID: {site.root_page.id})")
+            output.append(f"   Root page type: {site.root_page.content_type.app_label}.{site.root_page.content_type.model}")
+            output.append(f"   Root page live: {site.root_page.live}")
+        else:
+            output.append(f"   ⚠ No root page set!")
+    except Site.DoesNotExist:
+        output.append(f"   ⚠ No default site found!")
+    
+    # Check for HomePage using ORM
+    try:
+        from lampstands.core.models import HomePage
+        home_pages = HomePage.objects.all()
+        output.append(f"\n6. HomePage Check (ORM):")
+        output.append(f"   Total HomePage instances: {home_pages.count()}")
+        for hp in home_pages[:5]:
+            output.append(f"     - {hp.title} (ID: {hp.id}, live: {hp.live}, depth: {hp.depth})")
+    except Exception as e:
+        output.append(f"   Error checking HomePage: {e}")
+    
+    output.append(f"\n" + "=" * 60)
+    
+    # Return as plain text
+    return HttpResponse('\n'.join(output), content_type='text/plain')
+
+
 @api_view(['GET', 'POST'])
 def api_root(request, format=None):
     context = {'request': request}

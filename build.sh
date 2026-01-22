@@ -57,17 +57,26 @@ python manage.py showmigrations --list | grep -E "\[ \]" && {
 # Migrate data from Heroku if HEROKU_DATABASE_URL is set
 # Use direct table copy which handles Wagtail tables in proper dependency order
 if [ -n "$HEROKU_DATABASE_URL" ]; then
+    echo "=========================================="
     echo "Heroku database URL detected. Running migration..."
-    python migrate_from_heroku.py || echo "Migration failed or skipped"
+    echo "=========================================="
+    python migrate_from_heroku.py 2>&1 || echo "Migration failed or skipped"
+    echo "=========================================="
 fi
 
 # Fix Wagtail site configuration after migration
+echo "=========================================="
 echo "Fixing Wagtail site configuration..."
-python fix_wagtail_site.py || echo "Site configuration fix failed or skipped"
+echo "=========================================="
+python fix_wagtail_site.py 2>&1 || echo "Site configuration fix failed or skipped"
+echo "=========================================="
 
 # Run diagnostic check to see what was actually migrated
+echo "=========================================="
 echo "Running migration diagnostic check..."
-python check_migration_status.py || echo "Diagnostic check failed or skipped"
+echo "=========================================="
+python check_migration_status.py 2>&1 || echo "Diagnostic check failed or skipped"
+echo "=========================================="
 
 # Collect static files
 python manage.py collectstatic --no-input

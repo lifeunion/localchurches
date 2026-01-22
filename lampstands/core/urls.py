@@ -16,4 +16,5 @@ urlpatterns = format_suffix_patterns([
 
 urlpatterns += [
     path('api-auth/', include('rest_framework.urls')),
+    path('diagnostic/', views.diagnostic_view, name='diagnostic'),
 ]
