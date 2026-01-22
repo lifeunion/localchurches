@@ -8,6 +8,10 @@ import json
 import os
 import sys
 
+# Ensure all output is flushed immediately
+sys.stdout.reconfigure(line_buffering=True)
+sys.stderr.reconfigure(line_buffering=True)
+
 # Try to import psycopg, install if needed
 try:
     import psycopg
