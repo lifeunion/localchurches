@@ -186,12 +186,41 @@ def copy_table_data(source_conn, dest_conn, table_name, skip_columns=None, json_
             placeholders = sql.SQL(', ').join(sql.Placeholder() * len(common_columns))
             
             # Check if 'id' is in the columns (primary key)
+            # For critical Wagtail tables, use UPDATE on conflict to overwrite existing data
+            # For other tables, use DO NOTHING to skip duplicates
             if 'id' in common_columns:
-                insert_query = sql.SQL("INSERT INTO {} ({}) VALUES ({}) ON CONFLICT (id) DO NOTHING").format(
-                    sql.Identifier(table_name),
-                    cols,
-                    placeholders
-                )
+                if table_name in ['wagtailcore_page', 'wagtailcore_site', 'wagtailcore_revision']:
+                    # For critical tables, update on conflict (but only if we have all columns)
+                    # Build UPDATE clause for all non-id columns
+                    update_cols = [col for col in common_columns if col != 'id']
+                    if update_cols:
+                        update_set = sql.SQL(', ').join(
+                            sql.SQL("{} = EXCLUDED.{}").format(sql.Identifier(col), sql.Identifier(col))
+                            for col in update_cols
+                        )
+                        insert_query = sql.SQL("""
+                            INSERT INTO {} ({}) VALUES ({}) 
+                            ON CONFLICT (id) DO UPDATE SET {}
+                        """).format(
+                            sql.Identifier(table_name),
+                            cols,
+                            placeholders,
+                            update_set
+                        )
+                    else:
+                        # Fallback to DO NOTHING if no columns to update
+                        insert_query = sql.SQL("INSERT INTO {} ({}) VALUES ({}) ON CONFLICT (id) DO NOTHING").format(
+                            sql.Identifier(table_name),
+                            cols,
+                            placeholders
+                        )
+                else:
+                    # For other tables, skip duplicates
+                    insert_query = sql.SQL("INSERT INTO {} ({}) VALUES ({}) ON CONFLICT (id) DO NOTHING").format(
+                        sql.Identifier(table_name),
+                        cols,
+                        placeholders
+                    )
             else:
                 # No primary key conflict handling - just insert (will fail on duplicates)
                 insert_query = sql.SQL("INSERT INTO {} ({}) VALUES ({})").format(
@@ -202,9 +231,10 @@ def copy_table_data(source_conn, dest_conn, table_name, skip_columns=None, json_
             
             try:
                 dest_cur.executemany(insert_query, rows)
+                rows_inserted = dest_cur.rowcount
                 dest_conn.commit()
-                print(f"✓ ({len(rows)} rows)")
-                return len(rows)
+                print(f"✓ ({rows_inserted} rows inserted/updated)")
+                return rows_inserted if rows_inserted > 0 else len(rows)
             except Exception as batch_error:
                 # If batch insert fails, try row-by-row to identify problematic rows
                 dest_conn.rollback()
@@ -488,16 +518,22 @@ def main():
                     else:
                         print(f"        ⚠ No root page set!")
     
-    print(f"\n✓ Migration complete!")
-    print(f"  Copied {total_rows} total rows from {len(tables) - skipped} tables")
-    print(f"  Skipped {skipped} Django system tables")
+    # Final summary
+    print(f"\n" + "=" * 60)
+    print(f"Migration Summary")
+    print("=" * 60)
+    print(f"  Total rows copied: {total_rows}")
+    print(f"  Tables processed: {len(tables) - skipped}")
+    print(f"  Django system tables skipped: {skipped}")
     
     if not verification_passed:
         print(f"\n⚠ WARNING: Migration verification found issues!")
         print(f"  Some critical tables may be empty or misconfigured.")
         print(f"  The fix_wagtail_site.py script will attempt to fix site configuration.")
+        print(f"\n  ACTION REQUIRED: Check the verification output above to see what failed.")
     else:
         print(f"\n✓ Migration verification passed!")
+        print(f"  All critical tables appear to have data.")
     
     print(f"\n⚠ Important: After migration, verify:")
     print(f"  1. Wagtail site root page is configured correctly")
