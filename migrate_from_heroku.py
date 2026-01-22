@@ -51,7 +51,7 @@ def copy_table_data(source_conn, dest_conn, table_name, skip_columns=None, json_
         fk_fix_columns: List of tuples (column_name, referenced_table) to fix FK references.
                        If referenced record doesn't exist, set to NULL.
     """
-    print(f"  Copying {table_name}...", end=' ', flush=True)
+    print(f"\n  Copying {table_name}...", flush=True)
     json_columns = json_columns or []
     filter_null_columns = filter_null_columns or []
     fk_fix_columns = fk_fix_columns or []
@@ -112,7 +112,7 @@ def copy_table_data(source_conn, dest_conn, table_name, skip_columns=None, json_
             rows = src_cur.fetchall()
         
         if not rows:
-            print("(empty)")
+            print("    (empty - no rows to copy)")
             return 0
         
         # Filter out rows with NULL values in required columns
@@ -123,10 +123,10 @@ def copy_table_data(source_conn, dest_conn, table_name, skip_columns=None, json_
                 rows = [row for row in rows if all(row[i] is not None for i in filter_indices)]
                 filtered_count = original_count - len(rows)
                 if filtered_count > 0:
-                    print(f"(filtered {filtered_count} rows with NULL in required columns) ", end='', flush=True)
+                    print(f"    Filtered out {filtered_count} rows with NULL in required columns ({original_count} → {len(rows)})", flush=True)
         
         if not rows:
-            print("(empty after filtering)")
+            print("    (empty after filtering)")
             return 0
         
         # Get valid foreign key IDs if we need to fix FK references
@@ -140,9 +140,9 @@ def copy_table_data(source_conn, dest_conn, table_name, skip_columns=None, json_
                             fk_cur.execute(sql.SQL("SELECT id FROM {}").format(sql.Identifier(ref_table)))
                             valid_ids = {row[0] for row in fk_cur.fetchall()}
                             valid_fk_ids_map[col_idx] = (col_name, valid_ids)
-                            print(f"(checking {col_name} refs to {ref_table}: {len(valid_ids)} valid) ", end='', flush=True)
+                            print(f"    Checking {col_name} → {ref_table}: {len(valid_ids)} valid IDs", flush=True)
                     except Exception as e:
-                        print(f"(warning: could not check {col_name} refs: {e}) ", end='', flush=True)
+                        print(f"    WARNING: Could not check {col_name} refs: {e}", flush=True)
         
         # Transform rows: wrap json_columns values in Jsonb for psycopg
         # Also handle foreign key references that might not exist
@@ -233,14 +233,14 @@ def copy_table_data(source_conn, dest_conn, table_name, skip_columns=None, json_
                 dest_cur.executemany(insert_query, rows)
                 rows_inserted = dest_cur.rowcount
                 dest_conn.commit()
-                print(f"✓ ({rows_inserted} rows inserted/updated)")
+                print(f"    ✓ SUCCESS: {rows_inserted} rows inserted/updated")
                 return rows_inserted if rows_inserted > 0 else len(rows)
             except Exception as batch_error:
                 # If batch insert fails, try row-by-row to identify problematic rows
                 dest_conn.rollback()
                 error_msg = str(batch_error)
-                print(f"\n    Batch error: {error_msg[:200]}", end='', flush=True)
-                print(f"\n    Trying row-by-row insertion... ", end='', flush=True)
+                print(f"    ✗ Batch insert failed: {error_msg[:300]}", flush=True)
+                print(f"    Trying row-by-row insertion...", flush=True)
                 successful = 0
                 failed = 0
                 error_samples = []
@@ -255,7 +255,7 @@ def copy_table_data(source_conn, dest_conn, table_name, skip_columns=None, json_
                             error_samples.append((idx, str(row_error)[:150]))
                 dest_conn.commit()
                 if successful > 0:
-                    print(f"✓ ({successful} rows succeeded, {failed} failed)")
+                    print(f"    ✓ Partial success: {successful} rows succeeded, {failed} failed")
                     if error_samples:
                         print(f"    Sample errors:")
                         for idx, err in error_samples:
@@ -263,10 +263,11 @@ def copy_table_data(source_conn, dest_conn, table_name, skip_columns=None, json_
                     return successful
                 else:
                     # All rows failed - show the batch error
+                    print(f"    ✗ All rows failed!")
                     raise batch_error  # Re-raise if all rows failed
     except Exception as e:
         error_msg = str(e)
-        print(f"✗ Error: {error_msg[:200]}")
+        print(f"    ✗ ERROR: {error_msg[:300]}")
         dest_conn.rollback()
         return 0
 
