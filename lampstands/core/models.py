@@ -1161,20 +1161,28 @@ class ChurchPage(Page):
         return ChurchIndexPage.objects.first()
 
     def get_latitude_location(self):
-        latitude = self.position.latitude
-        return str(latitude)
+        if self.position:
+            latitude = self.position.latitude
+            return str(latitude)
+        return None
 
     def get_longitude_location(self):
-        longitude = self.position.longitude
-        return str(longitude)
+        if self.position:
+            longitude = self.position.longitude
+            return str(longitude)
+        return None
 
     def location(self):
-        dictified_loc = dict([("latitude", self.get_latitude_location()), ("longitude", self.get_longitude_location())])
-        return dictified_loc
+        if self.position:
+            dictified_loc = dict([("latitude", self.get_latitude_location()), ("longitude", self.get_longitude_location())])
+            return dictified_loc
+        return {"latitude": None, "longitude": None}
 
     def trimmed_address(self):
-        trimmed_address = quote(self.meeting_address)
-        return trimmed_address
+        if self.meeting_address:
+            trimmed_address = quote(self.meeting_address)
+            return trimmed_address
+        return ""
 
     content_panels = [
         FieldPanel('title', classname="full title"),

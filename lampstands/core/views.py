@@ -185,7 +185,7 @@ def api_root(request, format=None):
 
 
 class LocalitiesList(generics.ListCreateAPIView):
-    queryset = ChurchPage.objects.all()
+    queryset = ChurchPage.objects.filter(live=True)
     serializer_class = LocalitiesSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
