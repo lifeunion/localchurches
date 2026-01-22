@@ -65,5 +65,9 @@ fi
 echo "Fixing Wagtail site configuration..."
 python fix_wagtail_site.py || echo "Site configuration fix failed or skipped"
 
+# Run diagnostic check to see what was actually migrated
+echo "Running migration diagnostic check..."
+python check_migration_status.py || echo "Diagnostic check failed or skipped"
+
 # Collect static files
 python manage.py collectstatic --no-input

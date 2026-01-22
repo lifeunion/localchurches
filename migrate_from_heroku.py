@@ -424,6 +424,34 @@ def main():
             if homepage_count == 0:
                 print("    ⚠ WARNING: No HomePage found!")
                 verification_passed = False
+            else:
+                # Show HomePage details
+                verify_cur.execute("""
+                    SELECT p.id, p.title, p.live, p.depth, p.path
+                    FROM wagtailcore_page p
+                    JOIN django_content_type ct ON p.content_type_id = ct.id
+                    WHERE ct.app_label = 'lampstands' AND ct.model = 'homepage'
+                    ORDER BY p.depth, p.path
+                    LIMIT 5
+                """)
+                homepages = verify_cur.fetchall()
+                print(f"    HomePage details:")
+                for hp_id, title, live, depth, path in homepages:
+                    print(f"      - {title} (ID: {hp_id}, live: {live}, depth: {depth}, path: {path})")
+            
+            # Show page type breakdown
+            verify_cur.execute("""
+                SELECT ct.app_label, ct.model, COUNT(*) as count
+                FROM wagtailcore_page p
+                JOIN django_content_type ct ON p.content_type_id = ct.id
+                GROUP BY ct.app_label, ct.model
+                ORDER BY count DESC
+                LIMIT 10
+            """)
+            page_types = verify_cur.fetchall()
+            print(f"    Page types breakdown:")
+            for app_label, model, count in page_types:
+                print(f"      - {app_label}.{model}: {count}")
         
         # Check sites
         verify_cur.execute("SELECT COUNT(*) FROM wagtailcore_site")
@@ -440,6 +468,25 @@ def main():
             if site_with_root == 0:
                 print("    ⚠ WARNING: No sites have root_page set!")
                 verification_passed = False
+            else:
+                # Show site details
+                verify_cur.execute("""
+                    SELECT s.id, s.hostname, s.port, s.root_page_id, s.is_default_site,
+                           p.title as root_page_title, p.live as root_page_live
+                    FROM wagtailcore_site s
+                    LEFT JOIN wagtailcore_page p ON s.root_page_id = p.id
+                    ORDER BY s.is_default_site DESC, s.id
+                """)
+                sites = verify_cur.fetchall()
+                print(f"    Site details:")
+                for site_id, hostname, port, root_page_id, is_default, root_title, root_live in sites:
+                    default_str = " (DEFAULT)" if is_default else ""
+                    print(f"      - Site {site_id}: {hostname}:{port}{default_str}")
+                    if root_page_id:
+                        live_str = " (live)" if root_live else " (not live)"
+                        print(f"        Root page: {root_title} (ID: {root_page_id}){live_str}")
+                    else:
+                        print(f"        ⚠ No root page set!")
     
     print(f"\n✓ Migration complete!")
     print(f"  Copied {total_rows} total rows from {len(tables) - skipped} tables")
