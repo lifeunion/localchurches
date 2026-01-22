@@ -55,30 +55,22 @@ python manage.py showmigrations --list | grep -E "\[ \]" && {
 } || echo "All migrations appear to be applied"
 
 # Migrate data from Heroku if HEROKU_DATABASE_URL is set
-# Use direct table copy which handles Wagtail tables in proper dependency order
+# Use simple pg_dump/psql approach (most reliable)
 if [ -n "$HEROKU_DATABASE_URL" ]; then
     echo "=========================================="
-    echo "Heroku database URL detected."
-    echo "Testing connection first..."
+    echo "Heroku database URL detected. Running migration..."
     echo "=========================================="
-    if python test_heroku_connection.py 2>&1; then
-        echo ""
-        echo "=========================================="
-        echo "Connection test passed. Running migration..."
-        echo "=========================================="
-        if python migrate_from_heroku.py 2>&1; then
-            echo "✓ Migration completed successfully"
-        else
-            MIGRATION_EXIT_CODE=$?
-            echo "✗ Migration failed with exit code: $MIGRATION_EXIT_CODE"
-            echo "Check the output above for errors."
-            echo "The deployment will continue, but data may not be migrated."
-        fi
+    chmod +x migrate_simple.sh 2>/dev/null || true
+    if bash migrate_simple.sh 2>&1; then
+        echo "✓ Migration completed"
     else
-        CONNECTION_EXIT_CODE=$?
-        echo "✗ Connection test failed with exit code: $CONNECTION_EXIT_CODE"
-        echo "Cannot proceed with migration. Check HEROKU_DATABASE_URL."
-        echo "The deployment will continue, but migration will be skipped."
+        MIGRATION_EXIT_CODE=$?
+        echo "✗ Migration failed with exit code: $MIGRATION_EXIT_CODE"
+        echo "Falling back to Python migration..."
+        python migrate_from_heroku.py 2>&1 || {
+            echo "✗ Both migration methods failed"
+            echo "Check HEROKU_DATABASE_URL and database connectivity"
+        }
     fi
     echo "=========================================="
 fi
