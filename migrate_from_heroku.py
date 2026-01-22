@@ -285,8 +285,12 @@ def main():
     RENDER_DATABASE_URL = os.environ.get('DATABASE_URL')  # Render sets this automatically when linked
     
     if not HEROKU_DATABASE_URL:
+        print("=" * 60)
         print("⚠ HEROKU_DATABASE_URL not set. Skipping migration.")
+        print("=" * 60)
         print("To migrate: Set HEROKU_DATABASE_URL in Render dashboard → Environment")
+        print("The database will remain empty until migration is run.")
+        print("=" * 60)
         return 0
     
     if not RENDER_DATABASE_URL:
@@ -409,7 +413,24 @@ def main():
             rows = copy_table_data(source_conn, dest_conn, table)
             total_rows += rows
     
-    # Finally, copy non-Wagtail tables
+    # Copy lampstands_* tables (these contain the actual page data)
+    print("\nCopying lampstands application tables...")
+    lampstands_tables = [t for t in tables if t.startswith('lampstands_')]
+    print(f"  Found {len(lampstands_tables)} lampstands tables")
+    for table in lampstands_tables:
+        # Check if this table has foreign keys to wagtailcore_page
+        # If so, we need to handle FK references
+        fk_fix_cols = None
+        if table == 'lampstands_homepage' or table.startswith('lampstands_') and 'page' in table.lower():
+            # These tables have a page_ptr_id that references wagtailcore_page
+            # We should check if the page exists, but since we copied pages first, this should be fine
+            # But we'll still set up FK fixing just in case
+            fk_fix_cols = [('page_ptr_id', 'wagtailcore_page')]
+        
+        rows = copy_table_data(source_conn, dest_conn, table, fk_fix_columns=fk_fix_cols)
+        total_rows += rows
+    
+    # Finally, copy other non-Wagtail, non-lampstands tables
     print("\nCopying other tables...")
     for table in tables:
         # Skip Django system tables
@@ -421,6 +442,8 @@ def main():
         # Skip if already copied
         if any(table.startswith(prefix) for prefix in wagtail_prefixes):
             continue
+        if table.startswith('lampstands_'):
+            continue  # Already copied
         
         rows = copy_table_data(source_conn, dest_conn, table)
         total_rows += rows
