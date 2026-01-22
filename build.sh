@@ -58,15 +58,27 @@ python manage.py showmigrations --list | grep -E "\[ \]" && {
 # Use direct table copy which handles Wagtail tables in proper dependency order
 if [ -n "$HEROKU_DATABASE_URL" ]; then
     echo "=========================================="
-    echo "Heroku database URL detected. Running migration..."
+    echo "Heroku database URL detected."
+    echo "Testing connection first..."
     echo "=========================================="
-    if python migrate_from_heroku.py 2>&1; then
-        echo "✓ Migration completed successfully"
+    if python test_heroku_connection.py 2>&1; then
+        echo ""
+        echo "=========================================="
+        echo "Connection test passed. Running migration..."
+        echo "=========================================="
+        if python migrate_from_heroku.py 2>&1; then
+            echo "✓ Migration completed successfully"
+        else
+            MIGRATION_EXIT_CODE=$?
+            echo "✗ Migration failed with exit code: $MIGRATION_EXIT_CODE"
+            echo "Check the output above for errors."
+            echo "The deployment will continue, but data may not be migrated."
+        fi
     else
-        MIGRATION_EXIT_CODE=$?
-        echo "✗ Migration failed with exit code: $MIGRATION_EXIT_CODE"
-        echo "Check the output above for errors."
-        echo "The deployment will continue, but data may not be migrated."
+        CONNECTION_EXIT_CODE=$?
+        echo "✗ Connection test failed with exit code: $CONNECTION_EXIT_CODE"
+        echo "Cannot proceed with migration. Check HEROKU_DATABASE_URL."
+        echo "The deployment will continue, but migration will be skipped."
     fi
     echo "=========================================="
 fi
