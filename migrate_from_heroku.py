@@ -44,10 +44,11 @@ def _json_dumps_default(obj):
     raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
 
 
-def copy_table_data(source_conn, dest_conn, table_name, skip_columns=None, json_columns=None):
+def copy_table_data(source_conn, dest_conn, table_name, skip_columns=None, json_columns=None, filter_null_columns=None):
     """Copy data from source to destination table."""
     print(f"  Copying {table_name}...", end=' ', flush=True)
     json_columns = json_columns or []
+    filter_null_columns = filter_null_columns or []
     
     try:
         # Check if table exists in destination
@@ -106,6 +107,20 @@ def copy_table_data(source_conn, dest_conn, table_name, skip_columns=None, json_
         
         if not rows:
             print("(empty)")
+            return 0
+        
+        # Filter out rows with NULL values in required columns
+        if filter_null_columns:
+            filter_indices = {i for i, c in enumerate(common_columns) if c in filter_null_columns}
+            if filter_indices:
+                original_count = len(rows)
+                rows = [row for row in rows if all(row[i] is not None for i in filter_indices)]
+                filtered_count = original_count - len(rows)
+                if filtered_count > 0:
+                    print(f"(filtered {filtered_count} rows with NULL in required columns) ", end='', flush=True)
+        
+        if not rows:
+            print("(empty after filtering)")
             return 0
         
         # Transform rows: wrap json_columns values in Jsonb for psycopg
@@ -242,12 +257,14 @@ def main():
     print("\nCopying Wagtail core tables (in dependency order)...")
     for table in wagtail_tables_order:
         if table in tables:
-            # For wagtailcore_revision, handle JSON content column properly
+            # For wagtailcore_revision, handle JSON content column properly and filter NULL content_type_id
             skip_cols = None
             json_cols = None
+            filter_null_cols = None
             if table == 'wagtailcore_revision':
                 json_cols = ['content']  # Wrap content in Jsonb for proper JSON serialization
-            rows = copy_table_data(source_conn, dest_conn, table, skip_columns=skip_cols, json_columns=json_cols)
+                filter_null_cols = ['content_type_id']  # Filter out rows with NULL content_type_id (NOT NULL constraint)
+            rows = copy_table_data(source_conn, dest_conn, table, skip_columns=skip_cols, json_columns=json_cols, filter_null_columns=filter_null_cols)
             total_rows += rows
     
     # Then copy other Wagtail tables
