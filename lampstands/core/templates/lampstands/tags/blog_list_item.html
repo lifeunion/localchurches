@@ -1,7 +1,7 @@
 {% load wagtailcore_tags wagtailimages_tags lampstands_tags static %}
 
         <div class="content">
-            <div class="image-container" {% if not post.colour %}style="background-image: url('{{ background.url }}');"{% endif %}></div>
+            <div class="image-container" {% if not post.colour and background %}style="background-image: url('{{ background.url }}');"{% endif %}></div>
             <div class="blog-text">
                 
 
