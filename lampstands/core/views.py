@@ -56,6 +56,7 @@ def diagnostic_view(request):
     import json
     
     output = []
+    homepage_count = 0
     output.append("=" * 60)
     output.append("Database Migration Diagnostic")
     output.append("=" * 60)
@@ -165,7 +166,12 @@ def diagnostic_view(request):
     except Exception as e:
         output.append(f"   Error checking HomePage: {e}")
     
-    output.append(f"\n" + "=" * 60)
+    output.append("")
+    output.append("=" * 60)
+    if homepage_count == 0:
+        output.append("→ Migration did not copy data. Run ./migrate_manual.sh locally.")
+        output.append("  See MANUAL_MIGRATION.md in the repo.")
+    output.append("=" * 60)
     
     # Return as plain text
     return HttpResponse('\n'.join(output), content_type='text/plain')

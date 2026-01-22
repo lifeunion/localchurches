@@ -55,22 +55,22 @@ python manage.py showmigrations --list | grep -E "\[ \]" && {
 } || echo "All migrations appear to be applied"
 
 # Migrate data from Heroku if HEROKU_DATABASE_URL is set
-# Use simple pg_dump/psql approach (most reliable)
+# NOTE: Render build often cannot reach Heroku Postgres. If /diagnostic/ still
+# shows 0 HomePages, run ./migrate_manual.sh locally — see MANUAL_MIGRATION.md
 if [ -n "$HEROKU_DATABASE_URL" ]; then
     echo "=========================================="
-    echo "Heroku database URL detected. Running migration..."
+    echo "Heroku DB URL set. Attempting migration (may fail from Render)..."
     echo "=========================================="
     chmod +x migrate_simple.sh 2>/dev/null || true
     if bash migrate_simple.sh 2>&1; then
         echo "✓ Migration completed"
     else
         MIGRATION_EXIT_CODE=$?
-        echo "✗ Migration failed with exit code: $MIGRATION_EXIT_CODE"
+        echo "✗ Migration failed (exit $MIGRATION_EXIT_CODE)"
         echo "Falling back to Python migration..."
-        python migrate_from_heroku.py 2>&1 || {
-            echo "✗ Both migration methods failed"
-            echo "Check HEROKU_DATABASE_URL and database connectivity"
-        }
+        python migrate_from_heroku.py 2>&1 || true
+        echo "✗ Build-time migration did not succeed."
+        echo "  → Run ./migrate_manual.sh on your machine (see MANUAL_MIGRATION.md)"
     fi
     echo "=========================================="
 fi
