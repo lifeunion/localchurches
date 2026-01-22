@@ -303,11 +303,16 @@ def main():
     
     # Connect to databases
     print("\nStep 1: Connecting to databases...")
+    print(f"  Heroku URL: {HEROKU_DATABASE_URL[:50]}... (masked)")
+    print(f"  Render URL: {RENDER_DATABASE_URL[:50] if RENDER_DATABASE_URL else 'NOT SET'}... (masked)")
     try:
         source_conn = psycopg.connect(HEROKU_DATABASE_URL)
         print("✓ Connected to Heroku Postgres")
     except Exception as e:
         print(f"✗ Failed to connect to Heroku: {e}")
+        print(f"  Error type: {type(e).__name__}")
+        import traceback
+        traceback.print_exc()
         return 1
     
     try:
@@ -315,6 +320,9 @@ def main():
         print("✓ Connected to Render Postgres")
     except Exception as e:
         print(f"✗ Failed to connect to Render: {e}")
+        print(f"  Error type: {type(e).__name__}")
+        import traceback
+        traceback.print_exc()
         source_conn.close()
         return 1
     
@@ -322,9 +330,19 @@ def main():
     print("\nStep 2: Discovering tables...")
     try:
         tables = get_all_tables(source_conn)
-        print(f"✓ Found {len(tables)} tables")
+        print(f"✓ Found {len(tables)} tables in source database")
+        
+        # Show some sample tables
+        wagtail_tables = [t for t in tables if t.startswith('wagtail')]
+        lampstands_tables = [t for t in tables if t.startswith('lampstands_')]
+        print(f"  Wagtail tables: {len(wagtail_tables)}")
+        print(f"  Lampstands tables: {len(lampstands_tables)}")
+        if lampstands_tables:
+            print(f"  Sample lampstands tables: {', '.join(lampstands_tables[:5])}")
     except Exception as e:
         print(f"✗ Error getting tables: {e}")
+        import traceback
+        traceback.print_exc()
         source_conn.close()
         dest_conn.close()
         return 1
@@ -416,7 +434,15 @@ def main():
     # Copy lampstands_* tables (these contain the actual page data)
     print("\nCopying lampstands application tables...")
     lampstands_tables = [t for t in tables if t.startswith('lampstands_')]
-    print(f"  Found {len(lampstands_tables)} lampstands tables")
+    print(f"  Found {len(lampstands_tables)} lampstands tables: {', '.join(lampstands_tables)}")
+    
+    if not lampstands_tables:
+        print("  ⚠ WARNING: No lampstands_* tables found in source database!")
+        print("  This might mean:")
+        print("    - The source database doesn't have lampstands data")
+        print("    - The table names are different")
+        print("    - The connection is to the wrong database")
+    
     for table in lampstands_tables:
         # Check if this table has foreign keys to wagtailcore_page
         # If so, we need to handle FK references
@@ -566,19 +592,29 @@ def main():
     print(f"  Tables processed: {len(tables) - skipped}")
     print(f"  Django system tables skipped: {skipped}")
     
+    # Close connections
+    source_conn.close()
+    dest_conn.close()
+    
     if not verification_passed:
         print(f"\n⚠ WARNING: Migration verification found issues!")
         print(f"  Some critical tables may be empty or misconfigured.")
         print(f"  The fix_wagtail_site.py script will attempt to fix site configuration.")
         print(f"\n  ACTION REQUIRED: Check the verification output above to see what failed.")
+        print(f"\n⚠ Important: After migration, verify:")
+        print(f"  1. Wagtail site root page is configured correctly")
+        print(f"  2. Pages are accessible in Wagtail admin")
+        print(f"  3. Site settings are properly configured")
+        return 1
     else:
         print(f"\n✓ Migration verification passed!")
         print(f"  All critical tables appear to have data.")
-    
-    print(f"\n⚠ Important: After migration, verify:")
-    print(f"  1. Wagtail site root page is configured correctly")
-    print(f"  2. Pages are accessible in Wagtail admin")
-    print(f"  3. Site settings are properly configured")
+        print(f"\n✓ Migration complete!")
+        print(f"\n⚠ Important: After migration, verify:")
+        print(f"  1. Wagtail site root page is configured correctly")
+        print(f"  2. Pages are accessible in Wagtail admin")
+        print(f"  3. Site settings are properly configured")
+        return 0
     
     # Close connections
     source_conn.close()
