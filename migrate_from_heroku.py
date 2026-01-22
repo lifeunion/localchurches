@@ -4,6 +4,7 @@ Database migration script to run on Render.
 Migrates data from Heroku Postgres to Render Postgres using internal connection.
 This script uses psycopg to copy data table by table, avoiding version issues.
 """
+import json
 import os
 import sys
 
@@ -11,12 +12,14 @@ import sys
 try:
     import psycopg
     from psycopg import sql
+    from psycopg.types.json import Jsonb
 except ImportError:
     print("Installing psycopg...")
     import subprocess
     subprocess.check_call([sys.executable, '-m', 'pip', 'install', 'psycopg[binary]'])
     import psycopg
     from psycopg import sql
+    from psycopg.types.json import Jsonb
 
 def get_all_tables(conn):
     """Get list of all tables in the database."""
@@ -30,9 +33,21 @@ def get_all_tables(conn):
         """)
         return [row[0] for row in cur.fetchall()]
 
-def copy_table_data(source_conn, dest_conn, table_name, skip_columns=None):
+def _json_dumps_default(obj):
+    """JSON serializer for Wagtail revision content (handles datetime, Decimal, etc.)."""
+    from decimal import Decimal
+    from datetime import date, datetime, time
+    if isinstance(obj, (datetime, date, time)):
+        return obj.isoformat()
+    if isinstance(obj, Decimal):
+        return float(obj)
+    raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
+
+
+def copy_table_data(source_conn, dest_conn, table_name, skip_columns=None, json_columns=None):
     """Copy data from source to destination table."""
     print(f"  Copying {table_name}...", end=' ', flush=True)
+    json_columns = json_columns or []
     
     try:
         # Check if table exists in destination
@@ -92,6 +107,30 @@ def copy_table_data(source_conn, dest_conn, table_name, skip_columns=None):
         if not rows:
             print("(empty)")
             return 0
+        
+        # Transform rows: wrap json_columns values in Jsonb for psycopg
+        json_indices = {i for i, c in enumerate(common_columns) if c in json_columns}
+        if json_indices:
+            def adapt_row(row):
+                r = list(row)
+                for i in json_indices:
+                    v = r[i]
+                    if v is not None:
+                        # If already a dict/list, wrap in Jsonb with custom dumps for datetime/Decimal
+                        if isinstance(v, (dict, list)):
+                            r[i] = Jsonb(v, dumps=lambda o: json.dumps(o, default=_json_dumps_default))
+                        # If it's a string, try to parse as JSON first (unlikely from psycopg, but handle it)
+                        elif isinstance(v, str):
+                            try:
+                                parsed = json.loads(v)
+                                r[i] = Jsonb(parsed, dumps=lambda o: json.dumps(o, default=_json_dumps_default))
+                            except (TypeError, ValueError):
+                                # Not valid JSON string - pass through (will likely fail, but be explicit)
+                                r[i] = v
+                        # For other types (None, int, etc.), pass through as-is
+                        # None will fail if column is NOT NULL, which is expected
+                return tuple(r)
+            rows = [adapt_row(r) for r in rows]
         
         # Insert into destination
         with dest_conn.cursor() as dest_cur:
@@ -203,11 +242,12 @@ def main():
     print("\nCopying Wagtail core tables (in dependency order)...")
     for table in wagtail_tables_order:
         if table in tables:
-            # For wagtailcore_revision, skip JSON columns that cause issues
+            # For wagtailcore_revision, handle JSON content column properly
             skip_cols = None
+            json_cols = None
             if table == 'wagtailcore_revision':
-                skip_cols = ['content']  # Skip JSON content field - will be NULL
-            rows = copy_table_data(source_conn, dest_conn, table, skip_columns=skip_cols)
+                json_cols = ['content']  # Wrap content in Jsonb for proper JSON serialization
+            rows = copy_table_data(source_conn, dest_conn, table, skip_columns=skip_cols, json_columns=json_cols)
             total_rows += rows
     
     # Then copy other Wagtail tables
