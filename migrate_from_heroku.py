@@ -609,12 +609,17 @@ def main():
     else:
         print(f"\n✓ Migration verification passed!")
         print(f"  All critical tables appear to have data.")
-        print(f"\n✓ Migration complete!")
-        print(f"\n⚠ Important: After migration, verify:")
-        print(f"  1. Wagtail site root page is configured correctly")
-        print(f"  2. Pages are accessible in Wagtail admin")
-        print(f"  3. Site settings are properly configured")
-        return 0
+    
+    print(f"\n✓ Migration complete!")
+    print(f"\n⚠ Important: After migration, verify:")
+    print(f"  1. Wagtail site root page is configured correctly")
+    print(f"  2. Pages are accessible in Wagtail admin")
+    print(f"  3. Site settings are properly configured")
+    print(f"\nNext steps:")
+    print(f"1. Verify data in Render dashboard")
+    print(f"2. Remove HEROKU_DATABASE_URL after confirming migration success")
+    
+    return 0 if verification_passed else 1
     
     # Close connections
     source_conn.close()
