@@ -147,7 +147,7 @@ def copy_table_data(source_conn, dest_conn, table_name, skip_columns=None, json_
                 return tuple(r)
             rows = [adapt_row(r) for r in rows]
         
-        # Insert into destination
+        # Insert into destination - try batch insert, fall back to row-by-row on error
         with dest_conn.cursor() as dest_cur:
             # Build INSERT statement with ON CONFLICT DO NOTHING to avoid duplicates
             cols = sql.SQL(', ').join(map(sql.Identifier, common_columns))
@@ -158,13 +158,36 @@ def copy_table_data(source_conn, dest_conn, table_name, skip_columns=None, json_
                 placeholders
             )
             
-            dest_cur.executemany(insert_query, rows)
-            dest_conn.commit()
-            print(f"✓ ({len(rows)} rows)")
-            return len(rows)
+            try:
+                dest_cur.executemany(insert_query, rows)
+                dest_conn.commit()
+                print(f"✓ ({len(rows)} rows)")
+                return len(rows)
+            except Exception as batch_error:
+                # If batch insert fails, try row-by-row to identify problematic rows
+                dest_conn.rollback()
+                print(f"(batch insert failed, trying row-by-row...) ", end='', flush=True)
+                successful = 0
+                failed = 0
+                for row in rows:
+                    try:
+                        dest_cur.execute(insert_query, row)
+                        successful += 1
+                    except Exception as row_error:
+                        failed += 1
+                        # Only print first few errors to avoid spam
+                        if failed <= 3:
+                            error_msg = str(row_error)
+                            print(f"\n    Row error: {error_msg[:100]}", end='', flush=True)
+                dest_conn.commit()
+                if successful > 0:
+                    print(f"✓ ({successful} rows, {failed} failed)")
+                    return successful
+                else:
+                    raise batch_error  # Re-raise if all rows failed
     except Exception as e:
         error_msg = str(e)
-        print(f"✗ Error: {error_msg[:150]}")
+        print(f"✗ Error: {error_msg[:200]}")
         dest_conn.rollback()
         return 0
 
@@ -255,6 +278,10 @@ def main():
     
     # First, copy Wagtail core tables in order
     print("\nCopying Wagtail core tables (in dependency order)...")
+    
+    # Track which revision IDs were successfully copied (for fixing page references)
+    copied_revision_ids = set()
+    
     for table in wagtail_tables_order:
         if table in tables:
             # For wagtailcore_revision, handle JSON content column properly and filter NULL content_type_id
@@ -264,8 +291,39 @@ def main():
             if table == 'wagtailcore_revision':
                 json_cols = ['content']  # Wrap content in Jsonb for proper JSON serialization
                 filter_null_cols = ['content_type_id']  # Filter out rows with NULL content_type_id (NOT NULL constraint)
+            
             rows = copy_table_data(source_conn, dest_conn, table, skip_columns=skip_cols, json_columns=json_cols, filter_null_columns=filter_null_cols)
             total_rows += rows
+            
+            # If we copied revisions, track their IDs for later use
+            if table == 'wagtailcore_revision' and rows > 0:
+                # Get list of revision IDs that were copied
+                try:
+                    with dest_conn.cursor() as cur:
+                        cur.execute("SELECT id FROM wagtailcore_revision")
+                        copied_revision_ids = {row[0] for row in cur.fetchall()}
+                        print(f"  Tracked {len(copied_revision_ids)} revision IDs")
+                except Exception as e:
+                    print(f"  Warning: Could not track revision IDs: {e}")
+            
+            # For wagtailcore_page, fix live_revision_id references to revisions that don't exist
+            if table == 'wagtailcore_page' and copied_revision_ids:
+                try:
+                    with dest_conn.cursor() as cur:
+                        # Set live_revision_id to NULL for pages referencing non-existent revisions
+                        cur.execute("""
+                            UPDATE wagtailcore_page 
+                            SET live_revision_id = NULL 
+                            WHERE live_revision_id IS NOT NULL 
+                            AND live_revision_id NOT IN (SELECT id FROM wagtailcore_revision)
+                        """)
+                        fixed_count = cur.rowcount
+                        if fixed_count > 0:
+                            print(f"  Fixed {fixed_count} pages with invalid live_revision_id references")
+                        dest_conn.commit()
+                except Exception as e:
+                    print(f"  Warning: Could not fix page revision references: {e}")
+                    dest_conn.rollback()
     
     # Then copy other Wagtail tables
     print("\nCopying other Wagtail tables...")
