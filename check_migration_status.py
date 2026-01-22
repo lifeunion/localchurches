@@ -71,10 +71,20 @@ def main():
             print(f"     Default: {is_default}")
             print(f"     Root page ID: {root_page_id}")
             if root_page_id:
-                cursor.execute("SELECT title, depth, path FROM wagtailcore_page WHERE id = %s", [root_page_id])
+                cursor.execute("""
+                    SELECT p.title, p.depth, p.path, p.live, ct.app_label, ct.model
+                    FROM wagtailcore_page p
+                    JOIN django_content_type ct ON p.content_type_id = ct.id
+                    WHERE p.id = %s
+                """, [root_page_id])
                 page_info = cursor.fetchone()
                 if page_info:
-                    print(f"     Root page: {page_info[0]} (depth: {page_info[1]}, path: {page_info[2]})")
+                    title, depth, path, live, app_label, model = page_info
+                    print(f"     Root page: '{title}' (ID: {root_page_id})")
+                    print(f"       Type: {app_label}.{model}")
+                    print(f"       Depth: {depth}, Path: {path}, Live: {live}")
+                    if app_label != 'lampstands' or model != 'homepage':
+                        print(f"       ⚠ WARNING: Root page is NOT a HomePage! This is likely the default Wagtail page.")
                 else:
                     print(f"     ⚠ Root page {root_page_id} does not exist!")
     
@@ -108,9 +118,23 @@ def main():
     root_pages = Page.objects.filter(depth=1)
     print(f"   Root level pages (depth=1): {root_pages.count()}")
     for page in root_pages[:5]:
-        print(f"     - {page.title} (ID: {page.id}, path: {page.path})")
+        content_type = f"{page.content_type.app_label}.{page.content_type.model}"
+        print(f"     - {page.title} (ID: {page.id}, path: {page.path}, type: {content_type}, live: {page.live})")
         children = page.get_children()
         print(f"       Children: {children.count()}")
+    
+    # Check what pages exist with IDs 1 and 2 (from the logs)
+    print(f"\n7. Pages with IDs 1 and 2 (from runtime logs):")
+    cursor.execute("""
+        SELECT p.id, p.title, p.depth, p.path, p.live, ct.app_label, ct.model
+        FROM wagtailcore_page p
+        JOIN django_content_type ct ON p.content_type_id = ct.id
+        WHERE p.id IN (1, 2)
+        ORDER BY p.id
+    """)
+    for page_id, title, depth, path, live, app_label, model in cursor.fetchall():
+        print(f"   Page {page_id}: '{title}'")
+        print(f"     Type: {app_label}.{model}, Depth: {depth}, Path: {path}, Live: {live}")
     
     print(f"\n" + "=" * 60)
     print("Diagnostic complete!")

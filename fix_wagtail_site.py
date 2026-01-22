@@ -47,33 +47,64 @@ def main(recursion_depth=0):
             print(f"ERROR creating site: {e}")
             return 1
     
-    # Check if root page is set and is valid
+    # Always check if root page is a HomePage, and fix if not
+    root_page_needs_fix = False
     if not site.root_page:
         print("WARNING: Site has no root page!")
-        # Find the home page - try live first, then any HomePage
+        root_page_needs_fix = True
+    else:
+        # Check if root page is actually a HomePage
+        try:
+            site.root_page.refresh_from_db()
+            content_type = site.root_page.content_type
+            is_homepage = (content_type.app_label == 'lampstands' and 
+                          content_type.model == 'homepage')
+            
+            if not is_homepage:
+                print(f"WARNING: Root page is NOT a HomePage!")
+                print(f"  Current root: '{site.root_page.title}' (ID: {site.root_page.id})")
+                print(f"  Type: {content_type.app_label}.{content_type.model}")
+                root_page_needs_fix = True
+            else:
+                print(f"✓ Root page is correctly set to HomePage: {site.root_page.title} (ID: {site.root_page.id})")
+        except Exception as e:
+            print(f"WARNING: Root page {site.root_page_id} no longer exists: {e}")
+            root_page_needs_fix = True
+    
+    # Fix root page if needed
+    if root_page_needs_fix:
+        print("\nSearching for HomePage to set as root...")
         try:
             from lampstands.core.models import HomePage
+            
+            # Try to find a live HomePage first
             home_page = HomePage.objects.live().first()
             if not home_page:
-                # Try non-live pages too
+                # Try any HomePage (including non-live)
                 home_page = HomePage.objects.first()
             
             if home_page:
-                print(f"Found home page: {home_page.title} (ID: {home_page.id}, live: {home_page.live})")
+                print(f"Found HomePage: '{home_page.title}' (ID: {home_page.id}, live: {home_page.live})")
                 site.root_page = home_page
                 site.save()
-                print(f"✓ Set root page to: {home_page.title}")
+                print(f"✓ Set root page to HomePage: {home_page.title}")
             else:
+                print("WARNING: No HomePage found in database!")
+                print("Searching for any page to use as root...")
+                
                 # Get any page as root (prefer depth=1, but take any page)
                 root_page = Page.objects.filter(depth=1).first()
                 if not root_page:
                     root_page = Page.objects.exclude(depth=1).first()
                 
                 if root_page:
-                    print(f"Found page to use as root: {root_page.title} (ID: {root_page.id}, depth: {root_page.depth})")
+                    content_type = root_page.content_type
+                    print(f"Found page to use as root: '{root_page.title}' (ID: {root_page.id})")
+                    print(f"  Type: {content_type.app_label}.{content_type.model}, Depth: {root_page.depth}")
                     site.root_page = root_page
                     site.save()
                     print(f"✓ Set root page to: {root_page.title}")
+                    print(f"  ⚠ NOTE: This is NOT a HomePage - site may not work correctly!")
                 else:
                     print("ERROR: No pages found in database!")
                     return 1
@@ -82,18 +113,6 @@ def main(recursion_depth=0):
             import traceback
             traceback.print_exc()
             return 1
-    else:
-        # Verify the root page still exists
-        try:
-            site.root_page.refresh_from_db()
-            print(f"✓ Root page is set: {site.root_page.title} (ID: {site.root_page.id})")
-        except Exception as e:
-            print(f"WARNING: Root page {site.root_page_id} no longer exists: {e}")
-            # Try to find a new root page
-            site.root_page = None
-            site.save()
-            # Recursively call the fix logic (with depth check)
-            return main(recursion_depth + 1)
     
     # List all pages
     print("\nPages in database:")
