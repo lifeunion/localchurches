@@ -620,16 +620,6 @@ def main():
     print(f"2. Remove HEROKU_DATABASE_URL after confirming migration success")
     
     return 0 if verification_passed else 1
-    
-    # Close connections
-    source_conn.close()
-    dest_conn.close()
-    
-    print("\nNext steps:")
-    print("1. Verify data in Render dashboard")
-    print("2. Remove HEROKU_DATABASE_URL after confirming migration success")
-    
-    return 0 if verification_passed else 1
 
 if __name__ == '__main__':
     sys.exit(main())
