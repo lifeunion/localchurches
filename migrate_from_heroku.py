@@ -181,14 +181,24 @@ def copy_table_data(source_conn, dest_conn, table_name, skip_columns=None, json_
         
         # Insert into destination - try batch insert, fall back to row-by-row on error
         with dest_conn.cursor() as dest_cur:
-            # Build INSERT statement with ON CONFLICT DO NOTHING to avoid duplicates
+            # Build INSERT statement - use ON CONFLICT only if we have an 'id' column (primary key)
             cols = sql.SQL(', ').join(map(sql.Identifier, common_columns))
             placeholders = sql.SQL(', ').join(sql.Placeholder() * len(common_columns))
-            insert_query = sql.SQL("INSERT INTO {} ({}) VALUES ({}) ON CONFLICT DO NOTHING").format(
-                sql.Identifier(table_name),
-                cols,
-                placeholders
-            )
+            
+            # Check if 'id' is in the columns (primary key)
+            if 'id' in common_columns:
+                insert_query = sql.SQL("INSERT INTO {} ({}) VALUES ({}) ON CONFLICT (id) DO NOTHING").format(
+                    sql.Identifier(table_name),
+                    cols,
+                    placeholders
+                )
+            else:
+                # No primary key conflict handling - just insert (will fail on duplicates)
+                insert_query = sql.SQL("INSERT INTO {} ({}) VALUES ({})").format(
+                    sql.Identifier(table_name),
+                    cols,
+                    placeholders
+                )
             
             try:
                 dest_cur.executemany(insert_query, rows)
@@ -198,24 +208,31 @@ def copy_table_data(source_conn, dest_conn, table_name, skip_columns=None, json_
             except Exception as batch_error:
                 # If batch insert fails, try row-by-row to identify problematic rows
                 dest_conn.rollback()
-                print(f"(batch insert failed, trying row-by-row...) ", end='', flush=True)
+                error_msg = str(batch_error)
+                print(f"\n    Batch error: {error_msg[:200]}", end='', flush=True)
+                print(f"\n    Trying row-by-row insertion... ", end='', flush=True)
                 successful = 0
                 failed = 0
-                for row in rows:
+                error_samples = []
+                for idx, row in enumerate(rows):
                     try:
                         dest_cur.execute(insert_query, row)
                         successful += 1
                     except Exception as row_error:
                         failed += 1
-                        # Only print first few errors to avoid spam
-                        if failed <= 3:
-                            error_msg = str(row_error)
-                            print(f"\n    Row error: {error_msg[:100]}", end='', flush=True)
+                        # Collect first few errors for reporting
+                        if len(error_samples) < 3:
+                            error_samples.append((idx, str(row_error)[:150]))
                 dest_conn.commit()
                 if successful > 0:
-                    print(f"✓ ({successful} rows, {failed} failed)")
+                    print(f"✓ ({successful} rows succeeded, {failed} failed)")
+                    if error_samples:
+                        print(f"    Sample errors:")
+                        for idx, err in error_samples:
+                            print(f"      Row {idx}: {err}")
                     return successful
                 else:
+                    # All rows failed - show the batch error
                     raise batch_error  # Re-raise if all rows failed
     except Exception as e:
         error_msg = str(e)
@@ -324,10 +341,19 @@ def main():
                 filter_null_cols = ['content_type_id']  # Filter out rows with NULL content_type_id (NOT NULL constraint)
             
             elif table == 'wagtailcore_page':
-                # Fix foreign key references to revisions that might not exist (because we filtered them out)
+                # Fix foreign key references that might not exist
                 fk_fix_cols = [
                     ('live_revision_id', 'wagtailcore_revision'),
                     ('latest_revision_id', 'wagtailcore_revision'),
+                    ('locale_id', 'wagtailcore_locale'),  # Pages reference locales
+                ]
+                # Note: owner_id FK to auth_user is handled separately (auth_user is copied)
+                # Note: content_type_id FK to django_content_type is created by migrations
+            
+            elif table == 'wagtailcore_site':
+                # Fix foreign key reference to root_page_id - pages must exist first
+                fk_fix_cols = [
+                    ('root_page_id', 'wagtailcore_page'),
                 ]
             
             rows = copy_table_data(
@@ -364,9 +390,68 @@ def main():
         rows = copy_table_data(source_conn, dest_conn, table)
         total_rows += rows
     
+    # Verify critical tables were copied
+    print("\n" + "=" * 60)
+    print("Verifying migration results...")
+    print("=" * 60)
+    
+    verification_passed = True
+    with dest_conn.cursor() as verify_cur:
+        # Check revisions
+        verify_cur.execute("SELECT COUNT(*) FROM wagtailcore_revision")
+        rev_count = verify_cur.fetchone()[0]
+        print(f"  wagtailcore_revision: {rev_count} rows")
+        if rev_count == 0:
+            print("    ⚠ WARNING: No revisions copied!")
+            verification_passed = False
+        
+        # Check pages
+        verify_cur.execute("SELECT COUNT(*) FROM wagtailcore_page")
+        page_count = verify_cur.fetchone()[0]
+        print(f"  wagtailcore_page: {page_count} rows")
+        if page_count <= 1:  # 1 is just the root page created by migrations
+            print("    ⚠ WARNING: No content pages copied! (only root page exists)")
+            verification_passed = False
+        else:
+            # Check for HomePage specifically
+            verify_cur.execute("""
+                SELECT COUNT(*) FROM wagtailcore_page p
+                JOIN django_content_type ct ON p.content_type_id = ct.id
+                WHERE ct.app_label = 'lampstands' AND ct.model = 'homepage'
+            """)
+            homepage_count = verify_cur.fetchone()[0]
+            print(f"    HomePage instances: {homepage_count}")
+            if homepage_count == 0:
+                print("    ⚠ WARNING: No HomePage found!")
+                verification_passed = False
+        
+        # Check sites
+        verify_cur.execute("SELECT COUNT(*) FROM wagtailcore_site")
+        site_count = verify_cur.fetchone()[0]
+        print(f"  wagtailcore_site: {site_count} rows")
+        if site_count == 0:
+            print("    ⚠ WARNING: No sites copied!")
+            verification_passed = False
+        else:
+            # Check if site has root_page set
+            verify_cur.execute("SELECT COUNT(*) FROM wagtailcore_site WHERE root_page_id IS NOT NULL")
+            site_with_root = verify_cur.fetchone()[0]
+            print(f"    Sites with root_page: {site_with_root}")
+            if site_with_root == 0:
+                print("    ⚠ WARNING: No sites have root_page set!")
+                verification_passed = False
+    
     print(f"\n✓ Migration complete!")
     print(f"  Copied {total_rows} total rows from {len(tables) - skipped} tables")
     print(f"  Skipped {skipped} Django system tables")
+    
+    if not verification_passed:
+        print(f"\n⚠ WARNING: Migration verification found issues!")
+        print(f"  Some critical tables may be empty or misconfigured.")
+        print(f"  The fix_wagtail_site.py script will attempt to fix site configuration.")
+    else:
+        print(f"\n✓ Migration verification passed!")
+    
     print(f"\n⚠ Important: After migration, verify:")
     print(f"  1. Wagtail site root page is configured correctly")
     print(f"  2. Pages are accessible in Wagtail admin")
@@ -380,7 +465,7 @@ def main():
     print("1. Verify data in Render dashboard")
     print("2. Remove HEROKU_DATABASE_URL after confirming migration success")
     
-    return 0
+    return 0 if verification_passed else 1
 
 if __name__ == '__main__':
     sys.exit(main())
