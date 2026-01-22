@@ -54,40 +54,5 @@ python manage.py showmigrations --list | grep -E "\[ \]" && {
     python manage.py migrate --no-input
 } || echo "All migrations appear to be applied"
 
-# Migrate data from Heroku if HEROKU_DATABASE_URL is set
-# NOTE: Render build often cannot reach Heroku Postgres. If /diagnostic/ still
-# shows 0 HomePages, run ./migrate_manual.sh locally — see MANUAL_MIGRATION.md
-if [ -n "$HEROKU_DATABASE_URL" ]; then
-    echo "=========================================="
-    echo "Heroku DB URL set. Attempting migration (may fail from Render)..."
-    echo "=========================================="
-    chmod +x migrate_simple.sh 2>/dev/null || true
-    if bash migrate_simple.sh 2>&1; then
-        echo "✓ Migration completed"
-    else
-        MIGRATION_EXIT_CODE=$?
-        echo "✗ Migration failed (exit $MIGRATION_EXIT_CODE)"
-        echo "Falling back to Python migration..."
-        python migrate_from_heroku.py 2>&1 || true
-        echo "✗ Build-time migration did not succeed."
-        echo "  → Run ./migrate_manual.sh on your machine (see MANUAL_MIGRATION.md)"
-    fi
-    echo "=========================================="
-fi
-
-# Fix Wagtail site configuration after migration
-echo "=========================================="
-echo "Fixing Wagtail site configuration..."
-echo "=========================================="
-python fix_wagtail_site.py 2>&1 || echo "Site configuration fix failed or skipped"
-echo "=========================================="
-
-# Run diagnostic check to see what was actually migrated
-echo "=========================================="
-echo "Running migration diagnostic check..."
-echo "=========================================="
-python check_migration_status.py 2>&1 || echo "Diagnostic check failed or skipped"
-echo "=========================================="
-
 # Collect static files
 python manage.py collectstatic --no-input

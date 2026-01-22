@@ -35,27 +35,41 @@ sudo apt-get install postgresql-client
 
 ---
 
-## 3. Run the migration script
+## 3. Dump Heroku to a file (on your machine)
 
 ```bash
 cd /path/to/localchurches
 
 export HEROKU_DATABASE_URL='postgres://user:pass@host:port/dbname'
-export RENDER_DATABASE_URL='postgresql://user:pass@host:port/dbname'
 
-./migrate_manual.sh
+pg_dump "$HEROKU_DATABASE_URL" --no-owner --no-acl --format=plain -f ./heroku_dump.sql
 ```
 
-The script will:
-
-1. **Dump** Heroku (full schema + data) to a temp file  
-2. Ask you to **confirm** (it will wipe the Render DB)  
-3. **Drop** the `public` schema on Render and recreate it  
-4. **Restore** the Heroku dump into Render  
+Check the file exists and has size: `ls -lh heroku_dump.sql`
 
 ---
 
-## 4. After migration
+## 4. Restore into Render Postgres (on your machine)
+
+```bash
+export RENDER_DATABASE_URL='postgresql://user:pass@host:port/dbname'
+
+# Wipe Render DB (destructive — deletes all data)
+psql "$RENDER_DATABASE_URL" -v ON_ERROR_STOP=1 -c "
+  DROP SCHEMA public CASCADE;
+  CREATE SCHEMA public;
+  GRANT ALL ON SCHEMA public TO public;
+"
+
+# Restore from dump
+psql "$RENDER_DATABASE_URL" -v ON_ERROR_STOP=1 -f ./heroku_dump.sql
+```
+
+Use the **External** Render URL. If "Restrict by IP" is enabled, add your IP first.
+
+---
+
+## 5. After migration
 
 1. **Redeploy** your Render web service (or trigger a new deploy).
 2. Open **https://localchurches.onrender.com/diagnostic/** and confirm:

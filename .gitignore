@@ -5,3 +5,5 @@
 /media/
 .env
 .password
+heroku_dump.sql
+db_backup/
