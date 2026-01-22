@@ -478,7 +478,19 @@ def main():
                 WHERE ct.app_label = 'lampstands' AND ct.model = 'homepage'
             """)
             homepage_count = verify_cur.fetchone()[0]
-            print(f"    HomePage instances: {homepage_count}")
+            print(f"    HomePage instances (wagtailcore_page): {homepage_count}")
+            
+            # Check for HomePage data in lampstands_homepage table
+            try:
+                verify_cur.execute("SELECT COUNT(*) FROM lampstands_homepage")
+                homepage_data_count = verify_cur.fetchone()[0]
+                print(f"    HomePage data rows (lampstands_homepage): {homepage_data_count}")
+                if homepage_count > 0 and homepage_data_count == 0:
+                    print("      ⚠ WARNING: HomePage pages exist but no data in lampstands_homepage!")
+                    verification_passed = False
+            except Exception as e:
+                print(f"    ⚠ Could not check lampstands_homepage: {e}")
+            
             if homepage_count == 0:
                 print("    ⚠ WARNING: No HomePage found!")
                 verification_passed = False
