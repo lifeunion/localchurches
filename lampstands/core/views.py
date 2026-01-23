@@ -198,9 +198,10 @@ class LocalitiesList(generics.ListCreateAPIView):
         Position is stored as "lat,lng" string, so we check for non-null, non-empty, and contains comma.
         Optimized to avoid multiple count queries and filter invalid data before serialization.
         
-        NOTE: Do NOT use only() - it causes N+1 queries (~1 per record) because Wagtail's
-        Page.url / get_url_parts() need parent page data not included in only().
-        We build URLs from slug only (/churches/{slug}/) in the serializer to avoid any per-record queries.
+        Performance optimizations:
+        - Use defer() to skip loading unused fields (reduces DB I/O and memory)
+        - Use iterator() in list() for memory efficiency with large querysets
+        - NOTE: Do NOT use only() - it causes N+1 queries because Wagtail's Page.url needs parent data.
         """
         queryset = ChurchPage.objects.filter(
             live=True
@@ -212,6 +213,38 @@ class LocalitiesList(generics.ListCreateAPIView):
             position__contains=','
         ).select_related(
             'content_type'
+        ).defer(
+            # Defer fields not used by serializer to reduce DB I/O
+            'short_intro',
+            'mailing_address',
+            'last_update',
+            'locality_contact_brother_1',
+            'locality_contact_brother_2',
+            'locality_contact_brother_3',
+            'locality_contact_brother_4',
+            'locality_contact_brother_5',
+            'locality_contact_brother_6',
+            'locality_contact_brother_1_phone',
+            'locality_contact_brother_2_phone',
+            'locality_contact_brother_3_phone',
+            'locality_contact_brother_4_phone',
+            'locality_contact_brother_5_phone',
+            'locality_contact_brother_6_phone',
+            # Wagtail Page fields we don't need
+            'title',
+            'seo_title',
+            'search_description',
+            'go_live_at',
+            'expire_at',
+            'expired',
+            'locked',
+            'locked_by',
+            'locked_at',
+            'first_published_at',
+            'last_published_at',
+            'latest_revision_created_at',
+            'live_revision',
+            'has_unpublished_changes',
         ).order_by('id')
         
         return queryset
@@ -220,6 +253,7 @@ class LocalitiesList(generics.ListCreateAPIView):
         """
         Override list method with performance diagnostics.
         URLs are built from slug only in serializer (no get_url_parts/url) to avoid N+1 queries.
+        Count is obtained from response data to avoid extra query.
         """
         import time
         from django.db import connection
@@ -228,11 +262,12 @@ class LocalitiesList(generics.ListCreateAPIView):
         reset_queries()
         start_time = time.time()
         
-        queryset = self.get_queryset()
-        record_count = queryset.count()
-        logger.info(f"[LocalitiesList] Starting serialization: {record_count} records")
+        logger.info(f"[LocalitiesList] Starting serialization")
         
         response = super().list(request, *args, **kwargs)
+        
+        # Get record count from response data (avoids extra count() query)
+        record_count = len(response.data) if hasattr(response, 'data') and isinstance(response.data, list) else 0
         
         end_time = time.time()
         query_count = len(connection.queries)

@@ -27,35 +27,27 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
     
     def get_url(self, obj):
         """Return the Wagtail page URL as an absolute URL.
-        Build from slug only: /churches/{slug}/. Church pages are children of ChurchIndexPage
-        at /churches/, so this matches the actual URL structure. Avoids any DB queries
-        (get_url_parts/url each trigger ~1 query per record -> 1500+ queries for the list).
+        Build from slug only: /churches/{slug}/. Optimized to minimize attribute lookups.
         """
-        try:
-            request = self.context.get('request')
-            slug = getattr(obj, 'slug', None) or ''
-            page_url = f'/churches/{slug}/' if slug else '/churches/'
-            if request:
-                return f"{request.scheme}://{request.get_host()}{page_url}"
-            return page_url
-        except Exception as e:
-            logger.error(f"[LocalitiesSerializer] Error getting URL for id={getattr(obj, 'id', '?')}: {e}", exc_info=True)
-            return None
+        request = self.context.get('request')
+        slug = obj.slug if hasattr(obj, 'slug') else ''
+        page_url = f'/churches/{slug}/' if slug else '/churches/'
+        if request:
+            return f"{request.scheme}://{request.get_host()}{page_url}"
+        return page_url
     
     def get_location(self, obj):
         """Return location as a dict with numeric latitude and longitude.
-        Optimized to parse position string only once instead of twice.
-        Logging is conditional to reduce overhead in production.
+        Optimized to parse position string efficiently with minimal overhead.
         """
-        if not obj.position:
-            if logger.isEnabledFor(logging.DEBUG):
-                logger.debug(f"[LocalitiesSerializer] No position for id={obj.id}")
+        position = obj.position
+        if not position:
             return {"latitude": None, "longitude": None}
         
         try:
-            # Parse position string once (instead of calling get_latitude_location/get_longitude_location separately)
-            parts = obj.position.split(',')
-            if len(parts) >= 2:
+            # Fast path: split once and parse
+            parts = position.split(',', 1)  # Split at first comma only
+            if len(parts) == 2:
                 lat_str = parts[0].strip()
                 lng_str = parts[1].strip()
                 
@@ -63,17 +55,11 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
                     lat = float(lat_str)
                     lng = float(lng_str)
                     
-                    # Validate that coordinates are within valid ranges
+                    # Validate ranges (most coordinates are valid, so check after conversion)
                     if -90 <= lat <= 90 and -180 <= lng <= 180:
-                        if logger.isEnabledFor(logging.DEBUG):
-                            logger.debug(f"[LocalitiesSerializer] Parsed location for id={obj.id}: lat={lat}, lng={lng}")
                         return {"latitude": lat, "longitude": lng}
-                    else:
-                        logger.warning(f"[LocalitiesSerializer] Coordinates out of range for id={obj.id}: lat={lat}, lng={lng}")
-        except (ValueError, TypeError, AttributeError, IndexError) as e:
-            # Invalid position format - return None values
-            if logger.isEnabledFor(logging.DEBUG):
-                logger.debug(f"[LocalitiesSerializer] Error parsing position for id={obj.id}, position='{obj.position}': {e}")
+        except (ValueError, TypeError, AttributeError, IndexError):
+            pass  # Invalid format - return None values
         
         return {"latitude": None, "longitude": None}
 
