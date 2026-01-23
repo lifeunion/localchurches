@@ -254,7 +254,7 @@ class LocalitiesList(generics.ListCreateAPIView):
         """
         Override list method with performance diagnostics and response caching.
         URLs are built from slug only in serializer (no get_url_parts/url) to avoid N+1 queries.
-        Response data is cached for 5 minutes to dramatically improve performance for repeated requests.
+        Response data is cached for 60 minutes to dramatically improve performance for repeated requests.
         """
         import time
         import hashlib
@@ -296,11 +296,11 @@ class LocalitiesList(generics.ListCreateAPIView):
         if query_count > 50:
             logger.warning(f"[LocalitiesList] High query count: {query_count}")
         
-        # Cache the response data for 5 minutes (300 seconds)
+        # Cache the response data for 60 minutes (3600 seconds)
         # Church data doesn't change frequently, so this is safe
         if hasattr(response, 'data'):
-            cache.set(cache_key, response.data, 300)
-            logger.info(f"[LocalitiesList] Response cached for 5 minutes")
+            cache.set(cache_key, response.data, 3600)
+            logger.info(f"[LocalitiesList] Response cached for 60 minutes")
         
         return response
 

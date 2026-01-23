@@ -177,6 +177,13 @@ CACHES = {
     }
 }
 
+# WhiteNoise configuration
+# WhiteNoise 6.x automatically compresses responses (including API JSON) with gzip
+# when client supports it (Accept-Encoding: gzip header) and content is compressible.
+# CompressedStaticFilesStorage handles static file compression during collectstatic.
+# No additional configuration needed - gzip compression is enabled by default.
+WHITENOISE_AUTOREFRESH = False  # Disable auto-refresh in production for better performance
+
 try:
     from .local import *
 except ImportError:
