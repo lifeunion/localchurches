@@ -31,18 +31,18 @@ class Command(BaseCommand):
                 return
             
             # List of columns that might be missing in Wagtail 6.4
-            # Based on error logs and Wagtail 6.4 UserProfile model
+            # Based on error logs and Wagtail 6.4 UserProfile model source code
             columns_to_add = [
                 {
                     'name': 'updated_comments_notifications',
                     'type': 'BOOLEAN',
-                    'default': 'FALSE',
+                    'default': 'TRUE',
                     'null': 'NOT NULL'
                 },
                 {
                     'name': 'rejected_notifications',
                     'type': 'BOOLEAN',
-                    'default': 'FALSE',
+                    'default': 'TRUE',
                     'null': 'NOT NULL'
                 },
                 {
@@ -58,11 +58,42 @@ class Command(BaseCommand):
                     'null': 'NOT NULL'
                 },
                 {
-                    'name': 'avatar_id',
-                    'type': 'INTEGER',
-                    'default': 'NULL',
-                    'null': 'NULL',
-                    'note': 'ForeignKey to wagtailimages.Image - nullable'
+                    'name': 'avatar',
+                    'type': 'VARCHAR(100)',
+                    'default': "''",
+                    'null': 'NOT NULL',
+                    'note': 'ImageField - stores file path as VARCHAR'
+                },
+                {
+                    'name': 'dismissibles',
+                    'type': 'JSONB',
+                    'default': "'{}'",
+                    'null': 'NOT NULL',
+                    'note': 'JSONField - stores as JSONB in PostgreSQL'
+                },
+                {
+                    'name': 'theme',
+                    'type': 'VARCHAR(40)',
+                    'default': "'system'",
+                    'null': 'NOT NULL'
+                },
+                {
+                    'name': 'contrast',
+                    'type': 'VARCHAR(40)',
+                    'default': "'system'",
+                    'null': 'NOT NULL'
+                },
+                {
+                    'name': 'density',
+                    'type': 'VARCHAR(40)',
+                    'default': "'default'",
+                    'null': 'NOT NULL'
+                },
+                {
+                    'name': 'keyboard_shortcuts',
+                    'type': 'BOOLEAN',
+                    'default': 'TRUE',
+                    'null': 'NOT NULL'
                 },
             ]
             
@@ -84,8 +115,17 @@ class Command(BaseCommand):
                     self.stdout.write(f"Adding missing column: {col['name']}")
                     try:
                         # Build ALTER TABLE statement
-                        null_clause = col['null'] if col.get('null') else 'NOT NULL'
-                        default_clause = f"DEFAULT {col['default']}" if col.get('default') else ''
+                        null_clause = col.get('null', 'NOT NULL')
+                        default_value = col.get('default', '')
+                        if default_value:
+                            # Handle empty string defaults
+                            if default_value == "''":
+                                default_clause = "DEFAULT ''"
+                            else:
+                                default_clause = f"DEFAULT {default_value}"
+                        else:
+                            default_clause = ''
+                        
                         alter_sql = f"""
                             ALTER TABLE wagtailusers_userprofile 
                             ADD COLUMN {col['name']} {col['type']} {default_clause} {null_clause};

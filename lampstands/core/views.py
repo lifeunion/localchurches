@@ -61,18 +61,18 @@ def fix_userprofile(request):
     """
     from django.db import connection
     
-    # List of all columns that Wagtail 6.4 expects
+    # List of all columns that Wagtail 6.4 expects (from wagtail/users/models.py)
     columns_to_add = [
         {
             'name': 'updated_comments_notifications',
             'type': 'BOOLEAN',
-            'default': 'FALSE',
+            'default': 'TRUE',
             'null': 'NOT NULL'
         },
         {
             'name': 'rejected_notifications',
             'type': 'BOOLEAN',
-            'default': 'FALSE',
+            'default': 'TRUE',
             'null': 'NOT NULL'
         },
         {
@@ -88,11 +88,42 @@ def fix_userprofile(request):
             'null': 'NOT NULL'
         },
         {
-            'name': 'avatar_id',
-            'type': 'INTEGER',
-            'default': 'NULL',
-            'null': 'NULL',
-            'note': 'ForeignKey to wagtailimages.Image - nullable'
+            'name': 'avatar',
+            'type': 'VARCHAR(100)',
+            'default': "''",
+            'null': 'NOT NULL',
+            'note': 'ImageField - stores file path'
+        },
+        {
+            'name': 'dismissibles',
+            'type': 'JSONB',
+            'default': "'{}'",
+            'null': 'NOT NULL',
+            'note': 'JSONField'
+        },
+        {
+            'name': 'theme',
+            'type': 'VARCHAR(40)',
+            'default': "'system'",
+            'null': 'NOT NULL'
+        },
+        {
+            'name': 'contrast',
+            'type': 'VARCHAR(40)',
+            'default': "'system'",
+            'null': 'NOT NULL'
+        },
+        {
+            'name': 'density',
+            'type': 'VARCHAR(40)',
+            'default': "'default'",
+            'null': 'NOT NULL'
+        },
+        {
+            'name': 'keyboard_shortcuts',
+            'type': 'BOOLEAN',
+            'default': 'TRUE',
+            'null': 'NOT NULL'
         },
     ]
     
@@ -116,8 +147,17 @@ def fix_userprofile(request):
                 
                 if not column_exists:
                     # Build ALTER TABLE statement
-                    null_clause = col['null'] if col.get('null') else 'NOT NULL'
-                    default_clause = f"DEFAULT {col['default']}" if col.get('default') else ''
+                    null_clause = col.get('null', 'NOT NULL')
+                    default_value = col.get('default', '')
+                    if default_value:
+                        # Handle empty string defaults
+                        if default_value == "''":
+                            default_clause = "DEFAULT ''"
+                        else:
+                            default_clause = f"DEFAULT {default_value}"
+                    else:
+                        default_clause = ''
+                    
                     alter_sql = f"""
                         ALTER TABLE wagtailusers_userprofile 
                         ADD COLUMN {col['name']} {col['type']} {default_clause} {null_clause};
