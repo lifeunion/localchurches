@@ -27,50 +27,19 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
     
     def get_url(self, obj):
         """Return the Wagtail page URL as an absolute URL.
-        Optimized to minimize database queries by using get_url_parts() with only() fields.
-        Falls back to url property if get_url_parts() fails (should be cached after first call).
+        Build from slug only: /churches/{slug}/. Church pages are children of ChurchIndexPage
+        at /churches/, so this matches the actual URL structure. Avoids any DB queries
+        (get_url_parts/url each trigger ~1 query per record -> 1500+ queries for the list).
         """
         try:
             request = self.context.get('request')
-            
-            # Try get_url_parts() first - it should work with path and slug from only()
-            # and may use cached site information
-            try:
-                url_parts = obj.get_url_parts()
-                if url_parts and url_parts[2]:  # Check if page_path exists
-                    _, root_url, page_path = url_parts
-                    page_url = page_path
-                else:
-                    # If get_url_parts() returns None or empty path, use url property
-                    # This is a @cached_property so subsequent calls are fast
-                    page_url = obj.url
-            except (AttributeError, Exception) as e:
-                # If get_url_parts() fails (e.g., missing fields), use url property
-                # This should work even with only() as url is a cached property
-                page_url = obj.url
-            
-            # Ensure it starts with /
-            if page_url and not page_url.startswith('/'):
-                page_url = '/' + page_url
-            
-            # If we have a request, build absolute URL
+            slug = getattr(obj, 'slug', None) or ''
+            page_url = f'/churches/{slug}/' if slug else '/churches/'
             if request:
-                absolute_url = f"{request.scheme}://{request.get_host()}{page_url}"
-                return absolute_url
-            else:
-                return page_url
+                return f"{request.scheme}://{request.get_host()}{page_url}"
+            return page_url
         except Exception as e:
-            logger.error(f"[LocalitiesSerializer] Error getting URL for id={obj.id}: {e}", exc_info=True)
-            # Final fallback: try to build from slug (last resort)
-            try:
-                if hasattr(obj, 'slug') and obj.slug:
-                    page_url = f'/{obj.slug}/'
-                    request = self.context.get('request')
-                    if request:
-                        return f"{request.scheme}://{request.get_host()}{page_url}"
-                    return page_url
-            except Exception:
-                pass
+            logger.error(f"[LocalitiesSerializer] Error getting URL for id={getattr(obj, 'id', '?')}: {e}", exc_info=True)
             return None
     
     def get_location(self, obj):
