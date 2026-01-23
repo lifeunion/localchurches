@@ -213,7 +213,7 @@ class LocalitiesList(generics.ListCreateAPIView):
         
         # Additional filter: position should contain a comma (indicating both lat and lng)
         # Use Django's __contains lookup instead of raw SQL to avoid placeholder issues
-        from django.db.models import Q
+        # This is safe and will generate proper parameterized SQL
         final_queryset = queryset.filter(position__contains=',')
         
         final_count = final_queryset.count()
