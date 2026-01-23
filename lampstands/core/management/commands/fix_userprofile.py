@@ -31,11 +31,30 @@ class Command(BaseCommand):
                 return
             
             # List of columns that might be missing in Wagtail 6.4
+            # Based on error logs and Wagtail 6.4 UserProfile model
             columns_to_add = [
                 {
                     'name': 'updated_comments_notifications',
                     'type': 'BOOLEAN',
                     'default': 'FALSE',
+                    'null': 'NOT NULL'
+                },
+                {
+                    'name': 'rejected_notifications',
+                    'type': 'BOOLEAN',
+                    'default': 'FALSE',
+                    'null': 'NOT NULL'
+                },
+                {
+                    'name': 'current_time_zone',
+                    'type': 'VARCHAR(40)',
+                    'default': "''",
+                    'null': 'NOT NULL'
+                },
+                {
+                    'name': 'preferred_language',
+                    'type': 'VARCHAR(10)',
+                    'default': "''",
                     'null': 'NOT NULL'
                 },
             ]

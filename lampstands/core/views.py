@@ -56,46 +56,86 @@ def error500(request):
 @api_view(['GET'])
 def fix_userprofile(request):
     """
-    One-time fix endpoint to add missing userprofile column.
+    One-time fix endpoint to add missing userprofile columns for Wagtail 6.4.
     TEMPORARY: No auth required for quick fix - REMOVE AFTER USE
     """
     from django.db import connection
     
+    # List of all columns that Wagtail 6.4 expects
+    columns_to_add = [
+        {
+            'name': 'updated_comments_notifications',
+            'type': 'BOOLEAN',
+            'default': 'FALSE',
+            'null': 'NOT NULL'
+        },
+        {
+            'name': 'rejected_notifications',
+            'type': 'BOOLEAN',
+            'default': 'FALSE',
+            'null': 'NOT NULL'
+        },
+        {
+            'name': 'current_time_zone',
+            'type': 'VARCHAR(40)',
+            'default': "''",
+            'null': 'NOT NULL'
+        },
+        {
+            'name': 'preferred_language',
+            'type': 'VARCHAR(10)',
+            'default': "''",
+            'null': 'NOT NULL'
+        },
+    ]
+    
     try:
         with connection.cursor() as cursor:
-            # Check if column exists
-            cursor.execute("""
-                SELECT EXISTS (
-                    SELECT FROM information_schema.columns 
-                    WHERE table_schema = 'public' 
-                    AND table_name = 'wagtailusers_userprofile'
-                    AND column_name = 'updated_comments_notifications'
-                );
-            """)
-            column_exists = cursor.fetchone()[0]
+            added_columns = []
+            existing_columns = []
             
-            if not column_exists:
+            for col in columns_to_add:
+                # Check if column exists
                 cursor.execute("""
-                    ALTER TABLE wagtailusers_userprofile 
-                    ADD COLUMN updated_comments_notifications BOOLEAN DEFAULT FALSE NOT NULL;
-                """)
+                    SELECT EXISTS (
+                        SELECT FROM information_schema.columns 
+                        WHERE table_schema = 'public' 
+                        AND table_name = 'wagtailusers_userprofile'
+                        AND column_name = %s
+                    );
+                """, [col['name']])
+                
+                column_exists = cursor.fetchone()[0]
+                
+                if not column_exists:
+                    # Add column with default value
+                    alter_sql = f"""
+                        ALTER TABLE wagtailusers_userprofile 
+                        ADD COLUMN {col['name']} {col['type']} DEFAULT {col['default']} {col['null']};
+                    """
+                    cursor.execute(alter_sql)
+                    added_columns.append(col['name'])
+                else:
+                    existing_columns.append(col['name'])
+            
+            if added_columns:
                 return Response({
                     'status': 'success',
-                    'message': 'Column added successfully'
+                    'message': f'Added {len(added_columns)} column(s)',
+                    'added': added_columns,
+                    'existing': existing_columns
                 })
             else:
                 return Response({
                     'status': 'already_exists',
-                    'message': 'Column already exists'
+                    'message': 'All columns already exist',
+                    'existing': existing_columns
                 })
     except Exception as e:
         return Response({
             'status': 'error',
             'message': str(e)
         }, status=500)
-    
-    # Otherwise render the 500.html template
-    return render(request, '500.html', status=500)
 
 
 def diagnostic_view(request):
