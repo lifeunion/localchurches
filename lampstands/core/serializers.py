@@ -23,12 +23,19 @@ class LocalitiesSerializer(serializers.Serializer):
     trimmed_address = serializers.SerializerMethodField()
     
     def get_url(self, obj):
-        """Return the Wagtail page URL as a relative path.
+        """Return the Wagtail page URL as an absolute URL.
         Works with dict from values() queryset - obj is a dict, not a model instance.
-        Returns relative path (e.g., /churches/slug/) that works on both domains.
+        Returns absolute URL for API responses (needed for JavaScript/frontend consumption).
         """
+        request = self.context.get('request')
         slug = obj.get('slug', '')
         page_url = f'/churches/{slug}/' if slug else '/churches/'
+        
+        # Build absolute URL if request context is available (API responses)
+        if request:
+            return f"{request.scheme}://{request.get_host()}{page_url}"
+        
+        # Fallback to relative if no request context
         return page_url
     
     def get_location(self, obj):
