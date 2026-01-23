@@ -48,6 +48,9 @@ def error500(request):
     if settings.DEBUG:
         from django.views.debug import technical_500_response
         return technical_500_response(request, *sys.exc_info())
+    
+    # Always return a response - render the 500 template for production
+    return render(request, '500.html', status=500)
 
 
 @api_view(['GET'])
