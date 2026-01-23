@@ -191,6 +191,15 @@ if AWS_STORAGE_BUCKET_NAME and AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
         print(f"DEBUG: ⚠️  boto3 not available - cannot test S3 connection", file=sys.stderr)
     except Exception as e:
         print(f"DEBUG: ⚠️  Could not test S3 connection: {type(e).__name__}: {str(e)[:200]}", file=sys.stderr)
+    
+    # IMPORTANT: Remove WhiteNoise middleware when using S3
+    # WhiteNoise only serves /static/ URLs, which conflicts with S3 URLs
+    # WhiteNoise will intercept /static/ requests and return 404 for S3-hosted files
+    if 'whitenoise.middleware.WhiteNoiseMiddleware' in MIDDLEWARE:
+        MIDDLEWARE = [m for m in MIDDLEWARE if m != 'whitenoise.middleware.WhiteNoiseMiddleware']
+        print(f"DEBUG: ✅ Removed WhiteNoise middleware (using S3 for static files)", file=sys.stderr)
+    else:
+        print(f"DEBUG: WhiteNoise middleware not found in MIDDLEWARE (expected when using S3)", file=sys.stderr)
 else:
     # Use WhiteNoise for static files (no S3)
     # Using CompressedStaticFilesStorage instead of CompressedManifestStaticFilesStorage
