@@ -31,7 +31,7 @@ class Command(BaseCommand):
                 return
             
             # List of columns that might be missing in Wagtail 6.4
-            # Both content_type_id and base_content_type_id are ForeignKeys to django_content_type
+            # These are part of Wagtail's generic foreign key system for workflows
             columns_to_add = [
                 {
                     'name': 'content_type_id',
@@ -46,6 +46,13 @@ class Command(BaseCommand):
                     'default': '',
                     'null': 'NULL',
                     'note': 'ForeignKey to django_content_type - nullable (Wagtail 6.4)'
+                },
+                {
+                    'name': 'object_id',
+                    'type': 'INTEGER',
+                    'default': '',
+                    'null': 'NULL',
+                    'note': 'ID of the related object (generic foreign key) - nullable'
                 },
             ]
             
