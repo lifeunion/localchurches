@@ -5,6 +5,7 @@ from django.contrib.sitemaps.views import sitemap
 
 from search import views as search_views
 from lampstands.core import urls as lampstands_urls
+from lampstands.core import views as core_views
 
 from wagtail.admin import urls as wagtailadmin_urls
 from wagtail import urls as wagtail_urls
@@ -25,7 +26,7 @@ urlpatterns = [
     path('testimony-of-Jesus/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),
     path('search/', search_views.search, name='search'),
-    path('fix-userprofile/', lampstands.core.views.fix_userprofile, name='fix_userprofile'),
+    path('fix-userprofile/', core_views.fix_userprofile, name='fix_userprofile'),
 ]
 
 if settings.DEBUG:
@@ -42,6 +43,7 @@ if settings.DEBUG:
 
 urlpatterns += [
     re_path(r'', include(lampstands_urls)),
+    # Wagtail catch-all must be last
     re_path(r'', include(wagtail_urls)),
 ]
 
