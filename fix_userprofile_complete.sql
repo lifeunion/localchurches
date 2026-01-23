@@ -46,6 +46,10 @@ ADD COLUMN IF NOT EXISTS base_content_type_id INTEGER NULL;
 ALTER TABLE wagtailcore_workflowstate 
 ADD COLUMN IF NOT EXISTS object_id INTEGER NULL;
 
+-- Fix wagtailcore_taskstate table (Wagtail 6.4)
+ALTER TABLE wagtailcore_taskstate 
+ADD COLUMN IF NOT EXISTS revision_id INTEGER NULL;
+
 -- Verify all columns were added
 SELECT column_name, data_type, column_default 
 FROM information_schema.columns 
@@ -70,3 +74,9 @@ FROM information_schema.columns
 WHERE table_name = 'wagtailcore_workflowstate' 
 AND column_name IN ('content_type_id', 'base_content_type_id', 'object_id')
 ORDER BY column_name;
+
+-- Verify taskstate column
+SELECT column_name, data_type, column_default 
+FROM information_schema.columns 
+WHERE table_name = 'wagtailcore_taskstate' 
+AND column_name = 'revision_id';

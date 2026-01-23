@@ -59,6 +59,12 @@ python manage.py fix_workflowstate || {
     echo "Warning: Could not fix workflowstate columns, but continuing..."
 }
 
+# Fix missing Wagtail taskstate columns (common after Heroku migration)
+echo "Checking for missing Wagtail taskstate columns..."
+python manage.py fix_taskstate || {
+    echo "Warning: Could not fix taskstate columns, but continuing..."
+}
+
 # Verify migrations completed successfully
 echo "Verifying migrations completed..."
 python manage.py showmigrations --list | grep -E "\[ \]" && {
