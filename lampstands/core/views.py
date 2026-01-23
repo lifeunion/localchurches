@@ -242,7 +242,7 @@ class LocalitiesList(generics.ListCreateAPIView):
             if original_count > 0:
                 sample = response.data[0] if response.data else None
                 if sample:
-                    logger.info(f"[LocalitiesList] Sample original data: id={sample.get('id')}, name={sample.get('locality_name')}, location={sample.get('location')}")
+                    logger.info(f"[LocalitiesList] Sample original data: id={sample.get('id')}, name={sample.get('locality_name')}, url={sample.get('url')}, location={sample.get('location')}")
             
             # Filter out entries where location has None coordinates
             filtered_data = []
@@ -261,7 +261,7 @@ class LocalitiesList(generics.ListCreateAPIView):
             # Log final sample
             if len(filtered_data) > 0:
                 sample = filtered_data[0]
-                logger.info(f"[LocalitiesList] Sample final data: id={sample.get('id')}, name={sample.get('locality_name')}, url={sample.get('url')}, location={sample.get('location')}")
+                logger.info(f"[LocalitiesList] Sample final data: id={sample.get('id')}, name={sample.get('locality_name')}, url='{sample.get('url')}', location={sample.get('location')}")
             else:
                 logger.error(f"[LocalitiesList] WARNING: No valid data after filtering! This means no churches have valid coordinates.")
         else:

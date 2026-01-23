@@ -26,15 +26,26 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
             'locality_country', 'locality_phone_number', 'locality_email','locality_web', 'location', 'trimmed_address')
     
     def get_url(self, obj):
-        """Return the Wagtail page URL (relative path starting with /)"""
+        """Return the Wagtail page URL as an absolute URL"""
         # Wagtail pages have a url property that returns the relative URL
-        # It should already start with /, but we ensure it does
+        # We need to make it absolute using the request context
         try:
+            request = self.context.get('request')
             page_url = obj.url
+            
+            # Ensure it starts with /
             if page_url and not page_url.startswith('/'):
                 page_url = '/' + page_url
-            logger.debug(f"[LocalitiesSerializer] get_url for church id={obj.id}, name={obj.locality_name}: '{page_url}'")
-            return page_url
+            
+            # If we have a request, build absolute URL
+            if request:
+                absolute_url = request.build_absolute_uri(page_url)
+                logger.debug(f"[LocalitiesSerializer] get_url for church id={obj.id}, name={obj.locality_name}: relative='{page_url}', absolute='{absolute_url}'")
+                return absolute_url
+            else:
+                # Fallback to relative URL if no request context
+                logger.warning(f"[LocalitiesSerializer] No request context for church id={obj.id}, returning relative URL: '{page_url}'")
+                return page_url
         except Exception as e:
             logger.error(f"[LocalitiesSerializer] Error getting URL for church id={obj.id}: {e}")
             return None
