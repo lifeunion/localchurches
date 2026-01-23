@@ -48,6 +48,54 @@ def error500(request):
     if settings.DEBUG:
         from django.views.debug import technical_500_response
         return technical_500_response(request, *sys.exc_info())
+
+
+@api_view(['GET'])
+def fix_userprofile(request):
+    """
+    One-time fix endpoint to add missing userprofile column.
+    Access with: /fix-userprofile/?key=<SECRET_KEY>
+    """
+    from django.db import connection
+    import os
+    
+    # Simple security check - use SECRET_KEY as auth
+    secret_key = request.GET.get('key', '')
+    if secret_key != os.environ.get('SECRET_KEY', ''):
+        return Response({'error': 'Unauthorized'}, status=403)
+    
+    try:
+        with connection.cursor() as cursor:
+            # Check if column exists
+            cursor.execute("""
+                SELECT EXISTS (
+                    SELECT FROM information_schema.columns 
+                    WHERE table_schema = 'public' 
+                    AND table_name = 'wagtailusers_userprofile'
+                    AND column_name = 'updated_comments_notifications'
+                );
+            """)
+            column_exists = cursor.fetchone()[0]
+            
+            if not column_exists:
+                cursor.execute("""
+                    ALTER TABLE wagtailusers_userprofile 
+                    ADD COLUMN updated_comments_notifications BOOLEAN DEFAULT FALSE NOT NULL;
+                """)
+                return Response({
+                    'status': 'success',
+                    'message': 'Column added successfully'
+                })
+            else:
+                return Response({
+                    'status': 'already_exists',
+                    'message': 'Column already exists'
+                })
+    except Exception as e:
+        return Response({
+            'status': 'error',
+            'message': str(e)
+        }, status=500)
     
     # Otherwise render the 500.html template
     return render(request, '500.html', status=500)
@@ -223,6 +271,18 @@ class LocalitiesList(generics.ListCreateAPIView):
             'locality_email',
             'locality_web',
             'position',
+            'locality_contact_brother_1',
+            'locality_contact_brother_1_phone',
+            'locality_contact_brother_2',
+            'locality_contact_brother_2_phone',
+            'locality_contact_brother_3',
+            'locality_contact_brother_3_phone',
+            'locality_contact_brother_4',
+            'locality_contact_brother_4_phone',
+            'locality_contact_brother_5',
+            'locality_contact_brother_5_phone',
+            'locality_contact_brother_6',
+            'locality_contact_brother_6_phone',
         ).order_by('id')
         
         return queryset
