@@ -86,12 +86,56 @@ python manage.py showmigrations --list | grep -E "\[ \]" && {
 
 # Collect static files
 # Use --clear to ensure all files are collected, including webpack chunks
+# Use --verbosity 2 to see which files are being collected (helps debug)
 echo "Collecting static files..."
-python manage.py collectstatic --no-input --clear || {
-    echo "Warning: collectstatic had issues, but continuing..."
+echo "Checking static file storage backend..."
+python -c "
+import os
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lampstands.settings.production')
+import django
+django.setup()
+from django.conf import settings
+print(f'STATICFILES_STORAGE: {settings.STATICFILES_STORAGE}')
+print(f'STATIC_URL: {settings.STATIC_URL}')
+print(f'STATIC_ROOT: {settings.STATIC_ROOT}')
+print(f'Using S3: {hasattr(settings, \"AWS_STORAGE_BUCKET_NAME\") and settings.AWS_STORAGE_BUCKET_NAME}')
+" || echo "Could not check storage backend"
+
+python manage.py collectstatic --no-input --clear --verbosity 2 2>&1 | tee /tmp/collectstatic.log || {
+    echo "Warning: collectstatic had issues, checking log..."
+    cat /tmp/collectstatic.log | tail -50
+    echo ""
+    echo "Trying collectstatic again without --clear..."
     # Try again without --clear as fallback
-    python manage.py collectstatic --no-input || {
+    python manage.py collectstatic --no-input --verbosity 2 || {
         echo "Error: collectstatic failed completely"
+        cat /tmp/collectstatic.log | tail -100
         exit 1
     }
 }
+
+# Verify critical Wagtail admin files were collected
+echo "Verifying Wagtail admin CSS files were collected..."
+python -c "
+import os
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lampstands.settings.production')
+import django
+django.setup()
+from django.conf import settings
+css_path = os.path.join(settings.STATIC_ROOT, 'wagtailadmin', 'css', 'core.css')
+if os.path.exists(css_path):
+    print(f'✅ Wagtail admin CSS found: {css_path}')
+    print(f'   File size: {os.path.getsize(css_path)} bytes')
+else:
+    print(f'❌ Wagtail admin CSS NOT found: {css_path}')
+    print(f'   STATIC_ROOT: {settings.STATIC_ROOT}')
+    # List what's actually in STATIC_ROOT
+    if os.path.exists(settings.STATIC_ROOT):
+        import subprocess
+        result = subprocess.run(['find', settings.STATIC_ROOT, '-name', 'core.css', '-type', 'f'], 
+                              capture_output=True, text=True, timeout=5)
+        if result.returncode == 0 and result.stdout:
+            print(f'   Found core.css files:')
+            for line in result.stdout.strip().split('\n')[:5]:
+                print(f'     {line}')
+" 2>&1 || echo "⚠️  Could not verify Wagtail admin CSS files"
