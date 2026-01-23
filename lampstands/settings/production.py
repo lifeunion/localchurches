@@ -48,6 +48,11 @@ LOGGING = {
             'level': 'DEBUG',  # Changed to DEBUG
             'propagate': False,
         },
+        'lampstands.core': {
+            'handlers': ['console'],
+            'level': 'DEBUG',  # Log all messages from our core module
+            'propagate': False,
+        },
     },
 }
 

@@ -1,6 +1,9 @@
+import logging
 from rest_framework import serializers
 from .models import ChurchPage, ChurchIndexPage
 from django_countries.serializer_fields import CountryField
+
+logger = logging.getLogger(__name__)
 
 class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.IntegerField(read_only=True)
@@ -26,28 +29,51 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
         """Return the Wagtail page URL (relative path starting with /)"""
         # Wagtail pages have a url property that returns the relative URL
         # It should already start with /, but we ensure it does
-        page_url = obj.url
-        if page_url and not page_url.startswith('/'):
-            return '/' + page_url
-        return page_url
+        try:
+            page_url = obj.url
+            if page_url and not page_url.startswith('/'):
+                page_url = '/' + page_url
+            logger.debug(f"[LocalitiesSerializer] get_url for church id={obj.id}, name={obj.locality_name}: '{page_url}'")
+            return page_url
+        except Exception as e:
+            logger.error(f"[LocalitiesSerializer] Error getting URL for church id={obj.id}: {e}")
+            return None
     
     def get_location(self, obj):
         """Return location as a dict with numeric latitude and longitude"""
-        if obj.position:
-            try:
-                # Convert string values to float for proper numeric serialization
-                lat_str = obj.get_latitude_location()
-                lng_str = obj.get_longitude_location()
-                if lat_str and lng_str:
-                    lat = float(lat_str)
-                    lng = float(lng_str)
-                    # Validate that coordinates are within valid ranges
-                    if -90 <= lat <= 90 and -180 <= lng <= 180:
-                        return {"latitude": lat, "longitude": lng}
-            except (ValueError, TypeError, AttributeError):
-                pass
+        try:
+            if obj.position:
+                logger.debug(f"[LocalitiesSerializer] get_location for church id={obj.id}, position='{obj.position}'")
+                try:
+                    # Convert string values to float for proper numeric serialization
+                    lat_str = obj.get_latitude_location()
+                    lng_str = obj.get_longitude_location()
+                    logger.debug(f"[LocalitiesSerializer] Parsed lat_str='{lat_str}', lng_str='{lng_str}'")
+                    
+                    if lat_str and lng_str:
+                        lat = float(lat_str)
+                        lng = float(lng_str)
+                        logger.debug(f"[LocalitiesSerializer] Converted to lat={lat}, lng={lng}")
+                        
+                        # Validate that coordinates are within valid ranges
+                        if -90 <= lat <= 90 and -180 <= lng <= 180:
+                            result = {"latitude": lat, "longitude": lng}
+                            logger.debug(f"[LocalitiesSerializer] Returning valid location: {result}")
+                            return result
+                        else:
+                            logger.warning(f"[LocalitiesSerializer] Coordinates out of range for church id={obj.id}: lat={lat}, lng={lng}")
+                    else:
+                        logger.warning(f"[LocalitiesSerializer] Empty lat_str or lng_str for church id={obj.id}: lat_str='{lat_str}', lng_str='{lng_str}'")
+                except (ValueError, TypeError, AttributeError) as e:
+                    logger.error(f"[LocalitiesSerializer] Error parsing location for church id={obj.id}, position='{obj.position}': {e}")
+            else:
+                logger.debug(f"[LocalitiesSerializer] No position for church id={obj.id}")
+        except Exception as e:
+            logger.error(f"[LocalitiesSerializer] Unexpected error in get_location for church id={obj.id}: {e}")
+        
         # Return dict with None values - these will cause errors in storeLocator.js
         # So we filter them out in the view
+        logger.debug(f"[LocalitiesSerializer] Returning None location for church id={obj.id}")
         return {"latitude": None, "longitude": None}
 
     def create(self, validated_data):
