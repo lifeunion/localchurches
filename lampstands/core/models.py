@@ -1050,7 +1050,7 @@ class ChurchIndexPage(Page):
 
     @property
     def get_locality_json(self):
-        json_locality_url = '/api-localities/?format=json'
+        json_locality_url = 'https://www.localchurches.org/api-localities/?format=json'
         return json_locality_url
 
     def church_posts(self):
@@ -1512,7 +1512,7 @@ class MapPage(Page):
 
     @property
     def get_locality_json(self):
-        json_locality_url = '/api-localities/?format=json'
+        json_locality_url = 'https://www.localchurches.org/api-localities/?format=json'
         return json_locality_url
 
     def geoinfo_lat(self):

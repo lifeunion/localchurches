@@ -757,7 +757,7 @@
                     var trimmed_address = encodeURIComponent(data.meeting_address.trim());
                     var content = '<b>' + '<h6>'+ 'Church in ' + data.locality_name + '</h6></b>' + data.meeting_address + '<br>'
                     + '<a class="label label-success label-map" href='+
-                    data.url + '>'+ 'more info' + '</a>' +
+                    'https://www.localchurches.org'+ data.url + '>'+ 'more info' + '</a>' +
                     '<a class="label label-danger label-map" href=' + 
                     'https://maps.google.com/?saddr=Current%20Location&daddr='+ trimmed_address + '>'+ 'get directions here' + '</a>';
 
