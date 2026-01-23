@@ -196,76 +196,43 @@ class LocalitiesList(generics.ListCreateAPIView):
         """
         Filter to only include live churches with valid position data.
         Position is stored as "lat,lng" string, so we check for non-null, non-empty, and contains comma.
+        Optimized to avoid multiple count queries and filter invalid data before serialization.
         """
-        # Log total live churches
-        total_live = ChurchPage.objects.filter(live=True).count()
-        logger.info(f"[LocalitiesList] Total live churches: {total_live}")
-        
-        queryset = ChurchPage.objects.filter(live=True).exclude(
+        # Single optimized queryset that filters for:
+        # 1. Live pages only
+        # 2. Non-null, non-empty position
+        # 3. Position contains comma (indicating valid "lat,lng" format)
+        queryset = ChurchPage.objects.filter(
+            live=True
+        ).exclude(
             position__isnull=True
         ).exclude(
             position=''
-        )
+        ).filter(
+            position__contains=','
+        ).order_by('id')
         
-        # Log churches with non-null, non-empty position
-        with_position = queryset.count()
-        logger.info(f"[LocalitiesList] Churches with position data: {with_position}")
-        
-        # Additional filter: position should contain a comma (indicating both lat and lng)
-        # Use Django's __contains lookup instead of raw SQL to avoid placeholder issues
-        # This is safe and will generate proper parameterized SQL
-        final_queryset = queryset.filter(position__contains=',')
-        
-        final_count = final_queryset.count()
-        logger.info(f"[LocalitiesList] Churches with valid position format (contains comma): {final_count}")
-        
-        # Log sample positions for debugging
-        if final_count > 0:
-            sample_churches = final_queryset[:5]
-            for church in sample_churches:
-                logger.info(f"[LocalitiesList] Sample church: id={church.id}, name={church.locality_name}, position='{church.position}'")
-        
-        return final_queryset
+        return queryset
     
     def list(self, request, *args, **kwargs):
         """
-        Override list method to filter out entries with invalid coordinates
+        Override list method to add minimal logging and filter invalid coordinates.
+        Note: Most filtering is done in get_queryset() to avoid serializing invalid data.
         """
-        logger.info(f"[LocalitiesList] API request received from {request.META.get('REMOTE_ADDR', 'unknown')}")
         response = super().list(request, *args, **kwargs)
         
         if response.status_code == status.HTTP_200_OK:
-            original_count = len(response.data)
-            logger.info(f"[LocalitiesList] Original serialized data count: {original_count}")
+            # Final safety check: filter out any entries with None coordinates
+            # (should be rare since we filter in queryset, but handle edge cases)
+            filtered_data = [
+                item for item in response.data
+                if item.get('location', {}).get('latitude') is not None 
+                and item.get('location', {}).get('longitude') is not None
+            ]
             
-            # Log sample of original data
-            if original_count > 0:
-                sample = response.data[0] if response.data else None
-                if sample:
-                    logger.info(f"[LocalitiesList] Sample original data: id={sample.get('id')}, name={sample.get('locality_name')}, url={sample.get('url')}, location={sample.get('location')}")
-            
-            # Filter out entries where location has None coordinates
-            filtered_data = []
-            invalid_count = 0
-            for item in response.data:
-                location = item.get('location')
-                if location and location.get('latitude') is not None and location.get('longitude') is not None:
-                    filtered_data.append(item)
-                else:
-                    invalid_count += 1
-                    logger.warning(f"[LocalitiesList] Filtered out item id={item.get('id')}, name={item.get('locality_name')}, location={location}")
-            
-            logger.info(f"[LocalitiesList] After filtering: valid={len(filtered_data)}, invalid={invalid_count}")
-            response.data = filtered_data
-            
-            # Log final sample
-            if len(filtered_data) > 0:
-                sample = filtered_data[0]
-                logger.info(f"[LocalitiesList] Sample final data: id={sample.get('id')}, name={sample.get('locality_name')}, url='{sample.get('url')}', location={sample.get('location')}")
-            else:
-                logger.error(f"[LocalitiesList] WARNING: No valid data after filtering! This means no churches have valid coordinates.")
-        else:
-            logger.error(f"[LocalitiesList] API request failed with status {response.status_code}")
+            if len(filtered_data) != len(response.data):
+                logger.warning(f"[LocalitiesList] Filtered out {len(response.data) - len(filtered_data)} items with invalid coordinates")
+                response.data = filtered_data
         
         return response
 
