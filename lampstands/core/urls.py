@@ -22,4 +22,5 @@ urlpatterns += [
     path('fix-taskstate/', views.fix_taskstate, name='fix_taskstate'),
     path('fix-revision/', views.fix_revision, name='fix_revision'),
     path('fix-document/', views.fix_document, name='fix_document'),
+    path('fix-lampstandsimage/', views.fix_lampstandsimage, name='fix_lampstandsimage'),
 ]

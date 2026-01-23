@@ -77,6 +77,12 @@ python manage.py fix_document || {
     echo "Warning: Could not fix document columns, but continuing..."
 }
 
+# Fix missing LampstandsImage columns (common after Heroku migration)
+echo "Checking for missing LampstandsImage columns..."
+python manage.py fix_lampstandsimage || {
+    echo "Warning: Could not fix lampstandsimage columns, but continuing..."
+}
+
 # Verify migrations completed successfully
 echo "Verifying migrations completed..."
 python manage.py showmigrations --list | grep -E "\[ \]" && {
