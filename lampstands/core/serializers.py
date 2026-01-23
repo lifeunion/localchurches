@@ -39,10 +39,14 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
             
             # If we have a request, build absolute URL
             if request:
-                return f"{request.scheme}://{request.get_host()}{page_url}"
+                absolute_url = f"{request.scheme}://{request.get_host()}{page_url}"
+                logger.debug(f"[LocalitiesSerializer] Built absolute URL for id={obj.id}: {absolute_url}")
+                return absolute_url
             else:
+                logger.debug(f"[LocalitiesSerializer] No request context for id={obj.id}, returning relative: {page_url}")
                 return page_url
-        except Exception:
+        except Exception as e:
+            logger.error(f"[LocalitiesSerializer] Error getting URL for id={obj.id}: {e}", exc_info=True)
             return None
     
     def get_location(self, obj):
@@ -50,6 +54,7 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
         Optimized to parse position string only once instead of twice.
         """
         if not obj.position:
+            logger.debug(f"[LocalitiesSerializer] No position for id={obj.id}")
             return {"latitude": None, "longitude": None}
         
         try:
@@ -65,10 +70,13 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
                     
                     # Validate that coordinates are within valid ranges
                     if -90 <= lat <= 90 and -180 <= lng <= 180:
+                        logger.debug(f"[LocalitiesSerializer] Parsed location for id={obj.id}: lat={lat}, lng={lng}")
                         return {"latitude": lat, "longitude": lng}
-        except (ValueError, TypeError, AttributeError, IndexError):
+                    else:
+                        logger.warning(f"[LocalitiesSerializer] Coordinates out of range for id={obj.id}: lat={lat}, lng={lng}")
+        except (ValueError, TypeError, AttributeError, IndexError) as e:
             # Invalid position format - return None values
-            pass
+            logger.debug(f"[LocalitiesSerializer] Error parsing position for id={obj.id}, position='{obj.position}': {e}")
         
         return {"latitude": None, "longitude": None}
 
