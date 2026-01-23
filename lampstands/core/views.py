@@ -212,10 +212,9 @@ class LocalitiesList(generics.ListCreateAPIView):
         logger.info(f"[LocalitiesList] Churches with position data: {with_position}")
         
         # Additional filter: position should contain a comma (indicating both lat and lng)
-        # Using a custom filter to check if position contains comma
-        final_queryset = queryset.extra(
-            where=["position LIKE '%,%'"]
-        )
+        # Use Django's __contains lookup instead of raw SQL to avoid placeholder issues
+        from django.db.models import Q
+        final_queryset = queryset.filter(position__contains=',')
         
         final_count = final_queryset.count()
         logger.info(f"[LocalitiesList] Churches with valid position format (contains comma): {final_count}")
