@@ -26,7 +26,6 @@ urlpatterns = [
     path('testimony-of-Jesus/', include(wagtailadmin_urls)),
     path('documents/', include(wagtaildocs_urls)),
     path('search/', search_views.search, name='search'),
-    path('fix-userprofile/', core_views.fix_userprofile, name='fix_userprofile'),
 ]
 
 if settings.DEBUG:
