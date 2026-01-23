@@ -33,22 +33,38 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
             request = self.context.get('request')
             page_url = obj.url
             
+            logger.info(f"[LocalitiesSerializer] get_url for church id={obj.id}, name={obj.locality_name}: raw_url='{page_url}', has_request={request is not None}")
+            
             # Ensure it starts with /
             if page_url and not page_url.startswith('/'):
                 page_url = '/' + page_url
+                logger.info(f"[LocalitiesSerializer] Added leading slash: '{page_url}'")
             
             # If we have a request, build absolute URL
             if request:
-                absolute_url = request.build_absolute_uri(page_url)
-                logger.debug(f"[LocalitiesSerializer] get_url for church id={obj.id}, name={obj.locality_name}: relative='{page_url}', absolute='{absolute_url}'")
+                # Get the scheme and host from the request
+                scheme = request.scheme  # 'http' or 'https'
+                host = request.get_host()  # 'localchurches.onrender.com'
+                
+                # Build absolute URL manually to ensure it's correct
+                absolute_url = f"{scheme}://{host}{page_url}"
+                logger.info(f"[LocalitiesSerializer] Built absolute URL: scheme='{scheme}', host='{host}', path='{page_url}', absolute='{absolute_url}'")
                 return absolute_url
             else:
                 # Fallback to relative URL if no request context
                 logger.warning(f"[LocalitiesSerializer] No request context for church id={obj.id}, returning relative URL: '{page_url}'")
                 return page_url
         except Exception as e:
-            logger.error(f"[LocalitiesSerializer] Error getting URL for church id={obj.id}: {e}")
-            return None
+            logger.error(f"[LocalitiesSerializer] Error getting URL for church id={obj.id}: {e}", exc_info=True)
+            # Fallback: try to get URL from obj directly
+            try:
+                fallback_url = obj.url
+                if fallback_url and not fallback_url.startswith('/'):
+                    fallback_url = '/' + fallback_url
+                logger.warning(f"[LocalitiesSerializer] Using fallback URL: '{fallback_url}'")
+                return fallback_url
+            except:
+                return None
     
     def get_location(self, obj):
         """Return location as a dict with numeric latitude and longitude"""
