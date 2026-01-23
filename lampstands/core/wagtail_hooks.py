@@ -12,52 +12,55 @@ from .models import ChurchPage
 # Keeping this for backwards compatibility during migration.
 
 
-@hooks.register('insert_global_admin_css')
-def import_fontawesome_stylesheet():
-    elem = '<link rel="stylesheet" href="{}lampstands/vendor/fontawesome/css/font-awesome.min.css">'.format(
-        settings.STATIC_URL
-    )
-    return format_html(elem)
+# Temporarily disabled to fix admin CSS issues
+# @hooks.register('insert_global_admin_css')
+# def import_fontawesome_stylesheet():
+#     elem = '<link rel="stylesheet" href="{}lampstands/vendor/fontawesome/css/font-awesome.min.css">'.format(
+#         settings.STATIC_URL
+#     )
+#     return format_html(elem)
 
 
-@hooks.register('insert_global_admin_css')
-def fix_admin_login_css():
-    """Fix CSS issues on Wagtail admin login page (bird icon size, button overlap)."""
-    from django.utils.safestring import mark_safe
-    # Only apply to login page - check for login-specific classes
-    css = """
-    <style>
-        /* Fix Wagtail login page CSS issues - ONLY on login page */
-        body.login .content-wrapper .logo img,
-        body.login .content-wrapper .logo svg {{
-            max-width: 60px !important;
-            max-height: 60px !important;
-            width: auto !important;
-            height: auto !important;
-        }}
-        
-        body.login .content-wrapper h1 {{
-            font-size: 2em !important;
-            margin-bottom: 1em !important;
-        }}
-        
-        @media screen and (min-width: 50em) {{
-            body.login .content-wrapper h1 {{
-                font-size: 3em !important;
-            }}
-        }}
-        
-        body.login .content-wrapper .button {{
-            margin-top: 1em !important;
-            clear: both !important;
-        }}
-        
-        body.login .content-wrapper .fields {{
-            margin-top: 1em !important;
-        }}
-    </style>
-    """
-    return mark_safe(css)
+# Temporarily disabled - CSS was interfering with main admin interface
+# Re-enable after confirming admin CSS loads correctly
+# @hooks.register('insert_global_admin_css')
+# def fix_admin_login_css():
+#     """Fix CSS issues on Wagtail admin login page (bird icon size, button overlap)."""
+#     from django.utils.safestring import mark_safe
+#     # Only apply to login page - check for login-specific classes
+#     css = """
+#     <style>
+#         /* Fix Wagtail login page CSS issues - ONLY on login page */
+#         body.login .content-wrapper .logo img,
+#         body.login .content-wrapper .logo svg {{
+#             max-width: 60px !important;
+#             max-height: 60px !important;
+#             width: auto !important;
+#             height: auto !important;
+#         }}
+#         
+#         body.login .content-wrapper h1 {{
+#             font-size: 2em !important;
+#             margin-bottom: 1em !important;
+#         }}
+#         
+#         @media screen and (min-width: 50em) {{
+#             body.login .content-wrapper h1 {{
+#                 font-size: 3em !important;
+#             }}
+#         }}
+#         
+#         body.login .content-wrapper .button {{
+#             margin-top: 1em !important;
+#             clear: both !important;
+#         }}
+#         
+#         body.login .content-wrapper .fields {{
+#             margin-top: 1em !important;
+#         }}
+#     </style>
+#     """
+#     return mark_safe(css)
 
 
 class ChurchAdmin(ModelAdmin):
