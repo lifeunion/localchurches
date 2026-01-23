@@ -98,9 +98,18 @@ from django.conf import settings
 print(f'STATICFILES_STORAGE: {settings.STATICFILES_STORAGE}')
 print(f'STATIC_URL: {settings.STATIC_URL}')
 print(f'STATIC_ROOT: {settings.STATIC_ROOT}')
-print(f'Using S3: {hasattr(settings, \"AWS_STORAGE_BUCKET_NAME\") and settings.AWS_STORAGE_BUCKET_NAME}')
+has_s3 = (hasattr(settings, 'AWS_STORAGE_BUCKET_NAME') and 
+          settings.AWS_STORAGE_BUCKET_NAME and 
+          hasattr(settings, 'AWS_ACCESS_KEY_ID') and 
+          settings.AWS_ACCESS_KEY_ID)
+print(f'Using S3: {has_s3}')
+if not has_s3:
+    print('⚠️  WARNING: No S3 credentials - using WhiteNoise')
+    print('   Files will be collected to:', settings.STATIC_ROOT)
 " || echo "Could not check storage backend"
 
+# Temporarily disable S3 storage during collectstatic if credentials are missing
+# This ensures files are collected locally for WhiteNoise
 python manage.py collectstatic --no-input --clear --verbosity 2 2>&1 | tee /tmp/collectstatic.log || {
     echo "Warning: collectstatic had issues, checking log..."
     cat /tmp/collectstatic.log | tail -50
@@ -115,6 +124,7 @@ python manage.py collectstatic --no-input --clear --verbosity 2 2>&1 | tee /tmp/
 }
 
 # Verify critical Wagtail admin files were collected
+echo ""
 echo "Verifying Wagtail admin CSS files were collected..."
 python -c "
 import os
@@ -129,13 +139,25 @@ if os.path.exists(css_path):
 else:
     print(f'❌ Wagtail admin CSS NOT found: {css_path}')
     print(f'   STATIC_ROOT: {settings.STATIC_ROOT}')
+    print(f'   STATIC_ROOT exists: {os.path.exists(settings.STATIC_ROOT)}')
     # List what's actually in STATIC_ROOT
     if os.path.exists(settings.STATIC_ROOT):
         import subprocess
-        result = subprocess.run(['find', settings.STATIC_ROOT, '-name', 'core.css', '-type', 'f'], 
-                              capture_output=True, text=True, timeout=5)
-        if result.returncode == 0 and result.stdout:
-            print(f'   Found core.css files:')
-            for line in result.stdout.strip().split('\n')[:5]:
-                print(f'     {line}')
+        try:
+            result = subprocess.run(['find', settings.STATIC_ROOT, '-name', 'core.css', '-type', 'f'], 
+                                  capture_output=True, text=True, timeout=5)
+            if result.returncode == 0 and result.stdout:
+                print(f'   Found core.css files:')
+                for line in result.stdout.strip().split('\n')[:5]:
+                    print(f'     {line}')
+            else:
+                print(f'   No core.css files found in STATIC_ROOT')
+                # List top-level directories
+                try:
+                    dirs = [d for d in os.listdir(settings.STATIC_ROOT) if os.path.isdir(os.path.join(settings.STATIC_ROOT, d))][:10]
+                    print(f'   Top-level directories in STATIC_ROOT: {dirs}')
+                except:
+                    pass
+        except Exception as e:
+            print(f'   Error checking files: {e}')
 " 2>&1 || echo "⚠️  Could not verify Wagtail admin CSS files"

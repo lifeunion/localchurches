@@ -156,6 +156,12 @@ else:
             "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
         },
     }
+    # IMPORTANT: When using WhiteNoise, ensure STATIC_ROOT is set correctly
+    # Files must be collected to local directory, not S3
+    import sys
+    print(f"DEBUG: Using WhiteNoise for static files", file=sys.stderr)
+    print(f"DEBUG: STATIC_ROOT = {STATIC_ROOT}", file=sys.stderr)
+    print(f"DEBUG: STATIC_URL = {STATIC_URL}", file=sys.stderr)
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
