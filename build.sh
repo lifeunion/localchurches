@@ -53,6 +53,12 @@ python manage.py fix_userprofile || {
     echo "Warning: Could not fix userprofile columns, but continuing..."
 }
 
+# Fix missing Wagtail workflowstate columns (common after Heroku migration)
+echo "Checking for missing Wagtail workflowstate columns..."
+python manage.py fix_workflowstate || {
+    echo "Warning: Could not fix workflowstate columns, but continuing..."
+}
+
 # Verify migrations completed successfully
 echo "Verifying migrations completed..."
 python manage.py showmigrations --list | grep -E "\[ \]" && {

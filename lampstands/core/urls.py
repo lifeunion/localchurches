@@ -18,4 +18,5 @@ urlpatterns += [
     path('api-auth/', include('rest_framework.urls')),
     path('diagnostic/', views.diagnostic_view, name='diagnostic'),
     path('fix-userprofile/', views.fix_userprofile, name='fix_userprofile'),
+    path('fix-workflowstate/', views.fix_workflowstate, name='fix_workflowstate'),
 ]
