@@ -203,10 +203,11 @@ class LocalitiesList(generics.ListCreateAPIView):
         - Use iterator() in list() for memory efficiency with large querysets
         - NOTE: Do NOT use only() - it causes N+1 queries because Wagtail's Page.url needs parent data.
         """
+        # Optimize position filter: position__contains is a LIKE query which can be slow
+        # We filter for non-null, non-empty, and contains comma in one go
         queryset = ChurchPage.objects.filter(
-            live=True
-        ).exclude(
-            position__isnull=True
+            live=True,
+            position__isnull=False
         ).exclude(
             position=''
         ).filter(
@@ -251,18 +252,32 @@ class LocalitiesList(generics.ListCreateAPIView):
     
     def list(self, request, *args, **kwargs):
         """
-        Override list method with performance diagnostics.
+        Override list method with performance diagnostics and response caching.
         URLs are built from slug only in serializer (no get_url_parts/url) to avoid N+1 queries.
-        Count is obtained from response data to avoid extra query.
+        Response data is cached for 5 minutes to dramatically improve performance for repeated requests.
         """
         import time
+        import hashlib
         from django.db import connection
         from django.db import reset_queries
+        from django.core.cache import cache
+        from rest_framework.response import Response
         
         reset_queries()
         start_time = time.time()
         
-        logger.info(f"[LocalitiesList] Starting serialization")
+        # Create cache key based on request parameters
+        cache_key = f'localities_list_{hashlib.md5(str(request.GET.urlencode()).encode()).hexdigest()}'
+        
+        # Try to get cached response data
+        cached_data = cache.get(cache_key)
+        if cached_data is not None:
+            logger.info(f"[LocalitiesList] Cache HIT - returning cached response")
+            record_count = len(cached_data) if isinstance(cached_data, list) else 0
+            logger.warning(f"[LocalitiesList] Cached: {record_count} records, 0 queries, <0.01s total")
+            return Response(cached_data)
+        
+        logger.info(f"[LocalitiesList] Cache MISS - generating response")
         
         response = super().list(request, *args, **kwargs)
         
@@ -280,6 +295,12 @@ class LocalitiesList(generics.ListCreateAPIView):
         )
         if query_count > 50:
             logger.warning(f"[LocalitiesList] High query count: {query_count}")
+        
+        # Cache the response data for 5 minutes (300 seconds)
+        # Church data doesn't change frequently, so this is safe
+        if hasattr(response, 'data'):
+            cache.set(cache_key, response.data, 300)
+            logger.info(f"[LocalitiesList] Response cached for 5 minutes")
         
         return response
 

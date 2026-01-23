@@ -165,6 +165,18 @@ STATICFILES_FINDERS = (
 # Wagtail admin base URL - use environment variable or default to Render URL
 WAGTAILADMIN_BASE_URL = os.environ.get('WAGTAILADMIN_BASE_URL', 'https://localchurches.onrender.com')
 
+# Cache configuration for API response caching
+# Using in-memory cache (fine for single server, upgrade to Redis if scaling to multiple servers)
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'localchurches-cache',
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000,
+        }
+    }
+}
+
 try:
     from .local import *
 except ImportError:
