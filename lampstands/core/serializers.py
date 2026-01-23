@@ -3,7 +3,7 @@ from .models import ChurchPage, ChurchIndexPage
 from django_countries.serializer_fields import CountryField
 
 class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
-    #id = serializers.IntegerField(read_only=False)
+    id = serializers.IntegerField(read_only=True)
     locality_name = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
     meeting_address = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
     locality_state_or_province = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
@@ -13,13 +13,32 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
     locality_web = serializers.CharField(required=False, allow_blank=True, allow_null=True, style={'base_template': 'textarea.html'})
     #position = GeopositionField()
 
-    location = serializers.ReadOnlyField()
+    location = serializers.SerializerMethodField()
     trimmed_address = serializers.ReadOnlyField()
     
     class Meta:
         model = ChurchPage
-        fields = ('url','locality_name', 'meeting_address', 'locality_state_or_province', 
+        fields = ('id', 'url','locality_name', 'meeting_address', 'locality_state_or_province', 
             'locality_country', 'locality_phone_number', 'locality_email','locality_web', 'location', 'trimmed_address')
+    
+    def get_location(self, obj):
+        """Return location as a dict with numeric latitude and longitude"""
+        if obj.position:
+            try:
+                # Convert string values to float for proper numeric serialization
+                lat_str = obj.get_latitude_location()
+                lng_str = obj.get_longitude_location()
+                if lat_str and lng_str:
+                    lat = float(lat_str)
+                    lng = float(lng_str)
+                    # Validate that coordinates are within valid ranges
+                    if -90 <= lat <= 90 and -180 <= lng <= 180:
+                        return {"latitude": lat, "longitude": lng}
+            except (ValueError, TypeError, AttributeError):
+                pass
+        # Return dict with None values - these will cause errors in storeLocator.js
+        # So we filter them out in the view
+        return {"latitude": None, "longitude": None}
 
     def create(self, validated_data):
         """

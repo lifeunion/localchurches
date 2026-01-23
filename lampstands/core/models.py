@@ -1161,15 +1161,31 @@ class ChurchPage(Page):
         return ChurchIndexPage.objects.first()
 
     def get_latitude_location(self):
+        """Parse latitude from position string (stored as "lat,lng" or "lat, lng")"""
         if self.position:
-            latitude = self.position.latitude
-            return str(latitude)
+            try:
+                # Position is stored as "lat,lng" string, split by comma
+                parts = self.position.split(',')
+                if len(parts) >= 1:
+                    lat_str = parts[0].strip()
+                    if lat_str:
+                        return str(float(lat_str))
+            except (ValueError, AttributeError, IndexError):
+                pass
         return None
 
     def get_longitude_location(self):
+        """Parse longitude from position string (stored as "lat,lng" or "lat, lng")"""
         if self.position:
-            longitude = self.position.longitude
-            return str(longitude)
+            try:
+                # Position is stored as "lat,lng" string, split by comma
+                parts = self.position.split(',')
+                if len(parts) >= 2:
+                    lng_str = parts[1].strip()
+                    if lng_str:
+                        return str(float(lng_str))
+            except (ValueError, AttributeError, IndexError):
+                pass
         return None
 
     def location(self):

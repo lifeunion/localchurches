@@ -12,6 +12,7 @@ from rest_framework import permissions
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from rest_framework import status
 
 
 def error404(request, exception=None):
@@ -185,9 +186,40 @@ def api_root(request, format=None):
 
 
 class LocalitiesList(generics.ListCreateAPIView):
-    queryset = ChurchPage.objects.filter(live=True)
     serializer_class = LocalitiesSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    
+    def get_queryset(self):
+        """
+        Filter to only include live churches with valid position data.
+        Position is stored as "lat,lng" string, so we check for non-null, non-empty, and contains comma.
+        """
+        queryset = ChurchPage.objects.filter(live=True).exclude(
+            position__isnull=True
+        ).exclude(
+            position=''
+        )
+        # Additional filter: position should contain a comma (indicating both lat and lng)
+        # Using a custom filter to check if position contains comma
+        return queryset.extra(
+            where=["position LIKE '%,%'"]
+        )
+    
+    def list(self, request, *args, **kwargs):
+        """
+        Override list method to filter out entries with invalid coordinates
+        """
+        response = super().list(request, *args, **kwargs)
+        if response.status_code == status.HTTP_200_OK:
+            # Filter out entries where location has None coordinates
+            filtered_data = [
+                item for item in response.data
+                if item.get('location') and 
+                   item['location'].get('latitude') is not None and 
+                   item['location'].get('longitude') is not None
+            ]
+            response.data = filtered_data
+        return response
 
 
 class LocalitiesDetail(generics.RetrieveUpdateDestroyAPIView):
