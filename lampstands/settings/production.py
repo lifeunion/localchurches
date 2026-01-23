@@ -155,6 +155,16 @@ if AWS_STORAGE_BUCKET_NAME and AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
     AWS_S3_USE_SSL = True
     AWS_S3_VERIFY = True
     
+    # IMPORTANT: Set location for static files in S3
+    # This ensures static files are stored in the root of the bucket, not in a subdirectory
+    # Without this, Wagtail admin CSS/JS files may not be found correctly
+    AWS_LOCATION = ''  # Empty string means root of bucket
+    
+    # Ensure static files are collected with correct paths
+    # This is critical for Wagtail admin files to load correctly
+    AWS_S3_FILE_OVERWRITE = False  # Don't overwrite existing files
+    AWS_IS_GZIPPED = False  # Let WhiteNoise handle compression if needed
+    
     # Update STORAGES for S3
     STORAGES = {
         "default": {
