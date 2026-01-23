@@ -4,6 +4,7 @@ from django_countries.serializer_fields import CountryField
 
 class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
     id = serializers.IntegerField(read_only=True)
+    url = serializers.SerializerMethodField()  # Override to use Wagtail page URL
     locality_name = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
     meeting_address = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
     locality_state_or_province = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
@@ -20,6 +21,15 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
         model = ChurchPage
         fields = ('id', 'url','locality_name', 'meeting_address', 'locality_state_or_province', 
             'locality_country', 'locality_phone_number', 'locality_email','locality_web', 'location', 'trimmed_address')
+    
+    def get_url(self, obj):
+        """Return the Wagtail page URL (relative path starting with /)"""
+        # Wagtail pages have a url property that returns the relative URL
+        # It should already start with /, but we ensure it does
+        page_url = obj.url
+        if page_url and not page_url.startswith('/'):
+            return '/' + page_url
+        return page_url
     
     def get_location(self, obj):
         """Return location as a dict with numeric latitude and longitude"""
@@ -50,7 +60,7 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
         """
         Update and return an existing `localities` instance, given the validated data.
         """
-        instance.url = validated_data.get('url', instance.get_absolute_url())
+        # url is a read-only property from Wagtail Page model, don't try to set it
         instance.locality_name = validated_data.get('locality_name', instance.locality_name)
         instance.meeting_address = validated_data.get('meeting_address', instance.meeting_address)
         instance.locality_state_or_province = validated_data.get('locality_state_or_province', instance.locality_state_or_province)
