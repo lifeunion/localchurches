@@ -87,6 +87,13 @@ def fix_userprofile(request):
             'default': "''",
             'null': 'NOT NULL'
         },
+        {
+            'name': 'avatar_id',
+            'type': 'INTEGER',
+            'default': 'NULL',
+            'null': 'NULL',
+            'note': 'ForeignKey to wagtailimages.Image - nullable'
+        },
     ]
     
     try:
@@ -108,10 +115,12 @@ def fix_userprofile(request):
                 column_exists = cursor.fetchone()[0]
                 
                 if not column_exists:
-                    # Add column with default value
+                    # Build ALTER TABLE statement
+                    null_clause = col['null'] if col.get('null') else 'NOT NULL'
+                    default_clause = f"DEFAULT {col['default']}" if col.get('default') else ''
                     alter_sql = f"""
                         ALTER TABLE wagtailusers_userprofile 
-                        ADD COLUMN {col['name']} {col['type']} DEFAULT {col['default']} {col['null']};
+                        ADD COLUMN {col['name']} {col['type']} {default_clause} {null_clause};
                     """
                     cursor.execute(alter_sql)
                     added_columns.append(col['name'])

@@ -57,6 +57,13 @@ class Command(BaseCommand):
                     'default': "''",
                     'null': 'NOT NULL'
                 },
+                {
+                    'name': 'avatar_id',
+                    'type': 'INTEGER',
+                    'default': 'NULL',
+                    'null': 'NULL',
+                    'note': 'ForeignKey to wagtailimages.Image - nullable'
+                },
             ]
             
             added_count = 0
@@ -76,10 +83,12 @@ class Command(BaseCommand):
                 if not column_exists:
                     self.stdout.write(f"Adding missing column: {col['name']}")
                     try:
-                        # Add column with default value
+                        # Build ALTER TABLE statement
+                        null_clause = col['null'] if col.get('null') else 'NOT NULL'
+                        default_clause = f"DEFAULT {col['default']}" if col.get('default') else ''
                         alter_sql = f"""
                             ALTER TABLE wagtailusers_userprofile 
-                            ADD COLUMN {col['name']} {col['type']} DEFAULT {col['default']} {col['null']};
+                            ADD COLUMN {col['name']} {col['type']} {default_clause} {null_clause};
                         """
                         cursor.execute(alter_sql)
                         self.stdout.write(
