@@ -21,6 +21,18 @@ class LocalitiesSerializer(serializers.Serializer):
     locality_web = serializers.CharField(required=False, allow_blank=True, allow_null=True, style={'base_template': 'textarea.html'})
     location = serializers.SerializerMethodField()
     trimmed_address = serializers.SerializerMethodField()
+    locality_contact_brother_1 = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
+    locality_contact_brother_1_phone = serializers.CharField(required=False, allow_blank=True, max_length=25, allow_null=True)
+    locality_contact_brother_2 = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
+    locality_contact_brother_2_phone = serializers.CharField(required=False, allow_blank=True, max_length=25, allow_null=True)
+    locality_contact_brother_3 = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
+    locality_contact_brother_3_phone = serializers.CharField(required=False, allow_blank=True, max_length=25, allow_null=True)
+    locality_contact_brother_4 = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
+    locality_contact_brother_4_phone = serializers.CharField(required=False, allow_blank=True, max_length=25, allow_null=True)
+    locality_contact_brother_5 = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
+    locality_contact_brother_5_phone = serializers.CharField(required=False, allow_blank=True, max_length=25, allow_null=True)
+    locality_contact_brother_6 = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
+    locality_contact_brother_6_phone = serializers.CharField(required=False, allow_blank=True, max_length=25, allow_null=True)
     
     def get_url(self, obj):
         """Return the Wagtail page URL as an absolute URL.

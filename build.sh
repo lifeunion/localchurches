@@ -47,6 +47,12 @@ with connection.cursor() as cursor:
     fi
 }
 
+# Fix missing Wagtail userprofile columns (common after Heroku migration)
+echo "Checking for missing Wagtail userprofile columns..."
+python manage.py fix_userprofile || {
+    echo "Warning: Could not fix userprofile columns, but continuing..."
+}
+
 # Verify migrations completed successfully
 echo "Verifying migrations completed..."
 python manage.py showmigrations --list | grep -E "\[ \]" && {

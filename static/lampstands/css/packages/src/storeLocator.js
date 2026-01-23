@@ -755,11 +755,15 @@
                     this.infowindow = new google.maps.InfoWindow();
                     var _map = this.map;
                     var trimmed_address = encodeURIComponent(data.meeting_address.trim());
+                    // Ensure URL exists and is valid, fallback to empty string if not
+                    var church_url = (data.url && data.url.trim()) ? data.url.trim() : '';
+                    // Build the "more info" link only if URL is available
+                    var more_info_link = church_url 
+                        ? '<a class="label label-success label-map" href="' + church_url + '">more info</a>'
+                        : '';
                     var content = '<b>' + '<h6>'+ 'Church in ' + data.locality_name + '</h6></b>' + data.meeting_address + '<br>'
-                    + '<a class="label label-success label-map" href='+
-                    data.url + '>'+ 'more info' + '</a>' +
-                    '<a class="label label-danger label-map" href=' + 
-                    'https://maps.google.com/?saddr=Current%20Location&daddr='+ trimmed_address + '>'+ 'get directions here' + '</a>';
+                    + more_info_link +
+                    '<a class="label label-danger label-map" href="https://maps.google.com/?saddr=Current%20Location&daddr='+ trimmed_address + '">get directions here</a>';
 
                     var _ = this;
 

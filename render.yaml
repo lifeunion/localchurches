@@ -1,0 +1,94 @@
+# Render Blueprint (Infrastructure as Code)
+# This file defines your Render services declaratively
+# See: https://render.com/docs/blueprint-spec
+
+services:
+  # PostgreSQL Database
+  - type: pspg
+    name: localchurches-db
+    databaseName: localchurches
+    databaseUser: localchurches_user
+    plan: starter  # Options: starter, standard, pro, pro-plus
+    # For production, consider: standard or pro
+    # For testing, use: starter (free tier available)
+    region: oregon  # Options: oregon, frankfurt, singapore, mumbai, tokyo
+    # Choose region closest to your users
+
+  # Web Service (Django Application)
+  - type: web
+    name: localchurches
+    env: python
+    region: oregon  # Should match database region
+    plan: starter  # Options: starter, standard, pro, pro-plus
+    # For production, consider: standard or pro
+    # For testing, use: starter (free tier available)
+    buildCommand: ./build.sh
+    startCommand: gunicorn lampstands.wsgi --log-file -
+    healthCheckPath: /
+    envVars:
+      # Django Settings
+      - key: DJANGO_SETTINGS_MODULE
+        value: lampstands.settings.production
+      
+      # Security - REQUIRED: Set these in Render dashboard after creating service
+      # DO NOT commit actual secrets to git!
+      - key: SECRET_KEY
+        sync: false  # Must be set manually in Render dashboard
+      
+      # Database - Will be auto-set when database is linked
+      - key: DATABASE_URL
+        fromDatabase:
+          name: localchurches-db
+          property: connectionString
+      
+      # Security Settings
+      - key: DEBUG
+        value: "False"  # Set to "True" only for temporary debugging
+      - key: ALLOWED_HOSTS
+        value: "localchurches.onrender.com"  # Update with your actual domain(s), comma-separated
+      
+      # Logging Levels (optional - defaults to INFO)
+      - key: LOG_LEVEL
+        value: "INFO"  # Options: DEBUG, INFO, WARNING, ERROR, CRITICAL
+      - key: DJANGO_LOG_LEVEL
+        value: "INFO"
+      - key: DJANGO_REQUEST_LOG_LEVEL
+        value: "WARNING"
+      - key: WAGTAIL_LOG_LEVEL
+        value: "INFO"
+      - key: LAMPSTANDS_LOG_LEVEL
+        value: "INFO"
+      
+      # AWS S3 Configuration (for media files)
+      # Set these in Render dashboard after creating service
+      - key: AWS_ACCESS_KEY_ID
+        sync: false  # Must be set manually
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false  # Must be set manually
+      - key: S3_BUCKET_NAME
+        value: "lcstatic"  # Update if your bucket name is different
+      
+      # Email Configuration (SendGrid)
+      # Set these in Render dashboard after creating service
+      - key: SENDGRID_USERNAME
+        sync: false  # Must be set manually
+      - key: SENDGRID_PASSWORD
+        sync: false  # Must be set manually
+      
+      # reCAPTCHA Configuration
+      # Set these in Render dashboard after creating service
+      - key: GOOGLE_RECAPTCHA_SITE_KEY
+        sync: false  # Must be set manually
+      - key: GOOGLE_RECAPTCHA_SECRET_KEY
+        sync: false  # Must be set manually
+      
+      # Wagtail Configuration
+      - key: WAGTAILADMIN_BASE_URL
+        value: "https://localchurches.onrender.com"  # Update with your actual domain
+
+# Note: After deploying with this blueprint:
+# 1. Go to Render dashboard → Your web service → Environment
+# 2. Set all the "sync: false" variables manually (SECRET_KEY, AWS keys, SendGrid, reCAPTCHA)
+# 3. Update ALLOWED_HOSTS with your actual domain(s)
+# 4. Update WAGTAILADMIN_BASE_URL with your actual domain
+# 5. Link the database if not auto-linked (should be automatic with this config)

@@ -2,11 +2,7 @@
 
         <div class="content">
             {% if not post.colour %}
-                {% if background and background.url %}
-                    <div class="image-container" style="background-image: url('{{ background.url }}');"></div>
-                {% else %}
-                    <div class="image-container"></div>
-                {% endif %}
+                <div class="image-container"></div>
             {% else %}
                 <div class="image-container"></div>
             {% endif %}

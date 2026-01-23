@@ -8,9 +8,13 @@ SECRET_KEY = env.get('SECRET_KEY')
 if not SECRET_KEY:
     raise ValueError("SECRET_KEY environment variable is required")
 
-ALLOWED_HOSTS = ['*']
-# Temporarily enable DEBUG to see error details - REMOVE AFTER FIXING
-DEBUG = True
+# Security: Set ALLOWED_HOSTS from environment variable or use wildcard as fallback
+# In production, set ALLOWED_HOSTS env var to your domain(s), e.g., "yourdomain.com,www.yourdomain.com"
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '*').split(',') if os.environ.get('ALLOWED_HOSTS') else ['*']
+
+# Security: DEBUG should be False in production
+# Set DEBUG=True in environment variable only for temporary debugging
+DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
 
 # Enable detailed error logging to console for debugging
 LOGGING = {
@@ -30,27 +34,28 @@ LOGGING = {
     },
     'root': {
         'handlers': ['console'],
-        'level': 'DEBUG',  # Changed to DEBUG to see all errors
+        # Use INFO in production, DEBUG only when troubleshooting
+        'level': os.environ.get('LOG_LEVEL', 'INFO'),
     },
     'loggers': {
         'django': {
             'handlers': ['console'],
-            'level': 'DEBUG',  # Changed to DEBUG
+            'level': os.environ.get('DJANGO_LOG_LEVEL', 'INFO'),
             'propagate': False,
         },
         'django.request': {
             'handlers': ['console'],
-            'level': 'DEBUG',  # Changed to DEBUG
+            'level': os.environ.get('DJANGO_REQUEST_LOG_LEVEL', 'WARNING'),
             'propagate': False,
         },
         'wagtail': {
             'handlers': ['console'],
-            'level': 'DEBUG',  # Changed to DEBUG
+            'level': os.environ.get('WAGTAIL_LOG_LEVEL', 'INFO'),
             'propagate': False,
         },
         'lampstands.core': {
             'handlers': ['console'],
-            'level': 'DEBUG',  # Log all messages from our core module
+            'level': os.environ.get('LAMPSTANDS_LOG_LEVEL', 'INFO'),
             'propagate': False,
         },
     },

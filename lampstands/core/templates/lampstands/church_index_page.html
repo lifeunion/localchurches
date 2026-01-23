@@ -56,6 +56,25 @@
                     <th>Phone</th>
                     <th>Email</th>
                     <th>Website</th>
+                    <th colspan="8">Available Contacts' Names and Phones</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th>Brother's Name</th>
+                    <th>Brother's Phone</th>
+                    <th>Brother's Name</th>
+                    <th>Brother's Phone</th>
+                    <th>Brother's Name</th>
+                    <th>Brother's Phone</th>
+                    <th>Brother's Name</th>
+                    <th>Brother's Phone</th>
                 </tr>
             </thead>
 
@@ -65,11 +84,19 @@
                         <td></td>
                         <td><a href="{{branch.url}}">{{branch.locality_name}}</a></td>
                         <td>{{branch.meeting_address}}</td>
-                        <td>{{branch.locality_state_or_province}}
+                        <td>{{branch.locality_state_or_province}}</td>
                         <td>{{branch.locality_country.name}}</td>
                         <td>{{branch.locality_phone_number}}</td>
                         <td>{{branch.locality_email}}</td>
                         <td><a href={{branch.locality_web}}>{{branch.locality_web}}</a></td>
+                        <td>{{branch.locality_contact_brother_1|default:"—"}}</td>
+                        <td>{{branch.locality_contact_brother_1_phone|default:"—"}}</td>
+                        <td>{{branch.locality_contact_brother_2|default:"—"}}</td>
+                        <td>{{branch.locality_contact_brother_2_phone|default:"—"}}</td>
+                        <td>{{branch.locality_contact_brother_3|default:"—"}}</td>
+                        <td>{{branch.locality_contact_brother_3_phone|default:"—"}}</td>
+                        <td>{{branch.locality_contact_brother_4|default:"—"}}</td>
+                        <td>{{branch.locality_contact_brother_4_phone|default:"—"}}</td>
                     </tr>
                 {% endfor %}
             </tbody>
