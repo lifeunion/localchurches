@@ -129,22 +129,27 @@
     /* Formatting function for row details - modify as you need */
     function format ( d ) {
         // `d` is the original data object for the row
+        var meetingAddress = d.meeting_address || '';
+        var phoneNumber = d.locality_phone_number || '';
+        var email = d.locality_email || '';
+        var website = d.locality_web || '';
+        var websiteLink = website ? '<a href="' + website + '">' + website + '</a>' : '';
         return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
             '<tr>'+
                 '<td>Meeting address:</td>'+
-                '<td>'+d.meeting_address+'</td>'+
+                '<td>'+meetingAddress+'</td>'+
             '</tr>'+
             '<tr>'+
                 '<td>Phone number:</td>'+
-                '<td>'+d.locality_phone_number+'</td>'+
+                '<td>'+phoneNumber+'</td>'+
             '</tr>'+
             '<tr>'+
                 '<td>Email:</td>'+
-                '<td>'+d.locality_email+'</td>'+
+                '<td>'+email+'</td>'+
             '</tr>'+
             '<tr>'+
                 '<td>Website:</td>'+
-                '<td>'+'<a href='+ d.locality_web+'>'+d.locality_web+'</a></td>'+
+                '<td>'+websiteLink+'</td>'+
             '</tr>'+
         '</table>';
     }
@@ -172,17 +177,30 @@
             "dataSrc": function (json) {
               var return_data = new Array();
               for(var i=0;i< json.length; i++){
+                // Safely handle locality_country - it might be null or a dict
+                var countryName = '';
+                if (json[i].locality_country) {
+                  if (typeof json[i].locality_country === 'object' && json[i].locality_country.name) {
+                    countryName = json[i].locality_country.name;
+                  } else if (typeof json[i].locality_country === 'string') {
+                    countryName = json[i].locality_country;
+                  }
+                }
                 return_data.push({
-                  'locality_name': json[i].locality_name,
-                  'locality_state_or_province': json[i].locality_state_or_province,
-                  'locality_country': json[i].locality_country.name,
-                  'meeting_address': json[i].meeting_address,
-                  'locality_phone_number': json[i].locality_phone_number,
-                  'locality_email': json[i].locality_email,
-                  'locality_web': json[i].locality_web,
+                  'locality_name': json[i].locality_name || '',
+                  'locality_state_or_province': json[i].locality_state_or_province || '',
+                  'locality_country': countryName,
+                  'meeting_address': json[i].meeting_address || '',
+                  'locality_phone_number': json[i].locality_phone_number || '',
+                  'locality_email': json[i].locality_email || '',
+                  'locality_web': json[i].locality_web || '',
                 })
               }
               return return_data;
+            },
+            "error": function(xhr, error, thrown) {
+              console.error('DataTables Ajax error:', error, thrown);
+              console.error('Response:', xhr.responseText);
             }
         },
         "scrollX": true,
