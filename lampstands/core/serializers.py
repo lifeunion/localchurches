@@ -26,7 +26,9 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
             'locality_country', 'locality_phone_number', 'locality_email','locality_web', 'location', 'trimmed_address')
     
     def get_url(self, obj):
-        """Return the Wagtail page URL as an absolute URL"""
+        """Return the Wagtail page URL as an absolute URL.
+        Optimized to minimize overhead.
+        """
         try:
             request = self.context.get('request')
             page_url = obj.url
@@ -37,46 +39,37 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
             
             # If we have a request, build absolute URL
             if request:
-                scheme = request.scheme
-                host = request.get_host()
-                return f"{scheme}://{host}{page_url}"
+                return f"{request.scheme}://{request.get_host()}{page_url}"
             else:
-                # Fallback to relative URL if no request context
                 return page_url
-        except Exception as e:
-            logger.error(f"[LocalitiesSerializer] Error getting URL for church id={obj.id}: {e}", exc_info=True)
-            try:
-                fallback_url = obj.url
-                if fallback_url and not fallback_url.startswith('/'):
-                    fallback_url = '/' + fallback_url
-                return fallback_url
-            except:
-                return None
+        except Exception:
+            return None
     
     def get_location(self, obj):
-        """Return location as a dict with numeric latitude and longitude"""
-        try:
-            if obj.position:
-                try:
-                    # Convert string values to float for proper numeric serialization
-                    lat_str = obj.get_latitude_location()
-                    lng_str = obj.get_longitude_location()
-                    
-                    if lat_str and lng_str:
-                        lat = float(lat_str)
-                        lng = float(lng_str)
-                        
-                        # Validate that coordinates are within valid ranges
-                        if -90 <= lat <= 90 and -180 <= lng <= 180:
-                            return {"latitude": lat, "longitude": lng}
-                        else:
-                            logger.warning(f"[LocalitiesSerializer] Coordinates out of range for church id={obj.id}: lat={lat}, lng={lng}")
-                except (ValueError, TypeError, AttributeError) as e:
-                    logger.error(f"[LocalitiesSerializer] Error parsing location for church id={obj.id}, position='{obj.position}': {e}")
-        except Exception as e:
-            logger.error(f"[LocalitiesSerializer] Unexpected error in get_location for church id={obj.id}: {e}")
+        """Return location as a dict with numeric latitude and longitude.
+        Optimized to parse position string only once instead of twice.
+        """
+        if not obj.position:
+            return {"latitude": None, "longitude": None}
         
-        # Return dict with None values - these will be filtered out in the view
+        try:
+            # Parse position string once (instead of calling get_latitude_location/get_longitude_location separately)
+            parts = obj.position.split(',')
+            if len(parts) >= 2:
+                lat_str = parts[0].strip()
+                lng_str = parts[1].strip()
+                
+                if lat_str and lng_str:
+                    lat = float(lat_str)
+                    lng = float(lng_str)
+                    
+                    # Validate that coordinates are within valid ranges
+                    if -90 <= lat <= 90 and -180 <= lng <= 180:
+                        return {"latitude": lat, "longitude": lng}
+        except (ValueError, TypeError, AttributeError, IndexError):
+            # Invalid position format - return None values
+            pass
+        
         return {"latitude": None, "longitude": None}
 
     def create(self, validated_data):

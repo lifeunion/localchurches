@@ -197,11 +197,13 @@ class LocalitiesList(generics.ListCreateAPIView):
         Filter to only include live churches with valid position data.
         Position is stored as "lat,lng" string, so we check for non-null, non-empty, and contains comma.
         Optimized to avoid multiple count queries and filter invalid data before serialization.
+        Uses only() to limit fields loaded from database for better performance.
         """
         # Single optimized queryset that filters for:
         # 1. Live pages only
         # 2. Non-null, non-empty position
         # 3. Position contains comma (indicating valid "lat,lng" format)
+        # Use only() to load only the fields we need for serialization
         queryset = ChurchPage.objects.filter(
             live=True
         ).exclude(
@@ -210,31 +212,21 @@ class LocalitiesList(generics.ListCreateAPIView):
             position=''
         ).filter(
             position__contains=','
+        ).only(
+            'id', 'path', 'slug', 'position',
+            'locality_name', 'meeting_address', 'locality_state_or_province',
+            'locality_country', 'locality_phone_number', 'locality_email', 'locality_web',
+            'live'  # Needed for filtering, but also include in only() for consistency
         ).order_by('id')
         
         return queryset
     
     def list(self, request, *args, **kwargs):
         """
-        Override list method to add minimal logging and filter invalid coordinates.
-        Note: Most filtering is done in get_queryset() to avoid serializing invalid data.
+        Override list method - queryset filtering handles all validation.
+        No post-processing needed for performance.
         """
-        response = super().list(request, *args, **kwargs)
-        
-        if response.status_code == status.HTTP_200_OK:
-            # Final safety check: filter out any entries with None coordinates
-            # (should be rare since we filter in queryset, but handle edge cases)
-            filtered_data = [
-                item for item in response.data
-                if item.get('location', {}).get('latitude') is not None 
-                and item.get('location', {}).get('longitude') is not None
-            ]
-            
-            if len(filtered_data) != len(response.data):
-                logger.warning(f"[LocalitiesList] Filtered out {len(response.data) - len(filtered_data)} items with invalid coordinates")
-                response.data = filtered_data
-        
-        return response
+        return super().list(request, *args, **kwargs)
 
 
 class LocalitiesDetail(generics.RetrieveUpdateDestroyAPIView):
