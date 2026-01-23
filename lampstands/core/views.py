@@ -204,6 +204,13 @@ def fix_workflowstate(request):
             'null': 'NULL',
             'note': 'ForeignKey to django_content_type - nullable'
         },
+        {
+            'name': 'base_content_type_id',
+            'type': 'INTEGER',
+            'default': '',
+            'null': 'NULL',
+            'note': 'ForeignKey to django_content_type - nullable (Wagtail 6.4)'
+        },
     ]
     
     try:
