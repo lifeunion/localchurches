@@ -54,6 +54,10 @@ ADD COLUMN IF NOT EXISTS revision_id INTEGER NULL;
 ALTER TABLE wagtailcore_revision 
 ADD COLUMN IF NOT EXISTS object_str TEXT NULL;
 
+-- Fix wagtaildocs_document table (Wagtail 6.4)
+ALTER TABLE wagtaildocs_document 
+ADD COLUMN IF NOT EXISTS file_size INTEGER NULL;
+
 -- Verify all columns were added
 SELECT column_name, data_type, column_default 
 FROM information_schema.columns 
@@ -90,3 +94,9 @@ SELECT column_name, data_type, column_default
 FROM information_schema.columns 
 WHERE table_name = 'wagtailcore_revision' 
 AND column_name = 'object_str';
+
+-- Verify document column
+SELECT column_name, data_type, column_default 
+FROM information_schema.columns 
+WHERE table_name = 'wagtaildocs_document' 
+AND column_name = 'file_size';

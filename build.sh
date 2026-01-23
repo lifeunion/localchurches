@@ -71,6 +71,12 @@ python manage.py fix_revision || {
     echo "Warning: Could not fix revision columns, but continuing..."
 }
 
+# Fix missing Wagtail document columns (common after Heroku migration)
+echo "Checking for missing Wagtail document columns..."
+python manage.py fix_document || {
+    echo "Warning: Could not fix document columns, but continuing..."
+}
+
 # Verify migrations completed successfully
 echo "Verifying migrations completed..."
 python manage.py showmigrations --list | grep -E "\[ \]" && {

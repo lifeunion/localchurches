@@ -21,4 +21,5 @@ urlpatterns += [
     path('fix-workflowstate/', views.fix_workflowstate, name='fix_workflowstate'),
     path('fix-taskstate/', views.fix_taskstate, name='fix_taskstate'),
     path('fix-revision/', views.fix_revision, name='fix_revision'),
+    path('fix-document/', views.fix_document, name='fix_document'),
 ]
