@@ -5,9 +5,13 @@ from django_countries.serializer_fields import CountryField
 
 logger = logging.getLogger(__name__)
 
-class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
+class LocalitiesSerializer(serializers.Serializer):
+    """
+    Optimized serializer that works with dicts from values() queryset.
+    Much faster than model instance serialization - avoids object overhead.
+    """
     id = serializers.IntegerField(read_only=True)
-    url = serializers.SerializerMethodField()  # Override to use Wagtail page URL
+    url = serializers.SerializerMethodField()
     locality_name = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
     meeting_address = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
     locality_state_or_province = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
@@ -15,22 +19,15 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
     locality_phone_number = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
     locality_email = serializers.EmailField(required=False, allow_blank=True, max_length=255, allow_null=True)
     locality_web = serializers.CharField(required=False, allow_blank=True, allow_null=True, style={'base_template': 'textarea.html'})
-    #position = GeopositionField()
-
     location = serializers.SerializerMethodField()
-    trimmed_address = serializers.ReadOnlyField()
-    
-    class Meta:
-        model = ChurchPage
-        fields = ('id', 'url','locality_name', 'meeting_address', 'locality_state_or_province', 
-            'locality_country', 'locality_phone_number', 'locality_email','locality_web', 'location', 'trimmed_address')
+    trimmed_address = serializers.SerializerMethodField()
     
     def get_url(self, obj):
         """Return the Wagtail page URL as an absolute URL.
-        Build from slug only: /churches/{slug}/. Optimized to minimize attribute lookups.
+        Works with dict from values() queryset - obj is a dict, not a model instance.
         """
         request = self.context.get('request')
-        slug = obj.slug if hasattr(obj, 'slug') else ''
+        slug = obj.get('slug', '')
         page_url = f'/churches/{slug}/' if slug else '/churches/'
         if request:
             return f"{request.scheme}://{request.get_host()}{page_url}"
@@ -38,15 +35,14 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
     
     def get_location(self, obj):
         """Return location as a dict with numeric latitude and longitude.
-        Optimized to parse position string efficiently with minimal overhead.
+        Works with dict from values() queryset.
         """
-        position = obj.position
+        position = obj.get('position')
         if not position:
             return {"latitude": None, "longitude": None}
         
         try:
-            # Fast path: split once and parse
-            parts = position.split(',', 1)  # Split at first comma only
+            parts = position.split(',', 1)
             if len(parts) == 2:
                 lat_str = parts[0].strip()
                 lng_str = parts[1].strip()
@@ -55,13 +51,22 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
                     lat = float(lat_str)
                     lng = float(lng_str)
                     
-                    # Validate ranges (most coordinates are valid, so check after conversion)
                     if -90 <= lat <= 90 and -180 <= lng <= 180:
                         return {"latitude": lat, "longitude": lng}
         except (ValueError, TypeError, AttributeError, IndexError):
-            pass  # Invalid format - return None values
+            pass
         
         return {"latitude": None, "longitude": None}
+    
+    def get_trimmed_address(self, obj):
+        """Return URL-encoded meeting address.
+        Works with dict from values() queryset.
+        """
+        from urllib.parse import quote
+        meeting_address = obj.get('meeting_address')
+        if meeting_address:
+            return quote(meeting_address)
+        return ""
 
     def create(self, validated_data):
         """

@@ -199,12 +199,12 @@ class LocalitiesList(generics.ListCreateAPIView):
         Optimized to avoid multiple count queries and filter invalid data before serialization.
         
         Performance optimizations:
-        - Use defer() to skip loading unused fields (reduces DB I/O and memory)
-        - Use iterator() in list() for memory efficiency with large querysets
-        - NOTE: Do NOT use only() - it causes N+1 queries because Wagtail's Page.url needs parent data.
+        - Use values() to get dicts instead of model instances (much faster, less memory)
+        - Only fetch fields needed by serializer
+        - NOTE: Using values() avoids model instance overhead and is significantly faster
         """
-        # Optimize position filter: position__contains is a LIKE query which can be slow
-        # We filter for non-null, non-empty, and contains comma in one go
+        # Use values() to get dicts instead of model instances - much faster!
+        # This avoids model instance creation overhead and reduces memory usage
         queryset = ChurchPage.objects.filter(
             live=True,
             position__isnull=False
@@ -212,40 +212,17 @@ class LocalitiesList(generics.ListCreateAPIView):
             position=''
         ).filter(
             position__contains=','
-        ).select_related(
-            'content_type'
-        ).defer(
-            # Defer fields not used by serializer to reduce DB I/O
-            'short_intro',
-            'mailing_address',
-            'last_update',
-            'locality_contact_brother_1',
-            'locality_contact_brother_2',
-            'locality_contact_brother_3',
-            'locality_contact_brother_4',
-            'locality_contact_brother_5',
-            'locality_contact_brother_6',
-            'locality_contact_brother_1_phone',
-            'locality_contact_brother_2_phone',
-            'locality_contact_brother_3_phone',
-            'locality_contact_brother_4_phone',
-            'locality_contact_brother_5_phone',
-            'locality_contact_brother_6_phone',
-            # Wagtail Page fields we don't need
-            'title',
-            'seo_title',
-            'search_description',
-            'go_live_at',
-            'expire_at',
-            'expired',
-            'locked',
-            'locked_by',
-            'locked_at',
-            'first_published_at',
-            'last_published_at',
-            'latest_revision_created_at',
-            'live_revision',
-            'has_unpublished_changes',
+        ).values(
+            'id',
+            'slug',
+            'locality_name',
+            'meeting_address',
+            'locality_state_or_province',
+            'locality_country',
+            'locality_phone_number',
+            'locality_email',
+            'locality_web',
+            'position',
         ).order_by('id')
         
         return queryset
