@@ -105,3 +105,9 @@ SELECT column_name, data_type, column_default
 FROM information_schema.columns 
 WHERE table_name = 'wagtaildocs_document' 
 AND column_name = 'file_size';
+
+-- Verify lampstands_lampstandsimage column
+SELECT column_name, data_type, column_default 
+FROM information_schema.columns 
+WHERE table_name = 'lampstands_lampstandsimage' 
+AND column_name = 'description';
