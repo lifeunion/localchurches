@@ -198,8 +198,10 @@ class LocalitiesList(generics.ListCreateAPIView):
         Position is stored as "lat,lng" string, so we check for non-null, non-empty, and contains comma.
         Optimized to avoid multiple count queries and filter invalid data before serialization.
         
-        NOTE: Using only() was removed because it causes N+1 queries with Wagtail's Page.url property,
-        which needs to access parent page relationships not included in only().
+        Performance optimizations:
+        - Use only() to limit fields loaded from database (reduces memory and I/O)
+        - Include path and slug for URL building without extra queries
+        - Use select_related for content_type to avoid extra queries
         """
         # Single optimized queryset that filters for:
         # 1. Live pages only
@@ -213,16 +215,73 @@ class LocalitiesList(generics.ListCreateAPIView):
             position=''
         ).filter(
             position__contains=','
+        ).select_related(
+            'content_type'  # Avoid queries when accessing content_type
+        ).only(
+            # Only load fields needed by serializer to reduce database I/O
+            'id',
+            'path',
+            'slug',
+            'locality_name',
+            'meeting_address',
+            'locality_state_or_province',
+            'locality_country',
+            'locality_phone_number',
+            'locality_email',
+            'locality_web',
+            'position',
+            'live',
+            'content_type',  # For Wagtail page operations
         ).order_by('id')
         
         return queryset
     
     def list(self, request, *args, **kwargs):
         """
-        Override list method - queryset filtering handles all validation.
-        No post-processing needed for performance.
+        Override list method with performance diagnostics and optimizations.
+        Prefetches sites to avoid N+1 queries when building URLs.
         """
-        return super().list(request, *args, **kwargs)
+        import time
+        from django.db import connection
+        from django.db import reset_queries
+        from wagtail.models import Site
+        
+        # Reset query count for accurate measurement
+        reset_queries()
+        start_time = time.time()
+        
+        # Prefetch sites to cache them - this avoids N+1 queries in get_url_parts()
+        # Sites are usually cached, but this ensures they're loaded upfront
+        _ = list(Site.objects.all())
+        
+        # Get queryset and count records
+        queryset = self.get_queryset()
+        record_count = queryset.count()
+        logger.info(f"[LocalitiesList] Starting serialization: {record_count} records")
+        
+        # Execute the parent list method
+        response = super().list(request, *args, **kwargs)
+        
+        # Measure performance
+        end_time = time.time()
+        query_count = len(connection.queries)
+        total_time = end_time - start_time
+        
+        # Log performance metrics
+        logger.warning(
+            f"[LocalitiesList] Performance: {record_count} records, "
+            f"{query_count} queries, {total_time:.2f}s total, "
+            f"{total_time/record_count*1000:.2f}ms per record" if record_count > 0 else f"{total_time:.2f}s total"
+        )
+        
+        # Log slow queries if any
+        if query_count > 50:  # Threshold for too many queries
+            logger.warning(f"[LocalitiesList] High query count detected: {query_count} queries")
+            # Log first 10 queries for debugging
+            for i, query in enumerate(connection.queries[:10]):
+                logger.debug(f"[LocalitiesList] Query {i+1}: {query['sql'][:200]}")
+        
+        return response
 
 
 class LocalitiesDetail(generics.RetrieveUpdateDestroyAPIView):

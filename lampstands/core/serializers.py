@@ -27,11 +27,27 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
     
     def get_url(self, obj):
         """Return the Wagtail page URL as an absolute URL.
-        Optimized to minimize overhead.
+        Optimized to minimize database queries by using get_url_parts() with only() fields.
+        Falls back to url property if get_url_parts() fails (should be cached after first call).
         """
         try:
             request = self.context.get('request')
-            page_url = obj.url
+            
+            # Try get_url_parts() first - it should work with path and slug from only()
+            # and may use cached site information
+            try:
+                url_parts = obj.get_url_parts()
+                if url_parts and url_parts[2]:  # Check if page_path exists
+                    _, root_url, page_path = url_parts
+                    page_url = page_path
+                else:
+                    # If get_url_parts() returns None or empty path, use url property
+                    # This is a @cached_property so subsequent calls are fast
+                    page_url = obj.url
+            except (AttributeError, Exception) as e:
+                # If get_url_parts() fails (e.g., missing fields), use url property
+                # This should work even with only() as url is a cached property
+                page_url = obj.url
             
             # Ensure it starts with /
             if page_url and not page_url.startswith('/'):
@@ -40,21 +56,31 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
             # If we have a request, build absolute URL
             if request:
                 absolute_url = f"{request.scheme}://{request.get_host()}{page_url}"
-                logger.debug(f"[LocalitiesSerializer] Built absolute URL for id={obj.id}: {absolute_url}")
                 return absolute_url
             else:
-                logger.debug(f"[LocalitiesSerializer] No request context for id={obj.id}, returning relative: {page_url}")
                 return page_url
         except Exception as e:
             logger.error(f"[LocalitiesSerializer] Error getting URL for id={obj.id}: {e}", exc_info=True)
+            # Final fallback: try to build from slug (last resort)
+            try:
+                if hasattr(obj, 'slug') and obj.slug:
+                    page_url = f'/{obj.slug}/'
+                    request = self.context.get('request')
+                    if request:
+                        return f"{request.scheme}://{request.get_host()}{page_url}"
+                    return page_url
+            except Exception:
+                pass
             return None
     
     def get_location(self, obj):
         """Return location as a dict with numeric latitude and longitude.
         Optimized to parse position string only once instead of twice.
+        Logging is conditional to reduce overhead in production.
         """
         if not obj.position:
-            logger.debug(f"[LocalitiesSerializer] No position for id={obj.id}")
+            if logger.isEnabledFor(logging.DEBUG):
+                logger.debug(f"[LocalitiesSerializer] No position for id={obj.id}")
             return {"latitude": None, "longitude": None}
         
         try:
@@ -70,13 +96,15 @@ class LocalitiesSerializer(serializers.HyperlinkedModelSerializer):
                     
                     # Validate that coordinates are within valid ranges
                     if -90 <= lat <= 90 and -180 <= lng <= 180:
-                        logger.debug(f"[LocalitiesSerializer] Parsed location for id={obj.id}: lat={lat}, lng={lng}")
+                        if logger.isEnabledFor(logging.DEBUG):
+                            logger.debug(f"[LocalitiesSerializer] Parsed location for id={obj.id}: lat={lat}, lng={lng}")
                         return {"latitude": lat, "longitude": lng}
                     else:
                         logger.warning(f"[LocalitiesSerializer] Coordinates out of range for id={obj.id}: lat={lat}, lng={lng}")
         except (ValueError, TypeError, AttributeError, IndexError) as e:
             # Invalid position format - return None values
-            logger.debug(f"[LocalitiesSerializer] Error parsing position for id={obj.id}, position='{obj.position}': {e}")
+            if logger.isEnabledFor(logging.DEBUG):
+                logger.debug(f"[LocalitiesSerializer] Error parsing position for id={obj.id}, position='{obj.position}': {e}")
         
         return {"latitude": None, "longitude": None}
 
