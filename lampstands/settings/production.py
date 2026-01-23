@@ -123,14 +123,38 @@ AWS_STORAGE_BUCKET_NAME = os.environ.get("S3_BUCKET_NAME", "")
 AWS_QUERYSTRING_AUTH = False
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com' if AWS_STORAGE_BUCKET_NAME else None
 
+# Debug S3 configuration
+import sys
+has_bucket = bool(AWS_STORAGE_BUCKET_NAME)
+has_access_key = bool(AWS_ACCESS_KEY_ID)
+has_secret_key = bool(AWS_SECRET_ACCESS_KEY)
+print(f"DEBUG S3 Config: bucket={has_bucket}, access_key={has_access_key}, secret_key={has_secret_key}", file=sys.stderr)
+if has_bucket:
+    print(f"DEBUG S3 Bucket Name: {AWS_STORAGE_BUCKET_NAME}", file=sys.stderr)
+if has_access_key:
+    print(f"DEBUG S3 Access Key: {AWS_ACCESS_KEY_ID[:8]}...", file=sys.stderr)
+
 # Static and media files configuration
 # Use S3 if configured, otherwise use WhiteNoise for static files
 if AWS_STORAGE_BUCKET_NAME and AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
     # S3 storage for both static and media files
+    print(f"DEBUG: Configuring S3 storage backend", file=sys.stderr)
+    print(f"DEBUG: STATIC_URL will be: https://{AWS_S3_CUSTOM_DOMAIN}/", file=sys.stderr)
+    
     DEFAULT_FILE_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
     STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
     STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
+    
+    # Additional S3 settings for better compatibility
+    AWS_S3_OBJECT_PARAMETERS = {
+        'CacheControl': 'max-age=86400',
+    }
+    AWS_DEFAULT_ACL = 'public-read'
+    AWS_S3_REGION_NAME = 'us-east-1'  # Adjust if your bucket is in a different region
+    AWS_S3_USE_SSL = True
+    AWS_S3_VERIFY = True
+    
     # Update STORAGES for S3
     STORAGES = {
         "default": {
@@ -140,6 +164,33 @@ if AWS_STORAGE_BUCKET_NAME and AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
             "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
         },
     }
+    
+    # Test S3 connection during startup (non-blocking)
+    try:
+        import boto3
+        from botocore.exceptions import ClientError, NoCredentialsError
+        s3_client = boto3.client(
+            's3',
+            aws_access_key_id=AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+            region_name=AWS_S3_REGION_NAME
+        )
+        # Try to list bucket (head_bucket is more lightweight)
+        try:
+            s3_client.head_bucket(Bucket=AWS_STORAGE_BUCKET_NAME)
+            print(f"DEBUG: ✅ S3 connection successful - bucket '{AWS_STORAGE_BUCKET_NAME}' is accessible", file=sys.stderr)
+        except ClientError as e:
+            error_code = e.response.get('Error', {}).get('Code', 'Unknown')
+            print(f"DEBUG: ⚠️  S3 connection issue - Error: {error_code}", file=sys.stderr)
+            print(f"DEBUG: S3 Error details: {str(e)[:200]}", file=sys.stderr)
+        except NoCredentialsError:
+            print(f"DEBUG: ❌ S3 credentials invalid or missing", file=sys.stderr)
+        except Exception as e:
+            print(f"DEBUG: ⚠️  S3 connection test failed: {type(e).__name__}: {str(e)[:200]}", file=sys.stderr)
+    except ImportError:
+        print(f"DEBUG: ⚠️  boto3 not available - cannot test S3 connection", file=sys.stderr)
+    except Exception as e:
+        print(f"DEBUG: ⚠️  Could not test S3 connection: {type(e).__name__}: {str(e)[:200]}", file=sys.stderr)
 else:
     # Use WhiteNoise for static files (no S3)
     # Using CompressedStaticFilesStorage instead of CompressedManifestStaticFilesStorage

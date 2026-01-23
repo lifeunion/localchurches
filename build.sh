@@ -98,14 +98,56 @@ from django.conf import settings
 print(f'STATICFILES_STORAGE: {settings.STATICFILES_STORAGE}')
 print(f'STATIC_URL: {settings.STATIC_URL}')
 print(f'STATIC_ROOT: {settings.STATIC_ROOT}')
-has_s3 = (hasattr(settings, 'AWS_STORAGE_BUCKET_NAME') and 
-          settings.AWS_STORAGE_BUCKET_NAME and 
-          hasattr(settings, 'AWS_ACCESS_KEY_ID') and 
-          settings.AWS_ACCESS_KEY_ID)
-print(f'Using S3: {has_s3}')
-if not has_s3:
-    print('⚠️  WARNING: No S3 credentials - using WhiteNoise')
-    print('   Files will be collected to:', settings.STATIC_ROOT)
+
+# Check S3 configuration
+has_bucket = bool(getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None))
+has_access_key = bool(getattr(settings, 'AWS_ACCESS_KEY_ID', None))
+has_secret_key = bool(getattr(settings, 'AWS_SECRET_ACCESS_KEY', None))
+has_s3 = has_bucket and has_access_key and has_secret_key
+
+print(f'')
+print(f'S3 Configuration Check:')
+print(f'  Bucket name set: {has_bucket}')
+if has_bucket:
+    print(f'  Bucket: {settings.AWS_STORAGE_BUCKET_NAME}')
+print(f'  Access key set: {has_access_key}')
+print(f'  Secret key set: {has_secret_key}')
+print(f'  Using S3: {has_s3}')
+
+if has_s3:
+    print(f'')
+    print(f'✅ S3 is configured - files will be uploaded to S3')
+    print(f'   STATIC_URL: {settings.STATIC_URL}')
+    print(f'   Expected URL format: {settings.STATIC_URL}wagtailadmin/css/core.css')
+    
+    # Test S3 connection
+    try:
+        import boto3
+        from botocore.exceptions import ClientError, NoCredentialsError
+        s3_client = boto3.client(
+            's3',
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            region_name=getattr(settings, 'AWS_S3_REGION_NAME', 'us-east-1')
+        )
+        try:
+            s3_client.head_bucket(Bucket=settings.AWS_STORAGE_BUCKET_NAME)
+            print(f'   ✅ S3 bucket is accessible')
+        except ClientError as e:
+            error_code = e.response.get('Error', {}).get('Code', 'Unknown')
+            print(f'   ❌ S3 bucket access failed: {error_code}')
+            print(f'      Error: {str(e)[:150]}')
+        except Exception as e:
+            print(f'   ⚠️  S3 connection test error: {type(e).__name__}: {str(e)[:150]}')
+    except ImportError:
+        print(f'   ⚠️  boto3 not available - cannot test S3 connection')
+    except Exception as e:
+        print(f'   ⚠️  Could not test S3: {type(e).__name__}: {str(e)[:150]}')
+else:
+    print(f'')
+    print(f'⚠️  WARNING: No S3 credentials - using WhiteNoise')
+    print(f'   Files will be collected to: {settings.STATIC_ROOT}')
+    print(f'   STATIC_URL: {settings.STATIC_URL}')
 " || echo "Could not check storage backend"
 
 # Temporarily disable S3 storage during collectstatic if credentials are missing
