@@ -20,6 +20,44 @@ def import_fontawesome_stylesheet():
     return format_html(elem)
 
 
+@hooks.register('insert_global_admin_css')
+def fix_admin_login_css():
+    """Fix CSS issues on Wagtail admin login page (bird icon size, button overlap)."""
+    css = """
+    <style>
+        /* Fix Wagtail login page CSS issues */
+        .content-wrapper .logo img,
+        .content-wrapper .logo svg {
+            max-width: 60px !important;
+            max-height: 60px !important;
+            width: auto !important;
+            height: auto !important;
+        }
+        
+        .content-wrapper h1 {
+            font-size: 2em !important;
+            margin-bottom: 1em !important;
+        }
+        
+        @media screen and (min-width: 50em) {
+            .content-wrapper h1 {
+                font-size: 3em !important;
+            }
+        }
+        
+        .content-wrapper .button {
+            margin-top: 1em !important;
+            clear: both !important;
+        }
+        
+        .content-wrapper .fields {
+            margin-top: 1em !important;
+        }
+    </style>
+    """
+    return format_html(css)
+
+
 class ChurchAdmin(ModelAdmin):
     model = ChurchPage
     menu_label = 'Localities'
