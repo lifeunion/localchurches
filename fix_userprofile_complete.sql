@@ -58,6 +58,11 @@ ADD COLUMN IF NOT EXISTS object_str TEXT NULL;
 ALTER TABLE wagtaildocs_document 
 ADD COLUMN IF NOT EXISTS file_size INTEGER NULL;
 
+-- Fix lampstands_lampstandsimage table (Wagtail 6.4)
+-- AbstractImage model includes description field
+ALTER TABLE lampstands_lampstandsimage 
+ADD COLUMN IF NOT EXISTS description TEXT NULL;
+
 -- Verify all columns were added
 SELECT column_name, data_type, column_default 
 FROM information_schema.columns 
