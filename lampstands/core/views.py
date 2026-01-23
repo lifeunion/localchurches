@@ -197,13 +197,14 @@ class LocalitiesList(generics.ListCreateAPIView):
         Filter to only include live churches with valid position data.
         Position is stored as "lat,lng" string, so we check for non-null, non-empty, and contains comma.
         Optimized to avoid multiple count queries and filter invalid data before serialization.
-        Uses only() to limit fields loaded from database for better performance.
+        
+        NOTE: Using only() was removed because it causes N+1 queries with Wagtail's Page.url property,
+        which needs to access parent page relationships not included in only().
         """
         # Single optimized queryset that filters for:
         # 1. Live pages only
         # 2. Non-null, non-empty position
         # 3. Position contains comma (indicating valid "lat,lng" format)
-        # Use only() to load only the fields we need for serialization
         queryset = ChurchPage.objects.filter(
             live=True
         ).exclude(
@@ -212,11 +213,6 @@ class LocalitiesList(generics.ListCreateAPIView):
             position=''
         ).filter(
             position__contains=','
-        ).only(
-            'id', 'path', 'slug', 'position',
-            'locality_name', 'meeting_address', 'locality_state_or_province',
-            'locality_country', 'locality_phone_number', 'locality_email', 'locality_web',
-            'live'  # Needed for filtering, but also include in only() for consistency
         ).order_by('id')
         
         return queryset
