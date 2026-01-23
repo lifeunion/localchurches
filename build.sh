@@ -79,4 +79,13 @@ python manage.py showmigrations --list | grep -E "\[ \]" && {
 } || echo "All migrations appear to be applied"
 
 # Collect static files
-python manage.py collectstatic --no-input
+# Use --clear to ensure all files are collected, including webpack chunks
+echo "Collecting static files..."
+python manage.py collectstatic --no-input --clear || {
+    echo "Warning: collectstatic had issues, but continuing..."
+    # Try again without --clear as fallback
+    python manage.py collectstatic --no-input || {
+        echo "Error: collectstatic failed completely"
+        exit 1
+    }
+}
