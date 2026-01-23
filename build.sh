@@ -65,6 +65,12 @@ python manage.py fix_taskstate || {
     echo "Warning: Could not fix taskstate columns, but continuing..."
 }
 
+# Fix missing Wagtail revision columns (common after Heroku migration)
+echo "Checking for missing Wagtail revision columns..."
+python manage.py fix_revision || {
+    echo "Warning: Could not fix revision columns, but continuing..."
+}
+
 # Verify migrations completed successfully
 echo "Verifying migrations completed..."
 python manage.py showmigrations --list | grep -E "\[ \]" && {

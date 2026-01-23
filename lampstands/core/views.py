@@ -359,6 +359,85 @@ def fix_taskstate(request):
         return Response({'status': 'error', 'message': str(e)}, status=500)
 
 
+@api_view(['GET'])
+def fix_revision(request):
+    """
+    One-time fix endpoint to add missing revision columns for Wagtail 6.4.
+    TEMPORARY: No auth required for quick fix - REMOVE AFTER USE
+    """
+    from django.db import connection
+    
+    # List of columns that Wagtail 6.4 expects for Revision
+    columns_to_add = [
+        {
+            'name': 'object_str',
+            'type': 'TEXT',
+            'default': '',
+            'null': 'NULL',
+            'note': 'String representation of the object - nullable'
+        },
+    ]
+    
+    try:
+        with connection.cursor() as cursor:
+            # Check if table exists
+            cursor.execute("""
+                SELECT EXISTS (
+                    SELECT FROM information_schema.tables 
+                    WHERE table_schema = 'public' 
+                    AND table_name = 'wagtailcore_revision'
+                );
+            """)
+            table_exists = cursor.fetchone()[0]
+            
+            if not table_exists:
+                return Response({'status': 'error', 'message': 'Table wagtailcore_revision does not exist'}, status=400)
+            
+            added_columns = []
+            existing_columns = []
+            
+            for col in columns_to_add:
+                # Check if column exists
+                cursor.execute("""
+                    SELECT EXISTS (
+                        SELECT FROM information_schema.columns 
+                        WHERE table_schema = 'public' 
+                        AND table_name = 'wagtailcore_revision'
+                        AND column_name = %s
+                    );
+                """, [col['name']])
+                
+                column_exists = cursor.fetchone()[0]
+                
+                if not column_exists:
+                    # Build ALTER TABLE statement
+                    null_clause = col.get('null', 'NOT NULL')
+                    default_value = col.get('default', '')
+                    if default_value:
+                        if default_value == "''":
+                            default_clause = "DEFAULT ''"
+                        else:
+                            default_clause = f"DEFAULT {default_value}"
+                    else:
+                        default_clause = ''
+                    
+                    alter_sql = f"""
+                        ALTER TABLE wagtailcore_revision 
+                        ADD COLUMN {col['name']} {col['type']} {default_clause} {null_clause};
+                    """
+                    cursor.execute(alter_sql)
+                    added_columns.append(col['name'])
+                else:
+                    existing_columns.append(col['name'])
+            
+            if added_columns:
+                return Response({'status': 'success', 'message': f'Added {len(added_columns)} column(s)', 'added': added_columns, 'existing': existing_columns})
+            else:
+                return Response({'status': 'already_exists', 'message': 'All columns already exist', 'existing': existing_columns})
+    except Exception as e:
+        return Response({'status': 'error', 'message': str(e)}, status=500)
+
+
 def diagnostic_view(request):
     """Diagnostic endpoint to check database migration status"""
     from django.db import connection
