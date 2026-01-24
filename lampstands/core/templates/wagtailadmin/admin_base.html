@@ -10,6 +10,17 @@
     {% hook_output 'insert_global_admin_css' %}
 
     {% block extra_css %}{% endblock %}
+
+    {# initDateChooser is defined in the date-time-chooser chunk, loaded async by wagtailadmin.js. Inline scripts in the page body call it before that chunk runs. Stub queues calls and drains when the real one loads. #}
+    <script>
+    (function(){
+      var q=[],stub=function(){q.push([].slice.call(arguments));};
+      window.initDateChooser=stub;
+      function drain(){if(q.length&&window.initDateChooser!==stub){var fn=window.initDateChooser;while(q.length)fn.apply(null,q.shift());return true;}return false;}
+      var t=setInterval(function(){if(drain())clearInterval(t);},50);
+      setTimeout(function(){clearInterval(t);drain();},10000);
+    })();
+    </script>
 {% endblock %}
 
 {% block branding_favicon %}
