@@ -971,6 +971,21 @@
                     } else {
                         $detail.append(rendered);
                     }
+                } else {
+                    var $listTmpl = $("#" + this.settings.templates.list);
+                    if ($listTmpl.length) {
+                        var d = $.extend({}, data);
+                        if (!d.trimmed_address && d.meeting_address) {
+                            d.trimmed_address = encodeURIComponent(String(d.meeting_address).trim());
+                        }
+                        var rendered = $listTmpl.tmpl(d);
+                        $detail.append($('<a href="#" class="map_details_close" style="display:block;margin-bottom:8px;">× Close</a>'));
+                        if (rendered && typeof rendered.appendTo === 'function') {
+                            rendered.appendTo($detail);
+                        } else {
+                            $detail.append(rendered);
+                        }
+                    }
                 }
                 $(".map_results").addClass("detail_open");
                 if(this.settings.detailsOptions.panorama.showPanorama)
