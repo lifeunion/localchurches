@@ -199,7 +199,6 @@
     </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="{{self.google_url_js}}{{self.google_key_js}}&libraries=places,geometry"></script>
 <script>
             var BUL = "{% static 'lampstands/css/packages/src/bullseye.png' %}"
             var BLA = "{% static 'lampstands/css/packages/pins/blank.png' %}"
@@ -209,8 +208,9 @@
 <script src="{% static 'lampstands/css/packages/src/markerclusterer.min.js' %}"></script>
 <script src="{% static 'lampstands/css/packages/src/jquery.tmpl.min.js' %}"></script>
 <script>
-    $(function() {
-        $('.map_container').storeLocator({
+    window.initMapPage = function() {
+        $(function() {
+            $('.map_container').storeLocator({
             remote: "{{self.get_locality_json}}",
             defaultLocation:['{{geoinfo_lat}}','{{geoinfo_lng}}'],
             viewport: "{{geoinfo_viewport}}",
@@ -307,25 +307,21 @@
                 });
 
 
-                if (window.timer) {
-                    clearTimeout(timer);
-                }
-                timer = setTimeout(function () {
+                if (window.timer) clearTimeout(window.timer);
+                window.timer = setTimeout(function () {
                     $('.result_item_detail .image').attr('src', "{% static 'lampstands/css/packages/src/close_purple.png' %}");
                 }, 3000);
             }
         });
-    });
-    /*
-    http://stackoverflow.com/a/1987545
-     */
-
+        });
+    };
     $.fn.stars = function() {
         return $(this).each(function() {
             $(this).html($('<span />').width(Math.max(0, (Math.min(5, Math.round(parseFloat($(this).html())) / 2))) * 16));
         });
     }
 </script>
+<script async defer src="{{self.google_url_js}}{{self.google_key_js}}&libraries=places,geometry,marker&loading=async&callback=initMapPage"></script>
 <script id="mapListEntryTemplate" type="text/x-jQuery-tmpl">
 <div class="result_item" data-id="${id}">
     <a href="${url}"><h3>${locality_name}</h3></a>
