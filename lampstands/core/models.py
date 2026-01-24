@@ -13,7 +13,6 @@ from django.views.decorators.vary import vary_on_headers
 from modelcluster.fields import ParentalKey
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
-from wagtailgeowidget.panels import LeafletPanel
 from wagtail import blocks
 from wagtail.admin.mail import send_mail
 from wagtail.blocks import (CharBlock, FieldBlock, ListBlock,
@@ -1230,7 +1229,7 @@ class ChurchPage(Page):
         FieldPanel('short_intro'),
         FieldPanel('mailing_address'),
         FieldPanel('meeting_address'),
-        LeafletPanel('position', address_field='meeting_address', zoom=6),
+        FieldPanel('position'),
         FieldPanel('locality_phone_number'),
         FieldPanel('locality_email'),
         FieldPanel('locality_web'),
