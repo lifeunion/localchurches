@@ -400,19 +400,38 @@
 
                 if(this.settings.routeOptions.show)
                 {
-                    $('<div>', {
-                        class: 'map_route',
-                        id: 'map_route',
-                    }).append(this.settings.routeOptions.headline)
-                            .append($('<input type="text">').attr('class', 'map_direction_input')
-                                    .attr('placeholder', this.settings.routeOptions.placeholder)
-                                    .attr('name', 'origin')
-                                    .attr('id', 'map_direction_input'))
-                            .append($('<a>', {
-                                class: 'map_direction_close_trigger',
-                                html: this.settings.routeOptions.closeHtml
-                            }))
-                    .appendTo('.map_results');
+                    this._routeOrigin = null;
+                    var mapRouteDiv = $('<div>', { class: 'map_route', id: 'map_route' });
+                    mapRouteDiv.append(this.settings.routeOptions.headline);
+                    var dirPac = document.createElement('gmp-place-autocomplete');
+                    dirPac.setAttribute('placeholder', this.settings.routeOptions.placeholder || 'Enter departure address');
+                    dirPac.setAttribute('class', 'map_direction_input');
+                    dirPac.setAttribute('id', 'map_direction_input');
+                    if (this.settings.routeOptions.country != null && String(this.settings.routeOptions.country).toLowerCase() !== 'all') {
+                        dirPac.setAttribute('included-region-codes', this.settings.routeOptions.country);
+                    }
+                    dirPac.setAttribute('included-primary-types', 'street_address establishment');
+                    dirPac.addEventListener('gmp-placeselect', function(ev) {
+                        var place = ev.place;
+                        if (!place || !place.fetchFields) return;
+                        place.fetchFields({ fields: ['location'] }).then(function() {
+                            if (!place.location) return;
+                            var loc = place.location;
+                            var lat = loc && (typeof loc.lat === 'function' ? loc.lat() : loc.lat);
+                            var lng = loc && (typeof loc.lng === 'function' ? loc.lng() : loc.lng);
+                            if (lat == null || lng == null) return;
+                            var latLng = new google.maps.LatLng(lat, lng);
+                            _t._routeOrigin = { latLng: latLng };
+                            if (_t._routeDestination) {
+                                _t._directionsDisplay.setMap(_t.map);
+                                _t._directionsDisplay.setPanel(document.getElementById('map_route'));
+                                _t._calculateAndDisplayRoute(directionsService, _t._directionsDisplay, latLng, _t._routeDestination);
+                            }
+                        }).catch(function() {});
+                    });
+                    mapRouteDiv.append(dirPac);
+                    mapRouteDiv.append($('<a>', { class: 'map_direction_close_trigger', html: this.settings.routeOptions.closeHtml }));
+                    mapRouteDiv.appendTo('.map_results');
 
                     this._directionsDisplay = new google.maps.DirectionsRenderer;
                     var directionsService = new google.maps.DirectionsService;
@@ -424,19 +443,14 @@
                             $('.map_route').addClass('open');
                             e.preventDefault();
 
-                            var origin = '';
-
-                            if($('.map_direction_input').val().length > 0)
-                            {
-                                origin = $('.map_direction_input').val();
-                            }
+                            var origin = _t._routeOrigin && _t._routeOrigin.latLng ? _t._routeOrigin.latLng : null;
 
                             var templateItem = $(this).tmplItem();
                             if($.isEmptyObject(templateItem.data) === false)
                             {
                                 var destination = templateItem.data.location.latitude + ',' + templateItem.data.location.longitude;
                                 _t._routeDestination = destination;
-                                if(origin.length > 0)
+                                if(origin)
                                 {
                                     _t._directionsDisplay.setMap(_t.map);
                                     _t._directionsDisplay.setPanel(document.getElementById('map_route'));
@@ -450,42 +464,6 @@
 
                     var closeTriggerRoute = this._checkClassOrId(this.settings.routeOptions.closeTrigger);
                     $(document).on('click', closeTriggerRoute, $.proxy(_t._closeDirections, _t));
-
-                    var input = document.getElementById('map_direction_input');
-                    var options = {
-                        types: [this.settings.routeOptions.types],
-                        componentRestrictions: {country: this.settings.routeOptions.country}
-                    };
-                    if(this.settings.routeOptions.country != null)
-                    {
-                        var options = {
-                            types: [this.settings.routeOptions.types],
-                            componentRestrictions: {country: this.settings.routeOptions.country}
-                        };
-                    }
-                     else {
-                        var options = {
-                            types: [this.settings.routeOptions.types],
-                        };
-                    }
-                    var autocomplete = new google.maps.places.Autocomplete(input, options);
-
-                    google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                        if(!this.getPlace())
-                        {
-                            return;
-                        }
-                        var latLng = new google.maps.LatLng(this.getPlace().geometry.location.lat(), this.getPlace().geometry.location.lng());
-                        var origin = latLng;
-                        if(_t._routeDestination)
-                        {
-                            _t._directionsDisplay.setMap(_t.map);
-                            _t._directionsDisplay.setPanel(document.getElementById('map_route'));
-
-                            var destination = _t._routeDestination;
-                            _t._calculateAndDisplayRoute(directionsService, _t._directionsDisplay, origin, destination);
-                        }
-                    });
                 }
                 $(document).on('mouseenter', '.result_item', function() {
                     var hoverId = $(this).data('id'), m = _t._markers[hoverId];
@@ -770,36 +748,13 @@
                         markerIcon = this.settings.markerOptions.markerIcon;
                     }
                     var latLng = new google.maps.LatLng(data.location.latitude, data.location.longitude);
-                    var marker;
-                    if (google.maps.marker && google.maps.marker.AdvancedMarkerElement) {
-                        try {
-                            marker = new google.maps.marker.AdvancedMarkerElement({
-                                map: this.map,
-                                position: latLng,
-                                title: data.locality_name || ''
-                            });
-                            marker.itemId = data.id;
-                            if (!marker.getPosition && marker.position) {
-                                marker.getPosition = function() { return marker.position; };
-                            }
-                        } catch (e) {
-                            marker = new google.maps.Marker({
-                                position: latLng,
-                                map: this.map,
-                                icon: markerIcon,
-                                draggable: this.settings.markerOptions.draggable,
-                                itemId: data.id,
-                            });
-                        }
-                    } else {
-                        marker = new google.maps.Marker({
-                            position: latLng,
-                            map: this.map,
-                            icon: markerIcon,
-                            draggable: this.settings.markerOptions.draggable,
-                            itemId: data.id,
-                        });
-                    }
+                    var marker = new google.maps.Marker({
+                        position: latLng,
+                        map: this.map,
+                        icon: markerIcon,
+                        draggable: this.settings.markerOptions.draggable,
+                        itemId: data.id,
+                    });
 
                     this.infowindow = new google.maps.InfoWindow();
                     var _map = this.map;
@@ -890,7 +845,8 @@
 
                 for(var i = 0; i < this.markers.length; i++)
                 {
-                    if (this.map.getBounds().contains(this.markers[i].position))
+                    var pos = this.markers[i].getPosition ? this.markers[i].getPosition() : this.markers[i].position;
+                    if (pos && this.map.getBounds().contains(pos))
                     {
                         this.viewPortMarkers[i] = this.markers[i].itemId;
                     }
