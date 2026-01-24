@@ -166,6 +166,9 @@ if AWS_STORAGE_BUCKET_NAME and AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
     AWS_IS_GZIPPED = False  # Let WhiteNoise handle compression if needed
     
     # Update STORAGES for S3
+    # Note: Using plain S3Boto3Storage (not ManifestStaticFilesStorage) because:
+    # - ManifestStaticFilesStorage requires manifest.json which may not work well with S3
+    # - Wagtail 6.4 handles file versioning via query strings (?v=hash)
     STORAGES = {
         "default": {
             "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
