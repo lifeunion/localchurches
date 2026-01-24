@@ -183,6 +183,7 @@ python manage.py collectstatic --no-input --clear --verbosity 2 2>&1 | tee /tmp/
 }
 
 # Verify critical Wagtail admin files were collected
+# When using S3: check object in bucket (collectstatic uploads there). When WhiteNoise: check STATIC_ROOT.
 echo ""
 echo "Verifying Wagtail admin CSS files were collected..."
 python -c "
@@ -191,32 +192,56 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lampstands.settings.production'
 import django
 django.setup()
 from django.conf import settings
-css_path = os.path.join(settings.STATIC_ROOT, 'wagtailadmin', 'css', 'core.css')
-if os.path.exists(css_path):
-    print(f'✅ Wagtail admin CSS found: {css_path}')
-    print(f'   File size: {os.path.getsize(css_path)} bytes')
+
+has_s3 = (
+    bool(getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None))
+    and bool(getattr(settings, 'AWS_ACCESS_KEY_ID', None))
+    and bool(getattr(settings, 'AWS_SECRET_ACCESS_KEY', None))
+)
+css_key = 'wagtailadmin/css/core.css'
+
+if has_s3:
+    try:
+        import boto3
+        from botocore.exceptions import ClientError, NoCredentialsError
+        loc = getattr(settings, 'AWS_LOCATION', '') or ''
+        key = (loc + '/' + css_key).lstrip('/') if loc else css_key
+        s3 = boto3.client(
+            's3',
+            aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+            aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+            region_name=getattr(settings, 'AWS_S3_REGION_NAME', 'us-east-1')
+        )
+        s3.head_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=key)
+        print(f'✅ Wagtail admin CSS found in S3: s3://{settings.AWS_STORAGE_BUCKET_NAME}/{key}')
+    except ClientError as e:
+        if e.response.get('Error', {}).get('Code') == '404':
+            print(f'❌ Wagtail admin CSS NOT in S3: {key}')
+        else:
+            print(f'⚠️  S3 check failed: {e}')
+    except Exception as e:
+        print(f'⚠️  S3 verification error: {type(e).__name__}: {e}')
 else:
-    print(f'❌ Wagtail admin CSS NOT found: {css_path}')
-    print(f'   STATIC_ROOT: {settings.STATIC_ROOT}')
-    print(f'   STATIC_ROOT exists: {os.path.exists(settings.STATIC_ROOT)}')
-    # List what's actually in STATIC_ROOT
-    if os.path.exists(settings.STATIC_ROOT):
-        import subprocess
-        try:
-            result = subprocess.run(['find', settings.STATIC_ROOT, '-name', 'core.css', '-type', 'f'], 
+    css_path = os.path.join(settings.STATIC_ROOT, 'wagtailadmin', 'css', 'core.css')
+    if os.path.exists(css_path):
+        print(f'✅ Wagtail admin CSS found: {css_path}')
+        print(f'   File size: {os.path.getsize(css_path)} bytes')
+    else:
+        print(f'❌ Wagtail admin CSS NOT found: {css_path}')
+        print(f'   STATIC_ROOT: {settings.STATIC_ROOT}')
+        if os.path.exists(settings.STATIC_ROOT):
+            import subprocess
+            try:
+                r = subprocess.run(['find', settings.STATIC_ROOT, '-name', 'core.css', '-type', 'f'],
                                   capture_output=True, text=True, timeout=5)
-            if result.returncode == 0 and result.stdout:
-                print(f'   Found core.css files:')
-                for line in result.stdout.strip().split('\n')[:5]:
-                    print(f'     {line}')
-            else:
-                print(f'   No core.css files found in STATIC_ROOT')
-                # List top-level directories
-                try:
-                    dirs = [d for d in os.listdir(settings.STATIC_ROOT) if os.path.isdir(os.path.join(settings.STATIC_ROOT, d))][:10]
-                    print(f'   Top-level directories in STATIC_ROOT: {dirs}')
-                except:
-                    pass
-        except Exception as e:
-            print(f'   Error checking files: {e}')
+                if r.returncode == 0 and r.stdout:
+                    print('   Found core.css under STATIC_ROOT:')
+                    for line in r.stdout.strip().split('\n')[:5]:
+                        print(f'     {line}')
+                else:
+                    dirs = [d for d in os.listdir(settings.STATIC_ROOT)
+                            if os.path.isdir(os.path.join(settings.STATIC_ROOT, d))][:10]
+                    print(f'   Top-level dirs in STATIC_ROOT: {dirs}')
+            except Exception as e:
+                print(f'   Error: {e}')
 " 2>&1 || echo "⚠️  Could not verify Wagtail admin CSS files"

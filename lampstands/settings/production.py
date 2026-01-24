@@ -110,6 +110,10 @@ COMPRESS_CSS_FILTERS = [
     'compressor.filters.cssmin.CSSMinFilter',
 ]
 COMPRESS_CSS_HASHING_METHOD = 'content'
+# Admin CSS safeguard: Wagtail admin does NOT use {% compress %} for core.css; it uses
+# {% versioned_static 'wagtailadmin/css/core.css' %}. Compressor only processes {% compress %}
+# blocks, so wagtailadmin assets are already excluded. Do not wrap admin base or skeleton
+# in {% compress %}; that would break admin CSS.
 
 RECAPTCHA_PUBLIC_KEY = os.environ.get("GOOGLE_RECAPTCHA_SITE_KEY", "")
 RECAPTCHA_PRIVATE_KEY = os.environ.get("GOOGLE_RECAPTCHA_SECRET_KEY", "")
@@ -240,6 +244,8 @@ STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# CompressorFinder is for {% compress %} blocks (site CSS/JS) only. Wagtail admin is
+# not in any {% compress %} block and must remain that way.
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',

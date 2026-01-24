@@ -1,152 +1,94 @@
-# Master Plan: Fix Wagtail Admin CSS (Permanently)
+# Master Plan: Fix Wagtail Admin CSS (Admin Page Only)
 
-## Why previous fixes failed (3+ attempts)
+## Status
 
-1. **Conflicting sources** – Admin static comes from two places: project `static/wagtailadmin/` (old, from an older Wagtail build) and the `wagtail` package. `FileSystemFinder` runs first, so the project copy wins and overrides the package. That mix (old `core.css`/`common.js`/`wagtailadmin.js` + newer `vendor.js`/jQuery from the package) causes broken layout and JS errors.
-
-2. **Targeting symptoms** – Past fixes focused on 404s, collectstatic, S3, `versioned_static`, and disabling CSS hooks. The underlying issue is **which** `core.css` and JS are used, not just that *some* files load.
-
-3. **Over-customisation** – `admin_base.html` was fully overridden and references a specific, old set of files (e.g. `common.js`). The `wagtail` 6.4 package uses a different build; our override locks us into an old build that we keep in `static/wagtailadmin/`.
-
----
-
-## Root cause (one-line)
-
-**Project `static/wagtailadmin/` overrides the Wagtail package’s admin static. That project copy is from an older build and clashes with Wagtail 6.4.**
+- **Phase 1 (done):** Project `static/wagtailadmin/` removed. Admin assets come from the `wagtail` package only.
+- **Phase A (done):** `admin_base.html` override removed; Wagtail default is used.
+- **Phase B (done):** Compressor safeguard: comments in `production.py` that `wagtailadmin` must not be inside any `{% compress %}` block (django-compressor has no `COMPRESS_EXCLUDE`; the safeguard is documentation).
+- **Phase D (done):** `build.sh` verifies `wagtailadmin/css/core.css` in the S3 bucket when S3 is used, and in `STATIC_ROOT` when using WhiteNoise.
+- **Phase E (done):** CDN invalidation and hard-refresh note added below (Root cause 6).
+- **Phase C:** Only if 404 on `core.css` continues after A+B+D+deploy: add minimal `admin_base.html` override with `{% static 'wagtailadmin/css/core.css' %}`.
+- **Current:** Deploy and verify; if admin CSS still 404s, run Phase C.
 
 ---
 
-## Plan overview
+## Root causes (prioritised)
 
-| Phase | Goal | Risk |
-|-------|------|------|
-| **1** | Stop using project `static/wagtailadmin/` as source so admin uses only the package | Need to align `admin_base.html` with what the package provides |
-| **2** | Simplify `admin_base.html` to the minimum override (ideally only `common.js` if still needed) | May need to drop `common.js` if package build no longer needs it |
-| **3** | Confirm `versioned_static` and S3/WhiteNoise; no front-end CSS in admin | Low |
-| **4** | Optional: re-enable `insert_global_admin_css` hooks (FontAwesome, login tweaks) only after 1–3 are stable | Medium |
+### 1. Override drift and unnecessary customisation
 
----
+Our `admin_base.html` overrides Wagtail’s default. Even if it matches today, it can drift and it adds a needless maintenance surface. Wagtail’s default already loads `core.css` and the right JS in the right order. **Action:** Remove our override and use Wagtail’s default.
 
-## Phase 1: Stop using project `static/wagtailadmin/` as source
+### 2. Compressor and admin CSS
 
-### 1.1 Why this helps
+- `COMPRESS_OFFLINE = True` and `CompressorFinder` are enabled.
+- Admin does **not** use `{% compress %}` for its main CSS; `core.css` is loaded via `{% versioned_static %}`. So Compressor should not be rewriting or merging admin CSS.
+- To be safe, we should **exclude** `wagtailadmin` from Compressor so it never touches admin assets. **Action:** Set `COMPRESS_EXCLUDE` (or the appropriate Compressor setting) so `wagtailadmin` is excluded.
 
-- **Finder order:** `FileSystemFinder` (uses `STATICFILES_DIRS` = `static/`) runs before `AppDirectoriesFinder`. For `wagtailadmin/css/core.css`, the project’s `static/wagtailadmin/css/core.css` is chosen; the package’s is never used.
-- **What the project has:** Old `core.css`, `common.js`, `wagtailadmin.js`, `core.js`, jquery 2.2.1, jquery-ui 1.10.3, Hallo, etc. Wagtail 6.4 uses a different admin build (different `core.css`, different JS layout).
-- **Mismatch:** `admin_base.html` asks for `jquery-3.6.0`, `jquery-ui-1.13.2`, `vendor.js` (which the project does not have) → those come from the package. `core.css`, `common.js`, `wagtailadmin.js`, `core.js` come from the project. Mixed origins → broken CSS and possible JS errors.
+### 3. `versioned_static` and S3
 
-### 1.2 What to do
+- With S3, `versioned_static` typically produces `https://bucket…/wagtailadmin/css/core.css?v=hash`.
+- If the tag or storage interaction is wrong, we can get 404s or bad URLs. **Action:** Prefer `{% static 'wagtailadmin/css/core.css' %}` if `versioned_static` keeps 404’ing. (We try `versioned_static` first; only switch if evidence of 404.)
 
-**Remove `static/wagtailadmin/` from the project** so that all `wagtailadmin/*` assets are resolved from the `wagtail` package via `AppDirectoriesFinder`.
+### 4. `core.css` not in S3 / not collected
 
-- **Option A (recommended):** Delete the `static/wagtailadmin/` directory from the repo.
-- **Option B:** Move it to e.g. `static/_archived/wagtailadmin/` or out of `static/` so it is no longer under `STATICFILES_DIRS`. Same effect for finders.
+- If `wagtailadmin/css/core.css` is never uploaded to S3, the link will 404.
+- Build runs `collectstatic`. With S3, files go to the bucket; the current check uses `STATIC_ROOT`, which is wrong when using S3. **Action:** When using S3, verify `core.css` via S3 `head_object` or `list_objects` in the build instead of `STATIC_ROOT`.
 
-### 1.3 `admin_base.html` and `common.js`
+### 5. Site CSS and hooks
 
-- Our `admin_base.html` explicitly includes `wagtailadmin/js/common.js`. The Wagtail 6.4 default `admin_base` does **not** include `common.js`; its build inlines the runtime. Our `wagtailadmin.js` in the project was built to use `webpackJsonp` from `common.js`.
-- **After Phase 1:** `common.js` and `wagtailadmin.js` will come from the **package**. The package’s `wagtailadmin.js` may not use `webpackJsonp`; if so, loading `common.js` is unnecessary and can be removed from the override.
-- **Action:** After deleting `static/wagtailadmin/`, test admin. If the package’s `admin_base` works with no `common.js`, we can **replace our full `admin_base` override with Wagtail’s default** (Phase 2). If `webpackJsonp` errors appear, keep only the `common.js` line in an otherwise minimal override; if the package has no `common.js`, we must either stay with a custom build or upgrade the way we include admin JS.
+- `villareal-turquoise.css` and other site CSS are in `lampstands` templates; admin uses `wagtailadmin/skeleton` and `admin_base`. They are separate. **No change.**
+- `insert_global_admin_css` (FontAwesome, `fix_admin_login_css`) are **disabled**. **No change** until base admin CSS is solid.
 
-### 1.4 Rollback
+### 6. Caching (CDN / browser)
 
-- Restore `static/wagtailadmin/` from git and redeploy. Admin will revert to the previous (broken but familiar) mix.
+- Old or wrong `core.css` can be served from CDN or browser cache. **Action:** Document that CDN (e.g. CloudFront) should be invalidated for `wagtailadmin/*` after deploys, and that a hard refresh may be needed.
+
+**After deploy:** If admin CSS still looks wrong, invalidate the CDN for `wagtailadmin/*` (e.g. CloudFront invalidation `/wagtailadmin/*`) and do a hard refresh (Cmd+Shift+R / Ctrl+Shift+R) in the browser.
 
 ---
 
-## Phase 2: Simplify `admin_base.html`
+## Phases to execute
 
-### 2.1 Goal
-
-- Use Wagtail’s default `admin_base.html` and blocks if possible.
-- If we must override, limit the override to the minimum: e.g. one extra `<script>` for `common.js` only if the package’s `wagtailadmin.js` still expects it.
-
-### 2.2 Steps
-
-1. Remove our `lampstands/core/templates/wagtailadmin/admin_base.html` and test with the default.
-2. If that works: done. If `webpackJsonp` (or similar) appears: add a minimal override that only inserts `common.js` before `wagtailadmin.js`, and keep the rest as in the default.
-3. Periodically diff our `admin_base` against upstream Wagtail 6.4 to avoid drift.
+| Phase | Goal | Action |
+|-------|------|--------|
+| **A** | Remove override drift | Delete `lampstands/core/templates/wagtailadmin/admin_base.html` so Wagtail’s default is used. |
+| **B** | Protect admin from Compressor | Exclude `wagtailadmin` from Compressor (e.g. `COMPRESS_EXCLUDE` or equivalent). |
+| **C** | Reliable `core.css` URL | Keep `versioned_static` for now. If 404 continues, add a minimal override that uses `{% static 'wagtailadmin/css/core.css' %}` only. |
+| **D** | S3 build check | When S3 is used, in `build.sh` verify `wagtailadmin/css/core.css` in the bucket (not in `STATIC_ROOT`). |
+| **E** | Docs | In this file, add: “After deploy, invalidate CDN for `wagtailadmin/*` and hard‑refresh if admin CSS is still wrong.” |
 
 ---
 
-## Phase 3: `versioned_static`, S3/WhiteNoise, and pollution
+## Execution order
 
-### 3.1 `versioned_static` and 404s
-
-- If `{% versioned_static 'wagtailadmin/css/core.css' %}` produces hashed paths that 404 on S3, try `{% static 'wagtailadmin/css/core.css' %}` for core admin assets. Prefer `versioned_static` when it works.
-
-### 3.2 Front-end CSS in admin
-
-- Ensure `villareal-turquoise.css` and other site CSS are **not** loaded in admin. Our current `admin_base` does not include them; keep it that way.
-
-### 3.3 Compressor
-
-- `COMPRESS_OFFLINE = True` and `CompressorFinder` should not process Wagtail admin bundles; Wagtail uses its own build. If admin CSS breaks after Compressor changes, exclude `wagtailadmin` from Compressor.
+1. **A** – Remove `admin_base.html` override.
+2. **B** – Exclude `wagtailadmin` from Compressor in production (and base if that’s where finders/compress are shared).
+3. **D** – Adjust build verification for S3.
+4. **C** – Only if A+B+D are done and admin CSS still 404s: add a minimal `admin_base.html` that uses `{% static 'wagtailadmin/css/core.css' %}` and otherwise inherits from the default.
+5. **E** – Update this doc with the CDN/hard‑refresh note.
 
 ---
 
-## Phase 4 (optional): Re-enable `insert_global_admin_css` hooks
+## Rollback
 
-- In `wagtail_hooks.py`, `import_fontawesome_stylesheet` and `fix_admin_login_css` are disabled.
-- Re-enable only after Phases 1–3 are stable. Use scoped selectors (e.g. `body.login` for login tweaks) so they don’t affect the main admin.
-
----
-
-## Diagnostics (before and after each phase)
-
-### Which `core.css` is used
-
-- In browser DevTools → Network: open the URL for `core.css` (e.g. `.../wagtailadmin/css/core.css?...`). If it’s from the package, the path and optional hash should match what’s in the installed `wagtail` package.
-
-### 404s
-
-- Network tab: filter by “css” and “js”; ensure no 404s for `wagtailadmin/` assets.
-
-### collectstatic
-
-- Build logs: confirm lines like  
-  `Copying '.../site-packages/wagtail/.../static/wagtailadmin/...'`  
-  for `core.css` and key JS. After Phase 1, there should be **no** “Copying” from `static/wagtailadmin/` (project).
-
-### Finder order (optional)
-
-```python
-from django.contrib.staticfiles.finders import get_finders
-for finder in get_finders():
-    # Manually resolve 'wagtailadmin/css/core.css' to see which finder and path wins
-```
+- **A:** Restore `admin_base.html` from git. Our last version matched Wagtail’s default; restoring it is safe.
+- **B:** Remove the Compressor exclude.
+- **C:** Revert to `versioned_static` in the override, or delete the override again.
+- **D:** Revert the `build.sh` verification to the previous `STATIC_ROOT` check (or remove it).
 
 ---
 
-## Summary
+## Verification after changes
 
-| What | Before | After (Phase 1) |
-|------|--------|------------------|
-| `wagtailadmin/css/core.css` | From `static/wagtailadmin/` (project) | From `wagtail` package |
-| `wagtailadmin/js/common.js` | From project | From package (or dropped in Phase 2 if not needed) |
-| `wagtailadmin/js/wagtailadmin.js` | From project | From package |
-| Other `wagtailadmin/*` | Mix of project + package | All from package |
-
-Phase 1 is the necessary change; Phases 2–4 clean up and harden it.
-
----
-
-## Files to touch
-
-- **Phase 1:** Remove or relocate `static/wagtailadmin/` (and update `.gitignore` if it’s now ignored or archived).
-- **Phase 2:** `lampstands/core/templates/wagtailadmin/admin_base.html` – delete or reduce to a minimal override.
-- **Phase 4:** `lampstands/core/wagtail_hooks.py` – uncomment and adjust the `insert_global_admin_css` hooks when safe.
-
----
-
-## Phase 1 implementation (done)
-
-- **`static/wagtailadmin/`** – Removed from the project. All `wagtailadmin/*` assets now come from the `wagtail` package via `AppDirectoriesFinder`.
-- **`admin_base.html`** – The `<script src="...common.js">` line was removed. The Wagtail 6.4 package does not ship `common.js` (runtime is inlined in its `wagtailadmin.js`). Keeping it would 404. If you see `webpackJsonp is not defined` after deploy, the next step is Phase 2: replace our `admin_base` with Wagtail’s default.
+1. Deploy and open the admin (login and a page edit).
+2. DevTools → Network: `wagtailadmin/css/core.css` → status 200, size > 0.
+3. Visually: sidebar, header, forms, and modals look correct (no obviously missing or overridden Wagtail styles).
+4. If using S3: build logs show that `core.css` was found in the bucket (or in collectstatic output when writing to S3).
 
 ---
 
 ## References
 
-- `ROOT_CAUSE_COMMON_JS.md` – why `common.js` was added to `admin_base`
-- `FIX_ADMIN_CSS.md`, `DEBUG_WAGTAIL_ADMIN_CSS.md`, `URGENT_FIX_ADMIN_CSS.md` – 404s, collectstatic, S3
+- `FIX_ADMIN_CSS.md`, `DEBUG_WAGTAIL_ADMIN_CSS.md`, `URGENT_FIX_ADMIN_CSS.md`
+- `ROOT_CAUSE_COMMON_JS.md`
+- Wagtail 6.4: `wagtail/admin/templates/wagtailadmin/admin_base.html`, `wagtailadmin/skeleton.html`, `wagtail/admin/static/wagtailadmin/css/core.css`
