@@ -94,6 +94,13 @@ python manage.py fix_lampstandsimage || {
 echo "Checking for wagtailcore_referenceindex table..."
 python manage.py fix_referenceindex
 
+# One-time: restore ChurchPage.position from Wagtail revisions (overwritten to 39,-98 by LeafletPanel).
+# Safe to remove this block after the first successful deploy.
+echo "Restoring ChurchPage position from revisions..."
+python manage.py restore_position_from_revisions || {
+    echo "Warning: Could not restore position from revisions, but continuing..."
+}
+
 # Verify migrations completed successfully
 echo "Verifying migrations completed..."
 python manage.py showmigrations --list | grep -E "\[ \]" && {
