@@ -39,26 +39,36 @@
 
                      <table class="contact" style="margin-bottom:30px;">
                         <tbody>
+                        {% if self.meeting_address %}
                         <tr>
                             <th>Address:</th>
-                        <td>{{self.meeting_address}}<br></td>
+                            <td>{{ self.meeting_address }}</td>
                         </tr>
+                        {% endif %}
+                        {% if self.locality_phone_number %}
                         <tr>
                             <th>Telephone:</th>
-                            <td>{{self.locality_phone_number}}</td>
+                            <td>{{ self.locality_phone_number }}</td>
                         </tr>
+                        {% endif %}
+                        {% if self.locality_email %}
                         <tr>
                             <th>E-mail:</th>
-                            <td><a href="mailto:{{self.locality_email}}"</a>{{self.locality_email}}</td>
+                            <td><a href="mailto:{{ self.locality_email }}">{{ self.locality_email }}</a></td>
                         </tr>
+                        {% endif %}
+                        {% if self.locality_web %}
                         <tr>
                             <th>Website:</th>
-                            <td><a href="{{self.locality_web}}">{{self.locality_web}}</a></td>
+                            <td><a href="{{ self.locality_web }}">{{ self.locality_web }}</a></td>
                         </tr>
+                        {% endif %}
+                        {% if self.last_update %}
                         <tr>
                             <th>Last Updated:</th>
-                            <td>{{self.last_update}}</td>
+                            <td>{{ self.last_update }}</td>
                         </tr>
+                        {% endif %}
                         </tbody>
                         </table>
                         </div><!-- col-* -->
