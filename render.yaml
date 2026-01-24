@@ -82,6 +82,12 @@ services:
       - key: GOOGLE_RECAPTCHA_SECRET_KEY
         sync: false  # Must be set manually
       
+      # Google Maps Map ID for Advanced Markers (removes deprecated Marker)
+      # DEMO_MAP_ID = Google's built-in ID for testing/production
+      # For a custom style create one in Cloud Console → Map Management and set it here
+      - key: GOOGLE_MAPS_MAP_ID
+        value: "DEMO_MAP_ID"
+      
       # Wagtail Configuration
       - key: WAGTAILADMIN_BASE_URL
         value: "https://localchurches.onrender.com"  # Update with your actual domain
