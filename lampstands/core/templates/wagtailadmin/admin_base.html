@@ -25,8 +25,7 @@
     <script src="{% url 'wagtailadmin_javascript_catalog' %}"></script>
     <script src="{% versioned_static 'wagtailadmin/js/core.js' %}"></script>
     <script src="{% versioned_static 'wagtailadmin/js/vendor.js' %}"></script>
-    {# common.js (webpack runtime) MUST load before wagtailadmin.js - defines webpackJsonp #}
-    <script src="{% versioned_static 'wagtailadmin/js/common.js' %}"></script>
+    {# common.js removed: Wagtail 6.4 package inlines webpack runtime; project static/wagtailadmin/ was deleted in Phase 1 (MASTER_PLAN_ADMIN_CSS) #}
     <script src="{% versioned_static 'wagtailadmin/js/wagtailadmin.js' %}"></script>
     <script src="{% versioned_static 'wagtailadmin/js/telepath/telepath.js' %}"></script>
     <script src="{% versioned_static 'wagtailadmin/js/sidebar.js' %}"></script>

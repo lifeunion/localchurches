@@ -9,13 +9,19 @@ pip install -r requirements.txt
 echo "Checking migration status..."
 python manage.py showmigrations --list || true
 
+# Pre-migrate: fix revision content JSON so 0071_populate_revision_content_type doesn't FK-fail.
+# 0071 sets content_type_id from content.content_type; if that ID is missing from django_content_type, migrate fails.
+echo "Pre-migrate: fixing revision content JSON with invalid content_type..."
+python manage.py fix_revision_content_json || true
+
 # Run migrations with error handling
 echo "Running migrations..."
 python manage.py migrate --no-input --run-syncdb 2>&1 | tee /tmp/migrate.log || {
     MIGRATE_EXIT_CODE=$?
     # If migration fails due to foreign key constraint on revisions, fix it
     if grep -q "wagtailcore_revision.*foreign key constraint" /tmp/migrate.log; then
-        echo "Fixing revision content_type_id foreign key issues..."
+        echo "Fixing revision content_type_id and content JSON for foreign key issues..."
+        python manage.py fix_revision_content_json || true
         python -c "
 import os
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lampstands.settings.production')

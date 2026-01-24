@@ -11,7 +11,6 @@ images, documents, snippets, etc. in the side panel. If you see:
   ProgrammingError: relation "wagtailcore_referenceindex" does not exist
 run this command.
 """
-from django.core.management import call_command
 from django.core.management.base import BaseCommand
 from django.db import connection
 
@@ -38,28 +37,12 @@ class Command(BaseCommand):
                 )
                 return
 
+        # Do not run migrate here: it can trigger 0071_populate_revision_content_type, which
+        # fails when revision.content.content_type references a missing django_content_type
+        # (e.g. id 51). build.sh already runs migrate; we only create the table if it's missing.
         self.stdout.write(
             self.style.WARNING(
-                'Table wagtailcore_referenceindex does not exist. Running migrate...'
-            )
-        )
-        try:
-            call_command('migrate', '--no-input', verbosity=2)
-        except Exception as e:
-            self.stdout.write(self.style.ERROR(f'Migrate failed: {e}'))
-            raise
-
-        with connection.cursor() as cursor:
-            if _table_exists(cursor):
-                self.stdout.write(
-                    self.style.SUCCESS('wagtailcore_referenceindex table now exists.')
-                )
-                return
-
-        self.stdout.write(
-            self.style.WARNING(
-                'Table still missing after migrate (migration may be marked applied). '
-                'Creating table via schema editor or raw SQL...'
+                'Table is missing. Creating via schema editor or raw SQL...'
             )
         )
 
