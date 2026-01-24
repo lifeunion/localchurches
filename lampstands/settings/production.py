@@ -166,7 +166,7 @@ if AWS_STORAGE_BUCKET_NAME and AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
     
     # Ensure static files are collected with correct paths
     # This is critical for Wagtail admin files to load correctly
-    AWS_S3_FILE_OVERWRITE = False  # Don't overwrite existing files
+    AWS_S3_FILE_OVERWRITE = True  # Overwrite existing files so wagtailadmin and other statics update on each collectstatic
     AWS_IS_GZIPPED = False  # Let WhiteNoise handle compression if needed
     
     # Update STORAGES for S3
