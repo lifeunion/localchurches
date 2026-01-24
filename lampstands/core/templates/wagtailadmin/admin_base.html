@@ -19,6 +19,14 @@
 {% block js %}
     {% wagtail_config as config %}
     {{ config|json_script:"wagtail-config" }}
+    {# Bootstrap wagtailConfig before any Wagtail JS; chunks (date-time-chooser, bulk-actions, etc.) and core expect it. #}
+    <script>
+    (function(){
+      var el = document.getElementById('wagtail-config');
+      try { window.wagtailConfig = el && el.textContent ? JSON.parse(el.textContent) : {}; }
+      catch (e) { window.wagtailConfig = {}; }
+    })();
+    </script>
     <script src="{% versioned_static 'wagtailadmin/js/vendor/jquery-3.6.0.min.js' %}"></script>
     <script src="{% versioned_static 'wagtailadmin/js/vendor/jquery-ui-1.13.2.min.js' %}"></script>
     <script src="{% versioned_static 'wagtailadmin/js/vendor/jquery.datetimepicker.js' %}"></script>
@@ -26,10 +34,10 @@
     <script src="{% versioned_static 'wagtailadmin/js/vendor/bootstrap-modal.js' %}"></script>
     <script src="{% versioned_static 'wagtailadmin/js/vendor/tag-it.js' %}"></script>
     <script src="{% url 'wagtailadmin_javascript_catalog' %}"></script>
+    {# webpack runtime: must load before core/vendor/wagtailadmin (defines webpackJsonp) #}
+    <script src="{% versioned_static 'wagtailadmin/js/common.js' %}"></script>
     <script src="{% versioned_static 'wagtailadmin/js/core.js' %}"></script>
     <script src="{% versioned_static 'wagtailadmin/js/vendor.js' %}"></script>
-    {# webpack runtime: must load before wagtailadmin.js (defines webpackJsonp) #}
-    <script src="{% versioned_static 'wagtailadmin/js/common.js' %}"></script>
     <script src="{% versioned_static 'wagtailadmin/js/wagtailadmin.js' %}"></script>
     <script src="{% versioned_static 'wagtailadmin/js/sidebar.js' %}"></script>
     <script src="{% versioned_static 'wagtailadmin/js/modal-workflow.js' %}"></script>

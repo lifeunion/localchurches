@@ -8,8 +8,9 @@
 - **Phase D (done):** `build.sh` verifies `wagtailadmin/css/core.css` and `wagtailadmin/js/common.js` in the S3 bucket when S3 is used, and in `STATIC_ROOT` when using WhiteNoise. Build fails if either is missing.
 - **Phase E (done):** CDN invalidation and hard-refresh note added below (Root cause 6).
 - **Phase C (done):** `core.css` returned 200 but styles were not applied (likely `versioned_static` URL or S3 Content-Type). Added `lampstands/core/templates/wagtailadmin/admin_base.html` that uses `{% static 'wagtailadmin/css/core.css' %}` (and `{% static %}` for favicon); JS uses `{% versioned_static %}`. Extends `wagtailadmin/skeleton.html` and defines `css`, `branding_favicon`, `js` blocks.
-- **Phase F (done):** **common.js** added to `admin_base.html` after `vendor.js` and before `wagtailadmin.js` so `webpackJsonp` is defined (fixes `webpackJsonp is not defined` and broken admin JS). **CSS fallback:** inline `<style>body{...}</style>` before `core.css` so if `core.css` fails to load (404, CDN, wrong Content-Type), the page stays readable.
-- **Current:** Deploy and verify. If still broken: (1) Open the `core.css` URL in a new tab and check the response is real CSS and `Content-Type: text/css`; (2) Invalidate CDN for `wagtailadmin/*` and hard-refresh; (3) Confirm `common.js` loads before `wagtailadmin.js` in the HTML source.
+- **Phase F (done):** **common.js** added and **CSS fallback:** inline `<style>body{...}</style>` before `core.css` so if `core.css` fails to load, the page stays readable.
+- **Phase G (done):** **wagtailConfig** bootstrapped from `#wagtail-config` before any Wagtail JS (fixes `wagtailConfig is not defined`, `initDateChooser is not defined`). **common.js** moved to run **before** core.js and vendor.js (still before wagtailadmin.js) so the webpack runtime exists for all bundles (can fix `Cannot read properties of undefined (reading 'register')` in sidebar.js).
+- **Current:** Deploy and verify. If still broken: runbook below; also (1) core.css URL returns real CSS and `Content-Type: text/css`; (2) Invalidate CDN for `wagtailadmin/*` and hard-refresh; (3) `common.js` before core/vendor/wagtailadmin; (4) Console: no `wagtailConfig is not defined` or `webpackJsonp is not defined`.
 
 ---
 
@@ -83,8 +84,8 @@ Our `admin_base.html` overrides Wagtail’s default. Even if it matches today, i
 
 1. Deploy and open the admin (login and a page edit).
 2. DevTools → Network: `wagtailadmin/css/core.css` → status 200, size > 0; `wagtailadmin/js/common.js` → 200; `wagtailadmin.js` → 200.
-3. DevTools → Console: no `webpackJsonp is not defined` (or similar).
-4. View page source: `<script src=".../common.js...">` appears **before** `wagtailadmin.js`.
+3. DevTools → Console: no `webpackJsonp is not defined`, no `wagtailConfig is not defined`, no `initDateChooser is not defined`, no `Cannot read properties of undefined (reading 'register')`.
+4. View page source: `<script src=".../common.js...">` appears **before** `core.js`, `vendor.js`, and `wagtailadmin.js`; an inline script right after `#wagtail-config` sets `window.wagtailConfig`.
 5. Visually: sidebar, header, forms, and modals look correct (no obviously missing or overridden Wagtail styles). If `core.css` failed to load, the inline fallback should still make body text readable (system font, light background, dark text).
 6. If using S3: build logs show `core.css` and `common.js` found in the bucket (build fails if either is missing).
 
@@ -97,6 +98,14 @@ Our `admin_base.html` overrides Wagtail’s default. Even if it matches today, i
 
 ---
 
+## JS: wagtailConfig, common.js order, addEventListener on null
+
+- **Phase G (done):** **wagtailConfig:** An inline script right after `#wagtail-config` sets `window.wagtailConfig` so chunks (date-time-chooser, bulk-actions, etc.) and any code that expects it see it. Fixes `ReferenceError: wagtailConfig is not defined` and `initDateChooser is not defined` (date-time-chooser.js throws before defining it when wagtailConfig is missing).
+- **Phase G (done):** **common.js** is loaded **before** core.js and vendor.js (still before wagtailadmin.js) so the webpack runtime exists for all bundles. Can fix `Cannot read properties of undefined (reading 'register')` in sidebar.js if the provider depends on a bundle that needed the runtime.
+- **addEventListener on null** in `wagtailadmin.js`: The script may expect a DOM node that does not exist on some pages. We do not override `wagtailadmin/skeleton.html`. If this remains: (1) confirm `#wagtail` or the main app container exists when the script runs; (2) check for a Wagtail upgrade or skeleton change; (3) it may need a null-check in Wagtail. The wagtailConfig and common.js fixes often allow the rest of the bundle to run so this line is no longer reached.
+
+---
+
 ## Runbook: If admin is unreadable after deploy
 
 1. **Build:** Check Render (or your build) logs for `✅ Wagtail admin CSS` and `✅ Wagtail admin common.js`. If either shows `❌ NOT found`, fix collectstatic/STATICFILES_FINDERS/S3 and redeploy.
@@ -105,6 +114,9 @@ Our `admin_base.html` overrides Wagtail’s default. Even if it matches today, i
 4. **CDN:** If you use CloudFront (or similar), create an invalidation for `/wagtailadmin/*`, then hard-refresh the admin (Cmd+Shift+R / Ctrl+Shift+R).
 5. **JS order:** View page source and confirm `common.js` appears before `wagtailadmin.js`. If not, the `admin_base.html` override may have been reverted or changed.
 6. **Console:** No `webpackJsonp is not defined`. If present, `common.js` is missing, 404, or loads after `wagtailadmin.js`.
+7. **Console:** No `wagtailConfig is not defined`. If present, the inline bootstrap after `#wagtail-config` may be missing or the `#wagtail-config` script is absent; check `admin_base.html`.
+8. **Console:** No `Cannot read properties of undefined (reading 'register')` (sidebar). Usually fixed by Phase G (common.js before core, wagtailConfig bootstrap). If it persists, a bundle may expect a different load order.
+9. **Console:** No `addEventListener` on null (wagtailadmin.js). If it remains after 7–8, a DOM node Wagtail expects may be missing; check skeleton and that `#wagtail` (or the main app container) exists when the script runs.
 
 ---
 
