@@ -582,7 +582,9 @@
             },
             _initClicks: function () {
                 var _ = this;
-                $(document).on('click', '.result_item a', function(e) {
+                // Only the main title link (direct child a) opens the detail panel; preventDefault there.
+                // CTA links (church page, get directions) and other in-panel links must navigate normally.
+                $(document).on('click', '.result_item > a', function(e) {
                     e.preventDefault();
                     var templateItem = $(this).tmplItem();
                     if($.isEmptyObject(templateItem.data) === false)
