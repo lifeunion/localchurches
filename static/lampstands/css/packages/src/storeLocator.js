@@ -978,12 +978,14 @@
                         if (!d.trimmed_address && d.meeting_address) {
                             d.trimmed_address = encodeURIComponent(String(d.meeting_address).trim());
                         }
-                        var rendered = $listTmpl.tmpl(d);
+                        var rendered = $listTmpl.tmpl([d]);
                         $detail.append($('<a href="#" class="map_details_close" style="display:block;margin-bottom:8px;">× Close</a>'));
-                        if (rendered && typeof rendered.appendTo === 'function') {
-                            rendered.appendTo($detail);
-                        } else {
+                        if (rendered && rendered.length) {
                             $detail.append(rendered);
+                        } else {
+                            var addr = (data.meeting_address || '');
+                            var html = '<div class="result_item_detail" style="padding:10px 20px;"><h3>' + (data.locality_name || '') + '</h3><p><b>Address</b>: ' + addr + '</p><p><b>Phone</b>: ' + (data.locality_phone_number || '') + '</p><p><b>E-Mail</b>: ' + (data.locality_email || '') + '</p>' + (data.url ? '<a class="label label-success label-map" style="color:white;" href="' + data.url + '">church page</a> ' : '') + (addr ? '<a class="label label-danger label-map" style="color:white;" href="https://maps.google.com/?saddr=Current%20Location&daddr=' + encodeURIComponent(addr.trim()) + '">get directions</a>' : '') + '</div>';
+                            $detail.append(html);
                         }
                     }
                 }
