@@ -3,12 +3,12 @@
 ## Status
 
 - **Phase 1 (done):** Project `static/wagtailadmin/` removed. Admin assets come from the `wagtail` package only.
-- **Phase A (done):** `admin_base.html` override removed; Wagtail default is used.
+- **Phase A (done):** `admin_base.html` override had been removed; Phase C adds a minimal override back.
 - **Phase B (done):** Compressor safeguard: comments in `production.py` that `wagtailadmin` must not be inside any `{% compress %}` block (django-compressor has no `COMPRESS_EXCLUDE`; the safeguard is documentation).
 - **Phase D (done):** `build.sh` verifies `wagtailadmin/css/core.css` in the S3 bucket when S3 is used, and in `STATIC_ROOT` when using WhiteNoise.
 - **Phase E (done):** CDN invalidation and hard-refresh note added below (Root cause 6).
-- **Phase C:** Only if 404 on `core.css` continues after A+B+D+deploy: add minimal `admin_base.html` override with `{% static 'wagtailadmin/css/core.css' %}`.
-- **Current:** Deploy and verify; if admin CSS still 404s, run Phase C.
+- **Phase C (done):** `core.css` returned 200 but styles were not applied (likely `versioned_static` URL or S3 Content-Type). Added `lampstands/core/templates/wagtailadmin/admin_base.html` that uses `{% static 'wagtailadmin/css/core.css' %}` (and `{% static %}` for favicon); JS still uses `{% versioned_static %}`. Extends `wagtailadmin/skeleton.html` and defines `css`, `branding_favicon`, `js` blocks.
+- **Current:** Deploy and verify. If still broken: (1) Open the `core.css` URL in a new tab and check the response is real CSS and `Content-Type: text/css`; (2) Invalidate CDN for `wagtailadmin/*` and hard-refresh.
 
 ---
 
@@ -84,6 +84,13 @@ Our `admin_base.html` overrides Wagtail’s default. Even if it matches today, i
 2. DevTools → Network: `wagtailadmin/css/core.css` → status 200, size > 0.
 3. Visually: sidebar, header, forms, and modals look correct (no obviously missing or overridden Wagtail styles).
 4. If using S3: build logs show that `core.css` was found in the bucket (or in collectstatic output when writing to S3).
+
+## If core.css is 200 but the page is still unstyled
+
+1. **Check the response**: Open the `core.css` URL directly (from the page’s `<link href="...">`). The body must be CSS (starts with `/*` or selectors), not HTML. The response headers should include `Content-Type: text/css`. If it’s HTML or `Content-Type` is wrong, the browser won’t apply it as CSS.
+2. **Phase C**: Use `{% static 'wagtailadmin/css/core.css' %}` instead of `{% versioned_static %}` (done in `admin_base.html` override) so the URL has no `?v=hash`; that can avoid S3/CDN serving the wrong object for versioned URLs.
+3. **CDN**: Invalidate `wagtailadmin/*` and do a hard refresh (Cmd+Shift+R / Ctrl+Shift+R).
+4. **CSP**: If you use `Content-Security-Policy`, ensure `style-src` includes the static origin (e.g. your S3/CloudFront domain) so the browser can load the stylesheet.
 
 ---
 
