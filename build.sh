@@ -84,10 +84,9 @@ python manage.py fix_lampstandsimage || {
 }
 
 # Ensure wagtailcore_referenceindex exists (Wagtail 6 page editor "Usage" panel)
+# Must succeed or build fails (no silent deploy without the table).
 echo "Checking for wagtailcore_referenceindex table..."
-python manage.py fix_referenceindex || {
-    echo "Warning: Could not fix referenceindex, but continuing..."
-}
+python manage.py fix_referenceindex
 
 # Verify migrations completed successfully
 echo "Verifying migrations completed..."
