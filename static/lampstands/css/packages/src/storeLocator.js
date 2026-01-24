@@ -7,9 +7,10 @@
 
 	"use strict";
 
-		// Create the defaults once
+		// Create the defaults via a function so google.maps is only referenced after the Maps API has loaded.
 		var pluginName = "storeLocator",
-			defaults = {
+			getDefaults = function() {
+				return {
                 remote: null,
                 height: null,
                 defaultLocation: null,
@@ -165,13 +166,14 @@
                 onUpdateDetail: function() {},
                 onUpdateList: function(){},
                 onBeforeClickMarker: function() {}
+				};
 			};
 
 		// The actual plugin constructor
 		function StoreLocator ( element, options ) {
 			this.element = element;
 
-			this.settings = $.extend( true, defaults, options );
+			this.settings = $.extend( true, getDefaults(), options );
 			this._name = pluginName;
             this.markers = [];
             this._markers = {};
