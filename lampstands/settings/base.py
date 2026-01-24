@@ -193,6 +193,12 @@ WAGTAILIMAGES_IMAGE_MODEL = 'lampstands.LampstandsImage'
 
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyA4MAVqADcBv3nSIqd8y7RZWF9kmcVB6XQ'
 
+# Map ID for Advanced Markers (removes google.maps.Marker deprecation).
+# DEMO_MAP_ID works for testing; for production create one in Google Cloud
+# Console → Google Maps Platform → Map Management. Set to '' to fall back to
+# classic (deprecated) Marker.
+GOOGLE_MAPS_MAP_ID = os.environ.get('GOOGLE_MAPS_MAP_ID', 'DEMO_MAP_ID')
+
 # Wagtail uses Draftail as the default rich text editor (no configuration needed)
 
 REST_FRAMEWORK = {

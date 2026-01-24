@@ -233,6 +233,8 @@
                         { breakpoint: 480, settings: { mapHeight: 600, listHeight: 600 } }
                     ],
                     mapOptions: {
+                        {% get_google_map_id as map_id %}
+                        {% if map_id %}mapId: "{{ map_id }}",{% endif %}
                         mapTypeControl: false,
                         zoom: {{zoom_deflevel}},
                         zoomControlOptions: { position: google.maps.ControlPosition.RIGHT_TOP },
@@ -289,7 +291,7 @@
         });
     };
 </script>
-<script async defer src="{{self.google_url_js}}{{self.google_key_js}}&libraries=places,geometry&loading=async&callback=initMapPage"></script>
+<script async defer src="{{self.google_url_js}}{{self.google_key_js}}&libraries=places,geometry,marker&loading=async&callback=initMapPage"></script>
 <script id="mapListEntryTemplate" type="text/x-jQuery-tmpl">
 <div class="result_item" data-id="${id}">
     <a href="${url}"><h3>${locality_name}</h3></a>

@@ -500,7 +500,9 @@
                 }, this));
 			},
 			_initMap: function( ) {
-                this.map = new google.maps.Map( $(this.element)[0],this.settings.mapOptions);
+                var mo = Object.assign({}, this.settings.mapOptions);
+                if (!mo.mapId) delete mo.mapId;
+                this.map = new google.maps.Map($(this.element)[0], mo);
 			},
             _initMarker: function( ) {
                 this._createMarkers();
@@ -748,13 +750,26 @@
                         markerIcon = this.settings.markerOptions.markerIcon;
                     }
                     var latLng = new google.maps.LatLng(data.location.latitude, data.location.longitude);
-                    var marker = new google.maps.Marker({
-                        position: latLng,
-                        map: this.map,
-                        icon: markerIcon,
-                        draggable: this.settings.markerOptions.draggable,
-                        itemId: data.id,
-                    });
+                    var marker;
+                    if (this.settings.mapOptions.mapId && google.maps.marker && google.maps.marker.AdvancedMarkerElement) {
+                        marker = new google.maps.marker.AdvancedMarkerElement({
+                            map: this.map,
+                            position: latLng,
+                            title: data.locality_name || ''
+                        });
+                        marker.itemId = data.id;
+                        if (!marker.getPosition && marker.position) {
+                            marker.getPosition = function() { return marker.position; };
+                        }
+                    } else {
+                        marker = new google.maps.Marker({
+                            position: latLng,
+                            map: this.map,
+                            icon: markerIcon,
+                            draggable: this.settings.markerOptions.draggable,
+                            itemId: data.id,
+                        });
+                    }
 
                     this.infowindow = new google.maps.InfoWindow();
                     var _map = this.map;

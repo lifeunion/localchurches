@@ -19,6 +19,12 @@ def get_googe_maps_key():
 
 
 @register.simple_tag
+def get_google_map_id():
+    """Return GOOGLE_MAPS_MAP_ID for Advanced Markers (avoids Marker deprecation)."""
+    return getattr(settings, 'GOOGLE_MAPS_MAP_ID', '')
+
+
+@register.simple_tag
 def get_next_sibling_by_order(page):
     sibling = page.get_next_siblings().live().first()
 
