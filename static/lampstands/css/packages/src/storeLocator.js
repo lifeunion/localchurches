@@ -500,9 +500,7 @@
                 }, this));
 			},
 			_initMap: function( ) {
-                var mo = Object.assign({}, this.settings.mapOptions);
-                if (!mo.mapId) delete mo.mapId;
-                this.map = new google.maps.Map($(this.element)[0], mo);
+                this.map = new google.maps.Map( $(this.element)[0],this.settings.mapOptions);
 			},
             _initMarker: function( ) {
                 this._createMarkers();
@@ -750,26 +748,13 @@
                         markerIcon = this.settings.markerOptions.markerIcon;
                     }
                     var latLng = new google.maps.LatLng(data.location.latitude, data.location.longitude);
-                    var marker;
-                    if (this.settings.mapOptions.mapId && google.maps.marker && google.maps.marker.AdvancedMarkerElement) {
-                        marker = new google.maps.marker.AdvancedMarkerElement({
-                            map: this.map,
-                            position: latLng,
-                            title: data.locality_name || ''
-                        });
-                        marker.itemId = data.id;
-                        if (!marker.getPosition && marker.position) {
-                            marker.getPosition = function() { return marker.position; };
-                        }
-                    } else {
-                        marker = new google.maps.Marker({
-                            position: latLng,
-                            map: this.map,
-                            icon: markerIcon,
-                            draggable: this.settings.markerOptions.draggable,
-                            itemId: data.id,
-                        });
-                    }
+                    var marker = new google.maps.Marker({
+                        position: latLng,
+                        map: this.map,
+                        icon: markerIcon,
+                        draggable: this.settings.markerOptions.draggable,
+                        itemId: data.id,
+                    });
 
                     this.infowindow = new google.maps.InfoWindow();
                     var _map = this.map;
@@ -860,8 +845,7 @@
 
                 for(var i = 0; i < this.markers.length; i++)
                 {
-                    var pos = this.markers[i].getPosition ? this.markers[i].getPosition() : this.markers[i].position;
-                    if (pos && this.map.getBounds().contains(pos))
+                    if (this.map.getBounds().contains(this.markers[i].position))
                     {
                         this.viewPortMarkers[i] = this.markers[i].itemId;
                     }
@@ -970,23 +954,6 @@
                         rendered.appendTo($detail);
                     } else {
                         $detail.append(rendered);
-                    }
-                } else {
-                    var $listTmpl = $("#" + this.settings.templates.list);
-                    if ($listTmpl.length) {
-                        var d = $.extend({}, data);
-                        if (!d.trimmed_address && d.meeting_address) {
-                            d.trimmed_address = encodeURIComponent(String(d.meeting_address).trim());
-                        }
-                        var rendered = $listTmpl.tmpl([d]);
-                        $detail.append($('<a href="#" class="map_details_close" style="display:block;margin-bottom:8px;">× Close</a>'));
-                        if (rendered && rendered.length) {
-                            $detail.append(rendered);
-                        } else {
-                            var addr = (data.meeting_address || '');
-                            var html = '<div class="result_item_detail" style="padding:10px 20px;"><h3>' + (data.locality_name || '') + '</h3><p><b>Address</b>: ' + addr + '</p><p><b>Phone</b>: ' + (data.locality_phone_number || '') + '</p><p><b>E-Mail</b>: ' + (data.locality_email || '') + '</p>' + (data.url ? '<a class="label label-success label-map" style="color:white;" href="' + data.url + '">church page</a> ' : '') + (addr ? '<a class="label label-danger label-map" style="color:white;" href="https://maps.google.com/?saddr=Current%20Location&daddr=' + encodeURIComponent(addr.trim()) + '">get directions</a>' : '') + '</div>';
-                            $detail.append(html);
-                        }
                     }
                 }
                 $(".map_results").addClass("detail_open");
