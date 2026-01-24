@@ -2,6 +2,8 @@
 {% load i18n wagtailadmin_tags static %}
 
 {% block css %}
+    {# Fallback if core.css fails to load (404, CDN, wrong Content-Type): keep text readable. #}
+    <style>body{font-family:system-ui,-apple-system,sans-serif;background:#f6f6f6;color:#333;}</style>
     {# Use {% static %} instead of {% versioned_static %} to avoid S3/CDN serving wrong Content-Type or body for ?v=hash URLs. #}
     <link rel="stylesheet" href="{% static 'wagtailadmin/css/core.css' %}">
 
@@ -26,6 +28,8 @@
     <script src="{% url 'wagtailadmin_javascript_catalog' %}"></script>
     <script src="{% versioned_static 'wagtailadmin/js/core.js' %}"></script>
     <script src="{% versioned_static 'wagtailadmin/js/vendor.js' %}"></script>
+    {# webpack runtime: must load before wagtailadmin.js (defines webpackJsonp) #}
+    <script src="{% versioned_static 'wagtailadmin/js/common.js' %}"></script>
     <script src="{% versioned_static 'wagtailadmin/js/wagtailadmin.js' %}"></script>
     <script src="{% versioned_static 'wagtailadmin/js/sidebar.js' %}"></script>
     <script src="{% versioned_static 'wagtailadmin/js/modal-workflow.js' %}"></script>
