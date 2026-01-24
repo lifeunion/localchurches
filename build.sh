@@ -83,6 +83,12 @@ python manage.py fix_lampstandsimage || {
     echo "Warning: Could not fix lampstandsimage columns, but continuing..."
 }
 
+# Ensure wagtailcore_referenceindex exists (Wagtail 6 page editor "Usage" panel)
+echo "Checking for wagtailcore_referenceindex table..."
+python manage.py fix_referenceindex || {
+    echo "Warning: Could not fix referenceindex, but continuing..."
+}
+
 # Verify migrations completed successfully
 echo "Verifying migrations completed..."
 python manage.py showmigrations --list | grep -E "\[ \]" && {
