@@ -1462,6 +1462,20 @@ class HistoryIndexPage(Page):
     ]
 
 
+# Organizations index page (stub for legacy "Organizations Listing" pages;
+# model was removed from codebase but pages still exist in DB)
+class OrgIndexPage(Page):
+    intro = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name = "Organizations listing"
+
+    content_panels = [
+        FieldPanel("title", classname="full title"),
+        FieldPanel("intro", classname="full"),
+    ]
+
+
 # history page
 class HistoryPageRelatedLink(Orderable, RelatedLink):
     page = ParentalKey('lampstands.HistoryPage', related_name='related_links', on_delete=models.CASCADE)
