@@ -52,6 +52,8 @@ INSTALLED_APPS = [
 
     # wagtail-modeladmin (external package for Wagtail 6.x)
     'wagtail_modeladmin',
+    # wagtail-geo-widget: map widget for position/coordinates in admin (Leaflet/OSM)
+    'wagtailgeowidget',
 
     'modelcluster',
     'taggit',
@@ -192,6 +194,10 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 WAGTAILIMAGES_IMAGE_MODEL = 'lampstands.LampstandsImage'
 
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyA4MAVqADcBv3nSIqd8y7RZWF9kmcVB6XQ'
+
+# wagtailgeowidget (map widget for position/coordinates in admin)
+# Default map center when no position is set; uses Leaflet/OSM by default (no API key required)
+GEO_WIDGET_DEFAULT_LOCATION = {'lat': 39.0, 'lng': -98.0}
 
 # Wagtail uses Draftail as the default rich text editor (no configuration needed)
 

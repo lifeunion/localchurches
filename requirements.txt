@@ -40,6 +40,7 @@ sentry-sdk==2.20.0
 
 # Geo and maps
 geopy==2.4.1
+wagtailgeowidget>=9.0
 
 # Django compressor dependencies
 django-libsass==0.9
