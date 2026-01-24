@@ -2,8 +2,10 @@ from django import forms
 from django.core.mail import EmailMessage
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import models
-from django.db.models.signals import pre_delete
+from django.db.models.signals import post_delete, post_save, pre_delete
 from django.dispatch import receiver
+from django.core.cache import cache
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.utils.functional import cached_property
 from django.views.decorators.vary import vary_on_headers
@@ -1054,16 +1056,31 @@ class ChurchIndexPage(Page):
         return json_locality_url
 
     def church_posts(self):
-        church_posts = ChurchPage.objects.filter(
+        return ChurchPage.objects.filter(
             live=True,
             path__startswith=self.path
+        ).only(
+            'id', 'slug', 'locality_name', 'meeting_address',
+            'locality_state_or_province', 'locality_country',
+            'locality_phone_number', 'locality_email', 'locality_web',
+            'locality_contact_brother_1', 'locality_contact_brother_1_phone',
+            'locality_contact_brother_2', 'locality_contact_brother_2_phone',
+            'locality_contact_brother_3', 'locality_contact_brother_3_phone',
+            'locality_contact_brother_4', 'locality_contact_brother_4_phone',
         )
-        return church_posts
 
     def serve(self, request):
-        church_posts = self.church_posts()
-
         tag = request.GET.get('tag')
+
+        if not is_ajax(request):
+            cache_key = 'church_index_html_%s' % (tag or 'all')
+            cached = cache.get(cache_key)
+            if cached is not None:
+                r = HttpResponse(cached, content_type='text/html; charset=utf-8')
+                r['Cache-Control'] = 'public, max-age=600'
+                return r
+
+        church_posts = self.church_posts()
         if tag:
             church_posts = church_posts.filter(tags__tag__slug=tag)
 
@@ -1072,11 +1089,14 @@ class ChurchIndexPage(Page):
                 'self': self,
                 'church_posts': church_posts,
             })
-        else:
-            return render(request, self.template, {
-                'self': self,
-                'church_posts': church_posts,
-            })
+
+        response = render(request, self.template, {
+            'self': self,
+            'church_posts': church_posts,
+        })
+        response['Cache-Control'] = 'public, max-age=600'
+        cache.set(cache_key, response.content, 600)
+        return response
 
     @property
     def churches(self):
@@ -1227,6 +1247,12 @@ class ChurchPage(Page):
         FieldPanel('locality_contact_brother_6'),
         FieldPanel('locality_contact_brother_6_phone'),
     ]
+
+
+@receiver(post_save, sender=ChurchPage)
+@receiver(post_delete, sender=ChurchPage)
+def _invalidate_church_index_cache(sender, **kwargs):
+    cache.delete('church_index_html_all')
 
 
 # recognition index page

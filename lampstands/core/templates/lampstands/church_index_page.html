@@ -82,7 +82,7 @@
                 {% for branch in church_posts %} 
                     <tr>
                         <td></td>
-                        <td><a href="{{branch.url}}">{{branch.locality_name}}</a></td>
+                        <td><a href="/churches/{{ branch.slug }}/">{{branch.locality_name}}</a></td>
                         <td>{{branch.meeting_address}}</td>
                         <td>{{branch.locality_state_or_province}}</td>
                         <td>{{branch.locality_country.name}}</td>
