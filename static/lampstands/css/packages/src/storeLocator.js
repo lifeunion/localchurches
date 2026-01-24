@@ -748,13 +748,28 @@
                         markerIcon = this.settings.markerOptions.markerIcon;
                     }
                     var latLng = new google.maps.LatLng(data.location.latitude, data.location.longitude);
-                    var marker = new google.maps.Marker({
-                        position: latLng,
-                        map: this.map,
-                        icon: markerIcon,
-                        draggable: this.settings.markerOptions.draggable,
-                        itemId: data.id,
-                    });
+                    var marker;
+                    var useAdvanced = !!(this.settings.mapOptions && this.settings.mapOptions.mapId) &&
+                        (typeof google.maps.marker !== 'undefined' && google.maps.marker.AdvancedMarkerElement);
+                    if (useAdvanced) {
+                        marker = new google.maps.marker.AdvancedMarkerElement({
+                            map: this.map,
+                            position: latLng,
+                            title: data.locality_name || '',
+                            gmpIcon: markerIcon ? { url: markerIcon } : undefined
+                        });
+                        marker.getPosition = function() { return marker.position; };
+                        marker.setMap = function(m) { marker.map = m; };
+                        marker.itemId = data.id;
+                    } else {
+                        marker = new google.maps.Marker({
+                            position: latLng,
+                            map: this.map,
+                            icon: markerIcon,
+                            draggable: this.settings.markerOptions.draggable,
+                            itemId: data.id,
+                        });
+                    }
 
                     this.infowindow = new google.maps.InfoWindow();
                     var _map = this.map;
