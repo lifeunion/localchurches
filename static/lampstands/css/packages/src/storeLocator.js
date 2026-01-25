@@ -888,6 +888,7 @@
                 }
 
                 $(".map_listings_results").empty().append($("#" + this.settings.templates.list).tmpl(this._showData));
+                this._removeEmptyContactRows($(".map_listings_results"));
                 this._updateCount();
                 var callback = this.settings.onUpdateList;
                 if ($.isFunction(callback)) {
@@ -935,6 +936,7 @@
                 this.itemCount = listItems.length;
                 this._updateCount();
                 $(".map_listings_results").empty().append($("#" + this.settings.templates.list).tmpl(listItems));
+                this._removeEmptyContactRows($(".map_listings_results"));
 
                 var callback = this.settings.onUpdateList;
                 if ($.isFunction(callback)) {
@@ -944,6 +946,14 @@
             },
             _sortByDistance: function(a,b) {
                return (a.distance - b.distance)
+            },
+            _removeEmptyContactRows: function($root) {
+                $root.find('.info ul li[data-field]').each(function() {
+                    var v = $(this).attr('data-value');
+                    var s = $.trim(String(v != null ? v : ''));
+                    var emptyLike = ['null', 'undefined', 'none', '-', 'n.a.', 'n/a'];
+                    if (!s || emptyLike.indexOf(s.toLowerCase()) !== -1) $(this).remove();
+                });
             },
             _updateDetail: function(data) {
                 var $detail = $(".map_detail").empty();
@@ -955,12 +965,7 @@
                     } else {
                         $detail.append(rendered);
                     }
-                    $detail.find('.info ul li[data-field]').each(function() {
-                        var v = $(this).attr('data-value');
-                        var s = $.trim(String(v != null ? v : ''));
-                        var emptyLike = ['null', 'undefined', 'none', '-', 'n.a.', 'n/a'];
-                        if (!s || emptyLike.indexOf(s.toLowerCase()) !== -1) $(this).remove();
-                    });
+                    this._removeEmptyContactRows($detail);
                 }
                 $(".map_results").addClass("detail_open");
                 if(this.settings.detailsOptions.panorama.showPanorama)
