@@ -2,6 +2,14 @@
 # exit on error
 set -o errexit
 
+# Use staging for non-master branches: static→WhiteNoise only, lcstatic S3 never touched.
+if [ "${RENDER_GIT_BRANCH:-master}" = "master" ]; then
+  export DJANGO_SETTINGS_MODULE=lampstands.settings.production
+else
+  export DJANGO_SETTINGS_MODULE=lampstands.settings.staging
+fi
+echo "DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE} (RENDER_GIT_BRANCH=${RENDER_GIT_BRANCH:-master})"
+
 pip install -r requirements.txt
 
 # Run database migrations

@@ -23,10 +23,12 @@ services:
     # For production, consider: standard or pro
     # For testing, use: starter (free tier available)
     buildCommand: ./build.sh
-    startCommand: gunicorn lampstands.wsgi --log-file -
+    # start.sh sets DJANGO_SETTINGS_MODULE: production on master, staging on other branches.
+    # Staging uses WhiteNoise only so the lcstatic S3 bucket is never modified.
+    startCommand: bash scripts/start.sh
     healthCheckPath: /
     envVars:
-      # Django Settings
+      # Django Settings (overridden by scripts/start.sh based on RENDER_GIT_BRANCH)
       - key: DJANGO_SETTINGS_MODULE
         value: lampstands.settings.production
       
@@ -98,3 +100,8 @@ services:
 # 3. Update ALLOWED_HOSTS with your actual domain(s)
 # 4. Update WAGTAILADMIN_BASE_URL with your actual domain
 # 5. Link the database if not auto-linked (should be automatic with this config)
+#
+# Branch-based settings (build.sh + scripts/start.sh):
+# - master → lampstands.settings.production (S3 lcstatic used for static if AWS_* set)
+# - any other branch → lampstands.settings.staging (WhiteNoise only; lcstatic never modified)
+# For preview/staging deploys, S3 env vars are optional; staging ignores them.
