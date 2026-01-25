@@ -59,6 +59,27 @@ def get_site_root(context):
     return context['request'].site.root_page
 
 
+@register.simple_tag(takes_context=True)
+def contact_url(context):
+    """
+    Return the relative URL of the Contact page (slug 'contact') for the current site.
+    Domain-agnostic: always a path like /contact/ so it works on any domain.
+    Falls back to /contact/ if the page is not found.
+    """
+    from wagtail.models import Page
+
+    request = context.get('request')
+    if not request or not getattr(request, 'site', None):
+        return '/contact/'
+    root = request.site.root_page
+    if not root:
+        return '/contact/'
+    page = Page.objects.live().descendant_of(root, inclusive=True).filter(slug='contact').first()
+    if page:
+        return page.relative_url(current_site=request.site)
+    return '/contact/'
+
+
 @register.filter
 def content_type(value):
     # marketing landing page should behave like the homepage in templates
