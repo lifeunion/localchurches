@@ -125,6 +125,7 @@ span.stars span { background-position: 0 0; }
   color-scheme: light;
   background-color: #ffffff;
   color: #1a1a1a;
+  overflow: visible !important; /* .map_btn_custom sets overflow:hidden and clips the list */
 }
 #pac-input::part(prediction-list) {
   background-color: #ffffff !important;

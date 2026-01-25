@@ -269,6 +269,7 @@
                     var autocompleteContainer = document.createElement('div');
                     autocompleteContainer.style.margin = '8px';
                     autocompleteContainer.style.width = '33%';
+                    autocompleteContainer.style.overflow = 'visible';
 
                     (function initPlaceAutocomplete() {
                         if (typeof google.maps === 'undefined' || typeof google.maps.importLibrary !== 'function') {
@@ -338,6 +339,9 @@
                             });
                             autocompleteContainer.index = _t.settings.autocompleteOptions.index;
                             _t.map.controls[_t.settings.autocompleteOptions.position].push(autocompleteContainer);
+                            var p = autocompleteContainer.parentElement;
+                            if (p) { p.style.overflow = 'visible'; p = p.parentElement; }
+                            if (p) p.style.overflow = 'visible';
                         }).catch(function() {
                             var msg = document.createElement('span');
                             msg.textContent = 'Autocomplete could not be loaded.';
