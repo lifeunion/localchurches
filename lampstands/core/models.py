@@ -508,7 +508,7 @@ class PrivacyPageContentBlock(Orderable, ContentBlock):
 
 class PrivacyPage(Page):
     heading = models.CharField(max_length=255, blank=True)
-    content = models.CharField(max_length=255)
+    content = StreamField([('wholestory', StoryBlock())], use_json_field=True, blank=True)
     show_in_play_menu = models.BooleanField(default=False)
     search_fields = Page.search_fields + [
         index.SearchField('content'),
