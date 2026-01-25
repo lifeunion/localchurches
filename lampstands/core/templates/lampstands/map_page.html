@@ -22,8 +22,6 @@
     </script>
     <title>Local Churches</title>
 </head>
-<body>
-
 <body class="content-title-center">
 <div class="page-wrapper">
     
@@ -131,7 +129,7 @@
     <div class="map_results">
 
         <div class="map_detail" x-data>
-            <template x-if="$store.mapStore.detail">
+            <template x-if="$store.mapStore && $store.mapStore.detail">
                 <div class="result_item_detail">
                     <a href="#" class="map_details_close" aria-label="Close"><img src="{% static 'lampstands/css/packages/src/close.png' %}" alt=""></a>
                     <h3><a :href="$store.mapStore.detail.url" x-text="$store.mapStore.detail.locality_name"></a></h3>
@@ -151,12 +149,12 @@
             </template>
         </div>
 
-        <div class="map_listings">
+        <div class="map_listings" x-data>
             <div class="map_listings_headline">
-                <h2>Results<span class="map_listings_number" x-text="'(' + ($store.mapStore.itemCount || 0) + ')'"></span></h2>
+                <h2>Results<span class="map_listings_number" x-text="'(' + (($store.mapStore && $store.mapStore.itemCount) || 0) + ')'"></span></h2>
             </div>
-            <div class="map_listings_results" x-data>
-                <template x-for="item in $store.mapStore.listItems" :key="item.id">
+            <div class="map_listings_results">
+                <template x-for="item in (($store.mapStore && $store.mapStore.listItems) || [])" :key="item.id">
                     <div class="result_item" :data-id="item.id">
                         <a :href="item.url"><h3 x-text="item.locality_name"></h3></a>
                         <div class="result_item_info">
