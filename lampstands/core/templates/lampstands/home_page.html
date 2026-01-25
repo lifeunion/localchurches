@@ -91,12 +91,21 @@
 <script>
   window.initHomePageGeocomplete = function() {
     $(function(){
+      var searchButtonClicked = false;
       $(".form-control").geocomplete({
         details: ".details",
         detailsScope: '.location',
         types: ["(regions)"],
       });
+      $(".form-control").on("geocode:result", function() {
+        if (searchButtonClicked) {
+          searchButtonClicked = false;
+          return;
+        }
+        $("#searchphrase").closest("form").submit();
+      });
       $(".find").click(function(){
+        searchButtonClicked = true;
         $(this).parents(".location").find(".form-control").trigger("geocode");
       });
       $("#searchphrase").on("keydown", function(e) {
