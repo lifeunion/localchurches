@@ -86,22 +86,23 @@
 
 {% endblock %}
 {% block extra_js %}
-<script src="{{self.google_url_js}}{{self.google_key_js}}&libraries=places,geometry&loading=async" type="text/javascript"></script>
-<script type="text/javascript" src="{% static 'js/villareal/jquery1.7.1googapi.min.js' %}"></script>  
-<script type="text/javascript" src="{% static 'js/villareal/jquery.geocomplete.min.js' %}"></script>    
-    <script>
-      $(function(){
-        $(".form-control").geocomplete({
-          details: ".details",
-          detailsScope: '.location',
-          types: ["(regions)"],
-        });
-
-        $(".find").click(function(){
-          $(this).parents(".location").find(".form-control").trigger("geocode");
-        });
+<script type="text/javascript" src="{% static 'js/villareal/jquery1.7.1googapi.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/villareal/jquery.geocomplete.min.js' %}"></script>
+<script>
+  window.initHomePageGeocomplete = function() {
+    $(function(){
+      $(".form-control").geocomplete({
+        details: ".details",
+        detailsScope: '.location',
+        types: ["(regions)"],
       });
-    </script>
+      $(".find").click(function(){
+        $(this).parents(".location").find(".form-control").trigger("geocode");
+      });
+    });
+  };
+</script>
+<script src="{{self.google_url_js}}{{self.google_key_js}}&libraries=places,geometry&loading=async&callback=initHomePageGeocomplete" type="text/javascript"></script>
 <!--
     <script>
         document.querySelector("#searchphrase").addEventListener("keyup", function(event) {
