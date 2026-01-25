@@ -254,3 +254,10 @@ for key, label in checks:
 if not ok:
     sys.exit(1)
 " 2>&1
+
+# Optional: warm CloudFront edge caches after collectstatic (only if CLOUDFRONT_STATIC_URL is set)
+if [ -n "${CLOUDFRONT_STATIC_URL:-}" ] && [ -f ./scripts/warm_cloudfront.sh ]; then
+    echo ""
+    echo "Warming CloudFront caches..."
+    bash ./scripts/warm_cloudfront.sh || echo "Warning: CloudFront warming failed, continuing."
+fi

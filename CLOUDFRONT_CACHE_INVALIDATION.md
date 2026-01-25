@@ -1,5 +1,7 @@
 # CloudFront Cache Invalidation Guide
 
+See also: [CLOUDFRONT_WAF_AND_WARMING.md](CLOUDFRONT_WAF_AND_WARMING.md) for WAF setup and cache warming after deploy or invalidation.
+
 ## Quick Methods to Invalidate CloudFront Cache
 
 ### Method 1: AWS Console (Easiest)
