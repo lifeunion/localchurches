@@ -590,7 +590,7 @@
             _initClicks: function () {
                 var _ = this;
                 // Only the main title link (direct child a) opens the detail panel; preventDefault there.
-                // CTA links (church page, get directions) and other in-panel links must navigate normally.
+                // CTA links (more info, get directions) and other in-panel links must navigate normally.
                 $(document).on('click', '.result_item > a', function(e) {
                     e.preventDefault();
                     var templateItem = $(this).tmplItem();
@@ -769,7 +769,7 @@
                     var more_info_link = church_url
                         ? '<a class="label label-success label-map" style="color:white" href="' + church_url + '">more info</a> '
                         : '';
-                    var content = '<div style="margin:0;padding:0;font-size:13px;line-height:1.4">' +
+                    var content = '<div style="margin:-10px 0 0 0;padding:0;font-size:13px;line-height:1.4">' +
                         '<div style="margin:0 0 4px 0;font-weight:bold;font-size:14px">Church in ' + (data.locality_name || '') + '</div>' +
                         (data.meeting_address || '') +
                         '<div style="margin-top:8px">' + more_info_link +
