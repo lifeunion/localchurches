@@ -270,82 +270,72 @@
                     autocompleteContainer.style.margin = '8px';
                     autocompleteContainer.style.width = '33%';
 
-                    var usePlaceElement = (function(){
-                        try {
-                            var el = document.createElement('gmp-place-autocomplete');
-                            return (typeof HTMLUnknownElement !== 'undefined' && el.constructor === HTMLUnknownElement) ? false : true;
-                        } catch(e) { return false; }
-                    })();
-
-                    if (usePlaceElement) {
-                        var pacEl = document.createElement('gmp-place-autocomplete');
-                        pacEl.setAttribute('placeholder', this.settings.autocompleteOptions.placeholder || '');
-                        if (this.settings.autocompleteOptions.types && this.settings.autocompleteOptions.types !== 'all') {
-                            pacEl.setAttribute('included-primary-types', 'locality administrative_area_level_1 administrative_area_level_2');
+                    (function initPlaceAutocomplete() {
+                        if (typeof google.maps === 'undefined' || typeof google.maps.importLibrary !== 'function') {
+                            var msg = document.createElement('span');
+                            msg.textContent = 'Autocomplete unavailable.';
+                            autocompleteContainer.appendChild(msg);
+                            autocompleteContainer.index = _t.settings.autocompleteOptions.index;
+                            _t.map.controls[_t.settings.autocompleteOptions.position].push(autocompleteContainer);
+                            return;
                         }
-                        if (this.settings.autocompleteOptions.country && this.settings.autocompleteOptions.country.toLowerCase() !== 'all') {
-                            pacEl.setAttribute('included-region-codes', this.settings.autocompleteOptions.country.toLowerCase());
-                        }
-                        pacEl.id = 'pac-input';
-                        pacEl.className = this.settings.autocompleteOptions.class || '';
-                        autocompleteContainer.appendChild(pacEl);
-                        pacEl.addEventListener('gmp-placeselect', function(ev) {
-                            var place = ev.place;
-                            if (!place || !place.fetchFields) return;
-                            place.fetchFields({ fields: ['location', 'viewport'] }).then(function() {
-                                if (!place.location) {
-                                    _t._showNotification(_t.settings.autocompleteOptions.errorNotFound || 'Place not found');
-                                    return;
-                                }
-                                var loc = place.location;
-                                var latLng = (loc && (loc.lat && loc.lng)) ? new google.maps.LatLng(loc.lat(), loc.lng()) : (loc ? new google.maps.LatLng(loc.lat, loc.lng) : null);
-                                if (!latLng) return;
-                                if (place.viewport) {
-                                    var v = place.viewport;
-                                    var sw = (v.getSouthWest && v.getSouthWest()) || { lat: function(){ return v.south; }, lng: function(){ return v.west; } };
-                                    var ne = (v.getNorthEast && v.getNorthEast()) || { lat: function(){ return v.north; }, lng: function(){ return v.east; } };
-                                    var combineAuto = (typeof sw.lat === 'function' ? sw.lat() : sw.lat) + ',' + (typeof sw.lng === 'function' ? sw.lng() : sw.lng) + ',' + (typeof ne.lat === 'function' ? ne.lat() : ne.lat) + ',' + (typeof ne.lng === 'function' ? ne.lng() : ne.lng);
-                                    _t.map.setCenter(latLng);
-                                    var automapDim = { height: $(".map_container").height(), width: $(".map_container").width() };
-                                    var finalZoom = _t._getBoundsZoomLevel(combineAuto, automapDim) - 1;
-                                    _t.settings.autocompleteOptions.zoom = finalZoom;
-                                }
-                                _t.map.setCenter(latLng);
-                                _t.map.setZoom(_t.settings.autocompleteOptions.zoom);
-                            }).catch(function() { _t._showNotification(_t.settings.autocompleteOptions.errorNotFound || 'Place not found'); });
-                        });
-                    } else {
-                        var autocompleteInput = document.createElement('input');
-                        autocompleteInput.setAttribute('type', 'text');
-                        autocompleteInput.setAttribute('class', this.settings.autocompleteOptions.class);
-                        autocompleteInput.setAttribute('id', 'pac-input');
-                        autocompleteInput.setAttribute('placeholder', this.settings.autocompleteOptions.placeholder);
-                        autocompleteContainer.appendChild(autocompleteInput);
-                        var options = { types: [this.settings.autocompleteOptions.types] };
-                        if (this.settings.autocompleteOptions.country !== null && this.settings.autocompleteOptions.country.toLowerCase() != 'all') {
-                            options.componentRestrictions = { country: this.settings.autocompleteOptions.country };
-                        }
-                        var autocomplete = new google.maps.places.Autocomplete(autocompleteInput, options);
-                        google.maps.event.addListener(autocomplete, 'place_changed', function () {
-                            var place = this.getPlace();
-                            if (!place || !place.geometry) {
-                                _t._showNotification(_t.settings.autocompleteOptions.errorNotFound);
+                        google.maps.importLibrary('places').then(function(placesLib) {
+                            var PlaceAutocompleteElement = placesLib.PlaceAutocompleteElement || (placesLib.place && placesLib.place.PlaceAutocompleteElement);
+                            if (!PlaceAutocompleteElement) {
+                                var msg = document.createElement('span');
+                                msg.textContent = 'Autocomplete unavailable.';
+                                autocompleteContainer.appendChild(msg);
+                                autocompleteContainer.index = _t.settings.autocompleteOptions.index;
+                                _t.map.controls[_t.settings.autocompleteOptions.position].push(autocompleteContainer);
                                 return;
                             }
-                            var latLng = new google.maps.LatLng(place.geometry.location.lat(), place.geometry.location.lng());
-                            if (place.geometry.viewport) {
-                                var viewAuto = place.geometry.viewport;
-                                var combineAuto = viewAuto.getSouthWest().lat() + ',' + viewAuto.getSouthWest().lng() + ',' + viewAuto.getNorthEast().lat() + ',' + viewAuto.getNorthEast().lng();
-                                _t.map.setCenter(latLng);
-                                var automapDim = { height: $(".map_container").height(), width: $(".map_container").width() };
-                                _t.settings.autocompleteOptions.zoom = _t._getBoundsZoomLevel(combineAuto, automapDim) - 1;
+                            var opts = { placeholder: _t.settings.autocompleteOptions.placeholder || 'Type and select city name here' };
+                            if (_t.settings.autocompleteOptions.types && _t.settings.autocompleteOptions.types !== 'all') {
+                                opts.includedPrimaryTypes = ['locality', 'administrative_area_level_1', 'administrative_area_level_2'];
                             }
-                            _t.map.setZoom(_t.settings.autocompleteOptions.zoom);
+                            if (_t.settings.autocompleteOptions.country && _t.settings.autocompleteOptions.country.toLowerCase() !== 'all') {
+                                opts.includedRegionCodes = _t.settings.autocompleteOptions.country.toLowerCase().split(/[,\s]+/).filter(Boolean);
+                            }
+                            var pacEl = new PlaceAutocompleteElement(opts);
+                            pacEl.id = 'pac-input';
+                            pacEl.className = _t.settings.autocompleteOptions.class || '';
+                            autocompleteContainer.appendChild(pacEl);
+                            pacEl.addEventListener('gmp-select', function(ev) {
+                                var placePrediction = ev.placePrediction;
+                                if (!placePrediction || typeof placePrediction.toPlace !== 'function') return;
+                                var place = placePrediction.toPlace();
+                                place.fetchFields({ fields: ['location', 'viewport'] }).then(function() {
+                                    if (!place.location) {
+                                        _t._showNotification(_t.settings.autocompleteOptions.errorNotFound || 'Place not found');
+                                        return;
+                                    }
+                                    var loc = place.location;
+                                    var latLng = (loc && (typeof loc.lat === 'function' ? loc.lat() : loc.lat) != null) ? new google.maps.LatLng(typeof loc.lat === 'function' ? loc.lat() : loc.lat, typeof loc.lng === 'function' ? loc.lng() : loc.lng) : null;
+                                    if (!latLng) return;
+                                    if (place.viewport) {
+                                        var v = place.viewport;
+                                        var sw = (v.getSouthWest && v.getSouthWest()) || { lat: function(){ return v.south; }, lng: function(){ return v.west; } };
+                                        var ne = (v.getNorthEast && v.getNorthEast()) || { lat: function(){ return v.north; }, lng: function(){ return v.east; } };
+                                        var combineAuto = (typeof sw.lat === 'function' ? sw.lat() : sw.lat) + ',' + (typeof sw.lng === 'function' ? sw.lng() : sw.lng) + ',' + (typeof ne.lat === 'function' ? ne.lat() : ne.lat) + ',' + (typeof ne.lng === 'function' ? ne.lng() : ne.lng);
+                                        _t.map.setCenter(latLng);
+                                        var automapDim = { height: $(".map_container").height(), width: $(".map_container").width() };
+                                        var finalZoom = _t._getBoundsZoomLevel(combineAuto, automapDim) - 1;
+                                        _t.settings.autocompleteOptions.zoom = finalZoom;
+                                    }
+                                    _t.map.setCenter(latLng);
+                                    _t.map.setZoom(_t.settings.autocompleteOptions.zoom);
+                                }).catch(function() { _t._showNotification(_t.settings.autocompleteOptions.errorNotFound || 'Place not found'); });
+                            });
+                            autocompleteContainer.index = _t.settings.autocompleteOptions.index;
+                            _t.map.controls[_t.settings.autocompleteOptions.position].push(autocompleteContainer);
+                        }).catch(function() {
+                            var msg = document.createElement('span');
+                            msg.textContent = 'Autocomplete could not be loaded.';
+                            autocompleteContainer.appendChild(msg);
+                            autocompleteContainer.index = _t.settings.autocompleteOptions.index;
+                            _t.map.controls[_t.settings.autocompleteOptions.position].push(autocompleteContainer);
                         });
-                    }
-
-                    autocompleteContainer.index = this.settings.autocompleteOptions.index;
-                    this.map.controls[this.settings.autocompleteOptions.position].push(autocompleteContainer);
+                    })();
                 }
 
                 if(this.settings.searchOptions.show)
