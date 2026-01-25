@@ -957,8 +957,9 @@
                     }
                     $detail.find('.info ul li[data-field]').each(function() {
                         var v = $(this).attr('data-value');
-                        var s = $.trim(String(v || ''));
-                        if (!s || s.toLowerCase() === 'null' || s.toLowerCase() === 'undefined') $(this).remove();
+                        var s = $.trim(String(v != null ? v : ''));
+                        var emptyLike = ['null', 'undefined', 'none', '-', 'n.a.', 'n/a'];
+                        if (!s || emptyLike.indexOf(s.toLowerCase()) !== -1) $(this).remove();
                     });
                 }
                 $(".map_results").addClass("detail_open");
