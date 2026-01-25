@@ -79,10 +79,19 @@ services:
       
       # reCAPTCHA Configuration
       # Set these in Render dashboard after creating service
+      # IMPORTANT: Add localchurches.onrender.com to the key's allowed domains at
+      # https://www.google.com/recaptcha/admin
       - key: GOOGLE_RECAPTCHA_SITE_KEY
         sync: false  # Must be set manually
       - key: GOOGLE_RECAPTCHA_SECRET_KEY
         sync: false  # Must be set manually
+
+      # Resend (contact form email)
+      # Get API key at https://resend.com/api-keys. From must use a verified domain.
+      - key: RESEND_API_KEY
+        sync: false
+      - key: RESEND_FROM_EMAIL
+        sync: false  # e.g. "Contact <noreply@yourdomain.com>" (must be verified in Resend)
       
       # Google Maps Map ID for Advanced Markers (removes deprecated Marker)
       # DEMO_MAP_ID = Google's built-in ID for testing/production
@@ -96,7 +105,7 @@ services:
 
 # Note: After deploying with this blueprint:
 # 1. Go to Render dashboard → Your web service → Environment
-# 2. Set all the "sync: false" variables manually (SECRET_KEY, AWS keys, SendGrid, reCAPTCHA)
+# 2. Set all the "sync: false" variables manually (SECRET_KEY, AWS keys, SendGrid, reCAPTCHA, Resend)
 # 3. Update ALLOWED_HOSTS with your actual domain(s)
 # 4. Update WAGTAILADMIN_BASE_URL with your actual domain
 # 5. Link the database if not auto-linked (should be automatic with this config)

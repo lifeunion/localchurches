@@ -46,6 +46,9 @@ django-libsass==0.9
 rcssmin==1.1.2
 rjsmin==1.2.2
 
+# Email (Resend for contact form)
+resend>=2.0.0
+
 # Utilities
 beautifulsoup4==4.12.3
 html5lib==1.1

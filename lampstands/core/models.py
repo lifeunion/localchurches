@@ -508,7 +508,7 @@ class PrivacyPageContentBlock(Orderable, ContentBlock):
 
 class PrivacyPage(Page):
     heading = models.CharField(max_length=255, blank=True)
-    content = models.CharField(max_length=255)
+    content = StreamField([('wholestory', StoryBlock())], use_json_field=True, blank=True)
     show_in_play_menu = models.BooleanField(default=False)
     search_fields = Page.search_fields + [
         index.SearchField('content'),
@@ -1666,6 +1666,76 @@ class Contact(WagtailCaptchaEmailForm):
 
     class Meta:
         verbose_name = "Contact Page"
+
+    def send_mail(self, form):
+        """
+        Send contact form submission via Resend (when RESEND_API_KEY is set).
+        Email body includes: name, email, message.
+        Falls back to Wagtail's default (Django email backend) if Resend is not configured.
+        """
+        import html as html_module
+        import logging
+        import os
+
+        to_list = [a.strip() for a in (self.to_address or '').split(',') if a.strip()]
+        if not to_list:
+            return super().send_mail(form)
+
+        resend_api_key = os.environ.get('RESEND_API_KEY')
+        if not resend_api_key:
+            return super().send_mail(form)
+
+        from_addr = os.environ.get('RESEND_FROM_EMAIL') or (self.from_address or '').strip()
+        if not from_addr:
+            logger = logging.getLogger(__name__)
+            logger.warning('Resend: RESEND_FROM_EMAIL or Contact from_address is required. Falling back to Django email.')
+            return super().send_mail(form)
+
+        try:
+            import resend
+            resend.api_key = resend_api_key
+        except ImportError:
+            logging.getLogger(__name__).warning('resend package not installed. Falling back to Django email.')
+            return super().send_mail(form)
+
+        data = form.cleaned_data
+
+        def _find(keys, substrs):
+            for k in keys:
+                if k in data and data[k] not in (None, ''):
+                    return data[k]
+            for key, val in data.items():
+                if val in (None, ''):
+                    continue
+                if any(s in key.lower() for s in substrs):
+                    return val
+            return '—'
+
+        name = _find(['name', 'your_name', 'full_name'], ['name'])
+        email = _find(['email', 'your_email', 'email_address'], ['email'])
+        message = _find(['message', 'body', 'your_message', 'comment'], ['message', 'body', 'comment'])
+
+        def _esc(s):
+            return html_module.escape(str(s))
+
+        body_html = (
+            f'<h3>Contact form submission</h3>'
+            f'<p><b>Name:</b> {_esc(name)}</p>'
+            f'<p><b>Email:</b> {_esc(email)}</p>'
+            f'<p><b>Message:</b></p>'
+            f'<p>{_esc(message).replace(chr(10), "<br>")}</p>'
+        )
+
+        try:
+            resend.Emails.send({
+                'from': from_addr,
+                'to': to_list,
+                'subject': self.subject or 'Contact form submission',
+                'html': body_html,
+            })
+        except Exception as e:
+            logging.getLogger(__name__).exception('Resend send failed: %s', e)
+            super().send_mail(form)
 
     content_panels = [
         FieldPanel('title', classname="full title"),
