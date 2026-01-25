@@ -130,14 +130,49 @@
     
     <div class="map_results">
 
-        <div class="map_detail"></div>
+        <div class="map_detail" x-data>
+            <template x-if="$store.mapStore.detail">
+                <div class="result_item_detail">
+                    <a href="#" class="map_details_close" aria-label="Close"><img src="{% static 'lampstands/css/packages/src/close.png' %}" alt=""></a>
+                    <h3><a :href="$store.mapStore.detail.url" x-text="$store.mapStore.detail.locality_name"></a></h3>
+                    <div class="result_item_detail_info result_item_detail_info-main">
+                        <div class="info">
+                            <ul class="list-unstyled">
+                                <li data-field="address" :data-value="$store.mapStore.detail.meeting_address" x-show="!$store.mapStore.isContactEmpty($store.mapStore.detail.meeting_address)"><b>Address</b>: <span x-text="$store.mapStore.detail.meeting_address"></span></li>
+                                <li data-field="phone" :data-value="$store.mapStore.detail.locality_phone_number" x-show="!$store.mapStore.isContactEmpty($store.mapStore.detail.locality_phone_number)"><b>Phone</b>: <span x-text="$store.mapStore.detail.locality_phone_number"></span></li>
+                                <li data-field="email" :data-value="$store.mapStore.detail.locality_email" x-show="!$store.mapStore.isContactEmpty($store.mapStore.detail.locality_email)"><b>E-Mail</b>: <span x-text="$store.mapStore.detail.locality_email"></span></li>
+                                <li data-field="website" :data-value="$store.mapStore.detail.locality_web" x-show="!$store.mapStore.isContactEmpty($store.mapStore.detail.locality_web)"><b>Website</b>: <a :href="$store.mapStore.detail.locality_web" x-text="$store.mapStore.detail.locality_web"></a></li>
+                            </ul>
+                            <a class="label label-success label-map" :href="$store.mapStore.detail.url">church page</a>
+                            <a class="label label-danger label-map map_direction_trigger" :href="'https://maps.google.com/?saddr=Current%20Location&daddr=' + ($store.mapStore.detail.trimmed_address || encodeURIComponent(($store.mapStore.detail.meeting_address||'').trim()))">get directions</a>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
 
         <div class="map_listings">
             <div class="map_listings_headline">
-                <h2>Results<span class="map_listings_number"></span></h2>
+                <h2>Results<span class="map_listings_number" x-text="'(' + ($store.mapStore.itemCount || 0) + ')'"></span></h2>
             </div>
-            <div class="map_listings_results">
-
+            <div class="map_listings_results" x-data>
+                <template x-for="item in $store.mapStore.listItems" :key="item.id">
+                    <div class="result_item" :data-id="item.id">
+                        <a :href="item.url"><h3 x-text="item.locality_name"></h3></a>
+                        <div class="result_item_info">
+                            <div class="info">
+                                <ul class="list-unstyled">
+                                    <li data-field="address" :data-value="item.meeting_address" x-show="!$store.mapStore.isContactEmpty(item.meeting_address)"><b>Address</b>: <span x-text="item.meeting_address"></span></li>
+                                    <li data-field="phone" :data-value="item.locality_phone_number" x-show="!$store.mapStore.isContactEmpty(item.locality_phone_number)"><b>Phone</b>: <span x-text="item.locality_phone_number"></span></li>
+                                    <li data-field="email" :data-value="item.locality_email" x-show="!$store.mapStore.isContactEmpty(item.locality_email)"><b>E-Mail</b>: <span x-text="item.locality_email"></span></li>
+                                    <li data-field="website" :data-value="item.locality_web" x-show="!$store.mapStore.isContactEmpty(item.locality_web)"><b>Website</b>: <a :href="item.locality_web" x-text="item.locality_web"></a></li>
+                                    <a class="label label-success label-map" style="color:white;" :href="item.url">church page</a>
+                                    <a class="label label-danger label-map map_direction_trigger" style="color:white;" :href="'https://maps.google.com/?saddr=Current%20Location&daddr=' + (item.trimmed_address || encodeURIComponent((item.meeting_address||'').trim()))">get directions</a>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </template>
             </div>
         </div>
     </div>
@@ -198,20 +233,39 @@
 }     
     </script>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+    document.addEventListener('alpine:init', function() {
+        Alpine.store('mapStore', {
+            listItems: [],
+            detail: null,
+            itemCount: 0,
+            isContactEmpty: function(v) {
+                var s = String(v == null ? '' : v).trim();
+                if (!s) return true;
+                return ['null','undefined','none','-','n.a.','n/a'].indexOf(s.toLowerCase()) !== -1;
+            },
+            initStars: function() {
+                var els = document.querySelectorAll('.stars');
+                for (var i = 0; i < els.length; i++) {
+                    var el = els[i];
+                    var w = Math.max(0, (Math.min(5, Math.round(parseFloat(el.textContent || 0)) / 2))) * 16;
+                    el.innerHTML = '<span></span>';
+                    var sp = el.querySelector('span');
+                    if (sp) sp.style.width = w + 'px';
+                }
+            }
+        });
+    });
+</script>
+<script defer src="https://unpkg.com/alpinejs@3/dist/cdn.min.js"></script>
 <script>
             var BUL = "{% static 'lampstands/css/packages/src/bullseye.png' %}"
             var BLA = "{% static 'lampstands/css/packages/pins/blank.png' %}"
             var STA = "{% static 'lampstands/css/packages/src/stars.png' %}"
+            var MAP_CLOSE_PURPLE = "{% static 'lampstands/css/packages/src/close_purple.png' %}"
 </script>
 <script>
-    $.fn.stars = function() {
-        return $(this).each(function() {
-            $(this).html($('<span />').width(Math.max(0, (Math.min(5, Math.round(parseFloat($(this).html())) / 2))) * 16));
-        });
-    };
     window.initMapPage = function() {
-        /* Load map scripts only after google.maps exists to avoid "google is not defined" and ensure .storeLocator is registered. */
         function loadScript(src, done) {
             var s = document.createElement('script');
             s.src = src;
@@ -219,114 +273,63 @@
             s.onerror = function() { if (typeof done === 'function') done(); };
             document.head.appendChild(s);
         }
-        function runStoreLocator() {
-            $(function() {
-                $('.map_container').storeLocator({
-                    remote: "{{self.get_locality_json}}",
-                    defaultLocation:['{{geoinfo_lat}}','{{geoinfo_lng}}'],
-                    viewport: "{{geoinfo_viewport}}",
-                    listOptions:{ sortByDistance: true, distanceType: 'km' },
-                    detailsOptions: { panorama: { showPanorama: false } },
-                    markerOptions: { dropAnimation: true },
-                    responsiveOptions: [
-                        { breakpoint: 768, settings: { mapHeight: 1000, listHeight: 1000 } },
-                        { breakpoint: 480, settings: { mapHeight: 600, listHeight: 600 } }
-                    ],
-                    mapOptions: {
-                        mapTypeControl: false,
-                        zoom: {{zoom_deflevel}},
-                        zoomControlOptions: { position: google.maps.ControlPosition.RIGHT_TOP },
-                        minZoom: 1,
-                        maxZoom: 18
-                    },
-                    geoLocationOptions: { position: google.maps.ControlPosition.TOP_RIGHT, zoom: {{zoom_deflevel}} },
-                    autocompleteOptions: {
-                        placeholder: 'Type and select city name here',
-                        country: 'all',
-                        types: '(regions)',
-                        position: google.maps.ControlPosition.TOP_LEFT,
-                    },
-                    searchOptions: { show: true, placeholder: "Search within results below" },
-                    routeOptions: {
-                        show: true,
-                        closeHtml: '<span class="label label-danger">close</span>',
-                        country: null,
-                        placeholder: "Enter departure street name"
-                    },
-                    onUpdateList: function() { $('.stars').stars(); },
-                    onUpdateDetail: function() {
-                        var current = 0, items = $('.result_item_detail_info .slider_container div'), itemsLength = items.length;
-                        items.hide();
-                        function showItem() {
-                            var item = items.eq(current);
-                            items.hide();
-                            item.css('display', 'inline-block');
-                        }
-                        $(document).on('click', '.result_item_detail_info .slider_container .next', function() {
-                            current = current > itemsLength - 2 ? 0 : current + 1;
-                            showItem();
-                        });
-                        $(document).on('click', '.result_item_detail_info .slider_container .prev', function() {
-                            current = current < 1 ? itemsLength - 1 : current - 1;
-                            showItem();
-                        });
-                        if (window.timer) clearTimeout(window.timer);
-                        window.timer = setTimeout(function() {
-                            $('.result_item_detail .image').attr('src', "{% static 'lampstands/css/packages/src/close_purple.png' %}");
+        function runMap() {
+            var el = document.querySelector('#map') || document.querySelector('.map_container');
+            if (!el) return;
+            window.mapStoreLocator.init(el, {
+                remote: "{{ self.get_locality_json }}",
+                defaultLocation: ['{{ geoinfo_lat }}', '{{ geoinfo_lng }}'],
+                viewport: "{{ geoinfo_viewport }}",
+                listOptions: { sortByDistance: true, distanceType: 'km' },
+                detailsOptions: { panorama: { showPanorama: false } },
+                markerOptions: { dropAnimation: true },
+                responsiveOptions: [
+                    { breakpoint: 768, settings: { mapHeight: 1000, listHeight: 1000 } },
+                    { breakpoint: 480, settings: { mapHeight: 600, listHeight: 600 } }
+                ],
+                mapOptions: {
+                    mapTypeControl: false,
+                    zoom: {{ zoom_deflevel }},
+                    zoomControlOptions: { position: google.maps.ControlPosition.RIGHT_TOP },
+                    minZoom: 1,
+                    maxZoom: 18
+                },
+                geoLocationOptions: { position: google.maps.ControlPosition.TOP_RIGHT, zoom: {{ zoom_deflevel }} },
+                autocompleteOptions: {
+                    placeholder: 'Type and select city name here',
+                    country: 'all',
+                    types: '(regions)',
+                    position: google.maps.ControlPosition.TOP_LEFT
+                },
+                searchOptions: { show: true, placeholder: "Search within results below" },
+                routeOptions: {
+                    show: true,
+                    closeHtml: '<span class="label label-danger">close</span>',
+                    country: null,
+                    placeholder: "Enter departure street name"
+                },
+                onUpdateList: function() {
+                    var s = window.Alpine && Alpine.store && Alpine.store('mapStore');
+                    if (s && s.initStars) s.initStars();
+                },
+                onUpdateDetail: function() {
+                    setTimeout(function() {
+                        var items = document.querySelectorAll('.result_item_detail_info .slider_container div');
+                        for (var i = 0; i < items.length; i++) items[i].style.display = i === 0 ? 'inline-block' : 'none';
+                        if (window._mapDetailTimer) clearTimeout(window._mapDetailTimer);
+                        window._mapDetailTimer = setTimeout(function() {
+                            var img = document.querySelector('.result_item_detail .image');
+                            if (img && window.MAP_CLOSE_PURPLE) img.src = window.MAP_CLOSE_PURPLE;
                         }, 3000);
-                    }
-                });
+                    }, 50);
+                }
             });
         }
-        if (typeof $ !== 'undefined' && typeof $.fn.storeLocator === 'function') {
-            runStoreLocator();
-            return;
-        }
-        loadScript("{% static 'lampstands/css/packages/src/storeLocator.js' %}", function() {
-            loadScript("{% static 'lampstands/css/packages/src/markerclusterer.min.js' %}", function() {
-                loadScript("{% static 'lampstands/css/packages/src/jquery.tmpl.min.js' %}", runStoreLocator);
-            });
+        loadScript("{% static 'lampstands/css/packages/src/markerclusterer.min.js' %}", function() {
+            loadScript("{% static 'lampstands/css/packages/src/mapStoreLocator.js' %}", runMap);
         });
     };
 </script>
-<script async defer src="{{self.google_url_js}}{{self.google_key_js}}&libraries=places,geometry&loading=async&callback=initMapPage"></script>
-<script id="mapListEntryTemplate" type="text/x-jQuery-tmpl">
-<div class="result_item" data-id="${id}">
-    <a href="${url}"><h3>${locality_name}</h3></a>
-    <div class="result_item_info">
-        <div class="info">
-            <ul class="list-unstyled">
-                <li data-field="address" data-value="${meeting_address}"><b>Address</b>: ${meeting_address}</li>
-                <li data-field="phone" data-value="${locality_phone_number}"><b>Phone</b>: ${locality_phone_number}</li>
-                <li data-field="email" data-value="${locality_email}"><b>E-Mail</b>: ${locality_email}</li>
-                <li data-field="website" data-value="${locality_web}"><b>Website</b>: <a href="${locality_web}">${locality_web}</a></li>
-                <a class="label label-success label-map" style="color:white;" href="${url}">more info</a>
-                <a class="label label-danger label-map" style="color:white;" href="https://maps.google.com/?saddr=Current%20Location&daddr=${trimmed_address}">get directions</a>
-            </ul>
-        </div>
-    </div>
-</div>
-</script>
-<script id="mapListDetailTemplate" type="text/x-jQuery-tmpl">
-<div class="result_item_detail">
-    <a href="#" class="map_details_close" aria-label="Close"><span aria-hidden="true">×</span></a>
-    <h3><a href="${url}">${locality_name}</a></h3>
-    <div class="result_item_detail_info result_item_detail_info-main">
-        <div class="info">
-            <ul class="list-unstyled">
-                <li data-field="address" data-value="${meeting_address}"><b>Address</b>: ${meeting_address}</li>
-                <li data-field="phone" data-value="${locality_phone_number}"><b>Phone</b>: ${locality_phone_number}</li>
-                <li data-field="email" data-value="${locality_email}"><b>E-Mail</b>: ${locality_email}</li>
-                <li data-field="website" data-value="${locality_web}"><b>Website</b>: <a href="${locality_web}">${locality_web}</a></li>
-            </ul>
-            <div class="map_detail_ctas">
-                <a class="label label-success label-map" href="${url}">more info</a>
-                <a class="label label-danger label-map" href="https://maps.google.com/?saddr=Current%20Location&daddr=${trimmed_address}">get directions</a>
-            </div>
-        </div>
-    </div>
-
-</div>
-</script>
+<script async defer src="{{ self.google_url_js }}{{ self.google_key_js }}&libraries=places,geometry&loading=async&callback=initMapPage"></script>
 </body>
 </html>
