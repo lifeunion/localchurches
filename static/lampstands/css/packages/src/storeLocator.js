@@ -765,13 +765,16 @@
                     var trimmed_address = encodeURIComponent(data.meeting_address.trim());
                     // Ensure URL exists and is valid, fallback to empty string if not
                     var church_url = (data.url && data.url.trim()) ? data.url.trim() : '';
-                    // Build the "more info" link only if URL is available
-                    var more_info_link = church_url 
-                        ? '<a class="label label-success label-map" href="' + church_url + '">more info</a>'
+                    // Build the "more info" link only if URL is available (green); red "get directions"
+                    var more_info_link = church_url
+                        ? '<a class="label label-success label-map" style="color:white" href="' + church_url + '">more info</a> '
                         : '';
-                    var content = '<b>' + '<h6>'+ 'Church in ' + data.locality_name + '</h6></b>' + data.meeting_address + '<br>'
-                    + more_info_link +
-                    '<a class="label label-danger label-map" href="https://maps.google.com/?saddr=Current%20Location&daddr='+ trimmed_address + '">get directions here</a>';
+                    var content = '<div style="margin:0;padding:0;font-size:13px;line-height:1.4">' +
+                        '<div style="margin:0 0 4px 0;font-weight:bold;font-size:14px">Church in ' + (data.locality_name || '') + '</div>' +
+                        (data.meeting_address || '') +
+                        '<div style="margin-top:8px">' + more_info_link +
+                        '<a class="label label-danger label-map" style="color:white" href="https://maps.google.com/?saddr=Current%20Location&daddr=' + trimmed_address + '">get directions</a>' +
+                        '</div></div>';
 
                     var _ = this;
 

@@ -300,8 +300,8 @@
                 <li data-field="phone" data-value="${locality_phone_number}"><b>Phone</b>: ${locality_phone_number}</li>
                 <li data-field="email" data-value="${locality_email}"><b>E-Mail</b>: ${locality_email}</li>
                 <li data-field="website" data-value="${locality_web}"><b>Website</b>: <a href="${locality_web}">${locality_web}</a></li>
-                <a class="label label-success label-map" style="color:white;" href="${url}">church page</a>
-                <a class="label label-danger label-map" style="color:white;" href= "https://maps.google.com/?saddr=Current%20Location&daddr=${trimmed_address}">get directions</a>
+                <a class="label label-success label-map" style="color:white;" href="${url}">more info</a>
+                <a class="label label-danger label-map" style="color:white;" href="https://maps.google.com/?saddr=Current%20Location&daddr=${trimmed_address}">get directions</a>
             </ul>
         </div>
     </div>
@@ -309,7 +309,7 @@
 </script>
 <script id="mapListDetailTemplate" type="text/x-jQuery-tmpl">
 <div class="result_item_detail">
-    <a href="#" class="map_details_close" aria-label="Close"><img src="{% static 'lampstands/css/packages/src/close.png' %}" alt=""></a>
+    <a href="#" class="map_details_close" aria-label="Close"><span aria-hidden="true">×</span></a>
     <h3><a href="${url}">${locality_name}</a></h3>
     <div class="result_item_detail_info result_item_detail_info-main">
         <div class="info">
@@ -319,8 +319,10 @@
                 <li data-field="email" data-value="${locality_email}"><b>E-Mail</b>: ${locality_email}</li>
                 <li data-field="website" data-value="${locality_web}"><b>Website</b>: <a href="${locality_web}">${locality_web}</a></li>
             </ul>
-            <a class="label label-success label-map" href="${url}">church page</a>
-            <a class="label label-danger label-map" href="https://maps.google.com/?saddr=Current%20Location&daddr=${trimmed_address}">get directions</a>
+            <div class="map_detail_ctas">
+                <a class="label label-success label-map" href="${url}">more info</a>
+                <a class="label label-danger label-map" href="https://maps.google.com/?saddr=Current%20Location&daddr=${trimmed_address}">get directions</a>
+            </div>
         </div>
     </div>
 
