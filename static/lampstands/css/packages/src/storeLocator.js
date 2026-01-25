@@ -326,6 +326,16 @@
                                     _t.map.setZoom(_t.settings.autocompleteOptions.zoom);
                                 }).catch(function() { _t._showNotification(_t.settings.autocompleteOptions.errorNotFound || 'Place not found'); });
                             });
+                            pacEl.addEventListener('keydown', function(ev) {
+                                if ((ev.key !== 'Enter' && ev.key !== 'Return') || ev.defaultPrevented) return;
+                                var root = pacEl.shadowRoot;
+                                if (!root) return;
+                                var target = root.querySelector('[part="prediction-item-selected"]') || root.querySelector('[part="prediction-item"]');
+                                if (target) {
+                                    target.click();
+                                    ev.preventDefault();
+                                }
+                            });
                             autocompleteContainer.index = _t.settings.autocompleteOptions.index;
                             _t.map.controls[_t.settings.autocompleteOptions.position].push(autocompleteContainer);
                         }).catch(function() {

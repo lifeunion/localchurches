@@ -119,3 +119,29 @@ span.stars span { background-position: 0 0; }
 .slider_container span:hover { opacity: 1; }
 .slider_container span.next { right: 0; }
 .slider_container span.prev { left: 0; }
+
+/*** Place Autocomplete (PlaceAutocompleteElement) – light dropdown, fix black/invisible list */
+#pac-input {
+  color-scheme: light;
+  background-color: #ffffff;
+  color: #1a1a1a;
+}
+#pac-input::part(prediction-list) {
+  background-color: #ffffff !important;
+  color: #1a1a1a !important;
+  border: 1px solid #dadce0;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+#pac-input::part(prediction-item) {
+  background-color: #ffffff !important;
+  color: #1a1a1a !important;
+}
+#pac-input::part(prediction-item-selected),
+#pac-input::part(prediction-item):hover {
+  background-color: #f1f3f4 !important;
+  color: #1a1a1a !important;
+}
+#pac-input::part(prediction-item-main-text) {
+  color: #1a1a1a !important;
+}
