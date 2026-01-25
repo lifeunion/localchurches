@@ -955,6 +955,10 @@
                     } else {
                         $detail.append(rendered);
                     }
+                    $detail.find('.info ul li[data-field]').each(function() {
+                        var v = $(this).attr('data-value');
+                        if (!$.trim(String(v || ''))) $(this).remove();
+                    });
                 }
                 $(".map_results").addClass("detail_open");
                 if(this.settings.detailsOptions.panorama.showPanorama)
