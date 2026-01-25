@@ -125,7 +125,8 @@ span.stars span { background-position: 0 0; }
 .slider_container span.prev { left: 0; }
 
 /*** Map InfoWindow: red close X to match sidebar; hide Google's default close */
-.info-window-close { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 4px; background-color: #c62828; color: #fff; text-decoration: none; font-size: 22px; line-height: 1; font-weight: bold; flex-shrink: 0; cursor: pointer; }
+.info-window-close { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 4px; background-color: #c62828; color: #fff; text-decoration: none; font-size: 22px; line-height: 1; font-weight: bold; flex-shrink: 0; cursor: pointer; border: none !important; outline: none !important; box-shadow: none !important; }
+.info-window-close:hover, .info-window-close:focus, .info-window-close:active, .info-window-close:focus-visible { border: none !important; outline: none !important; box-shadow: none !important; background-color: #c62828; color: #fff; }
 .info-window-close span { font-size: 22px; line-height: 1; font-weight: bold; }
 .gm-style-iw button.gm-ui-hover-effect { display: none !important; }
 .gm-style-iw button[aria-label="Close"] { display: none !important; }
