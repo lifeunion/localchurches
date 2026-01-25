@@ -99,6 +99,12 @@
       $(".find").click(function(){
         $(this).parents(".location").find(".form-control").trigger("geocode");
       });
+      $("#searchphrase").on("keydown", function(e) {
+        if (e.key === "Enter" || e.which === 13) {
+          e.preventDefault();
+          $("#searchdesktop").click();
+        }
+      });
     });
   };
 </script>
