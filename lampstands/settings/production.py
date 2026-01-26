@@ -234,11 +234,10 @@ else:
             "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
         },
     }
-    # IMPORTANT: When using WhiteNoise, ensure STATIC_ROOT is set correctly
-    # Files must be collected to local directory, not S3
+    # IMPORTANT: When using WhiteNoise, STATIC_ROOT (set below) must exist; start.sh
+    # runs collectstatic so staticfiles/ is created when build output is not persisted.
     import sys
     print(f"DEBUG: Using WhiteNoise for static files", file=sys.stderr)
-    print(f"DEBUG: STATIC_ROOT = {STATIC_ROOT}", file=sys.stderr)
     print(f"DEBUG: STATIC_URL = {STATIC_URL}", file=sys.stderr)
 
 STATICFILES_DIRS = (

@@ -188,14 +188,13 @@ else:
     print(f'   STATIC_URL: {settings.STATIC_URL}')
 " || echo "Could not check storage backend"
 
-# Collect static (uses DJANGO_SETTINGS_MODULE set at top from RENDER_GIT_BRANCH)
+# Collect static (uses DJANGO_SETTINGS_MODULE set at top from RENDER_GIT_BRANCH).
 echo "Running collectstatic with DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}"
 python manage.py collectstatic --no-input --clear --verbosity 2 2>&1 | tee /tmp/collectstatic.log || {
     echo "Warning: collectstatic had issues, checking log..."
     cat /tmp/collectstatic.log | tail -50
     echo ""
     echo "Trying collectstatic again without --clear..."
-    # Try again without --clear as fallback
     python manage.py collectstatic --no-input --verbosity 2 || {
         echo "Error: collectstatic failed completely"
         cat /tmp/collectstatic.log | tail -100
