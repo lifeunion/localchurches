@@ -90,7 +90,7 @@
             <tbody>
                 {% for branch in church_posts %} 
                     <tr>
-                        <td><a href="/churches/{{ branch.slug }}/">{{branch.locality_name}}</a></td>
+                        <td class="city-column"><a href="/churches/{{ branch.slug }}/">{{branch.locality_name}}</a></td>
                         <td>{{branch.meeting_address}}</td>
                         <td>{{branch.locality_state_or_province}}</td>
                         <td>{{branch.locality_country.name}}</td>
@@ -109,6 +109,7 @@
                 {% endfor %}
             </tbody>
         </table>
+                </div>
                 <div class="church-list-pagination" style="margin-top:1em; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; min-height:2.5em; width:100%;" x-show="visibleCount > 0">
                     <span style="display:inline-flex; align-items:center; line-height:1.5; flex-shrink:0;" x-text="'Showing ' + (visibleCount ? (Math.min((currentPage-1)*pageSize+1, visibleCount)) : 0) + ' to ' + (Math.min(currentPage*pageSize, visibleCount) || 0) + ' of ' + visibleCount + ' entries'"></span>
                     <div style="display:flex; align-items:center; gap:0.6em; flex-wrap:wrap; margin-left:auto; flex-shrink:0;">
@@ -122,17 +123,20 @@
                         <button type="button" @click="currentPage=Math.min(totalPages, currentPage+1)" :disabled="currentPage >= totalPages" style="padding:0.35em 0.65em; line-height:1.5; vertical-align:middle; margin:0;">Next</button>
                     </div>
                 </div>
-                </div>
                 </div><!-- /.row -->
             </div><!-- /.posts-->
         </div><!-- /.vessel -->
     </div><!-- /.content -->
 
     <style>
-    #churches-table.table-striped tbody tr:nth-of-type(odd) { background-color: #e0e0e0; }
+    #churches-table.table-striped tbody tr:nth-of-type(odd) { background-color: #f5f5f5; }
     #churches-table.table-striped tbody tr:nth-of-type(even) { background-color: #fff; }
-    #churches-mobile-table.table-striped tbody tr:nth-of-type(odd) { background-color: #e0e0e0; }
+    #churches-table.table-striped tbody tr td.city-column { background-color: #e8e8e8 !important; }
+    #churches-table.table-striped tbody tr:nth-of-type(even) td.city-column { background-color: #e0e0e0 !important; }
+    #churches-mobile-table.table-striped tbody tr:nth-of-type(odd) { background-color: #f5f5f5; }
     #churches-mobile-table.table-striped tbody tr:nth-of-type(even) { background-color: #fff; }
+    #churches-mobile-table.table-striped tbody tr td.city-column { background-color: #e8e8e8 !important; }
+    #churches-mobile-table.table-striped tbody tr:nth-of-type(even) td.city-column { background-color: #e0e0e0 !important; }
     </style>
     <div class="content hidden-lg-up" data-json-url="{{ self.get_locality_json }}"
          x-data="churchMobile()"
@@ -156,7 +160,7 @@
                 <template x-for="item in displayedItems" :key="item.id">
                 <tr>
                     <td class="details-control" @click="toggle(item.id)" style="cursor:pointer; text-align:center; font-weight:bold; font-size:1.2em;" x-text="expanded[item.id] ? '−' : '+'"></td>
-                    <td><a :href="item.url || ('/churches/' + (item.slug||'') + '/')" x-text="item.locality_name"></a></td>
+                    <td class="city-column"><a :href="item.url || ('/churches/' + (item.slug||'') + '/')" x-text="item.locality_name"></a></td>
                     <td x-text="item.locality_state_or_province"></td>
                     <td>
                         <span x-text="item.locality_country"></span>
