@@ -105,38 +105,7 @@
     </div><!-- /.content -->
 
     <div class="content hidden-lg-up" data-json-url="{{ self.get_locality_json }}"
-         x-data="{
-           items: [],
-           expanded: {},
-           jsonUrl: '',
-           formatDetail(it) {
-             var w = (it.locality_web || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-             var wl = w ? '<a href=&quot;'+w+'&quot;>'+w+'</a>' : '';
-             return '<table cellpadding=&quot;5&quot; cellspacing=&quot;0&quot; border=&quot;0&quot; style=&quot;padding-left:50px&quot;><tr><td>Meeting address:</td><td>'+(it.meeting_address||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</td></tr><tr><td>Phone number:</td><td>'+(it.locality_phone_number||'').replace(/</g,'&lt;')+'</td></tr><tr><td>Email:</td><td>'+(it.locality_email||'').replace(/</g,'&lt;')+'</td></tr><tr><td>Website:</td><td>'+wl+'</td></tr></table>';
-           },
-           toggle(id) { this.expanded = Object.assign({}, this.expanded, { [id]: !this.expanded[id] }); },
-           initMobile() {
-             var that = this;
-             var url = that.jsonUrl;
-             if (!url) return;
-             fetch(url).then(function(r){return r.json();}).then(function(json){
-               var area = (new URLSearchParams(location.search)).get('area') || '';
-               var list = [];
-               for (var i = 0; i < json.length; i++) {
-                 var o = json[i];
-                 var cn = '';
-                 if (o.locality_country) {
-                   if (typeof o.locality_country === 'object' && o.locality_country.name) cn = o.locality_country.name;
-                   else if (typeof o.locality_country === 'string') cn = o.locality_country;
-                 }
-                 var it = { id: o.id, slug: o.slug, url: o.url, locality_name: o.locality_name||'', locality_state_or_province: o.locality_state_or_province||'', locality_country: cn, meeting_address: o.meeting_address||'', locality_phone_number: o.locality_phone_number||'', locality_email: o.locality_email||'', locality_web: o.locality_web||'' };
-                 if (!area || [it.locality_name,it.locality_state_or_province,it.locality_country,it.meeting_address].join(' ').toLowerCase().indexOf(area.toLowerCase()) >= 0) list.push(it);
-               }
-               list.sort(function(a,b){ return (a.locality_name||'').localeCompare(b.locality_name||''); });
-               that.items = list;
-             }).catch(function(e){ console.error('Church list fetch error:', e); });
-           }
-         }"
+         x-data="churchMobile()"
          x-init="jsonUrl = $el.dataset.jsonUrl || ''; initMobile()">
         <div class="vessel">
             <div class="posts posts-grid">  
@@ -175,6 +144,44 @@
 {% endblock %}
  
 {% block extra_js %}
+<script>
+document.addEventListener('alpine:init', function() {
+  Alpine.data('churchMobile', function() {
+    return {
+      items: [],
+      expanded: {},
+      jsonUrl: '',
+      formatDetail: function(it) {
+        var w = (it.locality_web || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+        var wl = w ? '<a href="'+w+'">'+w+'</a>' : '';
+        return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px"><tr><td>Meeting address:</td><td>'+(it.meeting_address||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</td></tr><tr><td>Phone number:</td><td>'+(it.locality_phone_number||'').replace(/</g,'&lt;')+'</td></tr><tr><td>Email:</td><td>'+(it.locality_email||'').replace(/</g,'&lt;')+'</td></tr><tr><td>Website:</td><td>'+wl+'</td></tr></table>';
+      },
+      toggle: function(id) { this.expanded = Object.assign({}, this.expanded, { [id]: !this.expanded[id] }); },
+      initMobile: function() {
+        var that = this;
+        var url = that.jsonUrl;
+        if (!url) return;
+        fetch(url).then(function(r){return r.json();}).then(function(json){
+          var area = (new URLSearchParams(location.search)).get('area') || '';
+          var list = [];
+          for (var i = 0; i < json.length; i++) {
+            var o = json[i];
+            var cn = '';
+            if (o.locality_country) {
+              if (typeof o.locality_country === 'object' && o.locality_country.name) cn = o.locality_country.name;
+              else if (typeof o.locality_country === 'string') cn = o.locality_country;
+            }
+            var it = { id: o.id, slug: o.slug, url: o.url, locality_name: o.locality_name||'', locality_state_or_province: o.locality_state_or_province||'', locality_country: cn, meeting_address: o.meeting_address||'', locality_phone_number: o.locality_phone_number||'', locality_email: o.locality_email||'', locality_web: o.locality_web||'' };
+            if (!area || [it.locality_name,it.locality_state_or_province,it.locality_country,it.meeting_address].join(' ').toLowerCase().indexOf(area.toLowerCase()) >= 0) list.push(it);
+          }
+          list.sort(function(a,b){ return (a.locality_name||'').localeCompare(b.locality_name||''); });
+          that.items = list;
+        }).catch(function(e){ console.error('Church list fetch error:', e); });
+      }
+    };
+  });
+});
+</script>
 <script defer src="https://unpkg.com/alpinejs@3/dist/cdn.min.js"></script>
 {% endblock %}
 
