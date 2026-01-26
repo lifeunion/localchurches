@@ -90,6 +90,7 @@
 <script type="text/javascript" src="{% static 'js/villareal/jquery.geocomplete.min.js' %}"></script>
 <script>
   window.initHomePageGeocomplete = function() {
+    if (typeof $ === 'undefined') { return; }
     $(function(){
       var searchButtonClicked = false;
       $(".form-control").geocomplete({

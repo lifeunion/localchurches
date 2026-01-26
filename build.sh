@@ -2,6 +2,14 @@
 # exit on error
 set -o errexit
 
+# Use staging for non-master branches: static→WhiteNoise only, lcstatic S3 never touched.
+if [ "${RENDER_GIT_BRANCH:-master}" = "master" ]; then
+  export DJANGO_SETTINGS_MODULE=lampstands.settings.production
+else
+  export DJANGO_SETTINGS_MODULE=lampstands.settings.staging
+fi
+echo "DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE} (RENDER_GIT_BRANCH=${RENDER_GIT_BRANCH:-master})"
+
 pip install -r requirements.txt
 
 # Run database migrations
@@ -120,7 +128,8 @@ echo "Collecting static files..."
 echo "Checking static file storage backend..."
 python -c "
 import os
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lampstands.settings.production')
+# Use same settings as build (from RENDER_GIT_BRANCH in build.sh)
+os.environ['DJANGO_SETTINGS_MODULE'] = os.environ.get('DJANGO_SETTINGS_MODULE') or 'lampstands.settings.production'
 import django
 django.setup()
 from django.conf import settings
@@ -179,14 +188,13 @@ else:
     print(f'   STATIC_URL: {settings.STATIC_URL}')
 " || echo "Could not check storage backend"
 
-# Temporarily disable S3 storage during collectstatic if credentials are missing
-# This ensures files are collected locally for WhiteNoise
+# Collect static (uses DJANGO_SETTINGS_MODULE set at top from RENDER_GIT_BRANCH).
+echo "Running collectstatic with DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}"
 python manage.py collectstatic --no-input --clear --verbosity 2 2>&1 | tee /tmp/collectstatic.log || {
     echo "Warning: collectstatic had issues, checking log..."
     cat /tmp/collectstatic.log | tail -50
     echo ""
     echo "Trying collectstatic again without --clear..."
-    # Try again without --clear as fallback
     python manage.py collectstatic --no-input --verbosity 2 || {
         echo "Error: collectstatic failed completely"
         cat /tmp/collectstatic.log | tail -100
@@ -201,20 +209,34 @@ echo "Verifying Wagtail admin CSS and JS files were collected..."
 python -c "
 import os
 import sys
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lampstands.settings.production')
+# Use same settings as build (from RENDER_GIT_BRANCH in build.sh)
+os.environ['DJANGO_SETTINGS_MODULE'] = os.environ.get('DJANGO_SETTINGS_MODULE') or 'lampstands.settings.production'
 import django
 django.setup()
 from django.conf import settings
 
-has_s3 = (
-    bool(getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None))
-    and bool(getattr(settings, 'AWS_ACCESS_KEY_ID', None))
-    and bool(getattr(settings, 'AWS_SECRET_ACCESS_KEY', None))
-)
+# Use actual storage: staging/production without S3 use WhiteNoise (staticfiles); production with S3 uses s3boto3.
+use_s3 = 's3boto3' in str(getattr(settings, 'STORAGES', {}).get('staticfiles', {}).get('BACKEND', ''))
 checks = [
     ('wagtailadmin/css/core.css', 'Wagtail admin CSS'),
     ('wagtailadmin/js/common.js', 'Wagtail admin common.js (webpack runtime)'),
 ]
+if not use_s3:
+    checks += [
+        ('css/villareal-turquoise.css', 'Site theme CSS'),
+        ('css/font-awesome.min.css', 'Font Awesome'),
+        ('js/villareal/jquery.min.js', 'jQuery'),
+        ('js/villareal/tether.min.js', 'Tether'),
+        ('js/villareal/bootstrap.min.js', 'Bootstrap'),
+        ('css/libraries/owl-carousel/owl.carousel.min.js', 'Owl Carousel'),
+        ('js/villareal/jquery.geocomplete.min.js', 'jQuery Geocomplete'),
+        ('js/villareal/jquery1.7.1googapi.min.js', 'jQuery 1.7.1 Google API'),
+        ('css/img/bluemap.jpg', 'Bluemap image'),
+        ('css/img/vessel1.jpg', 'Vessel1 image'),
+        ('lampstands/css/packages/src/markerclusterer.min.js', 'Map MarkerClusterer'),
+        ('lampstands/css/packages/src/mapStoreLocator.js', 'Map mapStoreLocator'),
+        ('lampstands/css/packages/src/style.css', 'Map style CSS'),
+    ]
 
 def check_s3(key):
     try:
@@ -241,7 +263,7 @@ def check_local(key):
 
 ok = True
 for key, label in checks:
-    if has_s3:
+    if use_s3:
         found, msg = check_s3(key)
     else:
         found, msg = check_local(key)

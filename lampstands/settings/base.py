@@ -147,7 +147,8 @@ STATICFILES_FINDERS = [
 ]
 
 STATICFILES_DIRS = [
-    os.path.join(PROJECT_DIR, 'static'),
+    os.path.join(BASE_DIR, 'static'),   # project root: css/, js/villareal/, etc.
+    os.path.join(PROJECT_DIR, 'static'), # lampstands: lampstands/images/, etc.
 ]
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
