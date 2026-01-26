@@ -268,7 +268,7 @@
             var s = document.createElement('script');
             s.src = src;
             s.onload = function() { if (typeof done === 'function') done(); };
-            s.onerror = function() { if (typeof done === 'function') done(); };
+            s.onerror = function() { /* do not call done() - script failed to load (e.g. 404); runMap must not run without the lib */ };
             document.head.appendChild(s);
         }
         function runMap() {
