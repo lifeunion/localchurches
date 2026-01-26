@@ -62,10 +62,13 @@ def get_site_root(context):
 @register.simple_tag(takes_context=True)
 def contact_url(context):
     """
-    Return the relative URL of the Contact page (slug 'contact') for the current site.
-    Domain-agnostic: always a path like /contact/ so it works on any domain.
+    Return the URL path of the Contact page (slug 'contact') for the current site.
+    Always returns a path (e.g. /contact/) with no scheme or host, so it works on
+    any domain (localchurches.onrender.com, www.localchurches.org, etc.).
     Falls back to /contact/ if the page is not found.
     """
+    from urllib.parse import urlparse
+
     from wagtail.models import Page
 
     request = context.get('request')
@@ -76,7 +79,13 @@ def contact_url(context):
         return '/contact/'
     page = Page.objects.live().descendant_of(root, inclusive=True).filter(slug='contact').first()
     if page:
-        return page.relative_url(current_site=request.site)
+        url = page.relative_url(current_site=request.site)
+        # Strip scheme/host so the link is relative to the current domain.
+        if url.startswith('http://') or url.startswith('https://'):
+            url = urlparse(url).path or '/contact/'
+        if not url.startswith('/'):
+            url = '/' + url
+        return url
     return '/contact/'
 
 
