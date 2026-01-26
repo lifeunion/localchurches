@@ -59,14 +59,14 @@
         <table class="table order-column table-striped table-hover" id="churches-table" cellspacing="0" width="100%">
             <thead>
                 <tr>
-                    <th>Index</th>
-                    <th>City</th>
-                    <th>Address</th>
-                    <th>State/Prov.</th>
-                    <th>Country</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th>Website</th>
+                    <th class="sortable-column" data-column="0">Index</th>
+                    <th class="sortable-column active-sort" data-column="1">City</th>
+                    <th class="sortable-column" data-column="2">Address</th>
+                    <th class="sortable-column" data-column="3">State/Prov.</th>
+                    <th class="sortable-column" data-column="4">Country</th>
+                    <th class="sortable-column" data-column="5">Phone</th>
+                    <th class="sortable-column" data-column="6">Email</th>
+                    <th class="sortable-column" data-column="7">Website</th>
                     <th colspan="8">Available Contacts' Names and Phones</th>
                 </tr>
                 <tr>
@@ -93,13 +93,13 @@
                 {% for branch in church_posts %} 
                     <tr>
                         <td class="index-column"></td>
-                        <td class="city-column"><a href="/churches/{{ branch.slug }}/">{{branch.locality_name}}</a></td>
-                        <td>{{branch.meeting_address}}</td>
-                        <td>{{branch.locality_state_or_province}}</td>
-                        <td>{{branch.locality_country.name}}</td>
-                        <td>{{branch.locality_phone_number}}</td>
-                        <td>{{branch.locality_email}}</td>
-                        <td><a href={{branch.locality_web}}>{{branch.locality_web}}</a></td>
+                        <td class="column-1"><a href="/churches/{{ branch.slug }}/">{{branch.locality_name}}</a></td>
+                        <td class="column-2">{{branch.meeting_address}}</td>
+                        <td class="column-3">{{branch.locality_state_or_province}}</td>
+                        <td class="column-4">{{branch.locality_country.name}}</td>
+                        <td class="column-5">{{branch.locality_phone_number}}</td>
+                        <td class="column-6">{{branch.locality_email}}</td>
+                        <td class="column-7"><a href={{branch.locality_web}}>{{branch.locality_web}}</a></td>
                         <td>{{branch.locality_contact_brother_1|default:"—"}}</td>
                         <td>{{branch.locality_contact_brother_1_phone|default:"—"}}</td>
                         <td>{{branch.locality_contact_brother_2|default:"—"}}</td>
@@ -113,9 +113,9 @@
             </tbody>
         </table>
                 </div>
-                <div class="church-list-pagination" style="margin-top:1em; display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; min-height:2.5em; width:100%;" x-show="visibleCount > 0">
-                    <span style="display:inline-flex; align-items:center; line-height:1.5; flex-shrink:0;" x-text="'Showing ' + (visibleCount ? (Math.min((currentPage-1)*pageSize+1, visibleCount)) : 0) + ' to ' + (Math.min(currentPage*pageSize, visibleCount) || 0) + ' of ' + visibleCount + ' entries'"></span>
-                    <div style="display:flex; align-items:center; gap:0.6em; flex-wrap:wrap; flex-shrink:0;">
+                <div class="church-list-pagination" style="margin-top:1em; display:flex; justify-content:space-between; align-items:baseline; flex-wrap:nowrap; min-height:2.5em; width:100%;" x-show="visibleCount > 0">
+                    <span style="display:inline-flex; align-items:center; line-height:1.5; flex-shrink:0; white-space:nowrap;" x-text="'Showing ' + (visibleCount ? (Math.min((currentPage-1)*pageSize+1, visibleCount)) : 0) + ' to ' + (Math.min(currentPage*pageSize, visibleCount) || 0) + ' of ' + visibleCount + ' entries'"></span>
+                    <div style="display:flex; align-items:center; gap:0.6em; flex-wrap:nowrap; flex-shrink:0;">
                         <button type="button" @click="currentPage=Math.max(1, currentPage-1)" :disabled="currentPage <= 1" style="padding:0.35em 0.65em; line-height:1.5; vertical-align:middle; margin:0;">Previous</button>
                         <template x-for="(p, i) in pageNumbers" :key="i">
                             <span style="display:inline-block; margin:0;">
@@ -132,14 +132,14 @@
     </div><!-- /.content -->
 
     <style>
-    #churches-table.table-striped tbody tr:nth-of-type(odd) { background-color: #f5f5f5; }
+    #churches-table.table-striped tbody tr:nth-of-type(odd) { background-color: #fafafa; }
     #churches-table.table-striped tbody tr:nth-of-type(even) { background-color: #fff; }
-    #churches-table.table-striped tbody tr td.city-column { background-color: #f4f4f4 !important; }
-    #churches-table.table-striped tbody tr:nth-of-type(even) td.city-column { background-color: #f0f0f0 !important; }
-    #churches-mobile-table.table-striped tbody tr:nth-of-type(odd) { background-color: #f5f5f5; }
+    #churches-table.table-striped tbody tr td.active-column { background-color: #f0f0f0 !important; }
+    #churches-table.table-striped tbody tr:nth-of-type(even) td.active-column { background-color: #f0f0f0 !important; }
+    #churches-mobile-table.table-striped tbody tr:nth-of-type(odd) { background-color: #fafafa; }
     #churches-mobile-table.table-striped tbody tr:nth-of-type(even) { background-color: #fff; }
-    #churches-mobile-table.table-striped tbody tr td.city-column { background-color: #f4f4f4 !important; }
-    #churches-mobile-table.table-striped tbody tr:nth-of-type(even) td.city-column { background-color: #f0f0f0 !important; }
+    #churches-mobile-table.table-striped tbody tr td.active-column { background-color: #f0f0f0 !important; }
+    #churches-mobile-table.table-striped tbody tr:nth-of-type(even) td.active-column { background-color: #f0f0f0 !important; }
     </style>
     <div class="content hidden-lg-up" data-json-url="{{ self.get_locality_json }}"
          x-data="churchMobile()"
@@ -174,9 +174,9 @@
             </tbody>
         </table>
                 </div>
-                <div class="church-list-pagination" style="margin-top:1em; display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; min-height:2.5em; width:100%;" x-show="visibleCount > 0">
-                    <span style="display:inline-flex; align-items:center; line-height:1.5; flex-shrink:0;" x-text="'Showing ' + (visibleCount ? (Math.min((currentPage-1)*pageSize+1, visibleCount)) : 0) + ' to ' + (Math.min(currentPage*pageSize, visibleCount) || 0) + ' of ' + visibleCount + ' entries'"></span>
-                    <div style="display:flex; align-items:center; gap:0.6em; flex-wrap:wrap; flex-shrink:0;">
+                <div class="church-list-pagination" style="margin-top:1em; display:flex; justify-content:space-between; align-items:baseline; flex-wrap:nowrap; min-height:2.5em; width:100%;" x-show="visibleCount > 0">
+                    <span style="display:inline-flex; align-items:center; line-height:1.5; flex-shrink:0; white-space:nowrap;" x-text="'Showing ' + (visibleCount ? (Math.min((currentPage-1)*pageSize+1, visibleCount)) : 0) + ' to ' + (Math.min(currentPage*pageSize, visibleCount) || 0) + ' of ' + visibleCount + ' entries'"></span>
+                    <div style="display:flex; align-items:center; gap:0.6em; flex-wrap:nowrap; flex-shrink:0;">
                         <button type="button" @click="currentPage=Math.max(1, currentPage-1)" :disabled="currentPage <= 1" style="padding:0.35em 0.65em; line-height:1.5; vertical-align:middle; margin:0;">Previous</button>
                         <template x-for="(p, i) in pageNumbers" :key="i">
                             <span style="display:inline-block; margin:0;">
@@ -267,6 +267,51 @@ document.addEventListener('alpine:init', function() {
         }).catch(function(e){ console.error('Church list fetch error:', e); });
       }
     };
+  });
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var table = document.getElementById('churches-table');
+  if (!table) return;
+  
+  var activeColumn = 1; // Default to City column
+  
+  function setActiveColumn(colIndex) {
+    activeColumn = colIndex;
+    var rows = table.querySelectorAll('tbody tr');
+    rows.forEach(function(row) {
+      var cells = row.querySelectorAll('td');
+      cells.forEach(function(cell, idx) {
+        if (idx === colIndex) {
+          cell.classList.add('active-column');
+        } else {
+          cell.classList.remove('active-column');
+        }
+      });
+    });
+    
+    // Update header active state
+    var headers = table.querySelectorAll('thead tr:first-child th.sortable-column');
+    headers.forEach(function(header, idx) {
+      if (idx === colIndex) {
+        header.classList.add('active-sort');
+      } else {
+        header.classList.remove('active-sort');
+      }
+    });
+  }
+  
+  // Set default active column (City)
+  setActiveColumn(1);
+  
+  // Add click handlers to sortable columns
+  var sortableHeaders = table.querySelectorAll('thead tr:first-child th.sortable-column');
+  sortableHeaders.forEach(function(header, idx) {
+    header.style.cursor = 'pointer';
+    header.addEventListener('click', function() {
+      setActiveColumn(idx);
+    });
   });
 });
 </script>
