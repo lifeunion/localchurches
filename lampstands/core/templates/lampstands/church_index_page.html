@@ -115,15 +115,15 @@
                 </div>
                 <div class="church-list-pagination" style="margin-top:1em; display:flex; justify-content:space-between; align-items:center; flex-wrap:nowrap; min-height:2.5em; width:100%;" x-show="visibleCount > 0">
                     <span style="display:inline-flex; align-items:center; line-height:1.5; flex-shrink:0; white-space:nowrap;" x-text="'Showing ' + (visibleCount ? (Math.min((currentPage-1)*pageSize+1, visibleCount)) : 0) + ' to ' + (Math.min(currentPage*pageSize, visibleCount) || 0) + ' of ' + visibleCount + ' entries'"></span>
-                    <div style="display:flex; align-items:center; gap:0.6em; flex-wrap:nowrap; flex-shrink:0; margin-left:auto;">
-                        <button type="button" @click="currentPage=Math.max(1, currentPage-1)" :disabled="currentPage <= 1" style="padding:0.35em 0.65em; line-height:1.5; height:2em; min-height:2em; box-sizing:border-box; margin:0; display:inline-flex; align-items:center; justify-content:center;">Previous</button>
+                    <div style="display:flex; align-items:center; gap:0.8em; flex-wrap:nowrap; flex-shrink:0; margin-left:auto;">
+                        <button type="button" @click="currentPage=Math.max(1, currentPage-1)" :disabled="currentPage <= 1" style="padding:0.35em 0.65em; line-height:1.5; height:2em; min-height:2em; box-sizing:border-box; margin:0; display:inline-flex; align-items:center; justify-content:center; background-color:#fff; border:1px solid #007bff; color:#666; border-radius:4px; cursor:pointer;" :style="currentPage <= 1 ? 'opacity:0.5; cursor:not-allowed;' : ''">Previous</button>
                         <template x-for="(p, i) in pageNumbers" :key="i">
                             <span style="display:inline-block; margin:0;">
-                                <button type="button" x-show="p !== '\u2026'" @click="currentPage = p" :style="currentPage === p ? 'font-weight:bold;' : ''" style="padding:0.35em 0.5em; line-height:1.5; min-width:2em; height:2em; min-height:2em; box-sizing:border-box; margin:0; display:inline-flex; align-items:center; justify-content:center;" x-text="p"></button>
-                                <span x-show="p === '\u2026'" style="padding:0 0.15em; margin:0; display:inline-block; height:2em; line-height:2em;">&#8230;</span>
+                                <button type="button" x-show="p !== '\u2026'" @click="currentPage = p" :style="currentPage === p ? 'background-color:#000; color:#fff; border:1px solid #000;' : 'background-color:#fff; color:#666; border:1px solid #ddd;'" style="padding:0.35em 0.5em; line-height:1.5; min-width:2em; height:2em; min-height:2em; box-sizing:border-box; margin:0; display:inline-flex; align-items:center; justify-content:center; border-radius:4px; cursor:pointer;" x-text="p"></button>
+                                <span x-show="p === '\u2026'" style="padding:0 0.15em; margin:0; display:inline-block; height:2em; line-height:2em; color:#666;">&#8230;</span>
                             </span>
                         </template>
-                        <button type="button" @click="currentPage=Math.min(totalPages, currentPage+1)" :disabled="currentPage >= totalPages" style="padding:0.35em 0.65em; line-height:1.5; height:2em; min-height:2em; box-sizing:border-box; margin:0; display:inline-flex; align-items:center; justify-content:center;">Next</button>
+                        <button type="button" @click="currentPage=Math.min(totalPages, currentPage+1)" :disabled="currentPage >= totalPages" style="padding:0.35em 0.65em; line-height:1.5; height:2em; min-height:2em; box-sizing:border-box; margin:0; display:inline-flex; align-items:center; justify-content:center; background-color:#fff; border:1px solid #007bff; color:#666; border-radius:4px; cursor:pointer;" :style="currentPage >= totalPages ? 'opacity:0.5; cursor:not-allowed;' : ''">Next</button>
                     </div>
                 </div>
                 </div><!-- /.row -->
@@ -140,6 +140,8 @@
     #churches-mobile-table.table-striped tbody tr:nth-of-type(even) { background-color: #fff; }
     #churches-mobile-table.table-striped tbody tr td.active-column { background-color: #f0f0f0 !important; }
     #churches-mobile-table.table-striped tbody tr:nth-of-type(even) td.active-column { background-color: #f0f0f0 !important; }
+    .church-list-pagination button:not(:disabled):hover { opacity: 0.8; }
+    .church-list-pagination button[style*="background-color:#000"]:hover { background-color: #333 !important; }
     </style>
     <div class="content hidden-lg-up" data-json-url="{{ self.get_locality_json }}"
          x-data="churchMobile()"
@@ -176,15 +178,15 @@
                 </div>
                 <div class="church-list-pagination" style="margin-top:1em; display:flex; justify-content:space-between; align-items:center; flex-wrap:nowrap; min-height:2.5em; width:100%;" x-show="visibleCount > 0">
                     <span style="display:inline-flex; align-items:center; line-height:1.5; flex-shrink:0; white-space:nowrap;" x-text="'Showing ' + (visibleCount ? (Math.min((currentPage-1)*pageSize+1, visibleCount)) : 0) + ' to ' + (Math.min(currentPage*pageSize, visibleCount) || 0) + ' of ' + visibleCount + ' entries'"></span>
-                    <div style="display:flex; align-items:center; gap:0.6em; flex-wrap:nowrap; flex-shrink:0; margin-left:auto;">
-                        <button type="button" @click="currentPage=Math.max(1, currentPage-1)" :disabled="currentPage <= 1" style="padding:0.35em 0.65em; line-height:1.5; height:2em; min-height:2em; box-sizing:border-box; margin:0; display:inline-flex; align-items:center; justify-content:center;">Previous</button>
+                    <div style="display:flex; align-items:center; gap:0.8em; flex-wrap:nowrap; flex-shrink:0; margin-left:auto;">
+                        <button type="button" @click="currentPage=Math.max(1, currentPage-1)" :disabled="currentPage <= 1" style="padding:0.35em 0.65em; line-height:1.5; height:2em; min-height:2em; box-sizing:border-box; margin:0; display:inline-flex; align-items:center; justify-content:center; background-color:#fff; border:1px solid #007bff; color:#666; border-radius:4px; cursor:pointer;" :style="currentPage <= 1 ? 'opacity:0.5; cursor:not-allowed;' : ''">Previous</button>
                         <template x-for="(p, i) in pageNumbers" :key="i">
                             <span style="display:inline-block; margin:0;">
-                                <button type="button" x-show="p !== '\u2026'" @click="currentPage = p" :style="currentPage === p ? 'font-weight:bold;' : ''" style="padding:0.35em 0.5em; line-height:1.5; min-width:2em; height:2em; min-height:2em; box-sizing:border-box; margin:0; display:inline-flex; align-items:center; justify-content:center;" x-text="p"></button>
-                                <span x-show="p === '\u2026'" style="padding:0 0.15em; margin:0; display:inline-block; height:2em; line-height:2em;">&#8230;</span>
+                                <button type="button" x-show="p !== '\u2026'" @click="currentPage = p" :style="currentPage === p ? 'background-color:#000; color:#fff; border:1px solid #000;' : 'background-color:#fff; color:#666; border:1px solid #ddd;'" style="padding:0.35em 0.5em; line-height:1.5; min-width:2em; height:2em; min-height:2em; box-sizing:border-box; margin:0; display:inline-flex; align-items:center; justify-content:center; border-radius:4px; cursor:pointer;" x-text="p"></button>
+                                <span x-show="p === '\u2026'" style="padding:0 0.15em; margin:0; display:inline-block; height:2em; line-height:2em; color:#666;">&#8230;</span>
                             </span>
                         </template>
-                        <button type="button" @click="currentPage=Math.min(totalPages, currentPage+1)" :disabled="currentPage >= totalPages" style="padding:0.35em 0.65em; line-height:1.5; height:2em; min-height:2em; box-sizing:border-box; margin:0; display:inline-flex; align-items:center; justify-content:center;">Next</button>
+                        <button type="button" @click="currentPage=Math.min(totalPages, currentPage+1)" :disabled="currentPage >= totalPages" style="padding:0.35em 0.65em; line-height:1.5; height:2em; min-height:2em; box-sizing:border-box; margin:0; display:inline-flex; align-items:center; justify-content:center; background-color:#fff; border:1px solid #007bff; color:#666; border-radius:4px; cursor:pointer;" :style="currentPage >= totalPages ? 'opacity:0.5; cursor:not-allowed;' : ''">Next</button>
                     </div>
                 </div>
                 <br>
