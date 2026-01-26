@@ -4,18 +4,11 @@ If the contact form link or other links point to `www.localchurches.org` when yo
 
 ---
 
-## 1. Wagtail Site hostname (fixed in code)
+## 1. Wagtail Site hostname
 
 **Cause:** The `wagtailcore_site` table has a Site with hostname `www.localchurches.org` (from Heroku). When you visit `localchurches.onrender.com`, Wagtail falls back to that default Site. Any logic that builds full URLs from the Site (redirects, sitemaps, etc.) will use `www.localchurches.org`.
 
-**Fix (automatic):** The build now runs `ensure_site` when `SITE_HOSTNAME` is set. That creates a Site for `localchurches.onrender.com` (same `root_page` as the existing one) so `request.site` matches the actual host.
-
-- **`render.yaml`** sets `SITE_HOSTNAME=localchurches.onrender.com`.
-- **`build.sh`** runs `python manage.py ensure_site --hostname="$SITE_HOSTNAME"` before `collectstatic`.
-
-On the next deploy, a Site for `localchurches.onrender.com` will be created if it doesn’t exist. No manual step needed if you use the blueprint.
-
-**Manual alternative:** Wagtail Admin → **Settings → Sites** → Add a Site with hostname `localchurches.onrender.com`, same root page as the existing site, port 80 (or 443 if your existing site uses it).
+**Fix:** Wagtail Admin → **Settings → Sites** → Add a Site with hostname `localchurches.onrender.com`, same root page as the existing site, port 80 (or 443 if your existing site uses it).
 
 ---
 
@@ -23,33 +16,19 @@ On the next deploy, a Site for `localchurches.onrender.com` will be created if i
 
 **Cause:** A redirect from `/contact/` (or another path) to `https://www.localchurches.org/contact/` sends users to the old domain.
 
-**Fix:** Wagtail Admin → **Redirects**. Look for:
-
-- **From:** `/contact/` or the path that matches
-- **To:** `https://www.localchurches.org/...`
-
-Either:
-
-- Delete the redirect, or  
-- Change **To** to a relative path (e.g. `/contact/`) so it stays on the current host.
+**Fix:** Wagtail Admin → **Redirects**. Look for **To:** `https://www.localchurches.org/...`. Delete the redirect or change **To** to a relative path (e.g. `/contact/`).
 
 ---
 
 ## 3. WAGTAILADMIN_BASE_URL
 
-**Cause:** Used for admin and notification links (e.g. in emails). If it’s `https://www.localchurches.org`, those links will point to the old domain.
+**Cause:** Used for admin and notification links (e.g. in emails). If it's `https://www.localchurches.org`, those links will point to the old domain.
 
-**Fix:** In **Render Dashboard → Environment**, set:
-
-```bash
-WAGTAILADMIN_BASE_URL=https://localchurches.onrender.com
-```
-
-`render.yaml` already uses this; if it’s overridden in the dashboard, update it there.
+**Fix:** In **Render Dashboard → Environment**, set `WAGTAILADMIN_BASE_URL=https://localchurches.onrender.com`.
 
 ---
 
-## 4. Links in CMS content (“in the text”)
+## 4. Links in CMS content ("in the text")
 
 **Cause:** A link to `https://www.localchurches.org/contact/` (or the old domain) is stored in CMS fields: rich text (e.g. Contact `intro`), `canonical_url`, `link_external`, GlobalSettings (address links, contact widget text), Advert `url`/`text`, or StreamField body.
 
@@ -76,9 +55,7 @@ WAGTAILADMIN_BASE_URL=https://localchurches.onrender.com
 
 | Cause            | Fix                                                                 |
 |------------------|---------------------------------------------------------------------|
-| Wagtail Site     | `ensure_site` + `SITE_HOSTNAME` when set; or add Site in Wagtail Admin |
+| Wagtail Site     | Add Site for localchurches.onrender.com in Wagtail Admin            |
 | Redirects        | Wagtail Admin → Redirects: delete or change **To** to a path        |
 | WAGTAILADMIN_BASE_URL | Render → Environment: set to `https://localchurches.onrender.com`  |
-| CMS content (“in the text”) | `python manage.py find_wrong_domain_links [--replace]`; or edit in Wagtail |
-
-After a redeploy, if links still go to `localchurches.org`, check Redirects, `WAGTAILADMIN_BASE_URL`, then run `find_wrong_domain_links` for CMS text.
+| CMS content ("in the text") | `python manage.py find_wrong_domain_links [--replace]`; or edit in Wagtail |

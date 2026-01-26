@@ -131,7 +131,7 @@
         <div class="map_detail" x-data>
             <template x-if="$store.mapStore && $store.mapStore.detail">
                 <div class="result_item_detail">
-                    <a href="#" class="map_details_close" aria-label="Close"><img src="{% static 'lampstands/css/packages/src/close.png' %}" alt=""></a>
+                    <a href="#" class="map_details_close" aria-label="Close"><span aria-hidden="true">×</span></a>
                     <h3><a :href="$store.mapStore.detail.url" x-text="$store.mapStore.detail.locality_name"></a></h3>
                     <div class="result_item_detail_info result_item_detail_info-main">
                         <div class="info">

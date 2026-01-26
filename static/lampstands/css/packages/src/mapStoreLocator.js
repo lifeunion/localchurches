@@ -564,8 +564,17 @@
 
 			var trimmed = encodeURIComponent((data.meeting_address || "").trim());
 			var url = (data.url && data.url.trim()) ? data.url.trim() : "";
-			var more = url ? '<a class="label label-success label-map" href="' + url + '">more info</a>' : "";
-			var content = "<b><h6>Church in " + (data.locality_name || "") + "</h6></b>" + (data.meeting_address || "") + "<br>" + more + '<a class="label label-danger label-map" href="https://maps.google.com/?saddr=Current%20Location&daddr=' + trimmed + '">get directions here</a>';
+			var more_info_link = url ? '<a class="label label-success label-map" style="color:white" href="' + url + '">more info</a> ' : "";
+			// Title and × close on one row (aligned); domready wires .info-window-close to close
+			var content = '<div style="margin:0;padding:0;font-size:13px;line-height:1.4">' +
+				'<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px">' +
+				'<div style="font-weight:bold;font-size:14px;flex:1;min-width:0">Church in ' + (data.locality_name || "") + '</div>' +
+				'<a href="#" class="info-window-close" aria-label="Close"><span aria-hidden="true">×</span></a>' +
+				'</div>' +
+				(data.meeting_address || "") +
+				'<div style="margin-top:8px">' + more_info_link +
+				'<a class="label label-danger label-map" style="color:white" href="https://maps.google.com/?saddr=Current%20Location&daddr=' + trimmed + '">get directions</a>' +
+				'</div></div>';
 			var _map = this.map;
 			var self = this;
 			google.maps.event.addListener(marker, "click", function () {
@@ -586,6 +595,11 @@
 		this._bounds = bounds;
 		if (this.settings.markerCluster.cluster && typeof MarkerClusterer !== "undefined")
 			this._markerCluster = new MarkerClusterer(this.map, this.markers, { imagePath: this.settings.markerCluster.imagePath, cssClass: this.settings.markerCluster.cssClass });
+		var _inf = this;
+		google.maps.event.addListener(this.infowindow, "domready", function () {
+			var el = document.querySelector(".gm-style-iw .info-window-close");
+			if (el) el.addEventListener("click", function (e) { e.preventDefault(); _inf.infowindow.close(); });
+		});
 	};
 
 	MapStoreLocator.prototype._handleMarkerClick = function (marker, data) {
