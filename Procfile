@@ -1,1 +1,1 @@
-web: gunicorn lampstands.wsgi --log-file -
+web: bash scripts/start.sh
