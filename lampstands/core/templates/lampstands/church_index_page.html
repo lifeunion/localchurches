@@ -112,11 +112,11 @@
                 {% endfor %}
             </tbody>
         </table>
-                <div class="church-list-pagination" style="margin-top:1em; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5em;" x-show="visibleCount > 0">
-                    <span x-text="'Showing ' + (visibleCount ? (Math.min((currentPage-1)*pageSize+1, visibleCount)) : 0) + ' to ' + (Math.min(currentPage*pageSize, visibleCount) || 0) + ' of ' + visibleCount + ' entries'"></span>
-                    <span>
-                        <button type="button" @click="currentPage=Math.max(1, currentPage-1)" :disabled="currentPage <= 1" style="margin-right:0.5em; padding:0.25em 0.5em;">Previous</button>
-                        <button type="button" @click="currentPage=Math.min(totalPages, currentPage+1)" :disabled="currentPage >= totalPages" style="padding:0.25em 0.5em;">Next</button>
+                <div class="church-list-pagination" style="margin-top:1em; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5em; min-height:2.5em;" x-show="visibleCount > 0">
+                    <span style="display:inline-flex; align-items:center; line-height:1.5;" x-text="'Showing ' + (visibleCount ? (Math.min((currentPage-1)*pageSize+1, visibleCount)) : 0) + ' to ' + (Math.min(currentPage*pageSize, visibleCount) || 0) + ' of ' + visibleCount + ' entries'"></span>
+                    <span style="display:inline-flex; align-items:center; gap:0.5em;">
+                        <button type="button" @click="currentPage=Math.max(1, currentPage-1)" :disabled="currentPage <= 1" style="padding:0.35em 0.65em; line-height:1.5; vertical-align:middle;">Previous</button>
+                        <button type="button" @click="currentPage=Math.min(totalPages, currentPage+1)" :disabled="currentPage >= totalPages" style="padding:0.35em 0.65em; line-height:1.5; vertical-align:middle;">Next</button>
                     </span>
                 </div>
                 </div>
