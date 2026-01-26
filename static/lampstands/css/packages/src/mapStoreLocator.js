@@ -92,6 +92,7 @@
 	function qs(sel, root) { return (root || document).querySelector(sel); }
 	function qsAll(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
 	function on(el, ev, fn) { if (el) el.addEventListener(ev, fn); }
+	function closest(el, sel) { return (el && typeof el.closest === "function") ? el.closest(sel) : null; }
 
 	MapStoreLocator.prototype._getStore = function () {
 		return window.Alpine && window.Alpine.store && window.Alpine.store("mapStore");
@@ -401,9 +402,9 @@
 
 		// .result_item > a: open detail (by data-id from Alpine-rendered list)
 		on(document, "click", function (e) {
-			var a = e.target.closest(".result_item > a");
+			var a = closest(e.target, ".result_item > a");
 			if (!a) return;
-			var ri = e.target.closest(".result_item");
+			var ri = closest(e.target, ".result_item");
 			if (!ri || !ri.dataset.id) return;
 			e.preventDefault();
 			var d = _._findById(ri.dataset.id);
@@ -411,7 +412,7 @@
 		});
 
 		on(document, "click", function (e) {
-			if (!e.target.closest(".filter_minimize")) return;
+			if (!closest(e.target, ".filter_minimize")) return;
 			var n = document.getElementById("mapFilterNavigation");
 			if (!n) return;
 			if (_._filterNavigationHeight == null) _._filterNavigationHeight = n.offsetHeight;
@@ -420,7 +421,7 @@
 		});
 
 		on(document, "click", function (e) {
-			if (!e.target.closest(".map_search_icon")) return;
+			if (!closest(e.target, ".map_search_icon")) return;
 			var fi = qs(".map_filter_input");
 			if (fi) fi.classList.toggle("input_open");
 		});
@@ -435,14 +436,14 @@
 
 		// Route: map_direction_trigger (get directions in list or detail)
 		on(document, "click", function (e) {
-			var tr = e.target.closest(".map_direction_trigger");
+			var tr = closest(e.target, ".map_direction_trigger");
 			if (!tr) return;
 			var mrt = qs(".map_route");
 			if (!mrt || mrt.classList.contains("open")) return;
 			mrt.classList.add("open");
 			e.preventDefault();
 			var destData = null;
-			var ri = e.target.closest(".result_item");
+			var ri = closest(e.target, ".result_item");
 			if (ri && ri.dataset.id) destData = _._findById(ri.dataset.id);
 			if (!destData) {
 				var s = _._getStore();
@@ -460,20 +461,20 @@
 		});
 
 		on(document, "click", function (e) {
-			if (e.target.closest(_.settings.detailsOptions.closeTrigger)) { e.preventDefault(); _.closeDetail(); }
+			if (closest(e.target, _.settings.detailsOptions.closeTrigger)) { e.preventDefault(); _.closeDetail(); }
 		});
 
 		on(document, "click", function (e) {
-			if (!e.target.closest(".map_direction_close_trigger")) return;
+			if (!closest(e.target, ".map_direction_close_trigger")) return;
 			_._closeDirections();
 		});
 
 		// Detail slider: .next / .prev in .result_item_detail_info .slider_container
 		on(document, "click", function (e) {
-			var next = e.target.closest(".result_item_detail_info .slider_container .next");
-			var prev = e.target.closest(".result_item_detail_info .slider_container .prev");
+			var next = closest(e.target, ".result_item_detail_info .slider_container .next");
+			var prev = closest(e.target, ".result_item_detail_info .slider_container .prev");
 			if (!next && !prev) return;
-			var container = (next || prev).closest(".slider_container");
+			var container = closest(next || prev, ".slider_container");
 			if (!container) return;
 			var items = container.querySelectorAll("> div");
 			if (items.length === 0) return;
@@ -489,7 +490,7 @@
 
 		// Categories (if used)
 		on(document, "click", function (e) {
-			var a = e.target.closest(".categories a");
+			var a = closest(e.target, ".categories a");
 			if (!a) return;
 			e.preventDefault();
 			if (a.classList.contains("map-marker-filter-all")) {
@@ -519,21 +520,20 @@
 
 		// Hover: .result_item -> bounce; mouseout from list item -> stop marker
 		on(document, "mouseenter", function (e) {
-			var ri = e.target.closest(".result_item");
+			var ri = closest(e.target, ".result_item");
 			if (!ri || !ri.dataset.id) return;
 			var m = _._markers[ri.dataset.id];
 			if (m && m.setAnimation) { m.setAnimation(google.maps.Animation.BOUNCE); setTimeout(function () { if (m.setAnimation) m.setAnimation(null); }, 750); }
 		});
 		on(document, "mouseout", function (e) {
-			var ri = e.target.closest && e.target.closest(".result_item");
+			var ri = closest(e.target, ".result_item");
 			if (ri && ri.dataset.id) {
-				if (!e.relatedTarget || !e.relatedTarget.closest || !e.relatedTarget.closest(".result_item")) {
+				if (!closest(e.relatedTarget, ".result_item")) {
 					var m = _._markers[ri.dataset.id];
 					if (m && m.setAnimation) m.setAnimation(null);
 				}
 			}
-			if (!e.relatedTarget || !e.relatedTarget.closest) return;
-			if (e.relatedTarget.closest(".result_item")) return;
+			if (closest(e.relatedTarget, ".result_item")) return;
 			qsAll(".map_listings_results .result_item").forEach(function (el) { el.classList.remove("active"); });
 		});
 	};
@@ -546,6 +546,7 @@
 
 	MapStoreLocator.prototype._createMarkers = function () {
 		this._removeMarkers();
+		if (!this.infowindow) this.infowindow = new google.maps.InfoWindow();
 		var bounds = new google.maps.LatLngBounds();
 		var BLA = typeof window.BLA !== "undefined" ? window.BLA : "";
 		var filter = this._activeCategories;
@@ -609,6 +610,7 @@
 	};
 
 	MapStoreLocator.prototype._removeMarkers = function () {
+		if (this.infowindow) this.infowindow.close();
 		for (var i = 0; i < this.markers.length; i++) {
 			var m = this.markers[i];
 			if (m.setMap) m.setMap(null);
