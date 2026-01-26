@@ -35,14 +35,26 @@
     </h6>
     </div>
 
-    <div class="content hidden-md-down" x-data="{ query: '', filterDesktop() { var q = this.query.trim().toLowerCase(); var t = document.getElementById('churches-table'); if (!t) return; var rows = t.querySelectorAll('tbody tr'); var idx = 1; for (var i = 0; i < rows.length; i++) { var r = rows[i]; var show = !q || r.textContent.toLowerCase().indexOf(q) >= 0; r.style.display = show ? '' : 'none'; if (show) { var c = r.querySelector('td:first-child'); if (c) c.textContent = idx++; } } } }" x-init="query = (new URLSearchParams(location.search)).get('area') || ''" x-effect="filterDesktop()">
+    <div class="content hidden-md-down" x-data="{ query: '', pageSize: 50, currentPage: 1, totalPages: 1, visibleCount: 0, filterDesktop() { var q = this.query.trim().toLowerCase(); var t = document.getElementById('churches-table'); if (!t) return; var rows = t.querySelectorAll('tbody tr'); var ps = this.pageSize || 50; var pg = this.currentPage || 1; var start = (pg - 1) * ps; var end = start + ps; var idx = 0; for (var i = 0; i < rows.length; i++) { var r = rows[i]; var match = !q || r.textContent.toLowerCase().indexOf(q) >= 0; if (match) { if (idx >= start && idx < end) { r.style.display = ''; var c = r.querySelector('td:first-child'); if (c) c.textContent = (idx - start + 1); } else { r.style.display = 'none'; } idx++; } else { r.style.display = 'none'; } } this.visibleCount = idx; this.totalPages = Math.ceil(idx / ps) || 1; this.currentPage = Math.min(Math.max(1, this.currentPage), this.totalPages); } }" x-effect="filterDesktop()">
         <div class="vessel">
             <div class="posts posts-grid">  
                 <div class="row">
                 <br>
-                <div class="church-list-search">
-                    <label for="church-search-filter" style="display:block; font-weight:bold;">SEARCH:</label>
-                    <input id="church-search-filter" type="text" x-model="query" placeholder="Filter (or use ?area= in URL)" style="display:block; width:100%; max-width:400px; padding:0.375rem 0.75rem; border:1px solid #0275d8; border-radius:0.25rem;">
+                <div class="church-list-toolbar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1em; margin-bottom:1em;">
+                    <div>
+                        <label>Show</label>
+                        <select x-model.number="pageSize" @change="currentPage=1" style="margin:0 0.25em; padding:0.25em 0.5em;">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                        <label>entries</label>
+                    </div>
+                    <div>
+                        <label>Search:</label>
+                        <input type="text" x-model="query" style="margin-left:0.5em; padding:0.375rem 0.75rem; border:1px solid #ccc; border-radius:0.25rem;" />
+                    </div>
                 </div>
                 <div style="overflow-x: auto;">
         <table class="table order-column stripe hover" id="churches-table" cellspacing="0" width="100%">
@@ -101,6 +113,13 @@
                 {% endfor %}
             </tbody>
         </table>
+                <div class="church-list-pagination" style="margin-top:1em; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5em;" x-show="visibleCount > 0">
+                    <span x-text="'Showing ' + (visibleCount ? (Math.min((currentPage-1)*pageSize+1, visibleCount)) : 0) + ' to ' + (Math.min(currentPage*pageSize, visibleCount) || 0) + ' of ' + visibleCount + ' entries'"></span>
+                    <span>
+                        <button type="button" @click="currentPage=Math.max(1, currentPage-1)" :disabled="currentPage <= 1" style="margin-right:0.5em; padding:0.25em 0.5em;">Previous</button>
+                        <button type="button" @click="currentPage=Math.min(totalPages, currentPage+1)" :disabled="currentPage >= totalPages" style="padding:0.25em 0.5em;">Next</button>
+                    </span>
+                </div>
                 </div>
                 </div><!-- /.row -->
             </div><!-- /.posts-->
