@@ -35,7 +35,7 @@
     </h6>
     </div>
 
-    <div class="content hidden-md-down" x-data="{ query: '', pageSize: 50, currentPage: 1, totalPages: 1, visibleCount: 0, filterDesktop() { var q = this.query.trim().toLowerCase(); var t = document.getElementById('churches-table'); if (!t) return; var rows = t.querySelectorAll('tbody tr'); var ps = this.pageSize || 50; var pg = this.currentPage || 1; var start = (pg - 1) * ps; var end = start + ps; var idx = 0; for (var i = 0; i < rows.length; i++) { var r = rows[i]; var match = !q || r.textContent.toLowerCase().indexOf(q) >= 0; if (match) { if (idx >= start && idx < end) { r.style.display = ''; var c = r.querySelector('td:first-child'); if (c) c.textContent = (idx - start + 1); } else { r.style.display = 'none'; } idx++; } else { r.style.display = 'none'; } } this.visibleCount = idx; this.totalPages = Math.ceil(idx / ps) || 1; this.currentPage = Math.min(Math.max(1, this.currentPage), this.totalPages); } }" x-effect="filterDesktop()">
+    <div class="content hidden-md-down" x-data="{ query: '', pageSize: 50, currentPage: 1, totalPages: 1, visibleCount: 0, pageNumbers: [], filterDesktop() { var q = this.query.trim().toLowerCase(); var t = document.getElementById('churches-table'); if (!t) return; var rows = t.querySelectorAll('tbody tr'); var ps = this.pageSize || 50; var pg = this.currentPage || 1; var start = (pg - 1) * ps; var end = start + ps; var idx = 0; for (var i = 0; i < rows.length; i++) { var r = rows[i]; var match = !q || r.textContent.toLowerCase().indexOf(q) >= 0; if (match) { if (idx >= start && idx < end) { r.style.display = ''; } else { r.style.display = 'none'; } idx++; } else { r.style.display = 'none'; } } this.visibleCount = idx; this.totalPages = Math.ceil(idx / ps) || 1; this.currentPage = Math.min(Math.max(1, this.currentPage), this.totalPages); var pn = []; var tot = this.totalPages; var cur = this.currentPage; if (tot <= 7) { for (var i = 1; i <= tot; i++) pn.push(i); } else { pn.push(1); if (cur > 3) pn.push('\u2026'); for (var i = Math.max(2, cur - 2); i <= Math.min(tot - 1, cur + 2); i++) pn.push(i); if (cur < tot - 2) pn.push('\u2026'); if (tot > 1) pn.push(tot); } this.pageNumbers = pn; } }" x-effect="filterDesktop()">
         <div class="vessel">
             <div class="posts posts-grid">  
                 <div class="row">
@@ -56,10 +56,9 @@
                     </div>
                 </div>
                 <div style="overflow-x: auto;">
-        <table class="table order-column stripe hover" id="churches-table" cellspacing="0" width="100%">
+        <table class="table order-column table-striped table-hover" id="churches-table" cellspacing="0" width="100%">
             <thead>
                 <tr>
-                    <th>Index</th>
                     <th>City</th>
                     <th>Address</th>
                     <th>State/Prov.</th>
@@ -70,7 +69,6 @@
                     <th colspan="8">Available Contacts' Names and Phones</th>
                 </tr>
                 <tr>
-                    <th></th>
                     <th></th>
                     <th></th>
                     <th></th>
@@ -92,7 +90,6 @@
             <tbody>
                 {% for branch in church_posts %} 
                     <tr>
-                        <td></td>
                         <td><a href="/churches/{{ branch.slug }}/">{{branch.locality_name}}</a></td>
                         <td>{{branch.meeting_address}}</td>
                         <td>{{branch.locality_state_or_province}}</td>
@@ -114,8 +111,14 @@
         </table>
                 <div class="church-list-pagination" style="margin-top:1em; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5em; min-height:2.5em;" x-show="visibleCount > 0">
                     <span style="display:inline-flex; align-items:center; line-height:1.5;" x-text="'Showing ' + (visibleCount ? (Math.min((currentPage-1)*pageSize+1, visibleCount)) : 0) + ' to ' + (Math.min(currentPage*pageSize, visibleCount) || 0) + ' of ' + visibleCount + ' entries'"></span>
-                    <span style="display:inline-flex; align-items:center; gap:0.5em;">
+                    <span style="display:inline-flex; align-items:center; gap:0.25em; flex-wrap:wrap; justify-content:flex-end;">
                         <button type="button" @click="currentPage=Math.max(1, currentPage-1)" :disabled="currentPage <= 1" style="padding:0.35em 0.65em; line-height:1.5; vertical-align:middle;">Previous</button>
+                        <template x-for="(p, i) in pageNumbers" :key="i">
+                            <span style="display:inline-flex;">
+                                <button type="button" x-show="p !== '\u2026'" @click="currentPage = p" :style="currentPage === p ? 'font-weight:bold;' : ''" style="padding:0.35em 0.5em; line-height:1.5; min-width:2em;" x-text="p"></button>
+                                <span x-show="p === '\u2026'" style="padding:0 0.25em;">&#8230;</span>
+                            </span>
+                        </template>
                         <button type="button" @click="currentPage=Math.min(totalPages, currentPage+1)" :disabled="currentPage >= totalPages" style="padding:0.35em 0.65em; line-height:1.5; vertical-align:middle;">Next</button>
                     </span>
                 </div>
@@ -125,6 +128,10 @@
         </div><!-- /.vessel -->
     </div><!-- /.content -->
 
+    <style>
+    .church-mobile-list .church-mobile-item:nth-of-type(odd) { background-color: #f9f9f9; }
+    .church-mobile-item { border-bottom: 1px solid #eee; padding: 0.75em 0.5em; }
+    </style>
     <div class="content hidden-lg-up" data-json-url="{{ self.get_locality_json }}"
          x-data="churchMobile()"
          x-init="jsonUrl = $el.dataset.jsonUrl || ''; initMobile()">
@@ -132,28 +139,22 @@
             <div class="posts posts-grid">  
                 <div class="row">
                 <br>
-                 <table class="display" id="churches-mobile-table" cellspacing="0" width="100%">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>City</th>
-                    <th>State/Prov.</th>
-                    <th>Country</th>
-                </tr>
-            </thead>
-            <tbody>
-                <template x-for="item in items" :key="item.id">
-                <tr>
-                    <td class="details-control" @click="toggle(item.id)" style="cursor:pointer" x-text="expanded[item.id] ? '−' : '+'"></td>
-                    <td><a :href="item.url || ('/churches/' + (item.slug||'') + '/')" x-text="item.locality_name"></a></td>
-                    <td x-text="item.locality_state_or_province"></td>
-                    <td><span x-text="item.locality_country"></span><div x-show="expanded[item.id]" style="margin-top:0.5em" x-html="formatDetail(item)"></div></td>
-                </tr>
-                </template>
-            </tbody>
-        </table>
-        <br>
-        <br>        
+                <div class="church-mobile-list">
+                    <template x-for="item in items" :key="item.id">
+                        <div class="church-mobile-item">
+                            <div style="display:flex; align-items:flex-start; gap:0.5em;">
+                                <span @click="toggle(item.id)" style="cursor:pointer; flex-shrink:0; min-width:1.2em;" x-text="expanded[item.id] ? '−' : '+'"></span>
+                                <div style="flex:1; min-width:0;">
+                                    <a :href="item.url || ('/churches/' + (item.slug||'') + '/')" x-text="item.locality_name" style="font-weight:600;"></a>
+                                    <span x-text="' — ' + (item.locality_state_or_province || '') + ', ' + (item.locality_country || '')"></span>
+                                    <div x-show="expanded[item.id]" style="margin-top:0.5em;" x-html="formatDetail(item)"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+                <br>
+                <br>        
 
                 </div><!-- /.row -->
             </div><!-- /.posts-->

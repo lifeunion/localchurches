@@ -1059,7 +1059,7 @@ class ChurchIndexPage(Page):
         return ChurchPage.objects.filter(
             live=True,
             path__startswith=self.path
-        ).only(
+        ).order_by('locality_name').only(
             'id', 'slug', 'locality_name', 'meeting_address',
             'locality_state_or_province', 'locality_country',
             'locality_phone_number', 'locality_email', 'locality_web',
