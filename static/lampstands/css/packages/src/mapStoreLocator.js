@@ -577,11 +577,14 @@
 				'</div></div>';
 			var _map = this.map;
 			var self = this;
-			google.maps.event.addListener(marker, "click", function () {
-				if (self.infowindow) self.infowindow.close();
-				self.infowindow.setContent(content);
-				self.infowindow.open(_map, marker);
-			});
+			// IIFE so each handler closes over this iteration's marker and content (avoids closure-in-loop bug)
+			(function (m, c) {
+				google.maps.event.addListener(m, "click", function () {
+					if (self.infowindow) self.infowindow.close();
+					self.infowindow.setContent(c);
+					self.infowindow.open(_map, m);
+				});
+			})(marker, content);
 			if (this.settings.markerOptions.dropAnimation && marker.setAnimation) marker.setAnimation(google.maps.Animation.DROP);
 			google.maps.event.addListener(marker, "click", this._handleMarkerClick.bind(this, marker, data));
 			google.maps.event.addListener(marker, "mouseover", this._handleMarkerMouseover.bind(this, marker, data));
