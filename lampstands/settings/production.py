@@ -219,18 +219,19 @@ if AWS_STORAGE_BUCKET_NAME and AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
         print(f"DEBUG: WhiteNoise middleware not found in MIDDLEWARE (expected when using S3)", file=sys.stderr)
 else:
     # Use WhiteNoise for static files (no S3)
-    # Using CompressedStaticFilesStorage instead of CompressedManifestStaticFilesStorage
-    # to avoid issues with missing source map files
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+    # Use StaticFilesStorage (not CompressedStaticFilesStorage) to avoid post_process
+    # skipping/failing files during collectstatic, which causes 404s and MIME type
+    # errors when Django's HTML 404 page is returned for missing CSS/JS.
+    # WhiteNoise still gzips responses on the fly.
+    STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
     STATIC_URL = '/static/'
     MEDIA_URL = '/media/'
-    # Update STORAGES for WhiteNoise (inherited from base.py but ensure it's set)
     STORAGES = {
         "default": {
             "BACKEND": "django.core.files.storage.FileSystemStorage",
         },
         "staticfiles": {
-            "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
         },
     }
     # IMPORTANT: When using WhiteNoise, ensure STATIC_ROOT is set correctly

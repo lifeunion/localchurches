@@ -128,7 +128,8 @@ echo "Collecting static files..."
 echo "Checking static file storage backend..."
 python -c "
 import os
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lampstands.settings.production')
+# Use same settings as build (from RENDER_GIT_BRANCH in build.sh)
+os.environ['DJANGO_SETTINGS_MODULE'] = os.environ.get('DJANGO_SETTINGS_MODULE') or 'lampstands.settings.production'
 import django
 django.setup()
 from django.conf import settings
@@ -187,8 +188,8 @@ else:
     print(f'   STATIC_URL: {settings.STATIC_URL}')
 " || echo "Could not check storage backend"
 
-# Temporarily disable S3 storage during collectstatic if credentials are missing
-# This ensures files are collected locally for WhiteNoise
+# Collect static (uses DJANGO_SETTINGS_MODULE set at top from RENDER_GIT_BRANCH)
+echo "Running collectstatic with DJANGO_SETTINGS_MODULE=${DJANGO_SETTINGS_MODULE}"
 python manage.py collectstatic --no-input --clear --verbosity 2 2>&1 | tee /tmp/collectstatic.log || {
     echo "Warning: collectstatic had issues, checking log..."
     cat /tmp/collectstatic.log | tail -50
@@ -209,7 +210,8 @@ echo "Verifying Wagtail admin CSS and JS files were collected..."
 python -c "
 import os
 import sys
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lampstands.settings.production')
+# Use same settings as build (from RENDER_GIT_BRANCH in build.sh)
+os.environ['DJANGO_SETTINGS_MODULE'] = os.environ.get('DJANGO_SETTINGS_MODULE') or 'lampstands.settings.production'
 import django
 django.setup()
 from django.conf import settings
