@@ -55,7 +55,7 @@
                         <input type="text" x-model="query" style="padding:0.375rem 0.75rem; border:1px solid #ccc; border-radius:0.25rem;" />
                     </div>
                 </div>
-                <div style="overflow-x: auto;">
+                <div style="overflow-x: auto; max-height: 70vh; overflow-y: auto;">
         <table class="table order-column table-striped table-hover" id="churches-table" cellspacing="0" width="100%">
             <thead>
                 <tr>
@@ -109,18 +109,18 @@
                 {% endfor %}
             </tbody>
         </table>
-                <div class="church-list-pagination" style="margin-top:1em; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.75em; min-height:2.5em;" x-show="visibleCount > 0">
+                <div class="church-list-pagination" style="margin-top:1em; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; min-height:2.5em; width:100%;" x-show="visibleCount > 0">
                     <span style="display:inline-flex; align-items:center; line-height:1.5; flex-shrink:0;" x-text="'Showing ' + (visibleCount ? (Math.min((currentPage-1)*pageSize+1, visibleCount)) : 0) + ' to ' + (Math.min(currentPage*pageSize, visibleCount) || 0) + ' of ' + visibleCount + ' entries'"></span>
-                    <span style="display:inline-flex; align-items:center; gap:0.5em; flex-wrap:wrap; margin-left:auto;">
-                        <button type="button" @click="currentPage=Math.max(1, currentPage-1)" :disabled="currentPage <= 1" style="padding:0.35em 0.65em; line-height:1.5; vertical-align:middle;">Previous</button>
+                    <div style="display:flex; align-items:center; gap:0.6em; flex-wrap:wrap; margin-left:auto; flex-shrink:0;">
+                        <button type="button" @click="currentPage=Math.max(1, currentPage-1)" :disabled="currentPage <= 1" style="padding:0.35em 0.65em; line-height:1.5; vertical-align:middle; margin:0;">Previous</button>
                         <template x-for="(p, i) in pageNumbers" :key="i">
-                            <span style="display:inline-flex;">
-                                <button type="button" x-show="p !== '\u2026'" @click="currentPage = p" :style="currentPage === p ? 'font-weight:bold;' : ''" style="padding:0.35em 0.5em; line-height:1.5; min-width:2em;" x-text="p"></button>
-                                <span x-show="p === '\u2026'" style="padding:0 0.15em;">&#8230;</span>
+                            <span style="display:inline-block; margin:0;">
+                                <button type="button" x-show="p !== '\u2026'" @click="currentPage = p" :style="currentPage === p ? 'font-weight:bold;' : ''" style="padding:0.35em 0.5em; line-height:1.5; min-width:2em; margin:0;" x-text="p"></button>
+                                <span x-show="p === '\u2026'" style="padding:0 0.15em; margin:0; display:inline-block;">&#8230;</span>
                             </span>
                         </template>
-                        <button type="button" @click="currentPage=Math.min(totalPages, currentPage+1)" :disabled="currentPage >= totalPages" style="padding:0.35em 0.65em; line-height:1.5; vertical-align:middle;">Next</button>
-                    </span>
+                        <button type="button" @click="currentPage=Math.min(totalPages, currentPage+1)" :disabled="currentPage >= totalPages" style="padding:0.35em 0.65em; line-height:1.5; vertical-align:middle; margin:0;">Next</button>
+                    </div>
                 </div>
                 </div>
                 </div><!-- /.row -->
@@ -131,29 +131,54 @@
     <style>
     #churches-table.table-striped tbody tr:nth-of-type(odd) { background-color: #e0e0e0; }
     #churches-table.table-striped tbody tr:nth-of-type(even) { background-color: #fff; }
-    .church-mobile-list .church-mobile-item:nth-of-type(odd) { background-color: #f9f9f9; }
-    .church-mobile-item { border-bottom: 1px solid #eee; padding: 0.75em 0.5em; }
+    #churches-mobile-table.table-striped tbody tr:nth-of-type(odd) { background-color: #e0e0e0; }
+    #churches-mobile-table.table-striped tbody tr:nth-of-type(even) { background-color: #fff; }
     </style>
     <div class="content hidden-lg-up" data-json-url="{{ self.get_locality_json }}"
          x-data="churchMobile()"
-         x-init="jsonUrl = $el.dataset.jsonUrl || ''; initMobile()">
+         x-init="jsonUrl = $el.dataset.jsonUrl || ''; initMobile()"
+         x-effect="updatePagination()">
         <div class="vessel">
             <div class="posts posts-grid">  
                 <div class="row">
                 <br>
-                <div class="church-mobile-list">
-                    <template x-for="item in items" :key="item.id">
-                        <div class="church-mobile-item">
-                            <div style="display:flex; align-items:flex-start; gap:0.5em;">
-                                <span @click="toggle(item.id)" style="cursor:pointer; flex-shrink:0; min-width:1.2em;" x-text="expanded[item.id] ? '−' : '+'"></span>
-                                <div style="flex:1; min-width:0;">
-                                    <a :href="item.url || ('/churches/' + (item.slug||'') + '/')" x-text="item.locality_name" style="font-weight:600;"></a>
-                                    <span x-text="' — ' + (item.locality_state_or_province || '') + ', ' + (item.locality_country || '')"></span>
-                                    <div x-show="expanded[item.id]" style="margin-top:0.5em;" x-html="formatDetail(item)"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </template>
+                <div style="overflow-x: auto; max-height: 70vh; overflow-y: auto;">
+                 <table class="table table-striped" id="churches-mobile-table" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>City</th>
+                    <th>State/Prov.</th>
+                    <th>Country</th>
+                </tr>
+            </thead>
+            <tbody>
+                <template x-for="item in displayedItems" :key="item.id">
+                <tr>
+                    <td class="details-control" @click="toggle(item.id)" style="cursor:pointer; text-align:center; font-weight:bold; font-size:1.2em;" x-text="expanded[item.id] ? '−' : '+'"></td>
+                    <td><a :href="item.url || ('/churches/' + (item.slug||'') + '/')" x-text="item.locality_name"></a></td>
+                    <td x-text="item.locality_state_or_province"></td>
+                    <td>
+                        <span x-text="item.locality_country"></span>
+                        <div x-show="expanded[item.id]" style="margin-top:0.5em;" x-html="formatDetail(item)"></div>
+                    </td>
+                </tr>
+                </template>
+            </tbody>
+        </table>
+                </div>
+                <div class="church-list-pagination" style="margin-top:1em; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; min-height:2.5em; width:100%;" x-show="visibleCount > 0">
+                    <span style="display:inline-flex; align-items:center; line-height:1.5; flex-shrink:0;" x-text="'Showing ' + (visibleCount ? (Math.min((currentPage-1)*pageSize+1, visibleCount)) : 0) + ' to ' + (Math.min(currentPage*pageSize, visibleCount) || 0) + ' of ' + visibleCount + ' entries'"></span>
+                    <div style="display:flex; align-items:center; gap:0.6em; flex-wrap:wrap; margin-left:auto; flex-shrink:0;">
+                        <button type="button" @click="currentPage=Math.max(1, currentPage-1)" :disabled="currentPage <= 1" style="padding:0.35em 0.65em; line-height:1.5; vertical-align:middle; margin:0;">Previous</button>
+                        <template x-for="(p, i) in pageNumbers" :key="i">
+                            <span style="display:inline-block; margin:0;">
+                                <button type="button" x-show="p !== '\u2026'" @click="currentPage = p" :style="currentPage === p ? 'font-weight:bold;' : ''" style="padding:0.35em 0.5em; line-height:1.5; min-width:2em; margin:0;" x-text="p"></button>
+                                <span x-show="p === '\u2026'" style="padding:0 0.15em; margin:0; display:inline-block;">&#8230;</span>
+                            </span>
+                        </template>
+                        <button type="button" @click="currentPage=Math.min(totalPages, currentPage+1)" :disabled="currentPage >= totalPages" style="padding:0.35em 0.65em; line-height:1.5; vertical-align:middle; margin:0;">Next</button>
+                    </div>
                 </div>
                 <br>
                 <br>        
@@ -173,14 +198,45 @@ document.addEventListener('alpine:init', function() {
   Alpine.data('churchMobile', function() {
     return {
       items: [],
+      displayedItems: [],
       expanded: {},
       jsonUrl: '',
+      pageSize: 25,
+      currentPage: 1,
+      totalPages: 1,
+      visibleCount: 0,
+      pageNumbers: [],
       formatDetail: function(it) {
         var w = (it.locality_web || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
         var wl = w ? '<a href="'+w+'">'+w+'</a>' : '';
         return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px"><tr><td>Meeting address:</td><td>'+(it.meeting_address||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</td></tr><tr><td>Phone number:</td><td>'+(it.locality_phone_number||'').replace(/</g,'&lt;')+'</td></tr><tr><td>Email:</td><td>'+(it.locality_email||'').replace(/</g,'&lt;')+'</td></tr><tr><td>Website:</td><td>'+wl+'</td></tr></table>';
       },
       toggle: function(id) { this.expanded = Object.assign({}, this.expanded, { [id]: !this.expanded[id] }); },
+      updatePagination: function() {
+        var that = this;
+        var ps = that.pageSize || 25;
+        var pg = that.currentPage || 1;
+        var total = that.items.length;
+        that.visibleCount = total;
+        that.totalPages = Math.ceil(total / ps) || 1;
+        that.currentPage = Math.min(Math.max(1, that.currentPage), that.totalPages);
+        var start = (that.currentPage - 1) * ps;
+        var end = start + ps;
+        that.displayedItems = that.items.slice(start, end);
+        var pn = [];
+        var tot = that.totalPages;
+        var cur = that.currentPage;
+        if (tot <= 7) {
+          for (var i = 1; i <= tot; i++) pn.push(i);
+        } else {
+          pn.push(1);
+          if (cur > 3) pn.push('\u2026');
+          for (var i = Math.max(2, cur - 2); i <= Math.min(tot - 1, cur + 2); i++) pn.push(i);
+          if (cur < tot - 2) pn.push('\u2026');
+          if (tot > 1) pn.push(tot);
+        }
+        that.pageNumbers = pn;
+      },
       initMobile: function() {
         var that = this;
         var url = that.jsonUrl;
@@ -200,6 +256,7 @@ document.addEventListener('alpine:init', function() {
           }
           list.sort(function(a,b){ return (a.locality_name||'').localeCompare(b.locality_name||''); });
           that.items = list;
+          that.updatePagination();
         }).catch(function(e){ console.error('Church list fetch error:', e); });
       }
     };
