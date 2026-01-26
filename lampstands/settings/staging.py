@@ -105,12 +105,16 @@ RECAPTCHA_USE_SSL = True
 
 # ---- Staging: never use S3. lcstatic is reserved for master/production only. ----
 # Static: WhiteNoise (collectstatic → STATIC_ROOT). Media: local filesystem.
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+# Use StaticFilesStorage (not CompressedStaticFilesStorage) to avoid post_process
+# issues that can skip or fail on some files during collectstatic on Render, which
+# led to 404s and "MIME type 'text/html'" when Django's 404 page was returned for
+# missing CSS/JS. WhiteNoise still gzips responses on the fly.
+STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.StaticFilesStorage'
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
-    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedStaticFilesStorage"},
+    "staticfiles": {"BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage"},
 }
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),   # project root: css/, js/villareal/, etc.
