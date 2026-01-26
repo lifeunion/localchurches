@@ -227,6 +227,7 @@ if not use_s3:
         ('js/villareal/jquery.min.js', 'jQuery'),
         ('lampstands/css/packages/src/markerclusterer.min.js', 'Map MarkerClusterer'),
         ('lampstands/css/packages/src/mapStoreLocator.js', 'Map mapStoreLocator'),
+        ('lampstands/css/packages/src/style.css', 'Map style CSS'),
     ]
 
 def check_s3(key):
