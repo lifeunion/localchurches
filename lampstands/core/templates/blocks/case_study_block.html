@@ -3,7 +3,7 @@
         <h2 class="services-section__heading">{{ value.title }}</h2>
 
         {% spaceless %}
-        <div class="services-slider">
+        <div class="services-slider" x-data="{ index: 0, n: {{ value.case_studies|length }} }" x-init="n = Math.max(1, n)">
             <h2 class="services-slider__heading">
                 {{ value.intro }}
             </h2>
@@ -11,10 +11,14 @@
             <ul class="work-list">
                 {% for case_study in value.case_studies %}
                 {% with case_study.page.specific as page %}
-                  {% include "lampstands/includes/work_item.html" with page=page title=case_study.title|default:page.title descriptive_title=case_study.descriptive_title|default:page.descriptive_title image=case_study.image|default:page.homepage_image %}
+                  {% include "lampstands/includes/work_item.html" with page=page title=case_study.title|default:page.title descriptive_title=case_study.descriptive_title|default:page.descriptive_title image=case_study.image|default:page.homepage_image carousel=True slide_index=forloop.counter0 %}
                 {% endwith %}
                 {% endfor %}
             </ul>
+            <div x-show="n > 1" style="margin-top:1em">
+                <button type="button" @click="index = (index - 1 + n) % n" aria-label="Previous">&#9664; Prev</button>
+                <button type="button" @click="index = (index + 1) % n" style="margin-left:0.5em" aria-label="Next">Next &#9654;</button>
+            </div>
         </div>
         {% endspaceless %}
 

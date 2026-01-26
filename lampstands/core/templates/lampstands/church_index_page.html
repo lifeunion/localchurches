@@ -4,9 +4,6 @@
 {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %} | The Local Churches
 {% endblock %}
 
-{% block extra_links %} 
-<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" >
-{% endblock %}
 {% block content %}
     
     <div class="map-toggle" style="background-color: #555; width: 100%;">
@@ -38,13 +35,13 @@
     </h6>
     </div>
 
-    <div class="content hidden-md-down">
+    <div class="content hidden-md-down" x-data="{ query: '', filterDesktop() { var q = this.query.trim().toLowerCase(); var t = document.getElementById('churches-table'); if (!t) return; var rows = t.querySelectorAll('tbody tr'); var idx = 1; for (var i = 0; i < rows.length; i++) { var r = rows[i]; var show = !q || r.textContent.toLowerCase().indexOf(q) >= 0; r.style.display = show ? '' : 'none'; if (show) { var c = r.querySelector('td:first-child'); if (c) c.textContent = idx++; } } } }" x-init="query = (new URLSearchParams(location.search)).get('area') || ''" x-effect="filterDesktop()">
         <div class="vessel">
             <div class="posts posts-grid">  
                 <div class="row">
                 <br>
-               
-
+                <div><label>Search: <input type="text" x-model="query" placeholder="Filter (or use ?area= in URL)"></label></div>
+                <div style="overflow-x: auto;">
         <table class="table order-column stripe hover display" id="churches-table" cellspacing="0" width="100%">
             <thead>
                 <tr>
@@ -101,19 +98,50 @@
                 {% endfor %}
             </tbody>
         </table>
-  
+                </div>
                 </div><!-- /.row -->
             </div><!-- /.posts-->
         </div><!-- /.vessel -->
     </div><!-- /.content -->
 
-    <div class="content hidden-lg-up">
+    <div class="content hidden-lg-up" data-json-url="{{ self.get_locality_json }}"
+         x-data="{
+           items: [],
+           expanded: {},
+           jsonUrl: '',
+           formatDetail(it) {
+             var w = (it.locality_web || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+             var wl = w ? '<a href=\"'+w+'\">'+w+'</a>' : '';
+             return '<table cellpadding=\"5\" cellspacing=\"0\" border=\"0\" style=\"padding-left:50px\"><tr><td>Meeting address:</td><td>'+(it.meeting_address||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</td></tr><tr><td>Phone number:</td><td>'+(it.locality_phone_number||'').replace(/</g,'&lt;')+'</td></tr><tr><td>Email:</td><td>'+(it.locality_email||'').replace(/</g,'&lt;')+'</td></tr><tr><td>Website:</td><td>'+wl+'</td></tr></table>';
+           },
+           toggle(id) { this.expanded = Object.assign({}, this.expanded, { [id]: !this.expanded[id] }); },
+           initMobile() {
+             var that = this;
+             var url = that.jsonUrl;
+             if (!url) return;
+             fetch(url).then(function(r){return r.json();}).then(function(json){
+               var area = (new URLSearchParams(location.search)).get('area') || '';
+               var list = [];
+               for (var i = 0; i < json.length; i++) {
+                 var o = json[i];
+                 var cn = '';
+                 if (o.locality_country) {
+                   if (typeof o.locality_country === 'object' && o.locality_country.name) cn = o.locality_country.name;
+                   else if (typeof o.locality_country === 'string') cn = o.locality_country;
+                 }
+                 var it = { id: o.id, slug: o.slug, url: o.url, locality_name: o.locality_name||'', locality_state_or_province: o.locality_state_or_province||'', locality_country: cn, meeting_address: o.meeting_address||'', locality_phone_number: o.locality_phone_number||'', locality_email: o.locality_email||'', locality_web: o.locality_web||'' };
+                 if (!area || [it.locality_name,it.locality_state_or_province,it.locality_country,it.meeting_address].join(' ').toLowerCase().indexOf(area.toLowerCase()) >= 0) list.push(it);
+               }
+               list.sort(function(a,b){ return (a.locality_name||'').localeCompare(b.locality_name||''); });
+               that.items = list;
+             }).catch(function(e){ console.error('Church list fetch error:', e); });
+           }
+         }"
+         x-init="jsonUrl = $el.dataset.jsonUrl || ''; initMobile()">
         <div class="vessel">
             <div class="posts posts-grid">  
                 <div class="row">
                 <br>
-          
-
                  <table class="display" id="churches-mobile-table" cellspacing="0" width="100%">
             <thead>
                 <tr>
@@ -123,6 +151,16 @@
                     <th>Country</th>
                 </tr>
             </thead>
+            <tbody>
+                <template x-for="item in items" :key="item.id">
+                <tr>
+                    <td class="details-control" @click="toggle(item.id)" style="cursor:pointer" x-text="expanded[item.id] ? '−' : '+'"></td>
+                    <td><a :href="item.url || ('/churches/' + (item.slug||'') + '/')" x-text="item.locality_name"></a></td>
+                    <td x-text="item.locality_state_or_province"></td>
+                    <td><span x-text="item.locality_country"></span><div x-show="expanded[item.id]" style="margin-top:0.5em" x-html="formatDetail(item)"></div></td>
+                </tr>
+                </template>
+            </tbody>
         </table>
         <br>
         <br>        
@@ -137,143 +175,7 @@
 {% endblock %}
  
 {% block extra_js %}
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>    
-<script>
-    // Read a page's GET URL variables and return them as an associative array.
-    
-    $.urlParam = function(name){
-    var results = new RegExp('[\\?&]' + name + '=([^&#]*)').exec(window.location.href);
-    if (!results)
-    {
-        return;
-    }
-    var trimmed = results[1]
-    trimmed = decodeURI(trimmed)
-    return trimmed || "";
-    };
-
-    /* Formatting function for row details - modify as you need */
-    function format ( d ) {
-        // `d` is the original data object for the row
-        var meetingAddress = d.meeting_address || '';
-        var phoneNumber = d.locality_phone_number || '';
-        var email = d.locality_email || '';
-        var website = d.locality_web || '';
-        var websiteLink = website ? '<a href="' + website + '">' + website + '</a>' : '';
-        return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-            '<tr>'+
-                '<td>Meeting address:</td>'+
-                '<td>'+meetingAddress+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td>Phone number:</td>'+
-                '<td>'+phoneNumber+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td>Email:</td>'+
-                '<td>'+email+'</td>'+
-            '</tr>'+
-            '<tr>'+
-                '<td>Website:</td>'+
-                '<td>'+websiteLink+'</td>'+
-            '</tr>'+
-        '</table>';
-    }
-
-    $(document).ready(function() {
-    var t = $('#churches-table').DataTable( {
-        "oSearch": {"sSearch": $.urlParam('area')},
-        "scrollX": true,
-        "columnDefs": [ {
-            "searchable": false,
-            "orderable": false,
-            "targets": 0
-        },
-             { "width": '700px', "targets": 2 },
-             { "width": '600px', "targets": 5 },
-             { "width": '250px', "targets": 7 },
-        ],
-        "order": [[ 1, 'asc' ]],
-    } );
-
-    var mobiletable = $('#churches-mobile-table').DataTable( {
-        "oSearch": {"sSearch": $.urlParam('area')},
-        "ajax": {
-            "url": "{{self.get_locality_json}}",
-            "dataSrc": function (json) {
-              var return_data = new Array();
-              for(var i=0;i< json.length; i++){
-                // Safely handle locality_country - it might be null or a dict
-                var countryName = '';
-                if (json[i].locality_country) {
-                  if (typeof json[i].locality_country === 'object' && json[i].locality_country.name) {
-                    countryName = json[i].locality_country.name;
-                  } else if (typeof json[i].locality_country === 'string') {
-                    countryName = json[i].locality_country;
-                  }
-                }
-                return_data.push({
-                  'locality_name': json[i].locality_name || '',
-                  'locality_state_or_province': json[i].locality_state_or_province || '',
-                  'locality_country': countryName,
-                  'meeting_address': json[i].meeting_address || '',
-                  'locality_phone_number': json[i].locality_phone_number || '',
-                  'locality_email': json[i].locality_email || '',
-                  'locality_web': json[i].locality_web || '',
-                })
-              }
-              return return_data;
-            },
-            "error": function(xhr, error, thrown) {
-              console.error('DataTables Ajax error:', error, thrown);
-              console.error('Response:', xhr.responseText);
-            }
-        },
-        "scrollX": true,
-        "order": [[1, 'asc']],
-        "columnDefs": [
-            { "width": "33%", "targets": 1 }
-        ],
-        "columns": [
-            {
-                "className":      'details-control',
-                "data":           null,
-                "orderable":      false,
-                "defaultContent": ''
-            },
-            { "data": "locality_name" },
-            { "data": "locality_state_or_province" },
-            { "data": "locality_country" },
-        ],
-    } );
- 
-    t.on( 'order.dt search.dt', function () {
-        t.column(0, {search:'applied', order:'applied'}).nodes().each( function (cell, i) {
-            cell.innerHTML = i+1;
-        } );
-    } ).draw();
-
-    // Add event listener for opening and closing details
-    $('#churches-mobile-table tbody').on('click', 'td.details-control', function () {
-        var tr = $(this).closest('tr');
-        var row = mobiletable.row( tr );
- 
-        if ( row.child.isShown() ) {
-            // This row is already open - close it
-            row.child.hide();
-            tr.removeClass('shown');
-        }
-        else {
-            // Open this row
-            row.child( format(row.data())).show();
-            tr.addClass('shown');
-        }
-    } );
-
-    } );
-
-</script>
+<script defer src="https://unpkg.com/alpinejs@3/dist/cdn.min.js"></script>
 {% endblock %}
 
 {% block findicon %}

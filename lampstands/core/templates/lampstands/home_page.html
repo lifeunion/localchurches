@@ -86,56 +86,39 @@
 
 {% endblock %}
 {% block extra_js %}
-<script type="text/javascript" src="{% static 'js/villareal/jquery1.7.1googapi.min.js' %}"></script>
-<script type="text/javascript" src="{% static 'js/villareal/jquery.geocomplete.min.js' %}"></script>
 <script>
   window.initHomePageGeocomplete = function() {
-    if (typeof $ === 'undefined') { return; }
-    $(function(){
-      var searchButtonClicked = false;
-      $(".form-control").geocomplete({
-        details: ".details",
-        detailsScope: '.location',
-        types: ["(regions)"],
-      });
-      $(".form-control").on("geocode:result", function() {
-        if (searchButtonClicked) {
-          searchButtonClicked = false;
-          return;
-        }
-        $("#searchphrase").closest("form").submit();
-      });
-      $(".find").click(function(){
-        searchButtonClicked = true;
-        $(this).parents(".location").find(".form-control").trigger("geocode");
-      });
-      $("#searchphrase").on("keydown", function(e) {
-        if (e.key === "Enter" || e.which === 13) {
-          e.preventDefault();
-          $("#searchdesktop").click();
-        }
-      });
+    var form = document.querySelector('.location form');
+    var input = document.getElementById('searchphrase');
+    var btn = document.getElementById('searchdesktop');
+    if (!form || !input) return;
+    var latInp = form.querySelector('[name=lat]');
+    var lngInp = form.querySelector('[name=lng]');
+    var viewInp = form.querySelector('[name=viewport]');
+    if (!latInp || !lngInp || !viewInp) return;
+    if (typeof google === 'undefined' || !google.maps || !google.maps.places) return;
+
+    var autocomplete = new google.maps.places.Autocomplete(input, { types: ['(regions)'] });
+    autocomplete.addListener('place_changed', function() {
+      var place = autocomplete.getPlace();
+      if (!place.geometry) return;
+      latInp.value = place.geometry.location.lat();
+      lngInp.value = place.geometry.location.lng();
+      if (place.geometry.viewport) {
+        var v = place.geometry.viewport;
+        viewInp.value = v.getSouthWest().lat() + ',' + v.getSouthWest().lng() + ',' + v.getNorthEast().lat() + ',' + v.getNorthEast().lng();
+      }
+      form.submit();
+    });
+
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.which === 13) {
+        e.preventDefault();
+        btn.click();
+      }
     });
   };
 </script>
-<script src="{{self.google_url_js}}{{self.google_key_js}}&libraries=places,geometry&loading=async&callback=initHomePageGeocomplete" type="text/javascript"></script>
-<!--
-    <script>
-        document.querySelector("#searchphrase").addEventListener("keyup", function(event) {
-            if (event.key !== "Enter") return;
-            event.preventDefault();
-            $(".form-control").geocomplete({
-              details: ".details",
-              detailsScope: '.location',
-              types: ["(regions)"],
-            });
-            $(".find").click(function(){
-                $(this).parents(".location").find(".form-control").trigger("geocode");
-            });
-            document.querySelector("#searchdesktop").click();
-        })
-    </script>
--->
-
+<script src="{{ self.google_url_js }}{{ self.google_key_js }}&libraries=places&loading=async&callback=initHomePageGeocomplete" async defer></script>
 {% endblock %}
 

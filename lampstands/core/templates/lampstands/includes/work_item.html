@@ -1,6 +1,6 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
-<li>
+<li{% if carousel %} x-show="index === {{ slide_index|default:0 }}"{% endif %}>
     <a href="{% pageurl page %}">
         <div class="content">
             {% if image %}

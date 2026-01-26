@@ -1,7 +1,7 @@
 {% load wagtailcore_tags wagtailimages_tags %}
 
 <div class="services-section">
-	<div class="services-wrapper">
+	<div class="services-wrapper" x-data="{ submit(ev){ var f=ev.target; var c=f.querySelector('[name=csrfmiddlewaretoken]'); var b=f.querySelector('.sign-up-form-button'); if(b) b.textContent='Submitting...'; fetch(f.action,{method:'POST',body:new FormData(f),headers:{'X-CSRFToken':(c?c.value:''),'Accept':'text/html'}}).then(function(r){return r.text();}).then(function(html){ window.dataLayer=window.dataLayer||[]; window.dataLayer.push({event:'formSubmissionSuccess',formId:'sign-up-form'}); f.innerHTML=html; }); } }" @submit.prevent="submit($event)">
 		{% with page_id=value.page.pk|stringformat:"s" %}
 		    {% include 'lampstands/includes/sign_up_form_page_form.html' with page=value.page legend=value.page.call_to_action_text form=form form_id='sign-up-form-'|add:page_id %}
 		{% endwith %}
