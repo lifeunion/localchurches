@@ -40,9 +40,12 @@
             <div class="posts posts-grid">  
                 <div class="row">
                 <br>
-                <div><label>Search: <input type="text" x-model="query" placeholder="Filter (or use ?area= in URL)"></label></div>
+                <div class="church-list-search">
+                    <label for="church-search-filter" style="display:block; font-weight:bold;">SEARCH:</label>
+                    <input id="church-search-filter" type="text" x-model="query" placeholder="Filter (or use ?area= in URL)" style="display:block; width:100%; max-width:400px; padding:0.375rem 0.75rem; border:1px solid #0275d8; border-radius:0.25rem;">
+                </div>
                 <div style="overflow-x: auto;">
-        <table class="table order-column stripe hover display" id="churches-table" cellspacing="0" width="100%">
+        <table class="table order-column stripe hover" id="churches-table" cellspacing="0" width="100%">
             <thead>
                 <tr>
                     <th>Index</th>
