@@ -214,15 +214,18 @@ import django
 django.setup()
 from django.conf import settings
 
-has_s3 = (
-    bool(getattr(settings, 'AWS_STORAGE_BUCKET_NAME', None))
-    and bool(getattr(settings, 'AWS_ACCESS_KEY_ID', None))
-    and bool(getattr(settings, 'AWS_SECRET_ACCESS_KEY', None))
-)
+# Use actual storage: staging/production without S3 use WhiteNoise (staticfiles); production with S3 uses s3boto3.
+use_s3 = 's3boto3' in str(getattr(settings, 'STORAGES', {}).get('staticfiles', {}).get('BACKEND', ''))
 checks = [
     ('wagtailadmin/css/core.css', 'Wagtail admin CSS'),
     ('wagtailadmin/js/common.js', 'Wagtail admin common.js (webpack runtime)'),
 ]
+if not use_s3:
+    checks += [
+        ('css/villareal-turquoise.css', 'Site theme CSS'),
+        ('css/font-awesome.min.css', 'Font Awesome'),
+        ('js/villareal/jquery.min.js', 'jQuery'),
+    ]
 
 def check_s3(key):
     try:
@@ -249,7 +252,7 @@ def check_local(key):
 
 ok = True
 for key, label in checks:
-    if has_s3:
+    if use_s3:
         found, msg = check_s3(key)
     else:
         found, msg = check_local(key)

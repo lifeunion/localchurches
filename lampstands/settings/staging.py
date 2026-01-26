@@ -112,7 +112,10 @@ STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
     "staticfiles": {"BACKEND": "whitenoise.storage.CompressedStaticFilesStorage"},
 }
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),   # project root: css/, js/villareal/, etc.
+    os.path.join(PROJECT_DIR, 'static'), # lampstands: lampstands/images/, etc.
+)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 print("DEBUG: Staging – using WhiteNoise for static (lcstatic S3 not used)", file=sys.stderr)

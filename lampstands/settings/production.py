@@ -240,7 +240,10 @@ else:
     print(f"DEBUG: STATIC_ROOT = {STATIC_ROOT}", file=sys.stderr)
     print(f"DEBUG: STATIC_URL = {STATIC_URL}", file=sys.stderr)
 
-STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),   # project root: css/, js/villareal/, etc.
+    os.path.join(PROJECT_DIR, 'static'), # lampstands: lampstands/images/, etc.
+)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
