@@ -43,7 +43,7 @@
                 <div class="church-list-toolbar" style="display:flex; justify-content:flex-end; align-items:center; flex-wrap:wrap; gap:1em; margin-bottom:1em;">
                     <div style="display:inline-flex; align-items:center;">
                         <label style="margin:0; margin-right:0.5em;">Search:</label>
-                        <input type="text" x-model="query" @input="if (allRows.length > 0) { displayedCount=50; filterDesktop(); }" style="padding:0.375rem 0.75rem; border:1px solid #ccc; border-radius:0.25rem;" />
+                        <input type="text" x-model="query" @input="displayedCount=50; filterDesktop();" style="padding:0.375rem 0.75rem; border:1px solid #ccc; border-radius:0.25rem;" />
                     </div>
                 </div>
                 <div style="overflow-x: auto; max-height: 70vh; overflow-y: auto;" @scroll="handleScroll($el, $data)" x-ref="scrollContainer">
@@ -235,7 +235,24 @@ document.addEventListener('alpine:init', function() {
         var q = (that.query || '').trim().toLowerCase();
         var filtered = that.items.filter(function(item) {
           if (!q) return true;
-          var searchText = [item.locality_name, item.locality_state_or_province, item.locality_country, item.meeting_address].join(' ').toLowerCase();
+          // Search across all fields including contacts and phones
+          var searchText = [
+            item.locality_name || '',
+            item.locality_state_or_province || '',
+            item.locality_country || '',
+            item.meeting_address || '',
+            item.locality_phone_number || '',
+            item.locality_email || '',
+            item.locality_web || '',
+            item.locality_contact_brother_1 || '',
+            item.locality_contact_brother_1_phone || '',
+            item.locality_contact_brother_2 || '',
+            item.locality_contact_brother_2_phone || '',
+            item.locality_contact_brother_3 || '',
+            item.locality_contact_brother_3_phone || '',
+            item.locality_contact_brother_4 || '',
+            item.locality_contact_brother_4_phone || ''
+          ].join(' ').toLowerCase();
           return searchText.indexOf(q) >= 0;
         });
         that.filteredItems = filtered;
@@ -324,23 +341,31 @@ Alpine.data('churchDesktop', function() {
       var idx = 0;
       for (var i = 0; i < that.allRows.length; i++) {
         var r = that.allRows[i];
+        // Search in all text content of the row (case-insensitive)
         var match = !q || r.textContent.toLowerCase().indexOf(q) >= 0;
         if (match) {
           var idxCell = r.querySelector('td.index-column');
           if (idxCell) idxCell.textContent = idx + 1;
           filtered.push(r);
           idx++;
-        } else {
-          r.style.display = 'none';
         }
       }
       that.filteredRows = filtered;
       that.displayedCount = 50;
-      for (var j = 0; j < filtered.length; j++) {
-        if (j < 50) {
-          filtered[j].style.display = '';
+      // Show/hide rows based on filter and infinite scroll
+      for (var j = 0; j < that.allRows.length; j++) {
+        var row = that.allRows[j];
+        var rowIndex = filtered.indexOf(row);
+        if (rowIndex >= 0) {
+          // Row matches filter - show if within displayed count
+          if (rowIndex < 50) {
+            row.style.display = '';
+          } else {
+            row.style.display = 'none';
+          }
         } else {
-          filtered[j].style.display = 'none';
+          // Row doesn't match filter - hide it
+          row.style.display = 'none';
         }
       }
     }
