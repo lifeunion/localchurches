@@ -188,6 +188,72 @@
 {% block extra_js %}
 <script>
 document.addEventListener('alpine:init', function() {
+  Alpine.data('churchDesktop', function() {
+    return {
+      query: '',
+      displayedCount: 50,
+      allRows: [],
+      filteredRows: [],
+      showMoreRows: function() {
+        var that = this;
+        if (!that.filteredRows || that.filteredRows.length === 0) return;
+        var toShow = Math.min(that.displayedCount + 50, that.filteredRows.length);
+        for (var i = that.displayedCount; i < toShow; i++) {
+          if (that.filteredRows[i]) {
+            that.filteredRows[i].style.display = '';
+          }
+        }
+        that.displayedCount = toShow;
+      },
+      filterDesktop: function() {
+        var that = this;
+        var q = (that.query || '').trim().toLowerCase();
+        var t = document.getElementById('churches-table');
+        if (!t) return;
+        if (that.allRows.length === 0) {
+          var rows = t.querySelectorAll('tbody tr');
+          that.allRows = Array.from(rows);
+          // Set initial indices
+          for (var k = 0; k < that.allRows.length; k++) {
+            var idxCell = that.allRows[k].querySelector('td.index-column');
+            if (idxCell) idxCell.textContent = k + 1;
+          }
+        }
+        var filtered = [];
+        var idx = 0;
+        for (var i = 0; i < that.allRows.length; i++) {
+          var r = that.allRows[i];
+          // Search in all text content of the row (case-insensitive)
+          var match = !q || r.textContent.toLowerCase().indexOf(q) >= 0;
+          if (match) {
+            var idxCell = r.querySelector('td.index-column');
+            if (idxCell) idxCell.textContent = idx + 1;
+            filtered.push(r);
+            idx++;
+          }
+        }
+        that.filteredRows = filtered;
+        that.displayedCount = 50;
+        // Show/hide rows based on filter and infinite scroll
+        for (var j = 0; j < that.allRows.length; j++) {
+          var row = that.allRows[j];
+          var rowIndex = filtered.indexOf(row);
+          if (rowIndex >= 0) {
+            // Row matches filter - show if within displayed count
+            if (rowIndex < 50) {
+              row.style.display = '';
+            } else {
+              row.style.display = 'none';
+            }
+          } else {
+            // Row doesn't match filter - hide it
+            row.style.display = 'none';
+          }
+        }
+      }
+    };
+  });
+
   Alpine.data('churchMobile', function() {
     return {
       items: [],
@@ -311,72 +377,6 @@ function handleMobileScroll(el, data) {
     data.showMoreItems();
   }
 }
-
-Alpine.data('churchDesktop', function() {
-  return {
-    query: '',
-    displayedCount: 50,
-    allRows: [],
-    filteredRows: [],
-    showMoreRows: function() {
-      var that = this;
-      if (!that.filteredRows || that.filteredRows.length === 0) return;
-      var toShow = Math.min(that.displayedCount + 50, that.filteredRows.length);
-      for (var i = that.displayedCount; i < toShow; i++) {
-        if (that.filteredRows[i]) {
-          that.filteredRows[i].style.display = '';
-        }
-      }
-      that.displayedCount = toShow;
-    },
-    filterDesktop: function() {
-      var that = this;
-      var q = (that.query || '').trim().toLowerCase();
-      var t = document.getElementById('churches-table');
-      if (!t) return;
-      if (that.allRows.length === 0) {
-        var rows = t.querySelectorAll('tbody tr');
-        that.allRows = Array.from(rows);
-        // Set initial indices
-        for (var k = 0; k < that.allRows.length; k++) {
-          var idxCell = that.allRows[k].querySelector('td.index-column');
-          if (idxCell) idxCell.textContent = k + 1;
-        }
-      }
-      var filtered = [];
-      var idx = 0;
-      for (var i = 0; i < that.allRows.length; i++) {
-        var r = that.allRows[i];
-        // Search in all text content of the row (case-insensitive)
-        var match = !q || r.textContent.toLowerCase().indexOf(q) >= 0;
-        if (match) {
-          var idxCell = r.querySelector('td.index-column');
-          if (idxCell) idxCell.textContent = idx + 1;
-          filtered.push(r);
-          idx++;
-        }
-      }
-      that.filteredRows = filtered;
-      that.displayedCount = 50;
-      // Show/hide rows based on filter and infinite scroll
-      for (var j = 0; j < that.allRows.length; j++) {
-        var row = that.allRows[j];
-        var rowIndex = filtered.indexOf(row);
-        if (rowIndex >= 0) {
-          // Row matches filter - show if within displayed count
-          if (rowIndex < 50) {
-            row.style.display = '';
-          } else {
-            row.style.display = 'none';
-          }
-        } else {
-          // Row doesn't match filter - hide it
-          row.style.display = 'none';
-        }
-      }
-    }
-  };
-});
 
 document.addEventListener('DOMContentLoaded', function() {
   var table = document.getElementById('churches-table');
