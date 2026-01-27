@@ -83,7 +83,7 @@
             <tbody>
                 {% for branch in church_posts %} 
                     <tr>
-                        <td class="index-column"></td>
+                        <td class="index-column">{{ forloop.counter }}</td>
                         <td class="column-1"><a href="/churches/{{ branch.slug }}/">{{branch.locality_name}}</a></td>
                         <td class="column-2">{{branch.meeting_address}}</td>
                         <td class="column-3">{{branch.locality_state_or_province}}</td>
@@ -120,6 +120,16 @@
     #churches-mobile-table.table-striped tbody tr:nth-of-type(even) td.active-column { background-color: #f0f0f0 !important; }
     .church-list-pagination button:not(:disabled):hover { opacity: 0.8; }
     .church-list-pagination button[style*="background-color:#000"]:hover { background-color: #333 !important; }
+    #churches-table { table-layout: fixed; width: 100%; }
+    #churches-table th:nth-child(1), #churches-table td:nth-child(1) { width: 4%; }
+    #churches-table th:nth-child(2), #churches-table td:nth-child(2) { width: 8%; }
+    #churches-table th:nth-child(3), #churches-table td:nth-child(3) { width: 18%; word-wrap: break-word; }
+    #churches-table th:nth-child(4), #churches-table td:nth-child(4) { width: 8%; }
+    #churches-table th:nth-child(5), #churches-table td:nth-child(5) { width: 10%; word-wrap: break-word; }
+    #churches-table th:nth-child(6), #churches-table td:nth-child(6) { width: 9%; }
+    #churches-table th:nth-child(7), #churches-table td:nth-child(7) { width: 11%; word-wrap: break-word; }
+    #churches-table th:nth-child(8), #churches-table td:nth-child(8) { width: 10%; word-wrap: break-word; }
+    #churches-table th:nth-child(n+9), #churches-table td:nth-child(n+9) { width: 6%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     </style>
     <div class="content hidden-lg-up" data-json-url="{{ self.get_locality_json }}"
          x-data="churchMobile()"
@@ -304,6 +314,11 @@ Alpine.data('churchDesktop', function() {
       if (that.allRows.length === 0) {
         var rows = t.querySelectorAll('tbody tr');
         that.allRows = Array.from(rows);
+        // Set initial indices
+        for (var k = 0; k < that.allRows.length; k++) {
+          var idxCell = that.allRows[k].querySelector('td.index-column');
+          if (idxCell) idxCell.textContent = k + 1;
+        }
       }
       var filtered = [];
       var idx = 0;
