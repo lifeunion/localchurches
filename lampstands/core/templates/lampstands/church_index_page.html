@@ -233,7 +233,15 @@
     #churches-table th:nth-child(6), #churches-table td:nth-child(6) { width: 9%; }
     #churches-table th:nth-child(7), #churches-table td:nth-child(7) { width: 11%; word-wrap: break-word; }
     #churches-table th:nth-child(8), #churches-table td:nth-child(8) { width: 10%; word-wrap: break-word; }
-    #churches-table th:nth-child(n+9), #churches-table td:nth-child(n+9) { width: 6%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    /* Available Contacts columns - allow full text display with horizontal scrolling */
+    #churches-table th:nth-child(9), #churches-table td:nth-child(9) { width: 8%; word-wrap: break-word; white-space: normal; overflow: visible; }
+    #churches-table th:nth-child(10), #churches-table td:nth-child(10) { width: 8%; word-wrap: break-word; white-space: normal; overflow: visible; }
+    #churches-table th:nth-child(11), #churches-table td:nth-child(11) { width: 8%; word-wrap: break-word; white-space: normal; overflow: visible; }
+    #churches-table th:nth-child(12), #churches-table td:nth-child(12) { width: 8%; word-wrap: break-word; white-space: normal; overflow: visible; }
+    #churches-table th:nth-child(13), #churches-table td:nth-child(13) { width: 8%; word-wrap: break-word; white-space: normal; overflow: visible; }
+    #churches-table th:nth-child(14), #churches-table td:nth-child(14) { width: 8%; word-wrap: break-word; white-space: normal; overflow: visible; }
+    #churches-table th:nth-child(15), #churches-table td:nth-child(15) { width: 8%; word-wrap: break-word; white-space: normal; overflow: visible; }
+    #churches-table th:nth-child(16), #churches-table td:nth-child(16) { width: 8%; word-wrap: break-word; white-space: normal; overflow: visible; }
     </style>
     <div class="content hidden-lg-up" data-json-url="{{ self.get_locality_json }}"
          x-data="churchMobile()"
