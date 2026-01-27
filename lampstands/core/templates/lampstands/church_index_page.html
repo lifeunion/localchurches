@@ -279,13 +279,13 @@
                 <template x-for="item in displayedItems" :key="item.id">
                 <tr>
                     <td class="details-control" @click.stop="toggle(item.id)" style="cursor:pointer; text-align:center; font-weight:bold; font-size:1.5em; background-color:#000; color:#fff; border:1px solid #ddd; width:2.5em; min-width:2.5em; height:2.5em; padding:0; vertical-align:middle; border-radius:4px; position:relative;">
-                        <span style="display:block !important; width:100%; height:100%; line-height:2.5em; user-select:none; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; position:relative; z-index:10;" x-text="isExpanded(item.id) ? '−' : '+'"></span>
+                        <span style="display:block !important; width:100%; height:100%; line-height:2.5em; user-select:none; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; position:relative; z-index:10;" x-text="expandedIds.includes(String(item.id)) ? '−' : '+'"></span>
                     </td>
                     <td class="city-column"><a :href="item.url || ('/churches/' + (item.slug||'') + '/')" x-text="item.locality_name"></a></td>
                     <td x-text="item.locality_state_or_province"></td>
                     <td x-text="item.locality_country"></td>
                 </tr>
-                <tr :style="isExpanded(item.id) ? 'display: table-row;' : 'display: none;'">
+                <tr x-show="expandedIds.includes(String(item.id))" style="display: table-row;">
                     <td colspan="4" style="padding:0;">
                         <div style="padding-left:1em; padding-top:0.5em; padding-bottom:0.5em;" x-html="formatDetail(item)"></div>
                     </td>
@@ -380,7 +380,7 @@ document.addEventListener('alpine:init', function() {
       items: [],
       displayedItems: [],
       filteredItems: [],
-      expandedIds: [],
+      expandedIds: [],  // Initialize as empty array for Alpine reactivity
       jsonUrl: '',
       query: '',
       displayedCount: 25,
@@ -416,7 +416,7 @@ document.addEventListener('alpine:init', function() {
                '<div style="display:flex;"><div style="background-color:#f5f5f5; padding:0.5em; min-width:120px; font-weight:500;">Phone 4:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+phone4+'</div></div></div>';
       },
       toggle: function(id) {
-        // Ensure expandedIds array exists
+        // Ensure expandedIds array exists and is reactive
         if (!this.expandedIds) {
           this.expandedIds = [];
         }
@@ -424,17 +424,15 @@ document.addEventListener('alpine:init', function() {
         var key = String(id);
         // Find index of id in array
         var index = this.expandedIds.indexOf(key);
-        // Create new array to trigger Alpine reactivity
-        var newExpandedIds = this.expandedIds.slice();
         if (index >= 0) {
-          // Remove from array (collapse)
-          newExpandedIds.splice(index, 1);
+          // Remove from array (collapse) - create new array for reactivity
+          this.expandedIds = this.expandedIds.filter(function(item) {
+            return item !== key;
+          });
         } else {
-          // Add to array (expand)
-          newExpandedIds.push(key);
+          // Add to array (expand) - create new array for reactivity
+          this.expandedIds = this.expandedIds.concat([key]);
         }
-        // Assign new array to trigger reactivity
-        this.expandedIds = newExpandedIds;
       },
       showMoreItems: function() {
         var that = this;
