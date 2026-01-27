@@ -35,7 +35,7 @@
     </h6>
     </div>
 
-    <div class="content hidden-md-down" x-data="churchDesktop()" x-effect="filterDesktop()" x-init="setTimeout(function() { var t = document.getElementById('churches-table'); if (t) { var rows = t.querySelectorAll('tbody tr'); var that = Alpine.$data(document.querySelector('.content.hidden-md-down')); that.allRows = Array.from(rows); that.filterDesktop(); } }, 100);">
+    <div class="content hidden-md-down" x-data="churchDesktop()" x-init="setTimeout(function() { var t = document.getElementById('churches-table'); if (t) { var rows = t.querySelectorAll('tbody tr'); var that = Alpine.$data(document.querySelector('.content.hidden-md-down')); if (that) { that.allRows = Array.from(rows); that.filterDesktop(); } } }, 100);">
         <div class="vessel">
             <div class="posts posts-grid">  
                 <div class="row">
@@ -43,7 +43,7 @@
                 <div class="church-list-toolbar" style="display:flex; justify-content:flex-end; align-items:center; flex-wrap:wrap; gap:1em; margin-bottom:1em;">
                     <div style="display:inline-flex; align-items:center;">
                         <label style="margin:0; margin-right:0.5em;">Search:</label>
-                        <input type="text" x-model="query" @input="displayedCount=50; filterDesktop()" style="padding:0.375rem 0.75rem; border:1px solid #ccc; border-radius:0.25rem;" />
+                        <input type="text" x-model="query" @input="if (allRows.length > 0) { displayedCount=50; filterDesktop(); }" style="padding:0.375rem 0.75rem; border:1px solid #ccc; border-radius:0.25rem;" />
                     </div>
                 </div>
                 <div style="overflow-x: auto; max-height: 70vh; overflow-y: auto;" @scroll="handleScroll($el, $data)" x-ref="scrollContainer">
@@ -298,17 +298,17 @@ Alpine.data('churchDesktop', function() {
     },
     filterDesktop: function() {
       var that = this;
-      var q = that.query.trim().toLowerCase();
+      var q = (that.query || '').trim().toLowerCase();
       var t = document.getElementById('churches-table');
       if (!t) return;
-      var rows = that.allRows.length > 0 ? that.allRows : t.querySelectorAll('tbody tr');
       if (that.allRows.length === 0) {
+        var rows = t.querySelectorAll('tbody tr');
         that.allRows = Array.from(rows);
       }
       var filtered = [];
       var idx = 0;
-      for (var i = 0; i < rows.length; i++) {
-        var r = rows[i];
+      for (var i = 0; i < that.allRows.length; i++) {
+        var r = that.allRows[i];
         var match = !q || r.textContent.toLowerCase().indexOf(q) >= 0;
         if (match) {
           var idxCell = r.querySelector('td.index-column');
