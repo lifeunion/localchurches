@@ -127,12 +127,23 @@
       -webkit-overflow-scrolling: touch !important;
       scroll-behavior: auto !important;
     }
-    .content.hidden-lg-up .vessel * {
+    /* Fix horizontal scrolling - override vessel max-width constraint */
+    .content.hidden-lg-up .vessel {
       max-width: none !important;
+      overflow-x: visible !important;
     }
     .content.hidden-lg-up .vessel > .posts > .row {
       max-width: 100% !important;
       overflow-x: visible !important;
+    }
+    /* Ensure scroll container allows horizontal scrolling */
+    .content.hidden-lg-up [x-ref="mobileScrollContainer"],
+    .content.hidden-lg-up [style*="overflow-x: scroll"] {
+      overflow-x: scroll !important;
+      overflow-y: auto !important;
+      -webkit-overflow-scrolling: touch !important;
+      width: 100% !important;
+      max-width: 100% !important;
     }
     #churches-mobile-table { 
       table-layout: fixed !important; 
@@ -148,13 +159,17 @@
     #churches-mobile-table.table-striped tbody tr:nth-of-type(even) td.active-column { background-color: #f0f0f0 !important; }
     #churches-mobile-table td.details-control { 
       position: relative; 
-      overflow: visible !important; 
+      overflow: hidden !important; 
       white-space: nowrap;
+      background-image: none !important;
+      background: #000 !important;
     }
     #churches-mobile-table td.details-control::before,
     #churches-mobile-table td.details-control::after {
       content: none !important;
       display: none !important;
+      background: none !important;
+      background-image: none !important;
     }
     #churches-mobile-table td.details-control:hover { 
       background-color: #0BB7A5 !important; 
@@ -162,8 +177,14 @@
     }
     #churches-mobile-table td.details-control span { 
       position: relative; 
-      z-index: 1; 
+      z-index: 10 !important; 
       display: block !important;
+      background: transparent !important;
+      color: #fff !important;
+    }
+    /* Remove any chevron or arrow icons from table cells */
+    #churches-mobile-table td.details-control * {
+      background-image: none !important;
     }
     #churches-mobile-table th,
     #churches-mobile-table td {
@@ -220,7 +241,7 @@
                         <input type="text" x-model="query" @input="displayedCount=25; updateDisplay()" style="padding:0.375rem 0.75rem; border:1px solid #ccc; border-radius:0.25rem; flex:1; min-width:0;" placeholder="Search churches..." />
                     </div>
                 </div>
-                <div style="overflow-x: scroll !important; overflow-y: auto; max-height: 70vh; -webkit-overflow-scrolling: touch; width: 100%; position: relative; display: block; -ms-overflow-style: -ms-autohiding-scrollbar; overflow-scrolling: touch;" @scroll="handleMobileScroll($el, $data)" x-ref="mobileScrollContainer">
+                <div style="overflow-x: scroll !important; overflow-y: auto; max-height: 70vh; -webkit-overflow-scrolling: touch; width: 100%; min-width: 100%; position: relative; display: block; -ms-overflow-style: -ms-autohiding-scrollbar; overflow-scrolling: touch;" @scroll="handleMobileScroll($el, $data)" x-ref="mobileScrollContainer">
                  <table class="table table-striped" id="churches-mobile-table" cellspacing="0" style="width: 680px; min-width: 680px; display: table; table-layout: fixed;">
             <thead>
                 <tr>
@@ -234,13 +255,13 @@
                 <template x-for="item in displayedItems" :key="item.id">
                 <tr>
                     <td class="details-control" @click.stop.prevent="toggle(item.id)" style="cursor:pointer; text-align:center; font-weight:bold; font-size:1.5em; background-color:#000; color:#fff; border:1px solid #ddd; width:2.5em; min-width:2.5em; height:2.5em; padding:0; vertical-align:middle; border-radius:4px; position:relative;">
-                        <span style="display:block !important; width:100%; height:100%; line-height:2.5em; user-select:none; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; position:relative; z-index:10;" x-text="expanded[item.id] === true ? '−' : '+'"></span>
+                        <span style="display:block !important; width:100%; height:100%; line-height:2.5em; user-select:none; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; position:relative; z-index:10;" x-text="!!expanded[item.id] ? '−' : '+'"></span>
                     </td>
                     <td class="city-column"><a :href="item.url || ('/churches/' + (item.slug||'') + '/')" x-text="item.locality_name"></a></td>
                     <td x-text="item.locality_state_or_province"></td>
                     <td x-text="item.locality_country"></td>
                 </tr>
-                <tr x-show="expanded[item.id] === true">
+                <tr x-show="!!expanded[item.id]">
                     <td colspan="4" style="padding:0;">
                         <div style="padding-left:1em; padding-top:0.5em; padding-bottom:0.5em;" x-html="formatDetail(item)"></div>
                     </td>
@@ -371,10 +392,20 @@ document.addEventListener('alpine:init', function() {
         if (!this.expanded) {
           this.expanded = {};
         }
-        // Toggle the state
-        var newState = !this.expanded[id];
-        // Create new object to trigger Alpine reactivity
-        this.expanded = Object.assign({}, this.expanded, { [id]: newState });
+        // Get current state (default to false)
+        var currentState = !!this.expanded[id];
+        // Create completely new object to ensure Alpine reactivity
+        var newExpanded = {};
+        // Copy all existing states
+        for (var key in this.expanded) {
+          if (this.expanded.hasOwnProperty(key)) {
+            newExpanded[key] = this.expanded[key];
+          }
+        }
+        // Toggle the specific item
+        newExpanded[id] = !currentState;
+        // Assign new object to trigger reactivity
+        this.expanded = newExpanded;
       },
       showMoreItems: function() {
         var that = this;
