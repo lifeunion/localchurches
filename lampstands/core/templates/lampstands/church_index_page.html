@@ -118,6 +118,24 @@
     #churches-mobile-table.table-striped tbody tr:nth-of-type(even) { background-color: #fff; }
     #churches-mobile-table.table-striped tbody tr td.active-column { background-color: #f0f0f0 !important; }
     #churches-mobile-table.table-striped tbody tr:nth-of-type(even) td.active-column { background-color: #f0f0f0 !important; }
+    #churches-mobile-table td.details-control { 
+      position: relative; 
+      overflow: visible !important; 
+    }
+    #churches-mobile-table td.details-control::before,
+    #churches-mobile-table td.details-control::after {
+      content: none !important;
+      display: none !important;
+    }
+    #churches-mobile-table td.details-control:hover { 
+      background-color: #0BB7A5 !important; 
+      opacity: 0.9; 
+    }
+    #churches-mobile-table td.details-control span { 
+      position: relative; 
+      z-index: 1; 
+      display: block !important;
+    }
     .church-list-pagination button:not(:disabled):hover { opacity: 0.8; }
     .church-list-pagination button[style*="background-color:#000"]:hover { background-color: #333 !important; }
     #churches-table { table-layout: fixed; width: 100%; }
@@ -157,8 +175,8 @@
             <tbody>
                 <template x-for="item in displayedItems" :key="item.id">
                 <tr>
-                    <td class="details-control" @click.stop="toggle(item.id)" style="cursor:pointer; text-align:center; font-weight:bold; font-size:1.8em; line-height:1.2; background-color:#fff; border:1px solid #ddd; width:3em; min-width:3em; height:3em; padding:0; vertical-align:middle;">
-                        <span style="display:block; width:100%; height:100%; line-height:3em; user-select:none; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none;" x-text="expanded[item.id] ? '−' : '+'"></span>
+                    <td class="details-control" @click.stop="toggle(item.id)" style="cursor:pointer; text-align:center; font-weight:bold; font-size:1.5em; background-color:#000; color:#fff; border:1px solid #ddd; width:2.5em; min-width:2.5em; height:2.5em; padding:0; vertical-align:middle; border-radius:4px; position:relative;">
+                        <span style="display:block !important; width:100%; height:100%; line-height:2.5em; user-select:none; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; position:relative; z-index:10;" x-text="expanded[item.id] ? '−' : '+'"></span>
                     </td>
                     <td class="city-column"><a :href="item.url || ('/churches/' + (item.slug||'') + '/')" x-text="item.locality_name"></a></td>
                     <td x-text="item.locality_state_or_province"></td>
@@ -294,7 +312,10 @@ document.addEventListener('alpine:init', function() {
         if (!this.expanded) {
           this.expanded = {};
         }
-        this.expanded[id] = !this.expanded[id];
+        // Create a new object to ensure Alpine reactivity
+        var newExpanded = Object.assign({}, this.expanded);
+        newExpanded[id] = !newExpanded[id];
+        this.expanded = newExpanded;
       },
       showMoreItems: function() {
         var that = this;
