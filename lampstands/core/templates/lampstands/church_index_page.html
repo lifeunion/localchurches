@@ -35,27 +35,18 @@
     </h6>
     </div>
 
-    <div class="content hidden-md-down" x-data="{ query: '', pageSize: 50, currentPage: 1, totalPages: 1, visibleCount: 0, pageNumbers: [], filterDesktop() { var q = this.query.trim().toLowerCase(); var t = document.getElementById('churches-table'); if (!t) return; var rows = t.querySelectorAll('tbody tr'); var ps = this.pageSize || 50; var pg = this.currentPage || 1; var start = (pg - 1) * ps; var end = start + ps; var idx = 0; for (var i = 0; i < rows.length; i++) { var r = rows[i]; var match = !q || r.textContent.toLowerCase().indexOf(q) >= 0; if (match) { if (idx >= start && idx < end) { r.style.display = ''; var idxCell = r.querySelector('td.index-column'); if (idxCell) idxCell.textContent = idx + 1; } else { r.style.display = 'none'; } idx++; } else { r.style.display = 'none'; } } this.visibleCount = idx; this.totalPages = Math.ceil(idx / ps) || 1; this.currentPage = Math.min(Math.max(1, this.currentPage), this.totalPages); var pn = []; var tot = this.totalPages; var cur = this.currentPage; if (tot <= 7) { for (var i = 1; i <= tot; i++) pn.push(i); } else { pn.push(1); if (cur > 3) pn.push('\u2026'); for (var i = Math.max(2, cur - 2); i <= Math.min(tot - 1, cur + 2); i++) pn.push(i); if (cur < tot - 2) pn.push('\u2026'); if (tot > 1) pn.push(tot); } this.pageNumbers = pn; } }" x-effect="filterDesktop()">
+    <div class="content hidden-md-down" x-data="churchDesktop()" x-effect="filterDesktop()" x-init="setTimeout(function() { var t = document.getElementById('churches-table'); if (t) { var rows = t.querySelectorAll('tbody tr'); var that = Alpine.$data(document.querySelector('.content.hidden-md-down')); that.allRows = Array.from(rows); that.filterDesktop(); } }, 100);">
         <div class="vessel">
             <div class="posts posts-grid">  
                 <div class="row">
                 <br>
-                <div class="church-list-toolbar" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1em; margin-bottom:1em;">
-                    <div>
-                        <label>Show</label>
-                        <select x-model.number="pageSize" @change="currentPage=1" style="margin:0 0.25em; padding:0.25em 0.5em;">
-                            <option value="25">25</option>
-                            <option value="50">50</option>
-                            <option value="999999">All</option>
-                        </select>
-                        <label>entries</label>
-                    </div>
+                <div class="church-list-toolbar" style="display:flex; justify-content:flex-end; align-items:center; flex-wrap:wrap; gap:1em; margin-bottom:1em;">
                     <div style="display:inline-flex; align-items:center;">
                         <label style="margin:0; margin-right:0.5em;">Search:</label>
-                        <input type="text" x-model="query" style="padding:0.375rem 0.75rem; border:1px solid #ccc; border-radius:0.25rem;" />
+                        <input type="text" x-model="query" @input="displayedCount=50; filterDesktop()" style="padding:0.375rem 0.75rem; border:1px solid #ccc; border-radius:0.25rem;" />
                     </div>
                 </div>
-                <div style="overflow-x: auto; max-height: 70vh; overflow-y: auto;">
+                <div style="overflow-x: auto; max-height: 70vh; overflow-y: auto;" @scroll="handleScroll($el, $data)" x-ref="scrollContainer">
         <table class="table order-column table-striped table-hover" id="churches-table" cellspacing="0" width="100%">
             <thead>
                 <tr>
@@ -113,19 +104,6 @@
             </tbody>
         </table>
                 </div>
-                <div class="church-list-pagination" style="margin-top:1em; display:flex; justify-content:space-between; align-items:center; flex-wrap:nowrap; min-height:2.5em; width:100%;" x-show="visibleCount > 0">
-                    <span style="display:inline-flex; align-items:center; line-height:1.5; flex-shrink:0; white-space:nowrap;" x-text="'Showing ' + (visibleCount ? (Math.min((currentPage-1)*pageSize+1, visibleCount)) : 0) + ' to ' + (Math.min(currentPage*pageSize, visibleCount) || 0) + ' of ' + visibleCount + ' entries'"></span>
-                    <div style="display:flex; align-items:center; gap:0.8em; flex-wrap:nowrap; flex-shrink:0; margin-left:auto;">
-                        <button type="button" @click="currentPage=Math.max(1, currentPage-1)" :disabled="currentPage <= 1" style="padding:0.35em 0.65em; line-height:1.5; height:2em; min-height:2em; box-sizing:border-box; margin:0; display:inline-flex; align-items:center; justify-content:center; background-color:#fff; border:1px solid #007bff; color:#666; border-radius:4px; cursor:pointer;" :style="currentPage <= 1 ? 'opacity:0.5; cursor:not-allowed;' : ''">Previous</button>
-                        <template x-for="(p, i) in pageNumbers" :key="i">
-                            <span style="display:inline-block; margin:0;">
-                                <button type="button" x-show="p !== '\u2026'" @click="currentPage = p" :style="currentPage === p ? 'background-color:#000; color:#fff; border:1px solid #000;' : 'background-color:#fff; color:#666; border:1px solid #ddd;'" style="padding:0.35em 0.5em; line-height:1.5; min-width:2em; height:2em; min-height:2em; box-sizing:border-box; margin:0; display:inline-flex; align-items:center; justify-content:center; border-radius:4px; cursor:pointer;" x-text="p"></button>
-                                <span x-show="p === '\u2026'" style="padding:0 0.15em; margin:0; display:inline-block; height:2em; line-height:2em; color:#666;">&#8230;</span>
-                            </span>
-                        </template>
-                        <button type="button" @click="currentPage=Math.min(totalPages, currentPage+1)" :disabled="currentPage >= totalPages" style="padding:0.35em 0.65em; line-height:1.5; height:2em; min-height:2em; box-sizing:border-box; margin:0; display:inline-flex; align-items:center; justify-content:center; background-color:#fff; border:1px solid #007bff; color:#666; border-radius:4px; cursor:pointer;" :style="currentPage >= totalPages ? 'opacity:0.5; cursor:not-allowed;' : ''">Next</button>
-                    </div>
-                </div>
                 </div><!-- /.row -->
             </div><!-- /.posts-->
         </div><!-- /.vessel -->
@@ -146,7 +124,7 @@
     <div class="content hidden-lg-up" data-json-url="{{ self.get_locality_json }}"
          x-data="churchMobile()"
          x-init="jsonUrl = $el.dataset.jsonUrl || ''; initMobile()"
-         x-effect="updatePagination()">
+         x-effect="updateDisplay()">
         <div class="vessel">
             <div class="posts posts-grid">  
                 <div class="row">
@@ -154,10 +132,10 @@
                 <div class="church-list-toolbar" style="display:flex; justify-content:flex-end; align-items:center; flex-wrap:wrap; gap:1em; margin-bottom:1em;">
                     <div style="display:inline-flex; align-items:center; width:100%; max-width:100%;">
                         <label style="margin:0; margin-right:0.5em; white-space:nowrap;">Search:</label>
-                        <input type="text" x-model="query" @input="currentPage=1" style="padding:0.375rem 0.75rem; border:1px solid #ccc; border-radius:0.25rem; flex:1; min-width:0;" placeholder="Search churches..." />
+                        <input type="text" x-model="query" @input="displayedCount=25; updateDisplay()" style="padding:0.375rem 0.75rem; border:1px solid #ccc; border-radius:0.25rem; flex:1; min-width:0;" placeholder="Search churches..." />
                     </div>
                 </div>
-                <div style="overflow-x: auto; max-height: 70vh; overflow-y: auto;">
+                <div style="overflow-x: auto; max-height: 70vh; overflow-y: auto;" @scroll="handleMobileScroll($el, $data)">
                  <table class="table table-striped" id="churches-mobile-table" cellspacing="0" width="100%">
             <thead>
                 <tr>
@@ -184,19 +162,6 @@
             </tbody>
         </table>
                 </div>
-                <div class="church-list-pagination" style="margin-top:1em; display:flex; justify-content:space-between; align-items:center; flex-wrap:nowrap; min-height:2.5em; width:100%;" x-show="visibleCount > 0">
-                    <span style="display:inline-flex; align-items:center; line-height:1.5; flex-shrink:0; white-space:nowrap;" x-text="'Showing ' + (visibleCount ? (Math.min((currentPage-1)*pageSize+1, visibleCount)) : 0) + ' to ' + (Math.min(currentPage*pageSize, visibleCount) || 0) + ' of ' + visibleCount + ' entries'"></span>
-                    <div style="display:flex; align-items:center; gap:0.8em; flex-wrap:nowrap; flex-shrink:0; margin-left:auto;">
-                        <button type="button" @click="currentPage=Math.max(1, currentPage-1)" :disabled="currentPage <= 1" style="padding:0.35em 0.65em; line-height:1.5; height:2em; min-height:2em; box-sizing:border-box; margin:0; display:inline-flex; align-items:center; justify-content:center; background-color:#fff; border:1px solid #007bff; color:#666; border-radius:4px; cursor:pointer;" :style="currentPage <= 1 ? 'opacity:0.5; cursor:not-allowed;' : ''">Previous</button>
-                        <template x-for="(p, i) in pageNumbers" :key="i">
-                            <span style="display:inline-block; margin:0;">
-                                <button type="button" x-show="p !== '\u2026'" @click="currentPage = p" :style="currentPage === p ? 'background-color:#000; color:#fff; border:1px solid #000;' : 'background-color:#fff; color:#666; border:1px solid #ddd;'" style="padding:0.35em 0.5em; line-height:1.5; min-width:2em; height:2em; min-height:2em; box-sizing:border-box; margin:0; display:inline-flex; align-items:center; justify-content:center; border-radius:4px; cursor:pointer;" x-text="p"></button>
-                                <span x-show="p === '\u2026'" style="padding:0 0.15em; margin:0; display:inline-block; height:2em; line-height:2em; color:#666;">&#8230;</span>
-                            </span>
-                        </template>
-                        <button type="button" @click="currentPage=Math.min(totalPages, currentPage+1)" :disabled="currentPage >= totalPages" style="padding:0.35em 0.65em; line-height:1.5; height:2em; min-height:2em; box-sizing:border-box; margin:0; display:inline-flex; align-items:center; justify-content:center; background-color:#fff; border:1px solid #007bff; color:#666; border-radius:4px; cursor:pointer;" :style="currentPage >= totalPages ? 'opacity:0.5; cursor:not-allowed;' : ''">Next</button>
-                    </div>
-                </div>
                 <br>
                 <br>        
 
@@ -216,14 +181,11 @@ document.addEventListener('alpine:init', function() {
     return {
       items: [],
       displayedItems: [],
+      filteredItems: [],
       expanded: {},
       jsonUrl: '',
       query: '',
-      pageSize: 25,
-      currentPage: 1,
-      totalPages: 1,
-      visibleCount: 0,
-      pageNumbers: [],
+      displayedCount: 25,
       formatDetail: function(it) {
         var w = (it.locality_web || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
         var wl = w ? '<a href="'+w+'">'+w+'</a>' : '—';
@@ -252,7 +214,13 @@ document.addEventListener('alpine:init', function() {
                '<div style="display:flex;"><div style="background-color:#f5f5f5; padding:0.5em; min-width:120px; font-weight:500;">Phone 4:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+phone4+'</div></div></div>';
       },
       toggle: function(id) { this.expanded = Object.assign({}, this.expanded, { [id]: !this.expanded[id] }); },
-      updatePagination: function() {
+      showMoreItems: function() {
+        var that = this;
+        var toShow = Math.min(that.displayedCount + 25, that.filteredItems.length);
+        that.displayedItems = that.filteredItems.slice(0, toShow);
+        that.displayedCount = toShow;
+      },
+      updateDisplay: function() {
         var that = this;
         var q = (that.query || '').trim().toLowerCase();
         var filtered = that.items.filter(function(item) {
@@ -260,28 +228,9 @@ document.addEventListener('alpine:init', function() {
           var searchText = [item.locality_name, item.locality_state_or_province, item.locality_country, item.meeting_address].join(' ').toLowerCase();
           return searchText.indexOf(q) >= 0;
         });
-        var ps = that.pageSize || 25;
-        var pg = that.currentPage || 1;
-        var total = filtered.length;
-        that.visibleCount = total;
-        that.totalPages = Math.ceil(total / ps) || 1;
-        that.currentPage = Math.min(Math.max(1, that.currentPage), that.totalPages);
-        var start = (that.currentPage - 1) * ps;
-        var end = start + ps;
-        that.displayedItems = filtered.slice(start, end);
-        var pn = [];
-        var tot = that.totalPages;
-        var cur = that.currentPage;
-        if (tot <= 7) {
-          for (var i = 1; i <= tot; i++) pn.push(i);
-        } else {
-          pn.push(1);
-          if (cur > 3) pn.push('\u2026');
-          for (var i = Math.max(2, cur - 2); i <= Math.min(tot - 1, cur + 2); i++) pn.push(i);
-          if (cur < tot - 2) pn.push('\u2026');
-          if (tot > 1) pn.push(tot);
-        }
-        that.pageNumbers = pn;
+        that.filteredItems = filtered;
+        that.displayedCount = 25;
+        that.displayedItems = filtered.slice(0, 25);
       },
       initMobile: function() {
         var that = this;
@@ -302,7 +251,7 @@ document.addEventListener('alpine:init', function() {
           }
           list.sort(function(a,b){ return (a.locality_name||'').localeCompare(b.locality_name||''); });
           that.items = list;
-          that.updatePagination();
+          that.updateDisplay();
         }).catch(function(e){ console.error('Church list fetch error:', e); });
       }
     };
@@ -310,6 +259,79 @@ document.addEventListener('alpine:init', function() {
 });
 </script>
 <script>
+function handleScroll(el, data) {
+  if (!data || !data.filteredRows) return;
+  var scrollTop = el.scrollTop;
+  var scrollHeight = el.scrollHeight;
+  var clientHeight = el.clientHeight;
+  if (scrollTop + clientHeight >= scrollHeight - 100) {
+    data.showMoreRows();
+  }
+}
+
+function handleMobileScroll(el, data) {
+  if (!data) return;
+  var scrollTop = el.scrollTop;
+  var scrollHeight = el.scrollHeight;
+  var clientHeight = el.clientHeight;
+  if (scrollTop + clientHeight >= scrollHeight - 100) {
+    data.showMoreItems();
+  }
+}
+
+Alpine.data('churchDesktop', function() {
+  return {
+    query: '',
+    displayedCount: 50,
+    allRows: [],
+    filteredRows: [],
+    showMoreRows: function() {
+      var that = this;
+      if (!that.filteredRows || that.filteredRows.length === 0) return;
+      var toShow = Math.min(that.displayedCount + 50, that.filteredRows.length);
+      for (var i = that.displayedCount; i < toShow; i++) {
+        if (that.filteredRows[i]) {
+          that.filteredRows[i].style.display = '';
+        }
+      }
+      that.displayedCount = toShow;
+    },
+    filterDesktop: function() {
+      var that = this;
+      var q = that.query.trim().toLowerCase();
+      var t = document.getElementById('churches-table');
+      if (!t) return;
+      var rows = that.allRows.length > 0 ? that.allRows : t.querySelectorAll('tbody tr');
+      if (that.allRows.length === 0) {
+        that.allRows = Array.from(rows);
+      }
+      var filtered = [];
+      var idx = 0;
+      for (var i = 0; i < rows.length; i++) {
+        var r = rows[i];
+        var match = !q || r.textContent.toLowerCase().indexOf(q) >= 0;
+        if (match) {
+          var idxCell = r.querySelector('td.index-column');
+          if (idxCell) idxCell.textContent = idx + 1;
+          filtered.push(r);
+          idx++;
+        } else {
+          r.style.display = 'none';
+        }
+      }
+      that.filteredRows = filtered;
+      that.displayedCount = 50;
+      for (var j = 0; j < filtered.length; j++) {
+        if (j < 50) {
+          filtered[j].style.display = '';
+        } else {
+          filtered[j].style.display = 'none';
+        }
+      }
+    }
+  };
+});
+
 document.addEventListener('DOMContentLoaded', function() {
   var table = document.getElementById('churches-table');
   if (!table) return;
