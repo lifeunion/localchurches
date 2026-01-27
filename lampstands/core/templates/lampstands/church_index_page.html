@@ -222,26 +222,26 @@
     /* Desktop table: force horizontal overflow so rightmost columns are reachable via scroll */
     #churches-table { 
       table-layout: fixed !important; 
-      width: 3850px !important;  /* fixed width: 60+100+200+140+108+112+160+90+(8×360)=3850px */
-      min-width: 3850px !important;
+      width: 3365px !important;  /* fixed width: 30+50+100+70+54+56+80+45+(8×360)=3365px */
+      min-width: 3365px !important;
     }
-    /* Use fixed pixel widths with !important to prevent compression */
-    /* Index column - ensure visible */
-    #churches-table th:nth-child(1), #churches-table td:nth-child(1) { width: 60px !important; min-width: 60px !important; max-width: 60px !important; display: table-cell !important; visibility: visible !important; }
-    /* City column - 20px less (120px -> 100px) */
-    #churches-table th:nth-child(2), #churches-table td:nth-child(2) { width: 100px !important; min-width: 100px !important; max-width: 100px !important; }
-    /* Address column - 200px */
-    #churches-table th:nth-child(3), #churches-table td:nth-child(3) { width: 200px !important; min-width: 200px !important; max-width: 200px !important; word-wrap: break-word; }
-    /* State/Prov column - unchanged */
-    #churches-table th:nth-child(4), #churches-table td:nth-child(4) { width: 140px !important; min-width: 140px !important; max-width: 140px !important; }
-    /* Country column - 40% less (180px -> 108px) */
-    #churches-table th:nth-child(5), #churches-table td:nth-child(5) { width: 108px !important; min-width: 108px !important; max-width: 108px !important; word-wrap: break-word; }
-    /* Phone column - 30% less (160px -> 112px) */
-    #churches-table th:nth-child(6), #churches-table td:nth-child(6) { width: 112px !important; min-width: 112px !important; max-width: 112px !important; }
-    /* Email column - 20% less (200px -> 160px) */
-    #churches-table th:nth-child(7), #churches-table td:nth-child(7) { width: 160px !important; min-width: 160px !important; max-width: 160px !important; word-wrap: break-word; }
-    /* Website column - 50% less (180px -> 90px) */
-    #churches-table th:nth-child(8), #churches-table td:nth-child(8) { width: 90px !important; min-width: 90px !important; max-width: 90px !important; word-wrap: break-word; }
+    /* Use fixed pixel widths with !important to prevent compression - all columns 1-8 reduced by 50% */
+    /* Index column - 50% less (60px -> 30px) */
+    #churches-table th:nth-child(1), #churches-table td:nth-child(1) { width: 30px !important; min-width: 30px !important; max-width: 30px !important; display: table-cell !important; visibility: visible !important; }
+    /* City column - 50% less (100px -> 50px) */
+    #churches-table th:nth-child(2), #churches-table td:nth-child(2) { width: 50px !important; min-width: 50px !important; max-width: 50px !important; }
+    /* Address column - 50% less (200px -> 100px) */
+    #churches-table th:nth-child(3), #churches-table td:nth-child(3) { width: 100px !important; min-width: 100px !important; max-width: 100px !important; word-wrap: break-word; }
+    /* State/Prov column - 50% less (140px -> 70px) */
+    #churches-table th:nth-child(4), #churches-table td:nth-child(4) { width: 70px !important; min-width: 70px !important; max-width: 70px !important; }
+    /* Country column - 50% less (108px -> 54px) */
+    #churches-table th:nth-child(5), #churches-table td:nth-child(5) { width: 54px !important; min-width: 54px !important; max-width: 54px !important; word-wrap: break-word; }
+    /* Phone column - 50% less (112px -> 56px) */
+    #churches-table th:nth-child(6), #churches-table td:nth-child(6) { width: 56px !important; min-width: 56px !important; max-width: 56px !important; }
+    /* Email column - 50% less (160px -> 80px) */
+    #churches-table th:nth-child(7), #churches-table td:nth-child(7) { width: 80px !important; min-width: 80px !important; max-width: 80px !important; word-wrap: break-word; }
+    /* Website column - 50% less (90px -> 45px) */
+    #churches-table th:nth-child(8), #churches-table td:nth-child(8) { width: 45px !important; min-width: 45px !important; max-width: 45px !important; word-wrap: break-word; }
     /* Available Contacts columns - 20% more each (300px -> 360px), total section 2880px (8 columns × 360px) */
     #churches-table th:nth-child(9), #churches-table td:nth-child(9) { width: 360px !important; min-width: 360px !important; max-width: 360px !important; word-wrap: break-word; white-space: normal !important; overflow: visible !important; }
     #churches-table th:nth-child(10), #churches-table td:nth-child(10) { width: 360px !important; min-width: 360px !important; max-width: 360px !important; word-wrap: break-word; white-space: normal !important; overflow: visible !important; }
@@ -278,8 +278,8 @@
             <tbody>
                 <template x-for="item in displayedItems" :key="item.id">
                 <tr>
-                    <td class="details-control" @click.stop="toggle(item.id)" style="cursor:pointer; text-align:center; font-weight:bold; font-size:1.5em; background-color:#000; color:#fff; border:1px solid #ddd; width:2.5em; min-width:2.5em; height:2.5em; padding:0; vertical-align:middle; border-radius:4px; position:relative;">
-                        <span style="display:block !important; width:100%; height:100%; line-height:2.5em; user-select:none; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; position:relative; z-index:10;" x-text="expandedIds.includes(String(item.id)) ? '−' : '+'"></span>
+                    <td class="details-control" style="padding:0.25em; vertical-align:middle; text-align:center;">
+                        <span @click.stop="toggle(item.id)" style="display:inline-block; cursor:pointer; text-align:center; font-weight:bold; font-size:1.5em; background-color:#000; color:#fff; border:1px solid #ddd; width:1.2em; height:1.2em; line-height:1.2em; padding:0; border-radius:4px; user-select:none; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none;" x-text="expandedIds.includes(String(item.id)) ? '−' : '+'"></span>
                     </td>
                     <td class="city-column"><a :href="item.url || ('/churches/' + (item.slug||'') + '/')" x-text="item.locality_name"></a></td>
                     <td x-text="item.locality_state_or_province"></td>
