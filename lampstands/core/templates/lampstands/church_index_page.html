@@ -151,6 +151,12 @@
             <div class="posts posts-grid">  
                 <div class="row">
                 <br>
+                <div class="church-list-toolbar" style="display:flex; justify-content:flex-end; align-items:center; flex-wrap:wrap; gap:1em; margin-bottom:1em;">
+                    <div style="display:inline-flex; align-items:center; width:100%; max-width:100%;">
+                        <label style="margin:0; margin-right:0.5em; white-space:nowrap;">Search:</label>
+                        <input type="text" x-model="query" @input="currentPage=1" style="padding:0.375rem 0.75rem; border:1px solid #ccc; border-radius:0.25rem; flex:1; min-width:0;" placeholder="Search churches..." />
+                    </div>
+                </div>
                 <div style="overflow-x: auto; max-height: 70vh; overflow-y: auto;">
                  <table class="table table-striped" id="churches-mobile-table" cellspacing="0" width="100%">
             <thead>
@@ -210,6 +216,7 @@ document.addEventListener('alpine:init', function() {
       displayedItems: [],
       expanded: {},
       jsonUrl: '',
+      query: '',
       pageSize: 25,
       currentPage: 1,
       totalPages: 1,
@@ -223,15 +230,21 @@ document.addEventListener('alpine:init', function() {
       toggle: function(id) { this.expanded = Object.assign({}, this.expanded, { [id]: !this.expanded[id] }); },
       updatePagination: function() {
         var that = this;
+        var q = (that.query || '').trim().toLowerCase();
+        var filtered = that.items.filter(function(item) {
+          if (!q) return true;
+          var searchText = [item.locality_name, item.locality_state_or_province, item.locality_country, item.meeting_address].join(' ').toLowerCase();
+          return searchText.indexOf(q) >= 0;
+        });
         var ps = that.pageSize || 25;
         var pg = that.currentPage || 1;
-        var total = that.items.length;
+        var total = filtered.length;
         that.visibleCount = total;
         that.totalPages = Math.ceil(total / ps) || 1;
         that.currentPage = Math.min(Math.max(1, that.currentPage), that.totalPages);
         var start = (that.currentPage - 1) * ps;
         var end = start + ps;
-        that.displayedItems = that.items.slice(start, end);
+        that.displayedItems = filtered.slice(start, end);
         var pn = [];
         var tot = that.totalPages;
         var cur = that.currentPage;
