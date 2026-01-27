@@ -276,7 +276,7 @@
                     <td x-text="item.locality_state_or_province"></td>
                     <td x-text="item.locality_country"></td>
                 </tr>
-                <tr x-show="isExpanded(item.id)" x-cloak>
+                <tr :style="isExpanded(item.id) ? 'display: table-row;' : 'display: none;'">
                     <td colspan="4" style="padding:0;">
                         <div style="padding-left:1em; padding-top:0.5em; padding-bottom:0.5em;" x-html="formatDetail(item)"></div>
                     </td>
