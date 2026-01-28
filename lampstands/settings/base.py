@@ -151,7 +151,7 @@ STATICFILES_DIRS = [
     os.path.join(PROJECT_DIR, 'static'), # lampstands: lampstands/images/, etc.
 ]
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 
 STORAGES = {
@@ -159,7 +159,9 @@ STORAGES = {
         "BACKEND": "django.core.files.storage.FileSystemStorage",
     },
     "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+        # Keep base settings aligned with staging’s “no post_process surprises” approach.
+        # staging.py/production.py override this as needed, but base should be safe.
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
     },
 }
 

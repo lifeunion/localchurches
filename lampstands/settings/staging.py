@@ -142,6 +142,11 @@ CACHES = {
 }
 
 WHITENOISE_AUTOREFRESH = False
+# Critical: if Render runtime starts without a populated STATIC_ROOT (e.g. collectstatic
+# didn’t run or build artifacts weren’t persisted), this allows WhiteNoise to serve
+# static assets directly from STATICFILES_DIRS via Django’s finders, preventing
+# `/static/...` 404s (and the resulting “MIME type text/html” errors).
+WHITENOISE_USE_FINDERS = True
 
 try:
     from .local import *

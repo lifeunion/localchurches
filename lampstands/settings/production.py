@@ -276,6 +276,10 @@ CACHES = {
 # CompressedStaticFilesStorage handles static file compression during collectstatic.
 # No additional configuration needed - gzip compression is enabled by default.
 WHITENOISE_AUTOREFRESH = False  # Disable auto-refresh in production for better performance
+# If production is running without S3 credentials, we fall back to WhiteNoise.
+# Use finders as a safety net so `/static/...` still resolves even if STATIC_ROOT
+# is empty (e.g. collectstatic didn’t run, or build output wasn’t persisted).
+WHITENOISE_USE_FINDERS = True
 
 try:
     from .local import *

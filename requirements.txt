@@ -19,7 +19,7 @@ django-storages[boto3]==1.14.4
 
 # Database
 dj-database-url==2.3.0
-psycopg[binary]==3.2.4
+psycopg[binary]==3.3.2
 
 # Web server
 gunicorn==23.0.0
