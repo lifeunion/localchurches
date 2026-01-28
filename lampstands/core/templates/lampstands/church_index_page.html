@@ -161,6 +161,12 @@
     #churches-mobile-table.table-striped tbody tr:nth-of-type(even) td.active-column { background-color: #f0f0f0 !important; }
     #churches-mobile-table .mobile-row-inner { background: inherit; }
     #churches-mobile-table .mobile-drawer { border-top: 1px solid #e0e0e0; }
+    /* Equal width for all expanded field labels (longest is "Contact person 4:") */
+    #churches-mobile-table .expanded-content .detail-field-label {
+      width: 11em;
+      min-width: 11em;
+      flex-shrink: 0;
+    }
     #churches-mobile-table td.details-control,
     #churches-mobile-table .details-control { 
       position: relative; 
@@ -416,18 +422,18 @@ document.addEventListener('alpine:init', function() {
         var phone3 = (it.locality_contact_brother_3_phone||'').replace(/</g,'&lt;') || '—';
         var contact4 = (it.locality_contact_brother_4||'').replace(/</g,'&lt;') || '—';
         var phone4 = (it.locality_contact_brother_4_phone||'').replace(/</g,'&lt;') || '—';
-        return '<div style="border-top:1px solid #e0e0e0;"><div style="display:flex; border-bottom:1px solid #e0e0e0;"><div style="background-color:#f5f5f5; padding:0.5em; min-width:120px; font-weight:500;">Meeting address:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+addr+'</div></div>'+
-               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div style="background-color:#f5f5f5; padding:0.5em; min-width:120px; font-weight:500;">Phone number:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+phone+'</div></div>'+
-               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div style="background-color:#f5f5f5; padding:0.5em; min-width:120px; font-weight:500;">Email:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+email+'</div></div>'+
-               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div style="background-color:#f5f5f5; padding:0.5em; min-width:120px; font-weight:500;">Website:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+wl+'</div></div>'+
-               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div style="background-color:#f5f5f5; padding:0.5em; min-width:120px; font-weight:500;">Contact person 1:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+contact1+'</div></div>'+
-               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div style="background-color:#f5f5f5; padding:0.5em; min-width:120px; font-weight:500;">Phone 1:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+phone1+'</div></div>'+
-               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div style="background-color:#f5f5f5; padding:0.5em; min-width:120px; font-weight:500;">Contact person 2:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+contact2+'</div></div>'+
-               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div style="background-color:#f5f5f5; padding:0.5em; min-width:120px; font-weight:500;">Phone 2:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+phone2+'</div></div>'+
-               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div style="background-color:#f5f5f5; padding:0.5em; min-width:120px; font-weight:500;">Contact person 3:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+contact3+'</div></div>'+
-               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div style="background-color:#f5f5f5; padding:0.5em; min-width:120px; font-weight:500;">Phone 3:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+phone3+'</div></div>'+
-               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div style="background-color:#f5f5f5; padding:0.5em; min-width:120px; font-weight:500;">Contact person 4:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+contact4+'</div></div>'+
-               '<div style="display:flex;"><div style="background-color:#f5f5f5; padding:0.5em; min-width:120px; font-weight:500;">Phone 4:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+phone4+'</div></div></div>';
+        return '<div style="border-top:1px solid #e0e0e0;"><div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Meeting address:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+addr+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Phone number:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+phone+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Email:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+email+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Website:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+wl+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Contact person 1:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+contact1+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Phone 1:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+phone1+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Contact person 2:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+contact2+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Phone 2:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+phone2+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Contact person 3:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+contact3+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Phone 3:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+phone3+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Contact person 4:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+contact4+'</div></div>'+
+               '<div style="display:flex;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Phone 4:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+phone4+'</div></div></div>';
       },
       toggle: function(id) {
         if (!id && id !== 0) return;
