@@ -159,7 +159,10 @@
     #churches-mobile-table.table-striped tbody tr:nth-of-type(even) { background-color: #fff; }
     #churches-mobile-table.table-striped tbody tr td.active-column { background-color: #f0f0f0 !important; }
     #churches-mobile-table.table-striped tbody tr:nth-of-type(even) td.active-column { background-color: #f0f0f0 !important; }
-    #churches-mobile-table td.details-control { 
+    #churches-mobile-table .mobile-row-inner { background: inherit; }
+    #churches-mobile-table .mobile-drawer { border-top: 1px solid #e0e0e0; }
+    #churches-mobile-table td.details-control,
+    #churches-mobile-table .details-control { 
       position: relative; 
       overflow: visible !important; 
       white-space: nowrap;
@@ -168,16 +171,20 @@
       text-align: center !important;
     }
     #churches-mobile-table td.details-control::before,
-    #churches-mobile-table td.details-control::after {
+    #churches-mobile-table td.details-control::after,
+    #churches-mobile-table .details-control::before,
+    #churches-mobile-table .details-control::after {
       content: none !important;
       display: none !important;
       background: none !important;
       background-image: none !important;
     }
-    #churches-mobile-table td.details-control:hover { 
+    #churches-mobile-table td.details-control:hover,
+    #churches-mobile-table .details-control:hover { 
       background-color: inherit !important; 
     }
-    #churches-mobile-table td.details-control span { 
+    #churches-mobile-table td.details-control span,
+    #churches-mobile-table .details-control span { 
       position: relative; 
       z-index: 10 !important; 
       display: inline-block !important;
@@ -185,7 +192,8 @@
       color: #fff !important;
     }
     /* Remove any chevron or arrow icons from table cells */
-    #churches-mobile-table td.details-control * {
+    #churches-mobile-table td.details-control *,
+    #churches-mobile-table .details-control * {
       background-image: none !important;
     }
     #churches-mobile-table th,
@@ -193,7 +201,8 @@
       white-space: nowrap !important;
       min-width: fit-content;
     }
-    #churches-mobile-table td.city-column {
+    #churches-mobile-table td.city-column,
+    #churches-mobile-table .city-column {
       min-width: 120px;
     }
     #churches-mobile-table th:nth-child(1),
@@ -277,17 +286,21 @@
             </thead>
             <tbody>
                 <template x-for="item in displayedItems" :key="item.id">
-                <tr class="main-row">
-                    <td class="details-control" style="padding:0.25em; vertical-align:middle; text-align:center; background-color:inherit;">
-                        <span class="toggle-icon" style="display:inline-block; cursor:pointer; text-align:center; font-weight:bold; font-size:1.5em; background-color:#0BB7A5; color:#fff; border:1px solid #ddd; width:1.2em; height:1.2em; line-height:1.2em; padding:0; border-radius:4px; user-select:none; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; margin:0 auto;">+</span>
-                    </td>
-                    <td class="city-column"><a :href="item.url || ('/churches/' + (item.slug||'') + '/')" x-text="item.locality_name"></a></td>
-                    <td x-text="item.locality_state_or_province"></td>
-                    <td x-text="item.locality_country"></td>
-                </tr>
-                <tr class="expanded-row" style="display: none;">
-                    <td colspan="4" style="padding:0;">
-                        <div class="expanded-content" style="padding-left:1em; padding-top:0.5em; padding-bottom:0.5em;" x-html="formatDetail(item)"></div>
+                <tr class="mobile-church-row">
+                    <td colspan="4" style="padding:0; vertical-align:top;">
+                        <div class="mobile-row-inner">
+                            <div class="mobile-row-main" style="display:grid; grid-template-columns: 80px 200px 200px 200px; align-items:center; border-bottom:1px solid #eee;">
+                                <div class="details-control" style="padding:0.25em; text-align:center; background-color:inherit;">
+                                    <span class="toggle-icon" style="display:inline-block; cursor:pointer; text-align:center; font-weight:bold; font-size:1.5em; background-color:#0BB7A5; color:#fff; border:1px solid #ddd; width:1.2em; height:1.2em; line-height:1.2em; padding:0; border-radius:4px; user-select:none; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; margin:0 auto;">+</span>
+                                </div>
+                                <div class="city-column" style="padding:0.5em;"><a :href="item.url || ('/churches/' + (item.slug||'') + '/')" x-text="item.locality_name"></a></div>
+                                <div style="padding:0.5em;" x-text="item.locality_state_or_province"></div>
+                                <div style="padding:0.5em;" x-text="item.locality_country"></div>
+                            </div>
+                            <div class="mobile-drawer" style="display:none;">
+                                <div class="expanded-content" style="padding-left:1em; padding-top:0.5em; padding-bottom:0.5em;" x-html="formatDetail(item)"></div>
+                            </div>
+                        </div>
                     </td>
                 </tr>
                 </template>
@@ -571,71 +584,33 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
+<script defer src="https://unpkg.com/alpinejs@3/dist/cdn.min.js"></script>
 <script>
-// Vanilla JavaScript toggle functionality for mobile table
+// Toggle drawer: click on .toggle-icon shows/hides the drawer in the same row (vanilla JS only).
 (function() {
-  function handleToggleClick(e) {
-    var toggleIcon = e.target.closest('.toggle-icon');
-    if (!toggleIcon) return;
-    
+  function onToggleClick(e) {
+    var icon = e.target.closest('.toggle-icon');
+    if (!icon) return;
+    var table = document.getElementById('churches-mobile-table');
+    if (!table || !table.contains(icon)) return;
     e.preventDefault();
     e.stopPropagation();
-    
-    // Find the parent row
-    var mainRow = toggleIcon.closest('tr.main-row');
-    if (!mainRow) return;
-    
-    // Find the next sibling row (the expanded row)
-    var expandedRow = mainRow.nextElementSibling;
-    if (!expandedRow || !expandedRow.classList.contains('expanded-row')) return;
-    
-    // Toggle the row visibility
-    var isHidden = expandedRow.style.display === 'none' || expandedRow.style.display === '';
-    if (isHidden) {
-      expandedRow.style.display = 'table-row';
-      toggleIcon.textContent = '−';
-    } else {
-      expandedRow.style.display = 'none';
-      toggleIcon.textContent = '+';
-    }
+    var row = icon.closest('tr.mobile-church-row') || icon.closest('tr');
+    if (!row) return;
+    var drawer = row.querySelector('.mobile-drawer');
+    if (!drawer) return;
+    var isHidden = drawer.style.display === 'none' || window.getComputedStyle(drawer).display === 'none';
+    drawer.style.display = isHidden ? 'block' : 'none';
+    icon.textContent = isHidden ? '−' : '+';
   }
-  
-  // Setup event delegation on the table (works even if rows are added later)
-  function setupToggle() {
-    var table = document.getElementById('churches-mobile-table');
-    if (table) {
-      // Remove any existing listener and add new one
-      table.removeEventListener('click', handleToggleClick);
-      table.addEventListener('click', handleToggleClick);
-    }
+  function attach() {
+    document.removeEventListener('click', onToggleClick, true);
+    document.addEventListener('click', onToggleClick, true);
   }
-  
-  // Setup when DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupToggle);
-  } else {
-    setupToggle();
-  }
-  
-  // Also setup after Alpine renders (using MutationObserver)
-  var observer = new MutationObserver(function() {
-    var table = document.getElementById('churches-mobile-table');
-    if (table && table.querySelector('.toggle-icon')) {
-      setupToggle();
-    }
-  });
-  
-  var container = document.querySelector('.content.hidden-lg-up');
-  if (container) {
-    observer.observe(container, { childList: true, subtree: true });
-  }
-  
-  // Also try after a delay to catch Alpine-rendered content
-  setTimeout(setupToggle, 500);
-  setTimeout(setupToggle, 1000);
+  document.addEventListener('alpine:init', function() { setTimeout(attach, 150); });
+  document.addEventListener('DOMContentLoaded', function() { setTimeout(attach, 600); });
 })();
 </script>
-<script defer src="https://unpkg.com/alpinejs@3/dist/cdn.min.js"></script>
 {% endblock %}
 
 {% block findicon %}
