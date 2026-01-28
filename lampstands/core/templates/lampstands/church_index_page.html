@@ -279,13 +279,13 @@
                 <template x-for="item in displayedItems" :key="item.id">
                 <tr>
                     <td class="details-control" style="padding:0.25em; vertical-align:middle; text-align:center; background-color:inherit;">
-                        <span @click="toggle(item.id)" style="display:inline-block; cursor:pointer; text-align:center; font-weight:bold; font-size:1.5em; background-color:#0BB7A5; color:#fff; border:1px solid #ddd; width:1.2em; height:1.2em; line-height:1.2em; padding:0; border-radius:4px; user-select:none; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; margin:0 auto;" x-text="expandedIds.includes(String(item.id)) ? '−' : '+'"></span>
+                        <span @click="toggle(item.id)" style="display:inline-block; cursor:pointer; text-align:center; font-weight:bold; font-size:1.5em; background-color:#0BB7A5; color:#fff; border:1px solid #ddd; width:1.2em; height:1.2em; line-height:1.2em; padding:0; border-radius:4px; user-select:none; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; margin:0 auto;" x-text="isExpanded(item.id) ? '−' : '+'"></span>
                     </td>
                     <td class="city-column"><a :href="item.url || ('/churches/' + (item.slug||'') + '/')" x-text="item.locality_name"></a></td>
                     <td x-text="item.locality_state_or_province"></td>
                     <td x-text="item.locality_country"></td>
                 </tr>
-                <tr :style="expandedIds.includes(String(item.id)) ? 'display: table-row;' : 'display: none;'">
+                <tr x-show="isExpanded(item.id)">
                     <td colspan="4" style="padding:0;">
                         <div style="padding-left:1em; padding-top:0.5em; padding-bottom:0.5em;" x-html="formatDetail(item)"></div>
                     </td>
@@ -385,8 +385,9 @@ document.addEventListener('alpine:init', function() {
       query: '',
       displayedCount: 25,
       isExpanded: function(id) {
+        if (!id && id !== 0) return false;
         var key = String(id);
-        return this.expandedIds.indexOf(key) >= 0;
+        return this.expandedIds && this.expandedIds.indexOf(key) >= 0;
       },
       formatDetail: function(it) {
         var w = (it.locality_web || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -416,6 +417,7 @@ document.addEventListener('alpine:init', function() {
                '<div style="display:flex;"><div style="background-color:#f5f5f5; padding:0.5em; min-width:120px; font-weight:500;">Phone 4:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+phone4+'</div></div></div>';
       },
       toggle: function(id) {
+        if (!id && id !== 0) return;
         // Ensure expandedIds array exists
         if (!this.expandedIds) {
           this.expandedIds = [];
@@ -426,23 +428,23 @@ document.addEventListener('alpine:init', function() {
         // Find index of id in array
         var index = that.expandedIds.indexOf(key);
         // Create a completely new array to ensure Alpine reactivity
-        var newExpandedIds = [];
+        var newArray = [];
         if (index >= 0) {
           // Remove from array (collapse)
           for (var i = 0; i < that.expandedIds.length; i++) {
             if (that.expandedIds[i] !== key) {
-              newExpandedIds.push(that.expandedIds[i]);
+              newArray.push(that.expandedIds[i]);
             }
           }
         } else {
           // Add to array (expand)
           for (var j = 0; j < that.expandedIds.length; j++) {
-            newExpandedIds.push(that.expandedIds[j]);
+            newArray.push(that.expandedIds[j]);
           }
-          newExpandedIds.push(key);
+          newArray.push(key);
         }
         // Assign new array - this should trigger Alpine reactivity
-        that.expandedIds = newExpandedIds;
+        that.expandedIds = newArray;
       },
       showMoreItems: function() {
         var that = this;
