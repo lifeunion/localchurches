@@ -279,13 +279,13 @@
                 <template x-for="item in displayedItems" :key="item.id">
                 <tr>
                     <td class="details-control" style="padding:0.25em; vertical-align:middle; text-align:center;">
-                        <span @click.stop="toggle(item.id)" style="display:inline-block; cursor:pointer; text-align:center; font-weight:bold; font-size:1.5em; background-color:#000; color:#fff; border:1px solid #ddd; width:1.2em; height:1.2em; line-height:1.2em; padding:0; border-radius:4px; user-select:none; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none;" x-text="expandedIds.includes(String(item.id)) ? '−' : '+'"></span>
+                        <span @click.stop="toggle(item.id)" style="display:inline-block; cursor:pointer; text-align:center; font-weight:bold; font-size:1.5em; background-color:#000; color:#fff; border:1px solid #ddd; width:1.2em; height:1.2em; line-height:1.2em; padding:0; border-radius:4px; user-select:none; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none;" x-text="isExpanded(item.id) ? '−' : '+'"></span>
                     </td>
                     <td class="city-column"><a :href="item.url || ('/churches/' + (item.slug||'') + '/')" x-text="item.locality_name"></a></td>
                     <td x-text="item.locality_state_or_province"></td>
                     <td x-text="item.locality_country"></td>
                 </tr>
-                <tr x-show="expandedIds.includes(String(item.id))" style="display: table-row;">
+                <tr :style="isExpanded(item.id) ? 'display: table-row;' : 'display: none;'">
                     <td colspan="4" style="padding:0;">
                         <div style="padding-left:1em; padding-top:0.5em; padding-bottom:0.5em;" x-html="formatDetail(item)"></div>
                     </td>
@@ -416,22 +416,23 @@ document.addEventListener('alpine:init', function() {
                '<div style="display:flex;"><div style="background-color:#f5f5f5; padding:0.5em; min-width:120px; font-weight:500;">Phone 4:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+phone4+'</div></div></div>';
       },
       toggle: function(id) {
-        // Ensure expandedIds array exists and is reactive
+        // Ensure expandedIds array exists
         if (!this.expandedIds) {
           this.expandedIds = [];
         }
         // Normalise id to string for consistent comparisons
         var key = String(id);
+        var that = this;
         // Find index of id in array
-        var index = this.expandedIds.indexOf(key);
+        var index = that.expandedIds.indexOf(key);
         if (index >= 0) {
-          // Remove from array (collapse) - create new array for reactivity
-          this.expandedIds = this.expandedIds.filter(function(item) {
-            return item !== key;
-          });
+          // Remove from array (collapse) - use splice on a copy to trigger reactivity
+          var newArray = that.expandedIds.slice();
+          newArray.splice(index, 1);
+          that.expandedIds = newArray;
         } else {
-          // Add to array (expand) - create new array for reactivity
-          this.expandedIds = this.expandedIds.concat([key]);
+          // Add to array (expand) - use concat to create new array
+          that.expandedIds = that.expandedIds.concat([key]);
         }
       },
       showMoreItems: function() {
