@@ -222,18 +222,18 @@
     /* Desktop table: force horizontal overflow so rightmost columns are reachable via scroll */
     #churches-table { 
       table-layout: fixed !important; 
-      width: 3365px !important;  /* fixed width: 30+50+100+70+54+56+80+45+(8×360)=3365px */
-      min-width: 3365px !important;
+      width: 3315px !important;  /* fixed width: 24+40+80+56+54+56+80+45+(8×360)=3315px */
+      min-width: 3315px !important;
     }
-    /* Use fixed pixel widths with !important to prevent compression - all columns 1-8 reduced by 50% */
-    /* Index column - 50% less (60px -> 30px) */
-    #churches-table th:nth-child(1), #churches-table td:nth-child(1) { width: 30px !important; min-width: 30px !important; max-width: 30px !important; display: table-cell !important; visibility: visible !important; }
-    /* City column - 50% less (100px -> 50px) */
-    #churches-table th:nth-child(2), #churches-table td:nth-child(2) { width: 50px !important; min-width: 50px !important; max-width: 50px !important; }
-    /* Address column - 50% less (200px -> 100px) */
-    #churches-table th:nth-child(3), #churches-table td:nth-child(3) { width: 100px !important; min-width: 100px !important; max-width: 100px !important; word-wrap: break-word; }
-    /* State/Prov column - 50% less (140px -> 70px) */
-    #churches-table th:nth-child(4), #churches-table td:nth-child(4) { width: 70px !important; min-width: 70px !important; max-width: 70px !important; }
+    /* Use fixed pixel widths with !important to prevent compression */
+    /* Index column - 20% less (30px -> 24px) */
+    #churches-table th:nth-child(1), #churches-table td:nth-child(1) { width: 24px !important; min-width: 24px !important; max-width: 24px !important; display: table-cell !important; visibility: visible !important; }
+    /* City column - 20% less (50px -> 40px) */
+    #churches-table th:nth-child(2), #churches-table td:nth-child(2) { width: 40px !important; min-width: 40px !important; max-width: 40px !important; }
+    /* Address column - 20% less (100px -> 80px) */
+    #churches-table th:nth-child(3), #churches-table td:nth-child(3) { width: 80px !important; min-width: 80px !important; max-width: 80px !important; word-wrap: break-word; }
+    /* State/Prov column - 20% less (70px -> 56px) */
+    #churches-table th:nth-child(4), #churches-table td:nth-child(4) { width: 56px !important; min-width: 56px !important; max-width: 56px !important; }
     /* Country column - 50% less (108px -> 54px) */
     #churches-table th:nth-child(5), #churches-table td:nth-child(5) { width: 54px !important; min-width: 54px !important; max-width: 54px !important; word-wrap: break-word; }
     /* Phone column - 50% less (112px -> 56px) */
