@@ -285,7 +285,7 @@
                     <td x-text="item.locality_state_or_province"></td>
                     <td x-text="item.locality_country"></td>
                 </tr>
-                <tr x-show="isExpanded(item.id)">
+                <tr x-bind:style="isExpanded(item.id) ? 'display: table-row;' : 'display: none;'">
                     <td colspan="4" style="padding:0;">
                         <div style="padding-left:1em; padding-top:0.5em; padding-bottom:0.5em;" x-html="formatDetail(item)"></div>
                     </td>
@@ -380,14 +380,14 @@ document.addEventListener('alpine:init', function() {
       items: [],
       displayedItems: [],
       filteredItems: [],
-      expandedIds: [],  // Initialize as empty array for Alpine reactivity
+      expanded: {},  // Use object instead of array for better reactivity
       jsonUrl: '',
       query: '',
       displayedCount: 25,
       isExpanded: function(id) {
         if (!id && id !== 0) return false;
         var key = String(id);
-        return this.expandedIds && this.expandedIds.indexOf(key) >= 0;
+        return this.expanded && this.expanded[key] === true;
       },
       formatDetail: function(it) {
         var w = (it.locality_web || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -418,33 +418,32 @@ document.addEventListener('alpine:init', function() {
       },
       toggle: function(id) {
         if (!id && id !== 0) return;
-        // Ensure expandedIds array exists
-        if (!this.expandedIds) {
-          this.expandedIds = [];
+        // Ensure expanded object exists
+        if (!this.expanded) {
+          this.expanded = {};
         }
         // Normalise id to string for consistent comparisons
         var key = String(id);
         var that = this;
-        // Find index of id in array
-        var index = that.expandedIds.indexOf(key);
-        // Create a completely new array to ensure Alpine reactivity
-        var newArray = [];
-        if (index >= 0) {
-          // Remove from array (collapse)
-          for (var i = 0; i < that.expandedIds.length; i++) {
-            if (that.expandedIds[i] !== key) {
-              newArray.push(that.expandedIds[i]);
+        // Toggle the expanded state
+        if (that.expanded[key]) {
+          // Collapse - create new object without this key
+          var newExpanded = {};
+          for (var k in that.expanded) {
+            if (k !== key) {
+              newExpanded[k] = that.expanded[k];
             }
           }
+          that.expanded = newExpanded;
         } else {
-          // Add to array (expand)
-          for (var j = 0; j < that.expandedIds.length; j++) {
-            newArray.push(that.expandedIds[j]);
+          // Expand - create new object with this key
+          var newExpanded = {};
+          for (var k in that.expanded) {
+            newExpanded[k] = that.expanded[k];
           }
-          newArray.push(key);
+          newExpanded[key] = true;
+          that.expanded = newExpanded;
         }
-        // Assign new array - this should trigger Alpine reactivity
-        that.expandedIds = newArray;
       },
       showMoreItems: function() {
         var that = this;
