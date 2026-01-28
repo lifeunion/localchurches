@@ -277,15 +277,15 @@
             </thead>
             <tbody>
                 <template x-for="item in displayedItems" :key="item.id">
-                <tr>
+                <tr class="main-row">
                     <td class="details-control" style="padding:0.25em; vertical-align:middle; text-align:center; background-color:inherit;">
-                        <span class="toggle-icon" :data-item-id="item.id" style="display:inline-block; cursor:pointer; text-align:center; font-weight:bold; font-size:1.5em; background-color:#0BB7A5; color:#fff; border:1px solid #ddd; width:1.2em; height:1.2em; line-height:1.2em; padding:0; border-radius:4px; user-select:none; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; margin:0 auto;">+</span>
+                        <span class="toggle-icon" style="display:inline-block; cursor:pointer; text-align:center; font-weight:bold; font-size:1.5em; background-color:#0BB7A5; color:#fff; border:1px solid #ddd; width:1.2em; height:1.2em; line-height:1.2em; padding:0; border-radius:4px; user-select:none; -webkit-user-select:none; -moz-user-select:none; -ms-user-select:none; margin:0 auto;">+</span>
                     </td>
                     <td class="city-column"><a :href="item.url || ('/churches/' + (item.slug||'') + '/')" x-text="item.locality_name"></a></td>
                     <td x-text="item.locality_state_or_province"></td>
                     <td x-text="item.locality_country"></td>
                 </tr>
-                <tr class="expanded-row" :data-item-id="item.id" style="display: none;">
+                <tr class="expanded-row" style="display: none;">
                     <td colspan="4" style="padding:0;">
                         <div class="expanded-content" style="padding-left:1em; padding-top:0.5em; padding-bottom:0.5em;" x-html="formatDetail(item)"></div>
                     </td>
@@ -573,47 +573,55 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 <script>
 // Vanilla JavaScript toggle functionality for mobile table
-document.addEventListener('DOMContentLoaded', function() {
-  function setupMobileToggle() {
-    var table = document.getElementById('churches-mobile-table');
-    if (!table) {
-      // Wait a bit for Alpine to render the table
-      setTimeout(setupMobileToggle, 100);
-      return;
-    }
+(function() {
+  function handleToggleClick(e) {
+    var toggleIcon = e.target.closest('.toggle-icon');
+    if (!toggleIcon) return;
     
-    // Use event delegation for dynamically added rows
-    table.addEventListener('click', function(e) {
-      var toggleIcon = e.target.closest('.toggle-icon');
-      if (!toggleIcon) return;
-      
-      var itemId = toggleIcon.getAttribute('data-item-id');
-      if (!itemId) return;
-      
-      // Find the corresponding expanded row
-      var expandedRow = table.querySelector('.expanded-row[data-item-id="' + itemId + '"]');
-      if (!expandedRow) return;
-      
-      // Toggle the row visibility
-      if (expandedRow.style.display === 'none' || expandedRow.style.display === '') {
-        expandedRow.style.display = 'table-row';
-        toggleIcon.textContent = '−';
-      } else {
-        expandedRow.style.display = 'none';
-        toggleIcon.textContent = '+';
-      }
-    });
+    e.preventDefault();
+    e.stopPropagation();
+    
+    // Find the parent row
+    var mainRow = toggleIcon.closest('tr.main-row');
+    if (!mainRow) return;
+    
+    // Find the next sibling row (the expanded row)
+    var expandedRow = mainRow.nextElementSibling;
+    if (!expandedRow || !expandedRow.classList.contains('expanded-row')) return;
+    
+    // Toggle the row visibility
+    var isHidden = expandedRow.style.display === 'none' || expandedRow.style.display === '';
+    if (isHidden) {
+      expandedRow.style.display = 'table-row';
+      toggleIcon.textContent = '−';
+    } else {
+      expandedRow.style.display = 'none';
+      toggleIcon.textContent = '+';
+    }
   }
   
-  // Setup on page load
-  setupMobileToggle();
+  // Setup event delegation on the table (works even if rows are added later)
+  function setupToggle() {
+    var table = document.getElementById('churches-mobile-table');
+    if (table) {
+      // Remove any existing listener and add new one
+      table.removeEventListener('click', handleToggleClick);
+      table.addEventListener('click', handleToggleClick);
+    }
+  }
+  
+  // Setup when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupToggle);
+  } else {
+    setupToggle();
+  }
   
   // Also setup after Alpine renders (using MutationObserver)
-  var observer = new MutationObserver(function(mutations) {
+  var observer = new MutationObserver(function() {
     var table = document.getElementById('churches-mobile-table');
     if (table && table.querySelector('.toggle-icon')) {
-      // Table is rendered, ensure toggle is set up
-      setupMobileToggle();
+      setupToggle();
     }
   });
   
@@ -621,7 +629,11 @@ document.addEventListener('DOMContentLoaded', function() {
   if (container) {
     observer.observe(container, { childList: true, subtree: true });
   }
-});
+  
+  // Also try after a delay to catch Alpine-rendered content
+  setTimeout(setupToggle, 500);
+  setTimeout(setupToggle, 1000);
+})();
 </script>
 <script defer src="https://unpkg.com/alpinejs@3/dist/cdn.min.js"></script>
 {% endblock %}
