@@ -571,71 +571,39 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 });
 </script>
+<script defer src="https://unpkg.com/alpinejs@3/dist/cdn.min.js"></script>
 <script>
-// Vanilla JavaScript toggle functionality for mobile table
-(function() {
-  function handleToggleClick(e) {
-    var toggleIcon = e.target.closest('.toggle-icon');
-    if (!toggleIcon) return;
+// Vanilla JavaScript toggle for mobile table. Attach after Alpine has run.
+function attachMobileToggle() {
+  document.addEventListener('click', function mobileToggleHandler(e) {
+    var el = e.target.closest && e.target.closest('.toggle-icon');
+    if (!el) return;
+    var table = document.getElementById('churches-mobile-table');
+    if (!table || !table.contains(el)) return;
     
     e.preventDefault();
     e.stopPropagation();
     
-    // Find the parent row
-    var mainRow = toggleIcon.closest('tr.main-row');
-    if (!mainRow) return;
+    var row = el.closest('tr');
+    if (!row) return;
     
-    // Find the next sibling row (the expanded row)
-    var expandedRow = mainRow.nextElementSibling;
-    if (!expandedRow || !expandedRow.classList.contains('expanded-row')) return;
+    var next = row.nextElementSibling;
+    if (!next || next.tagName !== 'TR') return;
     
-    // Toggle the row visibility
-    var isHidden = expandedRow.style.display === 'none' || expandedRow.style.display === '';
-    if (isHidden) {
-      expandedRow.style.display = 'table-row';
-      toggleIcon.textContent = '−';
-    } else {
-      expandedRow.style.display = 'none';
-      toggleIcon.textContent = '+';
-    }
-  }
-  
-  // Setup event delegation on the table (works even if rows are added later)
-  function setupToggle() {
-    var table = document.getElementById('churches-mobile-table');
-    if (table) {
-      // Remove any existing listener and add new one
-      table.removeEventListener('click', handleToggleClick);
-      table.addEventListener('click', handleToggleClick);
-    }
-  }
-  
-  // Setup when DOM is ready
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupToggle);
-  } else {
-    setupToggle();
-  }
-  
-  // Also setup after Alpine renders (using MutationObserver)
-  var observer = new MutationObserver(function() {
-    var table = document.getElementById('churches-mobile-table');
-    if (table && table.querySelector('.toggle-icon')) {
-      setupToggle();
-    }
-  });
-  
-  var container = document.querySelector('.content.hidden-lg-up');
-  if (container) {
-    observer.observe(container, { childList: true, subtree: true });
-  }
-  
-  // Also try after a delay to catch Alpine-rendered content
-  setTimeout(setupToggle, 500);
-  setTimeout(setupToggle, 1000);
-})();
+    var isHidden = next.style.display === 'none' || next.style.display === '';
+    next.style.display = isHidden ? 'table-row' : 'none';
+    el.textContent = isHidden ? '−' : '+';
+  }, true);
+}
+// Run after Alpine has initialized and had time to render
+document.addEventListener('alpine:init', function() {
+  setTimeout(attachMobileToggle, 100);
+});
+// Fallback: also attach after DOMContentLoaded with delay (in case alpine:init already fired)
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(attachMobileToggle, 800);
+});
 </script>
-<script defer src="https://unpkg.com/alpinejs@3/dist/cdn.min.js"></script>
 {% endblock %}
 
 {% block findicon %}
