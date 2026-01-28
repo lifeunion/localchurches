@@ -1,5 +1,5 @@
 # Core Django and Wagtail
-Django==5.2.11
+Django==5.2.10
 wagtail==7.2
 
 # Wagtail add-ons
