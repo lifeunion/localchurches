@@ -1,9 +1,9 @@
 # Core Django and Wagtail
-Django==5.1.4
-wagtail==6.4
+Django==5.2.11
+wagtail==7.2
 
 # Wagtail add-ons
-wagtail-modeladmin==2.1.0
+wagtail-modeladmin==2.2.0
 wagtail-django-recaptcha
 # wagtailfontawesome==1.2.1  # Removed: incompatible with Wagtail 6.4 (uses old import paths)
 
@@ -27,7 +27,7 @@ whitenoise==6.8.2
 
 # Image processing
 Pillow==11.1.0
-Willow[heif,avif]==1.9.0
+Willow[heif,avif]==1.11.0
 
 # REST API
 djangorestframework==3.15.2
