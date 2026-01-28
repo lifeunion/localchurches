@@ -1166,11 +1166,14 @@ class ChurchPage(Page):
     locality_contact_brother_5_phone = models.CharField(max_length=25, blank=True, null=True)
     locality_contact_brother_6_phone = models.CharField(max_length=25, blank=True, null=True)
 
+    # Boost locality-related fields so admin search (and global Wagtail search)
+    # strongly prefers matching the locality name / address for queries like
+    # "austin", ensuring "church in austin" appears at the top.
     search_fields = Page.search_fields + [
-        index.SearchField('locality_name'),
+        index.SearchField('locality_name', boost=3),
+        index.SearchField('meeting_address', boost=2),
         index.SearchField('locality_state_or_province'),
         index.SearchField('locality_country'),
-        index.SearchField('meeting_address'),
     ]
 
     @property
