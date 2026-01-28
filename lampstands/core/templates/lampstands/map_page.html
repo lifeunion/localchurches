@@ -11,6 +11,24 @@
     <link href="{% static 'lampstands/css/packages/src/style.css' %}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" id="css-primary" href="{% static 'css/villareal-turquoise.css' %}" >
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'css/img/LCblueicon.ico' %}" >
+    <style>
+    /* Keep map-toggle buttons consistent between /map and /churches, especially on mobile */
+    @media (max-width: 991px) {
+      .map-toggle-inner {
+        display: flex !important;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5em;
+      }
+      .map-toggle button {
+        min-height: 44px;
+        min-width: 44px;
+        padding: 0.75em 1em !important;
+        box-sizing: border-box;
+      }
+    }
+    </style>
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -110,13 +128,14 @@
 
 
 <div class="map_wrapper">
-<div class="map-toggle" style="background-color: #555; width: 100%;">
-
-
-            <h6 style="font-weight: 500; color: white; text-align: center;">
-                <button style="border-radius: 4px; background-color: darkgrey; padding: 0.5em 1.18em; margin: 0 0.7em; border-color: transparent;" onclick="location.href='/churches/'">Search by List</button>
-                <button style="cursor: default; border-radius: 4px; background-color: #0BB7A5; border-color: transparent; padding: 0.5em 1em; margin: 0 0.7em;">Search by Map</button>
-                
+<div class="map-toggle" style="background-color: #555; width: 100%; box-sizing: border-box;">
+            <h6 class="map-toggle-inner" style="font-weight: 500; color: white; text-align: center; margin: 0; padding: 0.5em 0;">
+                <button type="button" style="border-radius: 4px; background-color: darkgrey; padding: 0.5em 1.18em; margin: 0 0.35em; border-color: transparent;" onclick="location.href='/churches/'">
+                    Search by List
+                </button>
+                <button type="button" style="cursor: default; border-radius: 4px; background-color: #0BB7A5; border-color: transparent; padding: 0.5em 1em; margin: 0 0.35em;">
+                    Search by Map
+                </button>
             </h6>
 
         <!--<button onclick="myFunction()">List it</button>-->
