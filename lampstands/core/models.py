@@ -36,6 +36,7 @@ from django.core.validators import RegexValidator, URLValidator
 from django_countries.fields import CountryField
 from urllib.request import urlopen
 from urllib.parse import quote
+import hashlib
 import json
 from django.conf import settings as localitySettings
 from django.utils import text
@@ -1256,6 +1257,9 @@ class ChurchPage(Page):
 @receiver(post_delete, sender=ChurchPage)
 def _invalidate_church_index_cache(sender, **kwargs):
     cache.delete('church_index_html_all')
+    # Invalidate map API cache so publish/unpublish/edits reflect immediately
+    api_cache_key = 'localities_list_' + hashlib.md5(b'format=json').hexdigest()
+    cache.delete(api_cache_key)
 
 
 # recognition index page

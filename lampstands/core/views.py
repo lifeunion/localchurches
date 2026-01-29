@@ -838,6 +838,9 @@ class LocalitiesList(generics.ListCreateAPIView):
 
 
 class LocalitiesDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = ChurchPage.objects.all()
     serializer_class = LocalitiesSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+
+    def get_queryset(self):
+        """Only published churches are visible via the detail API."""
+        return ChurchPage.objects.live().public()
