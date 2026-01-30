@@ -21,7 +21,7 @@
             <div class="col-md-12 col-lg-12">
                    <div class="row">
                         <form class="listing-contact-form" action="{% pageurl page %}" method="post" id="contact-us-form">
-                                {{ page.intro|richtext }}
+                                <div class="contact-form-intro">{{ page.intro|richtext }}</div>
                                 {% csrf_token %}
                                 {% spaceless %}
 

@@ -7961,6 +7961,10 @@ label {
   padding: 25px 20px; }
   .listing-contact-form textarea {
     height: 210px; }
+  .listing-contact-form .contact-form-intro,
+  .listing-contact-form .contact-form-intro p,
+  .listing-contact-form .contact-form-intro div {
+    color: gray; }
 
 .listing-user {
   margin: 0 0 30px 0;
