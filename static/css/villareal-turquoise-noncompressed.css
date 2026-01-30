@@ -4654,6 +4654,8 @@ a.bg-danger:focus, a.bg-danger:hover {
 
 @media (min-width: 992px) {
   .hidden-lg-up {
+    display: none !important; }
+  .hero-search-mobile-cta {
     display: none !important; } }
 
 @media (max-width: 1199px) {
