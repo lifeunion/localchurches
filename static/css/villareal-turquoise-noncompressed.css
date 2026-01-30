@@ -4652,10 +4652,16 @@ a.bg-danger:focus, a.bg-danger:hover {
   .hidden-md-down {
     display: none !important; } }
 
+.hero-search-desktop {
+  display: none !important; }
+.hero-search-mobile-cta {
+  display: block !important; }
 @media (min-width: 992px) {
-  .hidden-lg-up {
-    display: none !important; }
+  .hero-search-desktop {
+    display: block !important; }
   .hero-search-mobile-cta {
+    display: none !important; }
+  .hidden-lg-up {
     display: none !important; } }
 
 @media (max-width: 1199px) {

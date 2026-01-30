@@ -1650,7 +1650,10 @@ a.bg-danger:focus, a.bg-danger:hover{background-color:#c9302c;}
 }
 @media (max-width:991px){.hidden-md-down{display:none !important;}
 }
-@media (min-width:992px){.hero-search-mobile-cta{display:none !important;}
+.hero-search-desktop{display:none !important;}
+.hero-search-mobile-cta{display:block !important;}
+@media (min-width:992px){.hero-search-desktop{display:block !important;}
+.hero-search-mobile-cta{display:none !important;}
 }
 @media (min-width:992px){.hidden-lg-up{display:none !important;}
 }
