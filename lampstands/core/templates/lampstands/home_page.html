@@ -37,6 +37,9 @@
     </div><!-- /.cover-title -->
 </div><!-- /.cover -->
 
+{% if self.body_html %}
+<div class="vessel homepage-custom-html">{{ self.body_html|safe }}</div>
+{% else %}
 <div class="information-bar">
     <div class="vessel">
         <i class="fa fa-exclamation-circle"></i>
@@ -95,6 +98,7 @@
     </div><!-- /.row -->
 </div><!-- /.vessel -->
 
+{% endif %}
 {% endblock %}
 {% block extra_js %}
 <script>

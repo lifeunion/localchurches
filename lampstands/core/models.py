@@ -344,6 +344,10 @@ class HomePage(Page):
     blogs_tag_line = models.TextField(blank=True)
     google_url_js = models.TextField(max_length=50, blank=True)
     google_key_js = models.TextField(max_length=50, blank=True)
+    body_html = models.TextField(
+        blank=True,
+        help_text="Optional: Custom HTML for the home page content below the hero. Leave blank to use the default layout (disclaimer, testimonies, FAQ, contact). When set, this HTML replaces that default content."
+    )
 
     class Meta:
         verbose_name = "Homepage"
@@ -363,6 +367,7 @@ class HomePage(Page):
         FieldPanel('blogs_tag_line'),
         FieldPanel('google_url_js'),
         FieldPanel('google_key_js'),
+        FieldPanel('body_html', classname="full"),
     ]
 
     @property
