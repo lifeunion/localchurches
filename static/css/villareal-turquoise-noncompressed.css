@@ -7965,6 +7965,13 @@ label {
   .listing-contact-form .contact-form-intro p,
   .listing-contact-form .contact-form-intro div {
     color: gray; }
+  .church-list-note-wrapper .church-list-note,
+  .church-list-note {
+    font-size: 0.95em;
+    line-height: 1.2em;
+    color: #666666;
+    text-align: center;
+    margin: 1em 0.75em 0.5em 0.75em; }
 
 .listing-user {
   margin: 0 0 30px 0;
