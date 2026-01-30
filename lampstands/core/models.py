@@ -333,7 +333,14 @@ class HomePageHero(Orderable, RelatedLink):
 class HomePage(Page):
     hero_intro_primary = models.TextField(blank=True)
     hero_intro_secondary = models.TextField(blank=True)
-    information_bar_content = models.TextField(blank=True)
+    disclaimer_content = models.TextField(
+        blank=True,
+        help_text="Disclaimer text shown in the first info bar (after hero). Leave blank for default."
+    )
+    information_bar_content = models.TextField(
+        blank=True,
+        help_text="Bible/info bar text shown after Testimonies (e.g. about treasuring the Holy Bible)."
+    )
     blogs_tag_line = models.TextField(blank=True)
     google_url_js = models.TextField(max_length=50, blank=True)
     google_key_js = models.TextField(max_length=50, blank=True)
@@ -351,6 +358,7 @@ class HomePage(Page):
             heading="Hero intro"
         ),
         InlinePanel('hero', label="Hero"),
+        FieldPanel('disclaimer_content'),
         FieldPanel('information_bar_content'),
         FieldPanel('blogs_tag_line'),
         FieldPanel('google_url_js'),
@@ -362,6 +370,27 @@ class HomePage(Page):
         # Get list of blog pages.
         blog_posts = BlogPage.objects.live().public()
         return blog_posts
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        # First 4 FAQ items from the FAQ index page (admin-managed)
+        faq_index = FAQIndexPage.objects.live().public().filter(slug='faq').first()
+        if not faq_index:
+            faq_index = FAQIndexPage.objects.live().public().first()
+        context['homepage_faq_items'] = list(
+            faq_index.faq_posts.order_by('path')[:4]
+        ) if faq_index else []
+        context['faq_index_page'] = faq_index
+        # Contact page and form so homepage can render the same form (submits to contact page)
+        contact_page = Contact.objects.live().public().filter(slug='contact').first()
+        if not contact_page:
+            contact_page = Contact.objects.live().public().first()
+        context['contact_page'] = contact_page
+        if contact_page and hasattr(contact_page, 'get_form'):
+            context['contact_form'] = contact_page.get_form(None)
+        else:
+            context['contact_form'] = None
+        return context
 
 
 # FAQ index page
