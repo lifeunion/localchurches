@@ -3,7 +3,7 @@
 
 {% block css %}
     {# Fallback if core.css fails to load (404, CDN, wrong Content-Type): keep text readable. #}
-    <style>body{font-family:system-ui,-apple-system,sans-serif;background:#f6f6f6;color:#333;}</style>
+    <style>body{font-family:'Raleway','Arial',sans-serif;background:#f6f6f6;color:#333;}</style>
     {# Use {% static %} instead of {% versioned_static %} to avoid S3/CDN serving wrong Content-Type or body for ?v=hash URLs. #}
     <link rel="stylesheet" href="{% static 'wagtailadmin/css/core.css' %}">
 
