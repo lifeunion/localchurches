@@ -6492,10 +6492,10 @@ label {
 
 .footer-left {
   float: left; }
-  .footer-left .footer-disclaimer {
+  .footer-left .footer-links {
     display: block;
     margin-bottom: 0.5em; }
-  .footer-left .footer-links {
+  .footer-left .footer-disclaimer {
     display: block; }
   @media (max-width: 767px) {
     .footer-left {
