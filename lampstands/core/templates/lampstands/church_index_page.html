@@ -5,8 +5,20 @@
 {% endblock %}
 
 {% block content %}
-    
-    <div class="map-toggle" style="background-color: #555; width: 100%; box-sizing: border-box;">
+    <style>
+    /* Critical: lock layout and fonts from first paint so Map→List has no visible rearrangement (match List→Map behavior) */
+    .church-list-content-wrapper { font-family: 'Raleway', 'Arial', sans-serif; font-size: 1rem; }
+    .church-list-page .map-toggle { min-height: 52px; box-sizing: border-box; }
+    .church-list-page .church-list-note-wrapper .church-list-note { margin: 1em 0.5em; font-size: 0.95em; }
+    .church-list-page .content-title.hidden-md-down .content-title-inner { padding: 104px 0 44px 0; }
+    @media (max-width: 991px) {
+      .church-list-page .map-toggle-inner { display: flex !important; flex-wrap: wrap; justify-content: center; align-items: center; gap: 0.5em; }
+      .church-list-page .map-toggle button { min-height: 44px; min-width: 44px; padding: 0.75em 1em !important; box-sizing: border-box; }
+      .church-list-page .church-list-note-wrapper .church-list-note { margin: 1em 0.75em 0.5em 0.75em !important; font-size: 0.95em; }
+    }
+    </style>
+    <div class="church-list-page">
+    <div class="map-toggle" style="background-color: #555; width: 100%; box-sizing: border-box; min-height: 52px;">
         <h6 class="map-toggle-inner" style="font-weight: 500; color: white; text-align: center; margin: 0; padding: 0.5em 0;">
                 <button type="button" style="cursor: default; border-radius: 4px; border-color: transparent; background-color: #0BB7A5; padding: 0.5em 1.18em; margin: 0 0.35em;">Search by List
                 </button>
@@ -17,7 +29,7 @@
 
     <div class="church-list-content-wrapper" style="min-height: 100vh; box-sizing: border-box;">
     <div class="content-title hidden-md-down">
-            <div class="content-title-inner">
+            <div class="content-title-inner" style="padding: 104px 0 44px 0;">
                 <div class="vessel">
                     <a href="/churches">  
                     <h1>List of Churches</h1> 
@@ -30,7 +42,7 @@
     
 
     <div class="vessel church-list-note-wrapper">
-    <h6 class="church-list-note" style="text-align: center; margin: 1.5em 1.5em 0.5em 1.5em; color: #666666; line-height: 1.2em;">
+    <h6 class="church-list-note" style="text-align: center; margin: 1em 0.5em; color: #666666; line-height: 1.2em; font-size: 0.95em;">
     <b>Disclaimer:</b> This directory is not comprehensive. Listings are included by consent only, and all information is provided and maintained by the respective listed entities.
     </h6>
     </div>
@@ -46,7 +58,7 @@
                         <input type="text" x-model="query" @input="displayedCount=50; filterDesktop();" style="padding:0.375rem 0.75rem; border:1px solid #ccc; border-radius:0.25rem;" />
                     </div>
                 </div>
-                <div style="overflow-x: auto; max-height: 70vh; overflow-y: auto;" @scroll="handleScroll($el, $data)" x-ref="scrollContainer">
+                <div style="overflow-x: auto; max-height: 70vh; min-height: 60vh; overflow-y: auto;" @scroll="handleScroll($el, $data)" x-ref="scrollContainer">
         <table class="table order-column table-striped table-hover" id="churches-table" cellspacing="0">
             <thead>
                 <tr>
@@ -370,7 +382,8 @@
         </div><!-- /.vessel -->
     </div><!-- /.content -->
 
-
+    </div><!-- /.church-list-content-wrapper -->
+    </div><!-- /.church-list-page -->
 
 {% endblock %}
  
