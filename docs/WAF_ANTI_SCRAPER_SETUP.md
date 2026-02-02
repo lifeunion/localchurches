@@ -24,6 +24,21 @@ Before starting, ensure you have:
 
 ---
 
+## SEO and Good Bots: Will This Affect Google / Search?
+
+**Yes, it can.** If your WAF blocks or heavily challenges **all** bots, it will block search engine crawlers (Googlebot, Bingbot, etc.). That leads to:
+
+- Pages not being indexed or re-crawled
+- Drops in search visibility and traffic
+
+**What to do:** Allow verified search engine crawlers and only block bad bots/scrapers.
+
+- **Add an Allow rule first** (see below) so requests with known good crawler user-agents are **allowed** before any block rules run.
+- **AWS Managed Bot Control** classifies bots; use **Count** at first and review which labels are “Verified search engine” or “Legitimate” so you don’t block them when you switch to Block.
+- **Rule 5** in this doc blocks user-agents containing `crawler`; that can catch some legitimate crawlers. Either keep that rule in **Count** only, or add the “Allow good crawlers” rule below and place it **above** the block rules so good bots are never blocked.
+
+---
+
 ## Step 1: Access AWS WAF Console
 
 1. **Log in to AWS Console**
@@ -59,6 +74,25 @@ Before starting, ensure you have:
 ---
 
 ## Step 3: Add Rules - Anti-Bot Protection
+
+### Rule 0: Allow Search Engine Crawlers (SEO – add this first)
+
+Add this rule **first** so it is evaluated before any block rules. Requests that match are **allowed** and never blocked by later rules.
+
+1. **Click "Add rules"** → **"Add my own rules and rule groups"** → **"Rule"**
+2. **Configure:**
+   - **Name:** `allow-search-engine-crawlers`
+   - **Type:** **"Regular rule"**
+   - **Statement:** **"Or"** (match any of the following):
+     - **Statement 1:** Single header → `user-agent` → **Starts with string** → `Googlebot`
+     - **Statement 2:** Single header → `user-agent` → **Starts with string** → `Bingbot`
+     - **Statement 3:** Single header → `user-agent` → **Starts with string** → `Slurp` (Yahoo)
+     - **Statement 4:** Single header → `user-agent` → **Contains string** → `Googlebot`
+     - (Add more as needed for other verified crawlers.)
+   - **Action:** **"Allow"**
+3. **Click "Add rule"**, then **move this rule to the top** of the rule list (highest priority) in the Web ACL.
+
+> **Result:** Googlebot, Bingbot, and other listed crawlers are always allowed; your WAF will not hurt SEO for these crawlers. Block rules below still apply to scrapers and other bots.
 
 ### Rule 1: AWS Managed Bot Control Rule (Recommended)
 
