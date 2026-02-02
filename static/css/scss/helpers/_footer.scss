@@ -131,6 +131,15 @@
 .footer-left {
 	float: left;
 
+	.footer-disclaimer {
+		display: block;
+		margin-bottom: 0.5em;
+	}
+
+	.footer-links {
+		display: block;
+	}
+
 	@include media-breakpoint-down(sm) {
 		float: none;
 		margin-bottom: 30px;

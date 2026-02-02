@@ -6492,6 +6492,11 @@ label {
 
 .footer-left {
   float: left; }
+  .footer-left .footer-disclaimer {
+    display: block;
+    margin-bottom: 0.5em; }
+  .footer-left .footer-links {
+    display: block; }
   @media (max-width: 767px) {
     .footer-left {
       float: none;
