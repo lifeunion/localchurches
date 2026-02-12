@@ -127,6 +127,37 @@
     });
   };
 </script>
-<script src="{{ self.google_url_js }}{{ self.google_key_js }}&libraries=places&loading=async&callback=initHomePageGeocomplete" async defer></script>
+<script>
+  (function() {
+    var scriptLoaded = false;
+
+    function loadPlacesScript() {
+      if (scriptLoaded) return;
+      scriptLoaded = true;
+      var s = document.createElement('script');
+      s.src = "{{ self.google_url_js }}{{ self.google_key_js }}&libraries=places&loading=async&callback=initHomePageGeocomplete";
+      s.async = true;
+      s.defer = true;
+      document.head.appendChild(s);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var input = document.getElementById('searchphrase');
+      var btn = document.getElementById('searchdesktop');
+      var mobileBtn = document.getElementById('searchbtnmobile');
+
+      if (input) {
+        input.addEventListener('focus', loadPlacesScript);
+        input.addEventListener('click', loadPlacesScript);
+      }
+      if (btn) {
+        btn.addEventListener('click', loadPlacesScript);
+      }
+      if (mobileBtn) {
+        mobileBtn.addEventListener('click', loadPlacesScript);
+      }
+    });
+  })();
+</script>
 {% endblock %}
 

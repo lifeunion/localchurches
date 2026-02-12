@@ -24,7 +24,7 @@
             {% elif child.block_type == 'bustout' %}
                 <div class="bustout clearfix">
                     {% image child.value.image width-1280 as blockimage %}
-                    <img src="{{ blockimage.url }}" width="{{ blockimage.width }}" height="{{ blockimage.height }}" alt="{{ blockimage.alt }}" />
+                    <img src="{{ blockimage.url }}" width="{{ blockimage.width }}" height="{{ blockimage.height }}" alt="{{ blockimage.alt }}" loading="lazy" decoding="async" />
 
                     <div class="bustout-text">
                         {{ child.value.text|richtext }}
@@ -42,7 +42,7 @@
                         {% endif %}
 
                         <div {% if child.value.attribution %}class="img-credit"{% endif %}>
-                            <img src="{{ blockimage.url }}" width="{{ blockimage.width }}" height="{{ blockimage.height }}" alt="{{ blockimage.alt }}" />
+                            <img src="{{ blockimage.url }}" width="{{ blockimage.width }}" height="{{ blockimage.height }}" alt="{{ blockimage.alt }}" loading="lazy" decoding="async" />
                             {% if child.value.attribution %}<p class="credit">{{ child.value.attribution }}</p>{% endif %}
                         </div>
 
@@ -55,7 +55,7 @@
                 <div class="">
                     <div class="img-holder">
                         {% image child.value.image width-1280 as blockimage %}
-                        <img src="{{ blockimage.url }}" width="{{ blockimage.width }}" height="{{ blockimage.height }}" alt="{{ blockimage.alt }}" />
+                        <img src="{{ blockimage.url }}" width="{{ blockimage.width }}" height="{{ blockimage.height }}" alt="{{ blockimage.alt }}" loading="lazy" decoding="async" />
                     </div>
                 </div>
             {% elif child.block_type == 'raw_html' %}

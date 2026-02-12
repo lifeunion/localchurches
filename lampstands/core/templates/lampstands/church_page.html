@@ -34,7 +34,7 @@
                     <div class="col-lg-6">
                      {% if self.feed_image %}
                         {% image self.feed_image fill-900x900 as photo %}
-                            <img src="{{ photo.url }}" width="{{ photo.width }}" height="{{ photo.height }}" alt="{{ photo.alt }}" />
+                            <img src="{{ photo.url }}" width="{{ photo.width }}" height="{{ photo.height }}" alt="{{ photo.alt }}" loading="lazy" decoding="async" />
                     {% endif %}
 
                      <table class="contact" style="margin-bottom:30px;">
