@@ -2,6 +2,8 @@
 
 See also: [CLOUDFRONT_WAF_AND_WARMING.md](CLOUDFRONT_WAF_AND_WARMING.md) for WAF setup and cache warming after deploy or invalidation.
 
+**Why invalidate after deploy:** Static files in S3 use a 1-year cache TTL (for PageSpeed). After each deploy, run an invalidation (e.g. `/*` or `/css/*` and `/wagtailadmin/*`) so CloudFront fetches the new files; otherwise returning users may see old CSS/JS until the cache expires.
+
 ## Quick Methods to Invalidate CloudFront Cache
 
 ### Method 1: AWS Console (Easiest)

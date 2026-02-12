@@ -150,9 +150,11 @@ if AWS_STORAGE_BUCKET_NAME and AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
     STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
     MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'
     
-    # Additional S3 settings for better compatibility
+    # Long cache TTL for static assets (PageSpeed / "efficient cache lifetimes").
+    # After each deploy, invalidate CloudFront (or run warm_cloudfront.sh) so the CDN
+    # fetches updated CSS/JS; then repeat visitors get long cache until next deploy.
     AWS_S3_OBJECT_PARAMETERS = {
-        'CacheControl': 'public, max-age=86400',
+        'CacheControl': 'public, max-age=31536000',
     }
     AWS_DEFAULT_ACL = 'public-read'
     AWS_S3_REGION_NAME = 'us-east-1'  # Adjust if your bucket is in a different region
