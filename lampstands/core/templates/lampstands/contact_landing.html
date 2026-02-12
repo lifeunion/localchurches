@@ -4,7 +4,20 @@
 {% if self.seo_title %}{{ self.seo_title }}{% else %}{{ self.title }}{% endif %} | The Local Churches
 {% endblock %}
 {% block content %}
-
+<style>
+.contact-thank-you .contact-thank-you__message,
+.contact-thank-you .contact-thank-you__link {
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: inherit;
+}
+.contact-thank-you .contact-thank-you__link {
+  text-decoration: underline;
+}
+.contact-thank-you .contact-thank-you__message { margin-bottom: 1em; }
+.contact-thank-you .contact-thank-you__link-wrap { margin: 0; }
+</style>
 <div class="content-title">
     <div class="content-title-inner">
         <div class="vessel">
@@ -16,15 +29,17 @@
 <div class="about-hero">
     <div class="main-content">
         <div class="vessel">
-            <div class="content" style="text-align: center;">
-                <h3 style="padding: 20px 0 35px 0;">
-                    {{ page.thank_you_text|default:"Thank you." }} {{ page.thank_you_follow_up|default:"We'll be in touch." }}
-                </h3>
+            <div class="content contact-thank-you" style="text-align: center;">
+                <p class="contact-thank-you__message">
+                    {{ page.thank_you_text|default:"Thank you for your message! We'll be in touch. If you do not receive any response within 1 week or you receive an error message, please email localchurcheswebsite@gmail.com" }}
+                </p>
+                <p class="contact-thank-you__link-wrap">
                 {% if page.landing_page_button_link %}
-                <a style="text-decoration:underline;" class="btn thanks-btn" href="{% pageurl page.landing_page_button_link %}">&laquo; {{ page.landing_page_button_title|default:"Back" }}</a>
+                <a class="contact-thank-you__link" href="{% pageurl page.landing_page_button_link %}">&laquo; {{ page.landing_page_button_title|default:"Back" }}</a>
                 {% else %}
-                <a style="text-decoration:underline;" class="btn thanks-btn" href="{% pageurl page %}">&laquo; Back to contact form</a>
+                <a class="contact-thank-you__link" href="{% pageurl page %}">&laquo; Back to contact form</a>
                 {% endif %}
+                </p>
             </div>
         </div>
     </div>
