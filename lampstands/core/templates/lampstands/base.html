@@ -21,25 +21,9 @@
       ga('create', 'UA-101434975-1', 'auto');
       ga('send', 'pageview');
     </script>
-    <link rel="preload" href="{% static 'css/font-awesome.min.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}"></noscript>
-    <link rel="preload" href="{% static 'css/villareal-turquoise.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'" id="css-primary">
-    <noscript><link rel="stylesheet" type="text/css" id="css-primary" href="{% static 'css/villareal-turquoise.css' %}"></noscript>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}" >
+    <link rel="stylesheet" type="text/css" id="css-primary" href="{% static 'css/villareal-turquoise.css' %}" >
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'css/img/LCblueicon.ico' %}" >
-    <style>
-      /* Ensure header nav links never flash default dark blue while main CSS loads */
-      .header .nav-primary-wrapper a,
-      .header .nav-primary-wrapper a:link,
-      .header .nav-primary-wrapper a:visited,
-      .header .nav-primary-wrapper a:active,
-      .header .nav-primary-wrapper a:focus {
-        color: #ffffff;
-        text-decoration: none;
-      }
-      .header .nav-primary-wrapper a {
-        -webkit-tap-highlight-color: transparent;
-      }
-    </style>
 </head>
 
 <body class="cover-pull-top header-transparent">
