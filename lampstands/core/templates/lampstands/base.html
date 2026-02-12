@@ -21,9 +21,22 @@
       ga('create', 'UA-101434975-1', 'auto');
       ga('send', 'pageview');
     </script>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/font-awesome.min.css' %}" >
-    <link rel="stylesheet" type="text/css" id="css-primary" href="{% static 'css/villareal-turquoise.css' %}" >
+    <link rel="preload" href="{% static 'css/font-awesome.min.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}"></noscript>
+    <link rel="preload" href="{% static 'css/villareal-turquoise.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'" id="css-primary">
+    <noscript><link rel="stylesheet" type="text/css" id="css-primary" href="{% static 'css/villareal-turquoise.css' %}"></noscript>
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'css/img/LCblueicon.ico' %}" >
+    <style>
+      /* Critical: top-right nav links stay white on transparent header (no blue flash). Dropdown stays dark on light. */
+      .header-transparent .nav-primary .nav-link,
+      .header-transparent .nav-primary .nav-link:link,
+      .header-transparent .nav-primary .nav-link:visited,
+      .header-transparent .nav-primary .nav-link:hover,
+      .header-transparent .nav-primary .nav-link:active,
+      .header-transparent .nav-primary .nav-link:focus { color: #fff; text-decoration: none; }
+      .nav-primary .nav-link { -webkit-tap-highlight-color: transparent; }
+      .nav-primary .sub-menu a { color: #323232; background-color: #f3f3f3; }
+    </style>
 </head>
 
 <body class="cover-pull-top header-transparent">

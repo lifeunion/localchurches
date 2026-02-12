@@ -1795,6 +1795,7 @@ hr{border-color:#eaeaea;margin:60px 0;padding:0;}
 .nav-primary .nav-item-parent:hover > .sub-menu{opacity:1;transition:opacity .15s linear;visibility:visible;}
 .nav-primary .nav-link{color:#323232;cursor:pointer;font-size:1em;font-weight:700;padding:5px 0;position:relative;transition:color .5s ease-out 0.75s;-moz-transition:color .5s ease-out 0.75s;text-transform:uppercase;}
 .header-transparent .nav-primary .nav-link{color:#fff;}
+.header-transparent .nav-primary .nav-link:link,.header-transparent .nav-primary .nav-link:visited{color:#fff;}
 .header-transparent .nav-primary .nav-link:hover{color:#fff;}
 .nav-primary .nav-link.active{background-color:transparent;border-radius:0;color:#323232;cursor:pointer !important;}
 .header-transparent .nav-primary .nav-link.active{color:#fff;}
