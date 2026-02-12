@@ -67,3 +67,19 @@ When `RESEND_API_KEY` is **not** set, the app uses Django’s email backend (Sen
 | **Send via SendGrid SMTP** | Set `SENDGRID_USERNAME` and `SENDGRID_PASSWORD` on Render; leave `RESEND_API_KEY` unset; set **To address** on the Contact page. |
 
 The `resend` package is already in `requirements.txt`. No code changes are required; configure env vars and the Contact page in admin.
+
+---
+
+## Troubleshooting
+
+**Blank page after submit**  
+The thank-you (landing) page is now fixed to work even when “Landing page button link” is not set. If you still see a blank page, check Render **Logs** for Python exceptions (e.g. template or form errors).
+
+**No Resend activity**  
+Resend only runs when all of these are true:
+
+1. **To address** is set on the Contact page (Wagtail Admin → Pages → Contact → Email → **To address**). If it’s empty, no email is sent and you’ll see a log: *“No To address set on Contact page”*.
+2. **RESEND_API_KEY** is set on Render (Environment variables). If missing, the app uses Django’s email backend instead.
+3. **RESEND_FROM_EMAIL** is set on Render (or **From address** on the Contact page). If missing, you’ll see a log: *“Set RESEND_FROM_EMAIL…”* and the app falls back to Django email.
+
+After a successful Resend send, logs show: *“Contact form: email sent via Resend to [addresses]”*. Check Render **Logs** (and Resend dashboard) to confirm.
