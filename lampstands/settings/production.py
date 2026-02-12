@@ -152,7 +152,7 @@ if AWS_STORAGE_BUCKET_NAME and AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY:
     
     # Additional S3 settings for better compatibility
     AWS_S3_OBJECT_PARAMETERS = {
-        'CacheControl': 'max-age=86400',
+        'CacheControl': 'public, max-age=86400',
     }
     AWS_DEFAULT_ACL = 'public-read'
     AWS_S3_REGION_NAME = 'us-east-1'  # Adjust if your bucket is in a different region

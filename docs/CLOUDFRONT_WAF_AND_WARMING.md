@@ -170,6 +170,19 @@ To reduce first-request misses in **Americas, Europe, and Asia-Pacific**, run th
 
 ---
 
+## Part 3: Compress with gzip (CloudFront)
+
+To satisfy "Compress components with gzip" (e.g. Pingdom): static assets served through CloudFront can be compressed at the edge.
+
+1. **CloudFront** → **Distributions** → select the distribution for `lcstatic`.
+2. Open the **Behaviors** tab → select the default (or the behavior for your S3 origin) → **Edit**.
+3. Under **Compress objects automatically**, set to **Yes**.
+4. **Save changes**. CloudFront will then serve gzip (or brotli when the client supports it) for compressible content types (e.g. CSS, JS, JSON).
+
+Django-served HTML is compressed by `GZipMiddleware` in this project (see [lampstands/settings/base.py](lampstands/settings/base.py)).
+
+---
+
 ## See also
 
 - [CLOUDFRONT_CACHE_INVALIDATION.md](CLOUDFRONT_CACHE_INVALIDATION.md) – invalidation methods
