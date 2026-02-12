@@ -1708,6 +1708,12 @@ class Contact(WagtailCaptchaEmailForm):
     class Meta:
         verbose_name = "Contact Page"
 
+    def process_form_submission(self, form):
+        """Log when form is valid and we are about to save + send email (helps debug missing Resend logs)."""
+        import logging
+        logging.getLogger(__name__).info('Contact form: process_form_submission() called (form is valid)')
+        return super().process_form_submission(form)
+
     def send_mail(self, form):
         """
         Send contact form submission via Resend (when RESEND_API_KEY is set).
@@ -1720,6 +1726,7 @@ class Contact(WagtailCaptchaEmailForm):
         import os
 
         logger = logging.getLogger(__name__)
+        logger.info('Contact form: send_mail() called (form valid, submission saved)')
 
         try:
             to_list = [a.strip() for a in (self.to_address or '').split(',') if a.strip()]
@@ -1729,6 +1736,7 @@ class Contact(WagtailCaptchaEmailForm):
 
             resend_api_key = os.environ.get('RESEND_API_KEY')
             if not resend_api_key:
+                logger.info('Contact form: RESEND_API_KEY not set; using Django email backend.')
                 return super().send_mail(form)
 
             from_addr = (os.environ.get('RESEND_FROM_EMAIL') or (self.from_address or '')).strip()

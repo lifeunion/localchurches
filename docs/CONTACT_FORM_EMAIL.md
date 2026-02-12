@@ -75,11 +75,16 @@ The `resend` package is already in `requirements.txt`. No code changes are requi
 **Blank page after submit**  
 The thank-you (landing) page is now fixed to work even when “Landing page button link” is not set. If you still see a blank page, check Render **Logs** for Python exceptions (e.g. template or form errors).
 
-**No Resend activity**  
-Resend only runs when all of these are true:
+**No Resend activity / no logs at all**  
+In Render **Logs**, after submitting the form you should see at least one of these (in order):
 
-1. **To address** is set on the Contact page (Wagtail Admin → Pages → Contact → Email → **To address**). If it’s empty, no email is sent and you’ll see a log: *“No To address set on Contact page”*.
-2. **RESEND_API_KEY** is set on Render (Environment variables). If missing, the app uses Django’s email backend instead.
-3. **RESEND_FROM_EMAIL** is set on Render (or **From address** on the Contact page). If missing, you’ll see a log: *“Set RESEND_FROM_EMAIL…”* and the app falls back to Django email.
+1. **`Contact form: process_form_submission() called (form is valid)`** – Form (including captcha) passed validation. If you never see this, the form is invalid (e.g. captcha failed or wrong domain for reCAPTCHA key); fix captcha/domain and try again.
+2. **`Contact form: send_mail() called (form valid, submission saved)`** – The email-send method ran. If you see (1) but not (2), something is wrong in the submission flow (contact support).
+3. Then one of:
+   - **`Contact form: email sent via Resend to [...]`** – Resend sent the email.
+   - **`Contact form: No To address set on Contact page...`** – Set **To address** in Wagtail Admin → Pages → Contact → Email.
+   - **`Contact form: RESEND_API_KEY not set; using Django email backend.`** – Set **RESEND_API_KEY** on Render if you want Resend.
+   - **`Resend: Set RESEND_FROM_EMAIL...`** – Set **RESEND_FROM_EMAIL** on Render (or **From address** on the Contact page).
+   - **`Contact form send_mail failed: ...`** – Exception (e.g. Resend API error); check the traceback in logs.
 
-After a successful Resend send, logs show: *“Contact form: email sent via Resend to [addresses]”*. Check Render **Logs** (and Resend dashboard) to confirm.
+Ensure **LAMPSTANDS_LOG_LEVEL** is not set to WARNING on Render (default is INFO so these messages appear). Check Render **Logs** (and Resend dashboard) to confirm.
