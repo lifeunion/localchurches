@@ -99,7 +99,7 @@
                         <td class="column-1"><a href="/churches/{{ branch.slug }}/">{{branch.locality_name}}</a></td>
                         <td class="column-2">{{branch.meeting_address}}</td>
                         <td class="column-3">{{branch.locality_state_or_province}}</td>
-                        <td class="column-4">{{branch.locality_country.name}}</td>
+                        <td class="column-4">{% if branch.locality_country %}{{ branch.locality_country.name }}{% else %}—{% endif %}</td>
                         <td class="column-5">{{branch.locality_phone_number}}</td>
                         <td class="column-6">{{branch.locality_email}}</td>
                         <td class="column-7"><a href={{branch.locality_web}}>{{branch.locality_web}}</a></td>

@@ -1077,6 +1077,8 @@ class ChurchIndexPageRelatedLink(Orderable, RelatedLink):
 class ChurchIndexPage(Page):
     intro = models.TextField(blank=True)
 
+    subpage_types = ['lampstands.ChurchPage']
+
     search_fields = Page.search_fields + [
         index.SearchField('intro'),
     ]
@@ -1174,9 +1176,11 @@ class ChurchPageRelatedLink(Orderable, RelatedLink):
 
 
 class ChurchPage(Page):
+    parent_page_types = ['lampstands.ChurchIndexPage']
+
     locality_name = models.CharField(max_length=255)
     locality_state_or_province = models.CharField(max_length=255, blank=True)
-    locality_country = CountryField(max_length=95, blank_label='(select country)')
+    locality_country = CountryField(max_length=95, blank=True, null=True, blank_label='(select country)')
     short_intro = models.CharField(
         max_length=255, blank=True,
         help_text='A short summary of when the locality started meeting'
