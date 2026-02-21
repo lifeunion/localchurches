@@ -1521,6 +1521,16 @@ class OrgIndexPage(Page):
     ]
 
 
+# Legacy org (organization) page type. Individual pages like "The Bible Tells Me So"
+# were created as lampstands.orgpage; the model was removed from the codebase.
+# This stub allows those pages to load and be edited or deleted in the admin.
+class OrgPage(Page):
+    class Meta:
+        verbose_name = "Organization page (legacy)"
+
+    content_panels = Page.content_panels
+
+
 # history page
 class HistoryPageRelatedLink(Orderable, RelatedLink):
     page = ParentalKey('lampstands.HistoryPage', related_name='related_links', on_delete=models.CASCADE)
