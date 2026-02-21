@@ -1525,10 +1525,17 @@ class OrgIndexPage(Page):
 # were created as lampstands.orgpage; the model was removed from the codebase.
 # This stub allows those pages to load and be edited or deleted in the admin.
 class OrgPage(Page):
+    intro = RichTextField(blank=True, help_text="Optional intro or summary.")
+    body = RichTextField(blank=True, help_text="Main content for the page.")
+
     class Meta:
         verbose_name = "Organization page (legacy)"
 
-    content_panels = Page.content_panels
+    content_panels = [
+        FieldPanel("title", classname="full title"),
+        FieldPanel("intro", classname="full"),
+        FieldPanel("body", classname="full"),
+    ]
 
 
 # history page
