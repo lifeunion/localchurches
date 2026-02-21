@@ -1520,6 +1520,15 @@ class OrgIndexPage(Page):
         FieldPanel("intro", classname="full"),
     ]
 
+    promote_panels = [
+        MultiFieldPanel(Page.promote_panels, "Common page configuration"),
+    ]
+
+    def get_context(self, request, *args, **kwargs):
+        context = super().get_context(request, *args, **kwargs)
+        context["org_children"] = self.get_children().live().public()
+        return context
+
 
 # Legacy org (organization) page type. Individual pages like "The Bible Tells Me So"
 # were created as lampstands.orgpage; the model was removed from the codebase.
