@@ -1512,6 +1512,8 @@ class HistoryIndexPage(Page):
 class OrgIndexPage(Page):
     intro = models.TextField(blank=True)
 
+    subpage_types = ["lampstands.OrgPage"]
+
     class Meta:
         verbose_name = "Organizations listing"
 
@@ -1536,6 +1538,8 @@ class OrgIndexPage(Page):
 class OrgPage(Page):
     intro = RichTextField(blank=True, help_text="Optional intro or summary.")
     body = RichTextField(blank=True, help_text="Main content for the page.")
+
+    parent_page_types = ["lampstands.OrgIndexPage"]
 
     class Meta:
         verbose_name = "Organization page (legacy)"
