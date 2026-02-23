@@ -53,6 +53,9 @@ INSTALLED_APPS = [
     # wagtail-modeladmin (external package for Wagtail 6.x)
     'wagtail_modeladmin',
 
+    # Map widget for address search + verify (ChurchPage, etc.)
+    'wagtailgeowidget',
+
     'modelcluster',
     'taggit',
 
@@ -197,6 +200,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 WAGTAILIMAGES_IMAGE_MODEL = 'lampstands.LampstandsImage'
 
 GEOPOSITION_GOOGLE_MAPS_API_KEY = 'AIzaSyA4MAVqADcBv3nSIqd8y7RZWF9kmcVB6XQ'
+
+# wagtail-geo-widget: address search + map verify in admin (Geocoding + Maps JavaScript API)
+GOOGLE_MAPS_V3_APIKEY = os.environ.get('GOOGLE_MAPS_V3_APIKEY', GEOPOSITION_GOOGLE_MAPS_API_KEY)
 
 # Map ID for Advanced Markers (removes google.maps.Marker deprecation).
 # DEMO_MAP_ID works for testing; for production create one in Google Cloud

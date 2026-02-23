@@ -13,6 +13,8 @@ from django.views.decorators.vary import vary_on_headers
 from modelcluster.fields import ParentalKey
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
 from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
+from wagtailgeowidget import geocoders
+from wagtailgeowidget.panels import GeoAddressPanel, GoogleMapsPanel
 from wagtail import blocks
 from wagtail.admin.mail import send_mail
 from wagtail.blocks import (CharBlock, FieldBlock, ListBlock,
@@ -29,7 +31,7 @@ from wagtail.images.models import AbstractImage, AbstractRendition, Image
 from wagtail.search import index
 from wagtail.snippets.models import register_snippet
 
-from .fields import ColorField, GeopositionField
+from .fields import ColorField, GeopositionField, parse_position_to_lat_lng
 
 # added for phone numbers
 from django.core.validators import RegexValidator, URLValidator
@@ -1187,7 +1189,7 @@ class ChurchPage(Page):
     )
     mailing_address = models.CharField(max_length=255, blank=True, null=True)
     meeting_address = models.CharField(max_length=255, blank=True, null=True)
-    position = GeopositionField(blank=True, null=True)
+    position = GeopositionField(blank=True, null=True)  # "lat,lng" or GEOSGeometry from wagtail-geo-widget
     locality_phone_number = models.CharField(blank=True, max_length=25)
     locality_fax_number = models.CharField(max_length=25, blank=True, null=True)
     locality_email = models.EmailField(blank=True)
@@ -1224,32 +1226,14 @@ class ChurchPage(Page):
         return ChurchIndexPage.objects.first()
 
     def get_latitude_location(self):
-        """Parse latitude from position string (stored as "lat,lng" or "lat, lng")"""
-        if self.position:
-            try:
-                # Position is stored as "lat,lng" string, split by comma
-                parts = self.position.split(',')
-                if len(parts) >= 1:
-                    lat_str = parts[0].strip()
-                    if lat_str:
-                        return str(float(lat_str))
-            except (ValueError, AttributeError, IndexError):
-                pass
-        return None
+        """Parse latitude from position (legacy "lat,lng" or wagtail-geo-widget GEOSGeometry)."""
+        lat, _ = parse_position_to_lat_lng(self.position)
+        return str(lat) if lat is not None else None
 
     def get_longitude_location(self):
-        """Parse longitude from position string (stored as "lat,lng" or "lat, lng")"""
-        if self.position:
-            try:
-                # Position is stored as "lat,lng" string, split by comma
-                parts = self.position.split(',')
-                if len(parts) >= 2:
-                    lng_str = parts[1].strip()
-                    if lng_str:
-                        return str(float(lng_str))
-            except (ValueError, AttributeError, IndexError):
-                pass
-        return None
+        """Parse longitude from position (legacy "lat,lng" or wagtail-geo-widget GEOSGeometry)."""
+        _, lng = parse_position_to_lat_lng(self.position)
+        return str(lng) if lng is not None else None
 
     def location(self):
         if self.position:
@@ -1271,8 +1255,13 @@ class ChurchPage(Page):
         InlinePanel('tags', label="Tags"),
         FieldPanel('short_intro'),
         FieldPanel('mailing_address'),
-        FieldPanel('meeting_address'),
-        FieldPanel('position'),
+        MultiFieldPanel(
+            [
+                GeoAddressPanel('meeting_address', geocoder=geocoders.GOOGLE_MAPS_GEOCODING),
+                GoogleMapsPanel('position', address_field='meeting_address'),
+            ],
+            heading='Meeting location (search address and verify on map)',
+        ),
         FieldPanel('locality_phone_number'),
         FieldPanel('locality_fax_number'),
         FieldPanel('locality_email'),

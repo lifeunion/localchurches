@@ -2,6 +2,7 @@ import requests
 import logging
 
 from django.conf import settings
+from django.db.models import Q
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
 
@@ -738,7 +739,7 @@ class LocalitiesList(generics.ListCreateAPIView):
     def get_queryset(self):
         """
         Filter to only include live churches with valid position data.
-        Position is stored as "lat,lng" string, so we check for non-null, non-empty, and contains comma.
+        Position may be legacy "lat,lng" or GEOSGeometry (e.g. SRID=4326;POINT(lng lat)); we filter by comma or POINT(.
         Optimized to avoid multiple count queries and filter invalid data before serialization.
         
         Performance optimizations:
@@ -747,14 +748,14 @@ class LocalitiesList(generics.ListCreateAPIView):
         - NOTE: Using values() avoids model instance overhead and is significantly faster
         """
         # Use values() to get dicts instead of model instances - much faster!
-        # This avoids model instance creation overhead and reduces memory usage
+        # Valid position: legacy "lat,lng" (contains ',') or wagtail-geo-widget GEOSGeometry (contains 'POINT(')
         queryset = ChurchPage.objects.filter(
             live=True,
             position__isnull=False
         ).exclude(
             position=''
         ).filter(
-            position__contains=','
+            Q(position__contains=',') | Q(position__contains='POINT(')
         ).values(
             'id',
             'slug',

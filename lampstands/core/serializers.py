@@ -53,27 +53,12 @@ class LocalitiesSerializer(serializers.Serializer):
     def get_location(self, obj):
         """Return location as a dict with numeric latitude and longitude.
         Works with dict from values() queryset.
+        Supports legacy "lat,lng" and wagtail-geo-widget GEOSGeometry.
         """
+        from lampstands.core.fields import parse_position_to_lat_lng
         position = obj.get('position')
-        if not position:
-            return {"latitude": None, "longitude": None}
-        
-        try:
-            parts = position.split(',', 1)
-            if len(parts) == 2:
-                lat_str = parts[0].strip()
-                lng_str = parts[1].strip()
-                
-                if lat_str and lng_str:
-                    lat = float(lat_str)
-                    lng = float(lng_str)
-                    
-                    if -90 <= lat <= 90 and -180 <= lng <= 180:
-                        return {"latitude": lat, "longitude": lng}
-        except (ValueError, TypeError, AttributeError, IndexError):
-            pass
-        
-        return {"latitude": None, "longitude": None}
+        lat, lng = parse_position_to_lat_lng(position)
+        return {"latitude": lat, "longitude": lng}
     
     def get_trimmed_address(self, obj):
         """Return URL-encoded meeting address.
