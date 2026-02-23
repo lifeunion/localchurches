@@ -22,6 +22,34 @@
         {% if self.body %}
             <div class="body">{{ self.body|richtext }}</div>
         {% endif %}
+
+        {% if self.address or self.phone or self.fax or self.email or self.website or self.contact_name or self.contact_phone %}
+            <div class="org-contact-address" style="margin-top: 1.5em; padding: 1em; background: #f6f6f6; border-radius: 4px;">
+                <h3 style="margin-top: 0;">Contact & address</h3>
+                {% if self.address %}
+                    <p><strong>Address:</strong><br>{{ self.address|linebreaksbr }}</p>
+                {% endif %}
+                {% if self.phone %}
+                    <p><strong>Phone:</strong> <a href="tel:{{ self.phone }}">{{ self.phone }}</a></p>
+                {% endif %}
+                {% if self.fax %}
+                    <p><strong>Fax:</strong> {{ self.fax }}</p>
+                {% endif %}
+                {% if self.email %}
+                    <p><strong>Email:</strong> <a href="mailto:{{ self.email }}">{{ self.email }}</a></p>
+                {% endif %}
+                {% if self.website %}
+                    <p><strong>Website:</strong> <a href="{{ self.website }}" target="_blank" rel="noopener noreferrer">{{ self.website }}</a></p>
+                {% endif %}
+                {% if self.contact_name or self.contact_phone %}
+                    <p>
+                        {% if self.contact_name %}<strong>Contact:</strong> {{ self.contact_name }}{% endif %}
+                        {% if self.contact_name and self.contact_phone %} — {% endif %}
+                        {% if self.contact_phone %}<a href="tel:{{ self.contact_phone }}">{{ self.contact_phone }}</a>{% endif %}
+                    </p>
+                {% endif %}
+            </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

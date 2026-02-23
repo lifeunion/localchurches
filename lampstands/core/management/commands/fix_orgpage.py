@@ -66,11 +66,30 @@ class Command(BaseCommand):
                 added += 1
                 self.stdout.write(self.style.SUCCESS('  Added body'))
 
+            # Contact & address columns (from migration 0051)
+            contact_columns = [
+                ('phone', 'VARCHAR(50) NOT NULL DEFAULT \'\''),
+                ('fax', 'VARCHAR(50) NOT NULL DEFAULT \'\''),
+                ('email', 'VARCHAR(254) NOT NULL DEFAULT \'\''),
+                ('website', 'VARCHAR(255) NOT NULL DEFAULT \'\''),
+                ('address', 'TEXT NOT NULL DEFAULT \'\''),
+                ('contact_name', 'VARCHAR(255) NOT NULL DEFAULT \'\''),
+                ('contact_phone', 'VARCHAR(50) NOT NULL DEFAULT \'\''),
+            ]
+            for col_name, col_def in contact_columns:
+                if not _column_exists(cursor, col_name):
+                    self.stdout.write(f'Adding missing column: {col_name}')
+                    cursor.execute(
+                        f"ALTER TABLE lampstands_orgpage ADD COLUMN {col_name} {col_def};"
+                    )
+                    added += 1
+                    self.stdout.write(self.style.SUCCESS(f'  Added {col_name}'))
+
             if added:
                 self.stdout.write(
                     self.style.SUCCESS(f'fix_orgpage: added {added} column(s).')
                 )
             else:
                 self.stdout.write(
-                    self.style.SUCCESS('fix_orgpage: intro and body already exist. Nothing to do.')
+                    self.style.SUCCESS('fix_orgpage: all columns already exist. Nothing to do.')
                 )

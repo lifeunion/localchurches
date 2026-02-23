@@ -1539,6 +1539,15 @@ class OrgPage(Page):
     intro = RichTextField(blank=True, help_text="Optional intro or summary.")
     body = RichTextField(blank=True, help_text="Main content for the page.")
 
+    # Contact / organization info
+    phone = models.CharField(max_length=50, blank=True, help_text="Phone number")
+    email = models.EmailField(blank=True, help_text="Email address")
+    address = models.TextField(blank=True, help_text="Street address, city, state, postal code")
+    website = models.URLField(blank=True, max_length=255, help_text="Organization website (include https://)")
+    contact_name = models.CharField(max_length=255, blank=True, help_text="Primary contact person name")
+    contact_phone = models.CharField(max_length=50, blank=True, help_text="Primary contact phone")
+    fax = models.CharField(max_length=50, blank=True, help_text="Fax number")
+
     parent_page_types = ["lampstands.OrgIndexPage"]
 
     class Meta:
@@ -1548,6 +1557,18 @@ class OrgPage(Page):
         FieldPanel("title", classname="full title"),
         FieldPanel("intro", classname="full"),
         FieldPanel("body", classname="full"),
+        MultiFieldPanel(
+            [
+                FieldPanel("phone"),
+                FieldPanel("fax"),
+                FieldPanel("email"),
+                FieldPanel("website"),
+                FieldPanel("address", classname="full"),
+                FieldPanel("contact_name"),
+                FieldPanel("contact_phone"),
+            ],
+            heading="Contact & address",
+        ),
     ]
 
 
