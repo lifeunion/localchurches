@@ -1257,7 +1257,8 @@ class ChurchPage(Page):
         FieldPanel('mailing_address'),
         MultiFieldPanel(
             [
-                GeoAddressPanel('meeting_address', geocoder=geocoders.GOOGLE_MAPS_GEOCODING),
+                # Use the built-in Google Maps geocoder constant from wagtail-geo-widget
+                GeoAddressPanel('meeting_address', geocoder=geocoders.GOOGLE_MAPS),
                 GoogleMapsPanel('position', address_field='meeting_address'),
             ],
             heading='Meeting location (search address and verify on map)',
