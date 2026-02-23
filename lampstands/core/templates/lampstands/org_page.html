@@ -23,30 +23,47 @@
             <div class="body">{{ self.body|richtext }}</div>
         {% endif %}
 
-        {% if self.address or self.phone or self.fax or self.email or self.website or self.contact_name or self.contact_phone %}
+        {% if self.organization_name or self.office_mailing_address or self.office_meeting_address or self.office_phone_number or self.office_fax_number or self.office_email or self.office_web or self.office_web_2 or self.org_contact_1 or self.org_contact_2 or self.org_contact_3 or self.org_contact_4 %}
             <div class="org-contact-address" style="margin-top: 1.5em; padding: 1em; background: #f6f6f6; border-radius: 4px;">
                 <h3 style="margin-top: 0;">Contact & address</h3>
-                {% if self.address %}
-                    <p><strong>Address:</strong><br>{{ self.address|linebreaksbr }}</p>
+                {% if self.organization_name %}
+                    <p><strong>Organization:</strong> {{ self.organization_name }}</p>
                 {% endif %}
-                {% if self.phone %}
-                    <p><strong>Phone:</strong> <a href="tel:{{ self.phone }}">{{ self.phone }}</a></p>
+                {% if self.office_mailing_address %}
+                    <p><strong>Mailing address:</strong><br>{{ self.office_mailing_address|linebreaksbr }}</p>
                 {% endif %}
-                {% if self.fax %}
-                    <p><strong>Fax:</strong> {{ self.fax }}</p>
+                {% if self.office_meeting_address %}
+                    <p><strong>Meeting address:</strong><br>{{ self.office_meeting_address|linebreaksbr }}</p>
                 {% endif %}
-                {% if self.email %}
-                    <p><strong>Email:</strong> <a href="mailto:{{ self.email }}">{{ self.email }}</a></p>
+                {% if self.office_state_or_province or self.office_country %}
+                    <p><strong>Location:</strong> {% if self.office_state_or_province %}{{ self.office_state_or_province }}{% endif %}{% if self.office_state_or_province and self.office_country %}, {% endif %}{% if self.office_country %}{{ self.office_country }}{% endif %}</p>
                 {% endif %}
-                {% if self.website %}
-                    <p><strong>Website:</strong> <a href="{{ self.website }}" target="_blank" rel="noopener noreferrer">{{ self.website }}</a></p>
+                {% if self.office_phone_number %}
+                    <p><strong>Phone:</strong> <a href="tel:{{ self.office_phone_number }}">{{ self.office_phone_number }}</a></p>
                 {% endif %}
-                {% if self.contact_name or self.contact_phone %}
-                    <p>
-                        {% if self.contact_name %}<strong>Contact:</strong> {{ self.contact_name }}{% endif %}
-                        {% if self.contact_name and self.contact_phone %} — {% endif %}
-                        {% if self.contact_phone %}<a href="tel:{{ self.contact_phone }}">{{ self.contact_phone }}</a>{% endif %}
-                    </p>
+                {% if self.office_fax_number %}
+                    <p><strong>Fax:</strong> {{ self.office_fax_number }}</p>
+                {% endif %}
+                {% if self.office_email %}
+                    <p><strong>Email:</strong> <a href="mailto:{{ self.office_email }}">{{ self.office_email }}</a></p>
+                {% endif %}
+                {% if self.office_web %}
+                    <p><strong>Website:</strong> <a href="{{ self.office_web }}" target="_blank" rel="noopener noreferrer">{{ self.office_web }}</a></p>
+                {% endif %}
+                {% if self.office_web_2 %}
+                    <p><strong>Website (alt):</strong> <a href="{{ self.office_web_2 }}" target="_blank" rel="noopener noreferrer">{{ self.office_web_2 }}</a></p>
+                {% endif %}
+                {% if self.last_update %}
+                    <p><strong>Last update:</strong> {{ self.last_update }}</p>
+                {% endif %}
+                {% if self.org_contact_1 or self.org_contact_2 or self.org_contact_3 or self.org_contact_4 %}
+                    <p><strong>Contacts:</strong></p>
+                    <ul style="margin-top: 0.25em;">
+                        {% if self.org_contact_1 %}<li>{{ self.org_contact_1 }}{% if self.org_contact_1_phone %} — <a href="tel:{{ self.org_contact_1_phone }}">{{ self.org_contact_1_phone }}</a>{% endif %}</li>{% endif %}
+                        {% if self.org_contact_2 %}<li>{{ self.org_contact_2 }}{% if self.org_contact_2_phone %} — <a href="tel:{{ self.org_contact_2_phone }}">{{ self.org_contact_2_phone }}</a>{% endif %}</li>{% endif %}
+                        {% if self.org_contact_3 %}<li>{{ self.org_contact_3 }}{% if self.org_contact_3_phone %} — <a href="tel:{{ self.org_contact_3_phone }}">{{ self.org_contact_3_phone }}</a>{% endif %}</li>{% endif %}
+                        {% if self.org_contact_4 %}<li>{{ self.org_contact_4 }}{% if self.org_contact_4_phone %} — <a href="tel:{{ self.org_contact_4_phone }}">{{ self.org_contact_4_phone }}</a>{% endif %}</li>{% endif %}
+                    </ul>
                 {% endif %}
             </div>
         {% endif %}

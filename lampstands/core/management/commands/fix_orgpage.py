@@ -66,17 +66,30 @@ class Command(BaseCommand):
                 added += 1
                 self.stdout.write(self.style.SUCCESS('  Added body'))
 
-            # Contact & address columns (from migration 0051)
-            contact_columns = [
-                ('phone', 'VARCHAR(50) NOT NULL DEFAULT \'\''),
-                ('fax', 'VARCHAR(50) NOT NULL DEFAULT \'\''),
-                ('email', 'VARCHAR(254) NOT NULL DEFAULT \'\''),
-                ('website', 'VARCHAR(255) NOT NULL DEFAULT \'\''),
-                ('address', 'TEXT NOT NULL DEFAULT \'\''),
-                ('contact_name', 'VARCHAR(255) NOT NULL DEFAULT \'\''),
-                ('contact_phone', 'VARCHAR(50) NOT NULL DEFAULT \'\''),
+            # Original org page columns (from heroku_dump / migration 0052) so existing data is readable
+            original_columns = [
+                ('organization_name', 'VARCHAR(255) NOT NULL DEFAULT \'\''),
+                ('office_state_or_province', 'VARCHAR(255) NOT NULL DEFAULT \'\''),
+                ('office_country', 'VARCHAR(2) NOT NULL DEFAULT \'\''),
+                ('office_mailing_address', 'VARCHAR(255) NOT NULL DEFAULT \'\''),
+                ('office_meeting_address', 'VARCHAR(255) NOT NULL DEFAULT \'\''),
+                ('office_position', 'VARCHAR(42) NOT NULL DEFAULT \'\''),
+                ('office_phone_number', 'VARCHAR(25) NOT NULL DEFAULT \'\''),
+                ('office_fax_number', 'VARCHAR(25) NOT NULL DEFAULT \'\''),
+                ('office_email', 'VARCHAR(254) NOT NULL DEFAULT \'\''),
+                ('office_web', 'TEXT NOT NULL DEFAULT \'\''),
+                ('office_web_2', 'TEXT NOT NULL DEFAULT \'\''),
+                ('last_update', 'DATE NULL'),
+                ('org_contact_1', 'VARCHAR(255) NOT NULL DEFAULT \'\''),
+                ('org_contact_2', 'VARCHAR(255) NOT NULL DEFAULT \'\''),
+                ('org_contact_3', 'VARCHAR(255) NOT NULL DEFAULT \'\''),
+                ('org_contact_4', 'VARCHAR(255) NOT NULL DEFAULT \'\''),
+                ('org_contact_1_phone', 'VARCHAR(25) NOT NULL DEFAULT \'\''),
+                ('org_contact_2_phone', 'VARCHAR(25) NOT NULL DEFAULT \'\''),
+                ('org_contact_3_phone', 'VARCHAR(25) NOT NULL DEFAULT \'\''),
+                ('org_contact_4_phone', 'VARCHAR(25) NOT NULL DEFAULT \'\''),
             ]
-            for col_name, col_def in contact_columns:
+            for col_name, col_def in original_columns:
                 if not _column_exists(cursor, col_name):
                     self.stdout.write(f'Adding missing column: {col_name}')
                     cursor.execute(

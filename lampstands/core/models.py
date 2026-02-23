@@ -1534,19 +1534,32 @@ class OrgIndexPage(Page):
 
 # Legacy org (organization) page type. Individual pages like "The Bible Tells Me So"
 # were created as lampstands.orgpage; the model was removed from the codebase.
-# This stub allows those pages to load and be edited or deleted in the admin.
+# Schema matches original lampstands_orgpage from heroku_dump / production so existing data is read.
 class OrgPage(Page):
     intro = RichTextField(blank=True, help_text="Optional intro or summary.")
     body = RichTextField(blank=True, help_text="Main content for the page.")
 
-    # Contact / organization info
-    phone = models.CharField(max_length=50, blank=True, help_text="Phone number")
-    email = models.EmailField(blank=True, help_text="Email address")
-    address = models.TextField(blank=True, help_text="Street address, city, state, postal code")
-    website = models.URLField(blank=True, max_length=255, help_text="Organization website (include https://)")
-    contact_name = models.CharField(max_length=255, blank=True, help_text="Primary contact person name")
-    contact_phone = models.CharField(max_length=50, blank=True, help_text="Primary contact phone")
-    fax = models.CharField(max_length=50, blank=True, help_text="Fax number")
+    # Original org page schema (from heroku_dump / production) — use these names so existing data shows
+    organization_name = models.CharField(max_length=255, blank=True)
+    office_state_or_province = models.CharField(max_length=255, blank=True)
+    office_country = CountryField(max_length=2, blank=True, null=True, blank_label="(select country)")
+    office_mailing_address = models.CharField(max_length=255, blank=True)
+    office_meeting_address = models.CharField(max_length=255, blank=True)
+    office_position = models.CharField(max_length=42, blank=True, help_text="Lat,lng e.g. 33.84,-117.96")
+    office_phone_number = models.CharField(max_length=25, blank=True)
+    office_fax_number = models.CharField(max_length=25, blank=True)
+    office_email = models.EmailField(blank=True, max_length=254)
+    office_web = models.URLField(blank=True, max_length=500)
+    office_web_2 = models.URLField(blank=True, max_length=500)
+    last_update = models.DateField(null=True, blank=True)
+    org_contact_1 = models.CharField(max_length=255, blank=True)
+    org_contact_2 = models.CharField(max_length=255, blank=True)
+    org_contact_3 = models.CharField(max_length=255, blank=True)
+    org_contact_4 = models.CharField(max_length=255, blank=True)
+    org_contact_1_phone = models.CharField(max_length=25, blank=True)
+    org_contact_2_phone = models.CharField(max_length=25, blank=True)
+    org_contact_3_phone = models.CharField(max_length=25, blank=True)
+    org_contact_4_phone = models.CharField(max_length=25, blank=True)
 
     parent_page_types = ["lampstands.OrgIndexPage"]
 
@@ -1559,15 +1572,33 @@ class OrgPage(Page):
         FieldPanel("body", classname="full"),
         MultiFieldPanel(
             [
-                FieldPanel("phone"),
-                FieldPanel("fax"),
-                FieldPanel("email"),
-                FieldPanel("website"),
-                FieldPanel("address", classname="full"),
-                FieldPanel("contact_name"),
-                FieldPanel("contact_phone"),
+                FieldPanel("organization_name"),
+                FieldPanel("office_state_or_province"),
+                FieldPanel("office_country"),
+                FieldPanel("office_mailing_address"),
+                FieldPanel("office_meeting_address"),
+                FieldPanel("office_position"),
+                FieldPanel("office_phone_number"),
+                FieldPanel("office_fax_number"),
+                FieldPanel("office_email"),
+                FieldPanel("office_web"),
+                FieldPanel("office_web_2"),
+                FieldPanel("last_update"),
             ],
-            heading="Contact & address",
+            heading="Office / address",
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel("org_contact_1"),
+                FieldPanel("org_contact_1_phone"),
+                FieldPanel("org_contact_2"),
+                FieldPanel("org_contact_2_phone"),
+                FieldPanel("org_contact_3"),
+                FieldPanel("org_contact_3_phone"),
+                FieldPanel("org_contact_4"),
+                FieldPanel("org_contact_4_phone"),
+            ],
+            heading="Contacts",
         ),
     ]
 
