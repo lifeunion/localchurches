@@ -1189,6 +1189,7 @@ class ChurchPage(Page):
     meeting_address = models.CharField(max_length=255, blank=True, null=True)
     position = GeopositionField(blank=True, null=True)
     locality_phone_number = models.CharField(blank=True, max_length=25)
+    locality_fax_number = models.CharField(max_length=25, blank=True, null=True)
     locality_email = models.EmailField(blank=True)
     locality_web = models.TextField(blank=True, help_text="Please type: 'http://' in the front of the URL")
     last_update = models.DateField(null=True, blank=True)
@@ -1273,6 +1274,7 @@ class ChurchPage(Page):
         FieldPanel('meeting_address'),
         FieldPanel('position'),
         FieldPanel('locality_phone_number'),
+        FieldPanel('locality_fax_number'),
         FieldPanel('locality_email'),
         FieldPanel('locality_web'),
         FieldPanel('last_update'),
