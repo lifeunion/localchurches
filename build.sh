@@ -97,6 +97,12 @@ python manage.py fix_lampstandsimage || {
     echo "Warning: Could not fix lampstandsimage columns, but continuing..."
 }
 
+# Fix missing lampstands_orgpage intro/body columns (admin "Organizations listing" 500)
+echo "Checking for missing lampstands_orgpage intro/body columns..."
+python manage.py fix_orgpage || {
+    echo "Warning: Could not fix orgpage columns, but continuing..."
+}
+
 # Ensure wagtailcore_referenceindex exists (Wagtail 6 page editor "Usage" panel)
 # Must succeed or build fails (no silent deploy without the table).
 echo "Checking for wagtailcore_referenceindex table..."
