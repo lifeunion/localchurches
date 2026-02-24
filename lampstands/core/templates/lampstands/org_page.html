@@ -48,10 +48,10 @@
                     <p><strong>Email:</strong> <a href="mailto:{{ self.office_email }}">{{ self.office_email }}</a></p>
                 {% endif %}
                 {% if self.office_web %}
-                    <p><strong>Website:</strong> <a href="{{ self.office_web }}" target="_blank" rel="noopener noreferrer">{{ self.office_web }}</a></p>
+                    <p><strong>Website:</strong> {% if self.office_web|slice:":8" == "https://" or self.office_web|slice:":7" == "http://" %}<a href="{{ self.office_web }}" target="_blank" rel="noopener noreferrer">{{ self.office_web }}</a>{% else %}{{ self.office_web }}{% endif %}</p>
                 {% endif %}
                 {% if self.office_web_2 %}
-                    <p><strong>Website (alt):</strong> <a href="{{ self.office_web_2 }}" target="_blank" rel="noopener noreferrer">{{ self.office_web_2 }}</a></p>
+                    <p><strong>Website (alt):</strong> {% if self.office_web_2|slice:":8" == "https://" or self.office_web_2|slice:":7" == "http://" %}<a href="{{ self.office_web_2 }}" target="_blank" rel="noopener noreferrer">{{ self.office_web_2 }}</a>{% else %}{{ self.office_web_2 }}{% endif %}</p>
                 {% endif %}
                 {% if self.last_update %}
                     <p><strong>Last update:</strong> {{ self.last_update }}</p>
