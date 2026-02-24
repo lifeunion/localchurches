@@ -34,17 +34,27 @@ def ensure_orgpage_table_and_columns(apps, schema_editor):
 
 
 def backfill_orgpage_rows(apps, schema_editor):
+    # Do not use apps.get_model("lampstands", "OrgPage") here: with SeparateDatabaseAndState,
+    # state_operations (CreateModel OrgPage) are applied after database_operations, so OrgPage
+    # is not in the app registry yet. Use raw SQL against lampstands_orgpage instead.
     ContentType = apps.get_model("contenttypes", "ContentType")
-    Page = apps.get_model("wagtailcore", "Page")
-    OrgPage = apps.get_model("lampstands", "OrgPage")
-
     ct = ContentType.objects.filter(app_label="lampstands", model="orgpage").first()
     if not ct:
         return
 
-    for page in Page.objects.filter(content_type=ct):
-        if not OrgPage.objects.filter(pk=page.pk).exists():
-            OrgPage.objects.create(page_ptr_id=page.pk, intro="", body="")
+    with schema_editor.connection.cursor() as cursor:
+        cursor.execute(
+            """
+            INSERT INTO lampstands_orgpage (page_ptr_id, intro, body)
+            SELECT p.id, '', ''
+            FROM wagtailcore_page p
+            WHERE p.content_type_id = %s
+            AND NOT EXISTS (
+                SELECT 1 FROM lampstands_orgpage o WHERE o.page_ptr_id = p.id
+            );
+            """,
+            [ct.id],
+        )
 
 
 def noop(apps, schema_editor):
