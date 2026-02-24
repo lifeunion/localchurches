@@ -12,7 +12,7 @@ from django.views.decorators.vary import vary_on_headers
 
 from modelcluster.fields import ParentalKey
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
-from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
+from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel, SnippetChooserPanel
 from wagtailgeowidget import geocoders
 from wagtailgeowidget.panels import GeoAddressPanel, GoogleMapsPanel
 from wagtail import blocks
@@ -1177,6 +1177,7 @@ class ChurchPageTagSelect(Orderable):
         related_name='church_page_tag_select',
         on_delete=models.CASCADE
     )
+    panels = [SnippetChooserPanel('tag')]
 
 
 class ChurchPageRelatedLink(Orderable, RelatedLink):
