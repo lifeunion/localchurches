@@ -1188,7 +1188,15 @@ class ChurchPage(Page):
         help_text='A short summary of when the locality started meeting'
     )
     mailing_address = models.CharField(max_length=255, blank=True, null=True)
-    meeting_address = models.CharField(max_length=255, blank=True, null=True)
+    meeting_address = models.CharField(
+        max_length=255, blank=True, null=True,
+        help_text="Meeting address as shown on the public page. Edit independently of the map."
+    )
+    # Widget-only: address used only by the map widget to search and set position. Not displayed on the site.
+    map_search_address = models.CharField(
+        max_length=255, blank=True, null=True,
+        help_text="Used only by the map below to search and place the marker. Does not affect the meeting address above."
+    )
     position = GeopositionField(blank=True, null=True)  # "lat,lng" or GEOSGeometry from wagtail-geo-widget
     locality_phone_number = models.CharField(blank=True, max_length=25)
     locality_fax_number = models.CharField(max_length=25, blank=True, null=True)
@@ -1247,6 +1255,18 @@ class ChurchPage(Page):
             return trimmed_address
         return ""
 
+    @property
+    def map_embed_q(self):
+        """
+        Value for the Google Maps Embed place query (q=) when coordinates are set.
+        Only uses position (widget or legacy). No fallback to meeting_address.
+        Returns None when coordinates are not set (published map then shows worldwide).
+        """
+        lat, lng = parse_position_to_lat_lng(self.position)
+        if lat is not None and lng is not None:
+            return f"{lat},{lng}"
+        return None
+
     content_panels = [
         FieldPanel('title', classname="full title"),
         FieldPanel('locality_name'),
@@ -1255,13 +1275,15 @@ class ChurchPage(Page):
         InlinePanel('tags', label="Tags"),
         FieldPanel('short_intro'),
         FieldPanel('mailing_address'),
+        FieldPanel('meeting_address'),
         MultiFieldPanel(
             [
-                # Use the built-in Google Maps geocoder constant from wagtail-geo-widget
-                GeoAddressPanel('meeting_address', geocoder=geocoders.GOOGLE_MAPS),
-                GoogleMapsPanel('position', address_field='meeting_address'),
+                # Map widget has its own address field; it only updates position (coordinates).
+                # meeting_address is separate and displayed on the public page.
+                GeoAddressPanel('map_search_address', geocoder=geocoders.GOOGLE_MAPS),
+                GoogleMapsPanel('position', address_field='map_search_address'),
             ],
-            heading='Meeting location (search address and verify on map)',
+            heading='Map location (search here to place the pin; saved coordinates drive the map on the church page)',
         ),
         FieldPanel('locality_phone_number'),
         FieldPanel('locality_fax_number'),
