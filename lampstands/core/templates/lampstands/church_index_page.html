@@ -384,8 +384,12 @@
 <script>
 document.addEventListener('alpine:init', function() {
   Alpine.data('churchDesktop', function() {
+    var initialQuery = '';
+    try {
+      initialQuery = (new URLSearchParams(window.location.search)).get('area') || '';
+    } catch (e) {}
     return {
-      query: '',
+      query: initialQuery,
       displayedCount: 50,
       allRows: [],
       filteredRows: [],
@@ -573,6 +577,7 @@ document.addEventListener('alpine:init', function() {
           }
           list.sort(function(a,b){ return (a.locality_name||'').localeCompare(b.locality_name||''); });
           that.items = list;
+          that.query = area;
           that.updateDisplay();
         }).catch(function(e){ console.error('Church list fetch error:', e); });
       }
