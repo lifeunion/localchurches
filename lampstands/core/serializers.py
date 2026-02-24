@@ -29,6 +29,14 @@ class LocalitiesSerializer(serializers.Serializer):
     locality_contact_brother_3_phone = serializers.CharField(required=False, allow_blank=True, max_length=25, allow_null=True)
     locality_contact_brother_4 = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
     locality_contact_brother_4_phone = serializers.CharField(required=False, allow_blank=True, max_length=25, allow_null=True)
+    consented_brother_1 = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
+    consented_brother_1_phone = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
+    consented_brother_2 = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
+    consented_brother_2_phone = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
+    consented_brother_3 = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
+    consented_brother_3_phone = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
+    consented_brother_4 = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
+    consented_brother_4_phone = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
     locality_contact_brother_5 = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
     locality_contact_brother_5_phone = serializers.CharField(required=False, allow_blank=True, max_length=25, allow_null=True)
     locality_contact_brother_6 = serializers.CharField(required=False, allow_blank=True, max_length=255, allow_null=True)
@@ -89,7 +97,14 @@ class LocalitiesSerializer(serializers.Serializer):
         instance.locality_phone_number = validated_data.get('locality_phone_number', instance.locality_phone_number)
         instance.locality_email = validated_data.get('locality_email', instance.locality_email)
         instance.locality_web = validated_data.get('locality_web', instance.locality_web)
-        #instance.position = validated_data.get('position', instance.position)
+        for i in range(1, 5):
+            setattr(instance, f'locality_contact_brother_{i}', validated_data.get(f'locality_contact_brother_{i}', getattr(instance, f'locality_contact_brother_{i}')))
+            setattr(instance, f'locality_contact_brother_{i}_phone', validated_data.get(f'locality_contact_brother_{i}_phone', getattr(instance, f'locality_contact_brother_{i}_phone')))
+            setattr(instance, f'consented_brother_{i}', validated_data.get(f'consented_brother_{i}', getattr(instance, f'consented_brother_{i}')))
+            setattr(instance, f'consented_brother_{i}_phone', validated_data.get(f'consented_brother_{i}_phone', getattr(instance, f'consented_brother_{i}_phone')))
+        for i in range(5, 7):
+            setattr(instance, f'locality_contact_brother_{i}', validated_data.get(f'locality_contact_brother_{i}', getattr(instance, f'locality_contact_brother_{i}')))
+            setattr(instance, f'locality_contact_brother_{i}_phone', validated_data.get(f'locality_contact_brother_{i}_phone', getattr(instance, f'locality_contact_brother_{i}_phone')))
         # location and trimmed_address are read-only properties, don't try to set them
         instance.save()
         return instance

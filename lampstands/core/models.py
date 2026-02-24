@@ -1106,6 +1106,12 @@ class ChurchIndexPage(Page):
             'locality_contact_brother_2', 'locality_contact_brother_2_phone',
             'locality_contact_brother_3', 'locality_contact_brother_3_phone',
             'locality_contact_brother_4', 'locality_contact_brother_4_phone',
+            'consented_brother_1', 'consented_brother_1_phone',
+            'consented_brother_2', 'consented_brother_2_phone',
+            'consented_brother_3', 'consented_brother_3_phone',
+            'consented_brother_4', 'consented_brother_4_phone',
+            'locality_contact_brother_5', 'locality_contact_brother_5_phone',
+            'locality_contact_brother_6', 'locality_contact_brother_6_phone',
         )
 
     def serve(self, request):
@@ -1203,18 +1209,29 @@ class ChurchPage(Page):
     locality_email = models.EmailField(blank=True)
     locality_web = models.TextField(blank=True, help_text="Please type: 'http://' in the front of the URL")
     last_update = models.DateField(null=True, blank=True)
-    locality_contact_brother_1 = models.CharField(max_length=255, blank=True, null=True)
-    locality_contact_brother_2 = models.CharField(max_length=255, blank=True, null=True)
-    locality_contact_brother_3 = models.CharField(max_length=255, blank=True, null=True)
-    locality_contact_brother_4 = models.CharField(max_length=255, blank=True, null=True)
-    locality_contact_brother_5 = models.CharField(max_length=255, blank=True, null=True)
-    locality_contact_brother_6 = models.CharField(max_length=255, blank=True, null=True)
-    locality_contact_brother_1_phone = models.CharField(max_length=25, blank=True, null=True)
-    locality_contact_brother_2_phone = models.CharField(max_length=25, blank=True, null=True)
-    locality_contact_brother_3_phone = models.CharField(max_length=25, blank=True, null=True)
-    locality_contact_brother_4_phone = models.CharField(max_length=25, blank=True, null=True)
-    locality_contact_brother_5_phone = models.CharField(max_length=25, blank=True, null=True)
-    locality_contact_brother_6_phone = models.CharField(max_length=25, blank=True, null=True)
+    # Regular contacts (1–4): locality_contact_brother_*
+    locality_contact_brother_1 = models.CharField(max_length=255, blank=True, null=True, verbose_name="Regular contact 1 (name)")
+    locality_contact_brother_2 = models.CharField(max_length=255, blank=True, null=True, verbose_name="Regular contact 2 (name)")
+    locality_contact_brother_3 = models.CharField(max_length=255, blank=True, null=True, verbose_name="Regular contact 3 (name)")
+    locality_contact_brother_4 = models.CharField(max_length=255, blank=True, null=True, verbose_name="Regular contact 4 (name)")
+    locality_contact_brother_1_phone = models.CharField(max_length=25, blank=True, null=True, verbose_name="Regular contact 1 (phone)")
+    locality_contact_brother_2_phone = models.CharField(max_length=25, blank=True, null=True, verbose_name="Regular contact 2 (phone)")
+    locality_contact_brother_3_phone = models.CharField(max_length=25, blank=True, null=True, verbose_name="Regular contact 3 (phone)")
+    locality_contact_brother_4_phone = models.CharField(max_length=25, blank=True, null=True, verbose_name="Regular contact 4 (phone)")
+    # Consented contacts (1–4): consented_brother_* (columns exist in DB from heroku_dump)
+    consented_brother_1 = models.CharField(max_length=255, blank=True, null=True, verbose_name="Consented contact 1 (name)")
+    consented_brother_2 = models.CharField(max_length=255, blank=True, null=True, verbose_name="Consented contact 2 (name)")
+    consented_brother_3 = models.CharField(max_length=255, blank=True, null=True, verbose_name="Consented contact 3 (name)")
+    consented_brother_4 = models.CharField(max_length=255, blank=True, null=True, verbose_name="Consented contact 4 (name)")
+    consented_brother_1_phone = models.CharField(max_length=255, blank=True, null=True, verbose_name="Consented contact 1 (phone)")
+    consented_brother_2_phone = models.CharField(max_length=255, blank=True, null=True, verbose_name="Consented contact 2 (phone)")
+    consented_brother_3_phone = models.CharField(max_length=255, blank=True, null=True, verbose_name="Consented contact 3 (phone)")
+    consented_brother_4_phone = models.CharField(max_length=255, blank=True, null=True, verbose_name="Consented contact 4 (phone)")
+    # Additional contacts (5–6): locality_contact_brother_5/6
+    locality_contact_brother_5 = models.CharField(max_length=255, blank=True, null=True, verbose_name="Additional contact 5 (name)")
+    locality_contact_brother_6 = models.CharField(max_length=255, blank=True, null=True, verbose_name="Additional contact 6 (name)")
+    locality_contact_brother_5_phone = models.CharField(max_length=25, blank=True, null=True, verbose_name="Additional contact 5 (phone)")
+    locality_contact_brother_6_phone = models.CharField(max_length=25, blank=True, null=True, verbose_name="Additional contact 6 (phone)")
 
     # Boost locality-related fields so admin search (and global Wagtail search)
     # strongly prefers matching the locality name / address for queries like
@@ -1290,18 +1307,41 @@ class ChurchPage(Page):
         FieldPanel('locality_email'),
         FieldPanel('locality_web'),
         FieldPanel('last_update'),
-        FieldPanel('locality_contact_brother_1'),
-        FieldPanel('locality_contact_brother_1_phone'),
-        FieldPanel('locality_contact_brother_2'),
-        FieldPanel('locality_contact_brother_2_phone'),
-        FieldPanel('locality_contact_brother_3'),
-        FieldPanel('locality_contact_brother_3_phone'),
-        FieldPanel('locality_contact_brother_4'),
-        FieldPanel('locality_contact_brother_4_phone'),
-        FieldPanel('locality_contact_brother_5'),
-        FieldPanel('locality_contact_brother_5_phone'),
-        FieldPanel('locality_contact_brother_6'),
-        FieldPanel('locality_contact_brother_6_phone'),
+        MultiFieldPanel(
+            [
+                FieldPanel('locality_contact_brother_1'),
+                FieldPanel('locality_contact_brother_1_phone'),
+                FieldPanel('locality_contact_brother_2'),
+                FieldPanel('locality_contact_brother_2_phone'),
+                FieldPanel('locality_contact_brother_3'),
+                FieldPanel('locality_contact_brother_3_phone'),
+                FieldPanel('locality_contact_brother_4'),
+                FieldPanel('locality_contact_brother_4_phone'),
+            ],
+            heading='Regular contacts (1–4)',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('consented_brother_1'),
+                FieldPanel('consented_brother_1_phone'),
+                FieldPanel('consented_brother_2'),
+                FieldPanel('consented_brother_2_phone'),
+                FieldPanel('consented_brother_3'),
+                FieldPanel('consented_brother_3_phone'),
+                FieldPanel('consented_brother_4'),
+                FieldPanel('consented_brother_4_phone'),
+            ],
+            heading='Consented contacts (1–4)',
+        ),
+        MultiFieldPanel(
+            [
+                FieldPanel('locality_contact_brother_5'),
+                FieldPanel('locality_contact_brother_5_phone'),
+                FieldPanel('locality_contact_brother_6'),
+                FieldPanel('locality_contact_brother_6_phone'),
+            ],
+            heading='Additional contacts (5–6)',
+        ),
     ]
 
 

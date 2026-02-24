@@ -70,25 +70,19 @@
                     <th class="sortable-column" data-column="5">Phone</th>
                     <th class="sortable-column" data-column="6">Email</th>
                     <th class="sortable-column" data-column="7">Website</th>
-                    <th colspan="8">Available Contacts' Names and Phones</th>
+                    <th colspan="20">Contacts (Regular 1–4, Consented 1–4, Additional 5–6)</th>
                 </tr>
                 <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th>Brother's Name</th>
-                    <th>Brother's Phone</th>
-                    <th>Brother's Name</th>
-                    <th>Brother's Phone</th>
-                    <th>Brother's Name</th>
-                    <th>Brother's Phone</th>
-                    <th>Brother's Name</th>
-                    <th>Brother's Phone</th>
+                    <th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
+                    <th colspan="8">Regular (1–4)</th>
+                    <th colspan="8">Consented (1–4)</th>
+                    <th colspan="4">Additional (5–6)</th>
+                </tr>
+                <tr>
+                    <th></th><th></th><th></th><th></th><th></th><th></th><th></th><th></th>
+                    <th>Name</th><th>Phone</th><th>Name</th><th>Phone</th><th>Name</th><th>Phone</th><th>Name</th><th>Phone</th>
+                    <th>Name</th><th>Phone</th><th>Name</th><th>Phone</th><th>Name</th><th>Phone</th><th>Name</th><th>Phone</th>
+                    <th>Name</th><th>Phone</th><th>Name</th><th>Phone</th>
                 </tr>
             </thead>
 
@@ -111,6 +105,18 @@
                         <td>{{branch.locality_contact_brother_3_phone|default:"—"}}</td>
                         <td>{{branch.locality_contact_brother_4|default:"—"}}</td>
                         <td>{{branch.locality_contact_brother_4_phone|default:"—"}}</td>
+                        <td>{{branch.consented_brother_1|default:"—"}}</td>
+                        <td>{{branch.consented_brother_1_phone|default:"—"}}</td>
+                        <td>{{branch.consented_brother_2|default:"—"}}</td>
+                        <td>{{branch.consented_brother_2_phone|default:"—"}}</td>
+                        <td>{{branch.consented_brother_3|default:"—"}}</td>
+                        <td>{{branch.consented_brother_3_phone|default:"—"}}</td>
+                        <td>{{branch.consented_brother_4|default:"—"}}</td>
+                        <td>{{branch.consented_brother_4_phone|default:"—"}}</td>
+                        <td>{{branch.locality_contact_brother_5|default:"—"}}</td>
+                        <td>{{branch.locality_contact_brother_5_phone|default:"—"}}</td>
+                        <td>{{branch.locality_contact_brother_6|default:"—"}}</td>
+                        <td>{{branch.locality_contact_brother_6_phone|default:"—"}}</td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -484,18 +490,42 @@ document.addEventListener('alpine:init', function() {
         var phone3 = (it.locality_contact_brother_3_phone||'').replace(/</g,'&lt;') || '—';
         var contact4 = (it.locality_contact_brother_4||'').replace(/</g,'&lt;') || '—';
         var phone4 = (it.locality_contact_brother_4_phone||'').replace(/</g,'&lt;') || '—';
+        var c1 = (it.consented_brother_1||'').replace(/</g,'&lt;') || '—';
+        var p1 = (it.consented_brother_1_phone||'').replace(/</g,'&lt;') || '—';
+        var c2 = (it.consented_brother_2||'').replace(/</g,'&lt;') || '—';
+        var p2 = (it.consented_brother_2_phone||'').replace(/</g,'&lt;') || '—';
+        var c3 = (it.consented_brother_3||'').replace(/</g,'&lt;') || '—';
+        var p3 = (it.consented_brother_3_phone||'').replace(/</g,'&lt;') || '—';
+        var c4 = (it.consented_brother_4||'').replace(/</g,'&lt;') || '—';
+        var p4 = (it.consented_brother_4_phone||'').replace(/</g,'&lt;') || '—';
+        var contact5 = (it.locality_contact_brother_5||'').replace(/</g,'&lt;') || '—';
+        var phone5 = (it.locality_contact_brother_5_phone||'').replace(/</g,'&lt;') || '—';
+        var contact6 = (it.locality_contact_brother_6||'').replace(/</g,'&lt;') || '—';
+        var phone6 = (it.locality_contact_brother_6_phone||'').replace(/</g,'&lt;') || '—';
         return '<div style="border-top:1px solid #e0e0e0;"><div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Meeting address:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+addr+'</div></div>'+
                '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Phone number:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+phone+'</div></div>'+
                '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Email:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+email+'</div></div>'+
                '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Website:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+wl+'</div></div>'+
-               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Contact person 1:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+contact1+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Regular contact 1:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+contact1+'</div></div>'+
                '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Phone 1:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+phone1+'</div></div>'+
-               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Contact person 2:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+contact2+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Regular contact 2:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+contact2+'</div></div>'+
                '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Phone 2:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+phone2+'</div></div>'+
-               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Contact person 3:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+contact3+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Regular contact 3:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+contact3+'</div></div>'+
                '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Phone 3:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+phone3+'</div></div>'+
-               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Contact person 4:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+contact4+'</div></div>'+
-               '<div style="display:flex;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Phone 4:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+phone4+'</div></div></div>';
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Regular contact 4:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+contact4+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Phone 4:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+phone4+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Consented contact 1:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+c1+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Consented phone 1:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+p1+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Consented contact 2:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+c2+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Consented phone 2:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+p2+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Consented contact 3:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+c3+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Consented phone 3:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+p3+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Consented contact 4:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+c4+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Consented phone 4:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+p4+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Additional contact 5:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+contact5+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Phone 5:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+phone5+'</div></div>'+
+               '<div style="display:flex; border-bottom:1px solid #e0e0e0;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Additional contact 6:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+contact6+'</div></div>'+
+               '<div style="display:flex;"><div class="detail-field-label" style="background-color:#f5f5f5; padding:0.5em; font-weight:500;">Phone 6:</div><div style="background-color:#fff; padding:0.5em; flex:1;">'+phone6+'</div></div></div>';
       },
       toggle: function(id) {
         if (!id && id !== 0) return;
@@ -538,7 +568,7 @@ document.addEventListener('alpine:init', function() {
         var filtered = that.items.filter(function(item) {
           if (!q) return true;
           // Search across all fields including contacts and phones
-          var searchText = [
+            var searchText = [
             item.locality_name || '',
             item.locality_state_or_province || '',
             item.locality_country || '',
@@ -553,7 +583,19 @@ document.addEventListener('alpine:init', function() {
             item.locality_contact_brother_3 || '',
             item.locality_contact_brother_3_phone || '',
             item.locality_contact_brother_4 || '',
-            item.locality_contact_brother_4_phone || ''
+            item.locality_contact_brother_4_phone || '',
+            item.consented_brother_1 || '',
+            item.consented_brother_1_phone || '',
+            item.consented_brother_2 || '',
+            item.consented_brother_2_phone || '',
+            item.consented_brother_3 || '',
+            item.consented_brother_3_phone || '',
+            item.consented_brother_4 || '',
+            item.consented_brother_4_phone || '',
+            item.locality_contact_brother_5 || '',
+            item.locality_contact_brother_5_phone || '',
+            item.locality_contact_brother_6 || '',
+            item.locality_contact_brother_6_phone || ''
           ].join(' ').toLowerCase();
           return searchText.indexOf(q) >= 0;
         });
@@ -575,7 +617,7 @@ document.addEventListener('alpine:init', function() {
               if (typeof o.locality_country === 'object' && o.locality_country.name) cn = o.locality_country.name;
               else if (typeof o.locality_country === 'string') cn = o.locality_country;
             }
-            var it = { id: o.id, slug: o.slug, url: o.url, locality_name: o.locality_name||'', locality_state_or_province: o.locality_state_or_province||'', locality_country: cn, meeting_address: o.meeting_address||'', locality_phone_number: o.locality_phone_number||'', locality_email: o.locality_email||'', locality_web: o.locality_web||'', locality_contact_brother_1: o.locality_contact_brother_1||'', locality_contact_brother_1_phone: o.locality_contact_brother_1_phone||'', locality_contact_brother_2: o.locality_contact_brother_2||'', locality_contact_brother_2_phone: o.locality_contact_brother_2_phone||'', locality_contact_brother_3: o.locality_contact_brother_3||'', locality_contact_brother_3_phone: o.locality_contact_brother_3_phone||'', locality_contact_brother_4: o.locality_contact_brother_4||'', locality_contact_brother_4_phone: o.locality_contact_brother_4_phone||'' };
+            var it = { id: o.id, slug: o.slug, url: o.url, locality_name: o.locality_name||'', locality_state_or_province: o.locality_state_or_province||'', locality_country: cn, meeting_address: o.meeting_address||'', locality_phone_number: o.locality_phone_number||'', locality_email: o.locality_email||'', locality_web: o.locality_web||'', locality_contact_brother_1: o.locality_contact_brother_1||'', locality_contact_brother_1_phone: o.locality_contact_brother_1_phone||'', locality_contact_brother_2: o.locality_contact_brother_2||'', locality_contact_brother_2_phone: o.locality_contact_brother_2_phone||'', locality_contact_brother_3: o.locality_contact_brother_3||'', locality_contact_brother_3_phone: o.locality_contact_brother_3_phone||'', locality_contact_brother_4: o.locality_contact_brother_4||'', locality_contact_brother_4_phone: o.locality_contact_brother_4_phone||'', consented_brother_1: o.consented_brother_1||'', consented_brother_1_phone: o.consented_brother_1_phone||'', consented_brother_2: o.consented_brother_2||'', consented_brother_2_phone: o.consented_brother_2_phone||'', consented_brother_3: o.consented_brother_3||'', consented_brother_3_phone: o.consented_brother_3_phone||'', consented_brother_4: o.consented_brother_4||'', consented_brother_4_phone: o.consented_brother_4_phone||'', locality_contact_brother_5: o.locality_contact_brother_5||'', locality_contact_brother_5_phone: o.locality_contact_brother_5_phone||'', locality_contact_brother_6: o.locality_contact_brother_6||'', locality_contact_brother_6_phone: o.locality_contact_brother_6_phone||'' };
             if (!area || [it.locality_name,it.locality_state_or_province,it.locality_country,it.meeting_address].join(' ').toLowerCase().indexOf(area.toLowerCase()) >= 0) list.push(it);
           }
           list.sort(function(a,b){ return (a.locality_name||'').localeCompare(b.locality_name||''); });
