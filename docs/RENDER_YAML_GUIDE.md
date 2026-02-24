@@ -135,6 +135,20 @@ After making changes to `render.yaml`:
 - Check build logs for specific errors
 - Ensure all dependencies are in `requirements.txt`
 
+## Running management commands on Render
+
+To run Django management commands against your Render database (e.g. to inspect church data):
+
+1. **Render Shell** (easiest): In the Render dashboard, open your **Web Service** → **Shell** tab. In the shell run:
+   ```bash
+   python manage.py check_church_contacts Anaheim
+   ```
+   This prints regular vs consented brother contact data for the Church in Anaheim (or use another locality name).
+
+2. **One-off job**: You can add a Background Worker or one-off job in `render.yaml` that runs a command; for ad-hoc checks, Shell is usually enough.
+
+Example: `python manage.py check_church_contacts Fullerton` or `python manage.py check_church_contacts "Some City" --all` to show all matching churches.
+
 ## Alternative: Manual Setup
 
 If you prefer not to use `render.yaml`, you can create services manually in the Render dashboard. See `RENDER_MIGRATION_CHECKLIST.md` for manual setup instructions.
