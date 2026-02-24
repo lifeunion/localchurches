@@ -3,6 +3,49 @@ Middleware for performance and caching (Pingdom / best practices).
 """
 
 
+def _is_organization_detail_path(path):
+    """
+    True if path is an organization detail page (e.g. /organizations-listing/dcp/)
+    and not the org index (e.g. /organizations-listing/).
+    """
+    path = (path or "").strip("/")
+    parts = [p for p in path.split("/") if p]
+    # Index: /organizations-listing/  -> parts == ['organizations-listing']
+    # Detail: /organizations-listing/dcp/ -> parts == ['organizations-listing', 'dcp']
+    return (
+        len(parts) >= 2
+        and parts[0].lower() == "organizations-listing"
+    )
+
+
+class BlockOrganizationDetailMiddleware:
+    """
+    Return 403 (and noindex) for GET requests to organization detail URLs
+    (e.g. /organizations-listing/dcp/) while keeping those pages published.
+    Use when you want org pages to stay live and listed but not reachable by
+    bots or direct URL traversal. Disable by setting BLOCK_ORGANIZATION_DETAIL_URLS=False.
+    """
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        from django.conf import settings
+        if not getattr(settings, "BLOCK_ORGANIZATION_DETAIL_URLS", True):
+            return self.get_response(request)
+        if request.method != "GET":
+            return self.get_response(request)
+        if not _is_organization_detail_path(request.path):
+            return self.get_response(request)
+        from django.http import HttpResponseForbidden
+        response = HttpResponseForbidden(
+            "<h1>403 Forbidden</h1><p>This page is not available at this URL.</p>",
+            content_type="text/html",
+        )
+        response["X-Robots-Tag"] = "noindex, nofollow"
+        return response
+
+
 class CacheControlHeadersMiddleware:
     """
     Set Cache-Control on Django-served HTML so browsers and CDNs can cache

@@ -83,8 +83,13 @@ MIDDLEWARE = [
     'django.middleware.gzip.GZipMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'wagtail.contrib.redirects.middleware.RedirectMiddleware',
+    'lampstands.core.middleware.BlockOrganizationDetailMiddleware',
     'lampstands.core.middleware.CacheControlHeadersMiddleware',
 ]
+
+# Block GET requests to organization detail URLs (e.g. /organizations-listing/dcp/)
+# so they stay published but are not reachable by bots or URL traversal. Set to False to disable.
+BLOCK_ORGANIZATION_DETAIL_URLS = True
 
 ROOT_URLCONF = 'lampstands.urls'
 
