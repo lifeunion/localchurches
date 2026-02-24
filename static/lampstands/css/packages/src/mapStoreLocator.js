@@ -573,7 +573,6 @@
 				'</div>' +
 				(data.meeting_address || "") +
 				'<div style="margin-top:8px">' + more_info_link +
-				'<a class="label label-danger label-map" style="color:white" href="https://maps.google.com/?saddr=Current%20Location&daddr=' + trimmed + '">get directions</a>' +
 				'</div></div>';
 			var _map = this.map;
 			var self = this;

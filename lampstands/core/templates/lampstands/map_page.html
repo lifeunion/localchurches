@@ -163,7 +163,6 @@
                                 <li data-field="website" :data-value="$store.mapStore.detail.locality_web" x-show="!$store.mapStore.isContactEmpty($store.mapStore.detail.locality_web)"><b>Website</b>: <a :href="$store.mapStore.detail.locality_web" x-text="$store.mapStore.detail.locality_web"></a></li>
                             </ul>
                             <a class="label label-success label-map" :href="$store.mapStore.detail.url">church page</a>
-                            <a class="label label-danger label-map map_direction_trigger" :href="'https://maps.google.com/?saddr=Current%20Location&daddr=' + ($store.mapStore.detail.trimmed_address || encodeURIComponent(($store.mapStore.detail.meeting_address||'').trim()))">get directions</a>
                         </div>
                     </div>
                 </div>
@@ -186,7 +185,6 @@
                                     <li data-field="email" :data-value="item.locality_email" x-show="!$store.mapStore.isContactEmpty(item.locality_email)"><b>E-Mail</b>: <span x-text="item.locality_email"></span></li>
                                     <li data-field="website" :data-value="item.locality_web" x-show="!$store.mapStore.isContactEmpty(item.locality_web)"><b>Website</b>: <a :href="item.locality_web" x-text="item.locality_web"></a></li>
                                     <a class="label label-success label-map" style="color:white;" :href="item.url">church page</a>
-                                    <a class="label label-danger label-map map_direction_trigger" style="color:white;" :href="'https://maps.google.com/?saddr=Current%20Location&daddr=' + (item.trimmed_address || encodeURIComponent((item.meeting_address||'').trim()))">get directions</a>
                                 </ul>
                             </div>
                         </div>
