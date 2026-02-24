@@ -17,11 +17,10 @@
       ga('create', 'UA-101434975-1', 'auto');
       ga('send', 'pageview');
     </script>
-    <link rel="preload" href="{% static 'css/font-awesome.min.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}"></noscript>
-    <link rel="preload" href="{% static 'css/villareal-turquoise.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'" id="css-primary">
-    <noscript><link rel="stylesheet" type="text/css" id="css-primary" href="{% static 'css/villareal-turquoise.css' %}"></noscript>
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/villareal-turquoise.css' %}" id="css-primary">
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'css/img/LCblueicon.ico' %}" >
+    <style>a { color: inherit; text-decoration: none; }</style>
     {% block extra_links %} {% endblock %}
 </head>
 
