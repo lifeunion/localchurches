@@ -30,7 +30,6 @@ from wagtail.images.blocks import ImageChooserBlock
 from wagtail.images.models import AbstractImage, AbstractRendition, Image
 from wagtail.search import index
 from wagtail.snippets.models import register_snippet
-from wagtail.snippets.widgets import AdminSnippetChooser
 
 from .fields import ColorField, GeopositionField, parse_position_to_lat_lng
 
@@ -1178,7 +1177,7 @@ class ChurchPageTagSelect(Orderable):
         related_name='church_page_tag_select',
         on_delete=models.CASCADE
     )
-    panels = [FieldPanel('tag', widget=AdminSnippetChooser(ChurchPageTagList))]
+    panels = [FieldPanel('tag')]
 
 
 class ChurchPageRelatedLink(Orderable, RelatedLink):
